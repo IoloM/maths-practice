@@ -3,6 +3,7 @@ import type { Template } from '../../../engine/templates/types';
 import t0 from './diffeq';
 import t1 from './methods';
 import t2 from './standard';
+import t3 from './trapezium';
 
-const templates: Template[] = [...t0, ...t1, ...t2];
+const templates: Template[] = [...t0, ...t1, ...t2, ...t3];
 export default templates;
