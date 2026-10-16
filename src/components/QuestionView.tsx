@@ -132,7 +132,17 @@ export function QuestionView({ inst, meta, number = 1, mode, setId, onFinished, 
       setPart(i, { revealed: true, showScheme: true, result: markPart(part, undefined) });
       return;
     }
-    const r = markPart(part, parts[i].response, prevValues(i, parts));
+    const response = parts[i].response;
+    const r = markPart(part, response, prevValues(i, parts));
+    if (r.verdict === 'invalid' && typeof response === 'string' && response.includes('\\')) {
+      // unusual LaTeX: let Compute Engine (lazy) re-express it, then mark again
+      void import('../engine/marking/ce-fallback').then(async ({ ceNormalise }) => {
+        const alt = await ceNormalise(response);
+        const r2 = alt ? markPart(part, alt, prevValues(i, parts)) : r;
+        setPart(i, { result: r2, showScheme: r2.verdict !== 'invalid' && r2.score < r2.max });
+      });
+      return;
+    }
     if (r.verdict === 'invalid' || r.verdict === 'unanswered') {
       setPart(i, { result: r });
       return;

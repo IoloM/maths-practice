@@ -74,6 +74,8 @@ export interface NumericSpec extends Base {
   exactAllowed?: boolean;
   /** exact expression for the value, shown in solutions */
   exact?: Expr;
+  /** other acceptable values, e.g. the table-based value when the calculator value differs */
+  alts?: number[];
 }
 
 export interface ExactSpec extends Base {

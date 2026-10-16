@@ -78,6 +78,7 @@ export function checkIntegral(student: Expr, correct: Expr, v: string, domain?: 
   const cname = consts[0];
   const pts = samplePoints([v], domain, 14, `int:${toText(correct)}`);
   let diff0: number | null = null;
+  let cdelta: number | null = null;
   let valid = 0;
   for (const p of pts) {
     const c = evaluate(correct, p);
@@ -93,6 +94,9 @@ export function checkIntegral(student: Expr, correct: Expr, v: string, domain?: 
       const s1 = evaluate(student, { ...p, [cname]: 1 });
       const s2 = evaluate(student, { ...p, [cname]: 2 });
       if (!close(s2 - s1, s1 - s0, 1e-7) || Math.abs(s1 - s0) < 1e-12) return { matches: false, hasConstant: true, extraSyms: [] };
+      // …and must not depend on the variable (rejects c·x)
+      if (cdelta === null) cdelta = s1 - s0;
+      else if (!close(s1 - s0, cdelta, 1e-7)) return { matches: false, hasConstant: true, extraSyms: [] };
     }
     valid++;
   }

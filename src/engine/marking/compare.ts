@@ -1,5 +1,5 @@
 /** Compare one response against one AnswerSpec. */
-import { type Expr, evaluate, freeSyms, hasDecimal, num, symTex, tidy } from '../core/expr';
+import { type Expr, evaluate, freeSyms, hasDecimal, num, some, symTex, tidy } from '../core/expr';
 import { fmtNum, accuracyPhrase } from '../core/format';
 import { Q, toFraction } from '../core/rational';
 import { awrt, nearMiss, plainLiteral } from './accuracy';
@@ -71,17 +71,17 @@ export function compareNumericExpr(spec: NumericSpec, e: Expr): Cmp {
   const lit = plainLiteral(e);
   const t = spec.value;
   if (lit === null) {
-    // exact form such as √5 or 3/7
-    if (close(s, t, 1e-9)) {
+    // exact form such as √5, 3/7 or π/6
+    const matches = close(s, t, 1e-9) || awrt(fmtNum(s, 12), s, t, spec.acc) === 'ok' || (spec.alts ?? []).some((a) => awrt(fmtNum(s, 12), s, a, spec.acc) === 'ok');
+    if (matches) {
       if (spec.exactAllowed) return ok({ value: s, correct: true });
       return acc([`Correct value — but give it as a decimal to ${accuracyPhrase(spec.acc) || 'the accuracy asked for'}.`], { value: s, correct: true }, 1, 'exact-not-decimal');
     }
-    const a = awrt(fmtNum(s, 12), s, t, spec.acc);
-    if (a === 'ok') return ok({ value: s, correct: true });
     return wrong(nearMiss(s, t) ? ['Very close — check for premature rounding.'] : [], value);
   }
   const r = awrt(lit, s, t, spec.acc);
   if (r === 'ok') return ok({ value: s, correct: true });
+  for (const alt of spec.alts ?? []) if (awrt(lit, s, alt, spec.acc) === 'ok') return ok({ value: s, correct: true }, ['Accepted (table-based value).']);
   if (r === 'low') return acc([`Correct, but give your answer to ${accuracyPhrase(spec.acc) || 'more figures'}.`], { value: s, correct: true }, 1, 'accuracy');
   if (nearMiss(s, t)) return { status: 'wrong', messages: ['Very close but outside the accepted range — have you rounded too early? Keep full calculator accuracy until the final answer.'], value, errorId: 'premature-rounding' };
   return wrong([], value);
@@ -106,7 +106,9 @@ export function compareExactExpr(spec: ExactSpec, e: Expr): Cmp {
   if (close(s, t, 1e-9)) {
     value.correct = true;
     if (hasDecimal(e) && !spec.allowDecimal) {
-      const exactDecimal = isTerminating(t) && close(s, t, 1e-12);
+      // short decimals such as 0.25π or 1.5 + √2 are exact; long ones are approximations
+      const shortDecimals = !some(e, (n) => n.k === 'dec' && n.s.replace(/^-/, '').replace('.', '').replace(/^0+/, '').length > 6);
+      const exactDecimal = (isTerminating(t) && close(s, t, 1e-12)) || (shortDecimals && close(s, t, 1e-12));
       const needsFraction = spec.forms?.includes('simplest-fraction');
       if (!exactDecimal || needsFraction) return acc(['Correct value — but give it exactly (as a fraction, surd or in terms of π, e or ln), not as a decimal.'], value, 1, 'decimal-not-exact');
     }
@@ -196,6 +198,7 @@ export function compareList(spec: ListSpec, r: Response): Cmp {
   if (missing) msgs.push(`${nCorrect} of ${spec.items.length} solutions correct — ${missing === 1 ? 'one is' : `${missing} are`} missing.`);
   if (extras) msgs.push(`${extras === 1 ? 'One value is' : `${extras} values are`} not a correct solution (check the interval and reject invalid roots).`);
   if (nCorrect > 0 && missing + extras === 1) return { status: 'accuracy', messages: msgs, value, lose: 1, errorId: missing ? 'missing-solution' : 'extra-solution' };
+  if (nCorrect > 0 && missing + extras === 2 && spec.items.length >= 2) return { status: 'accuracy', messages: msgs, value, lose: 2, errorId: 'some-solutions' };
   return wrong(msgs, value);
 }
 

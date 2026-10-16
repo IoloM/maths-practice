@@ -23,12 +23,12 @@ export function awrt(lit: string, s: number, t: number, acc: Accuracy): AwrtResu
   if (acc.tol !== undefined) return Math.abs(s - t) <= acc.tol + 1e-12 ? 'ok' : 'wrong';
   if (acc.dp !== undefined) {
     const k = countDP(lit);
-    if (k < acc.dp) return eqR(roundDP(t, k), s) ? 'low' : 'wrong';
+    if (k < acc.dp) return k >= acc.dp - 2 && eqR(roundDP(t, k), s) ? 'low' : 'wrong';
     return eqR(roundDP(s, acc.dp), roundDP(t, acc.dp)) ? 'ok' : 'wrong';
   }
   const [minSF, maxSF] = acc.sfRange ?? [acc.sf ?? 3, acc.sf ?? 3];
   const k = litSF(lit);
-  if (k < minSF) return eqR(roundSF(t, k), s) ? 'low' : 'wrong';
+  if (k < minSF) return k >= Math.max(2, minSF - 1) && eqR(roundSF(t, k), s) ? 'low' : 'wrong';
   const n = Math.min(k, maxSF);
   return eqR(roundSF(s, n), roundSF(t, n)) ? 'ok' : 'wrong';
 }

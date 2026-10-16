@@ -711,6 +711,7 @@ class Parser {
         this.next();
         left = div(left, this.unary());
       } else if (this.startsPrimary()) {
+        if (this.peek().t === 'num' && endsWithNumber(left)) throw new ParseError('Two numbers are next to each other — add an operator between them');
         left = mulFlat(left, this.power());
       } else break;
     }
@@ -992,6 +993,13 @@ class Parser {
     }
     return e;
   }
+}
+
+function endsWithNumber(e: Expr): boolean {
+  if (e.k === 'num' || e.k === 'dec') return true;
+  if (e.k === 'mul') return endsWithNumber(e.a[e.a.length - 1]);
+  if (e.k === 'neg') return endsWithNumber(e.a);
+  return false;
 }
 
 function mulFlat(a: Expr, b: Expr): Expr {
