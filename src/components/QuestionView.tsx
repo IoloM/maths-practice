@@ -1,0 +1,468 @@
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Instance } from '../engine/templates/types';
+import type { TemplateMeta } from '../engine/templates/types';
+import type { FtValue, MarkResult, Response } from '../engine/marking/types';
+import { codeMarks, markPart, selfAwardable } from '../engine/marking/mark';
+import { getStore } from '../storage';
+import type { Attempt, Mode, Working } from '../storage/types';
+import { useSettings } from '../lib/settings';
+import { partAttemptFrom, selfScore, useActiveTime } from '../lib/attempt';
+import { recordAttempt, updateAttempt } from '../progress/record';
+import { shareUrl } from '../router';
+import { CHAPTER_BY_REF } from '../content/chapters';
+import { MathText } from './MathText';
+import { AnswerInput, hasResponse } from './answers/AnswerInput';
+import { WorkingArea, emptyWorking } from '../working/WorkingArea';
+import { Icon } from './Icon';
+import { Difficulty } from './bits';
+
+const DrawingCanvas = lazy(() => import('../working/Canvas'));
+
+interface PartState {
+  response?: Response;
+  result?: MarkResult;
+  hints: number;
+  ticks: boolean[];
+  showScheme: boolean;
+  showSolution: boolean;
+  revealed: boolean; // self parts: model answer shown
+}
+
+interface Props {
+  inst: Instance;
+  meta: TemplateMeta;
+  number?: number;
+  mode: Mode;
+  setId?: string;
+  onFinished?: (a: Attempt) => void;
+  onNext?: () => void;
+  nextLabel?: string;
+}
+
+const verdictText: Record<string, string> = {
+  correct: 'Correct',
+  partial: 'Partly correct',
+  incorrect: 'Incorrect',
+  invalid: 'Check your input',
+  unanswered: 'Not answered',
+  self: 'Self-marked',
+};
+
+export function QuestionView({ inst, meta, number = 1, mode, setId, onFinished, onNext, nextLabel = 'Next question' }: Props) {
+  const { settings } = useSettings();
+  const key = `${inst.templateId}:${inst.seed}`;
+  const total = inst.parts.reduce((s, p) => s + p.marks, 0);
+  const [parts, setParts] = useState<PartState[]>(() => inst.parts.map((p) => ({ hints: 0, ticks: p.scheme.map(() => false), showScheme: false, showSolution: false, revealed: false })));
+  const [working, setWorking] = useState<Working>(() => emptyWorking(settings.paper, settings.workingMode));
+  const [gaveUp, setGaveUp] = useState(false);
+  const [annotating, setAnnotating] = useState(false);
+  const [attemptId, setAttemptId] = useState<number | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const startedAt = useRef(Date.now());
+  const activeTime = useActiveTime();
+  const loaded = useRef(false);
+  const paperRef = useRef<HTMLElement>(null);
+  const [paperH, setPaperH] = useState(400);
+  const year = CHAPTER_BY_REF.get(meta.chapter)?.year ?? 1;
+  const chapter = CHAPTER_BY_REF.get(meta.chapter);
+
+  // restore draft
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const store = await getStore();
+      const d = await store.getDraft(key);
+      if (!alive) return;
+      if (d) {
+        startedAt.current = d.startedAt;
+        setParts((ps) => ps.map((p, i) => ({ ...p, response: d.responses[inst.parts[i].label] ?? p.response, hints: d.hints[inst.parts[i].label] ?? p.hints })));
+        if (d.working) setWorking(d.working);
+      }
+      loaded.current = true;
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [key, inst.parts]);
+
+  // autosave draft
+  const done = attemptId !== null;
+  useEffect(() => {
+    if (!loaded.current || done) return;
+    const t = setTimeout(async () => {
+      const store = await getStore();
+      await store.putDraft({
+        key,
+        responses: Object.fromEntries(parts.map((p, i) => [inst.parts[i].label, p.response]).filter(([, r]) => r !== undefined)),
+        hints: Object.fromEntries(parts.map((p, i) => [inst.parts[i].label, p.hints])),
+        working,
+        startedAt: startedAt.current,
+        updatedAt: Date.now(),
+      });
+    }, 600);
+    return () => clearTimeout(t);
+  }, [parts, working, key, inst.parts, done]);
+
+  // paper height for annotation layer
+  useEffect(() => {
+    const el = paperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setPaperH(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const setPart = (i: number, p: Partial<PartState>) => setParts((ps) => ps.map((x, j) => (j === i ? { ...x, ...p } : x)));
+
+  const prevValues = useCallback(
+    (i: number, ps: PartState[]): Record<string, FtValue | undefined> => {
+      const out: Record<string, FtValue | undefined> = {};
+      for (let j = 0; j < i; j++) {
+        const r = ps[j].result ?? (ps[j].response !== undefined ? markPart(inst.parts[j], ps[j].response, out) : undefined);
+        out[inst.parts[j].label] = r?.value ? { ...r.value, correct: r.verdict === 'correct' && !r.ft } : r ? { correct: r.verdict === 'correct' } : undefined;
+      }
+      return out;
+    },
+    [inst.parts],
+  );
+
+  const check = (i: number) => {
+    const part = inst.parts[i];
+    if (part.answer.type === 'self') {
+      setPart(i, { revealed: true, showScheme: true, result: markPart(part, undefined) });
+      return;
+    }
+    const r = markPart(part, parts[i].response, prevValues(i, parts));
+    if (r.verdict === 'invalid' || r.verdict === 'unanswered') {
+      setPart(i, { result: r });
+      return;
+    }
+    setPart(i, { result: r, showScheme: r.score < r.max });
+  };
+
+  const allDone = parts.every((p, i) => {
+    const r = p.result;
+    if (!r) return false;
+    if (inst.parts[i].answer.type === 'self') return p.revealed;
+    return r.verdict !== 'invalid';
+  });
+
+  const buildAttempt = useCallback(
+    (ps: PartState[], gu: boolean): Attempt => ({
+      templateId: inst.templateId,
+      seed: inst.seed,
+      family: meta.family,
+      spec: meta.spec,
+      chapter: meta.chapter,
+      difficulty: meta.difficulty,
+      mode,
+      setId,
+      startedAt: startedAt.current,
+      finishedAt: Date.now(),
+      durationMs: Math.round(activeTime()),
+      marks: total,
+      parts: ps.map((p, i) => partAttemptFrom(inst.parts[i].label, p.result, p.response ?? null, p.ticks, inst.parts[i].scheme, p.hints)),
+      gaveUp: gu,
+      working,
+    }),
+    [inst, meta, mode, setId, total, working, activeTime],
+  );
+
+  // save once all parts are marked
+  const saving = useRef(false);
+  useEffect(() => {
+    if (!allDone || attemptId !== null || saving.current) return;
+    saving.current = true;
+    const a = buildAttempt(parts, gaveUp);
+    recordAttempt(a, meta.time).then(async (id) => {
+      setAttemptId(id);
+      const store = await getStore();
+      await store.deleteDraft(key);
+      onFinished?.({ ...a, id });
+    });
+  }, [allDone, attemptId, buildAttempt, parts, gaveUp, key, meta.time, onFinished]);
+
+  // keep self-marks and working in sync after saving
+  useEffect(() => {
+    if (attemptId === null) return;
+    const t = setTimeout(() => {
+      void updateAttempt({ ...buildAttempt(parts, gaveUp), id: attemptId });
+    }, 500);
+    return () => clearTimeout(t);
+  }, [parts, working, attemptId, buildAttempt, gaveUp]);
+
+  const giveUp = () => {
+    setGaveUp(true);
+    setParts((ps) =>
+      ps.map((p, i) => {
+        if (p.result && p.result.verdict !== 'invalid') return { ...p, showSolution: true, revealed: true };
+        const r: MarkResult = { verdict: 'unanswered', score: 0, max: inst.parts[i].marks, messages: ['You gave up on this part.'], selfMarkable: true };
+        return { ...p, result: r, showSolution: true, showScheme: true, revealed: true };
+      }),
+    );
+  };
+
+  const share = async () => {
+    const url = shareUrl(`/q/${inst.templateId}/${inst.seed}`);
+    try {
+      if (navigator.share) await navigator.share({ title: meta.title, url });
+      else {
+        await navigator.clipboard.writeText(url);
+        setToast('Link copied');
+        setTimeout(() => setToast(null), 2000);
+      }
+    } catch {
+      /* cancelled */
+    }
+  };
+
+  const autoScore = parts.reduce((s, p) => s + (p.result?.score ?? 0), 0);
+  const selfTotal = parts.reduce((s, p, i) => s + Math.max(p.result?.score ?? 0, selfScore(inst.parts[i].scheme, p.ticks)), 0);
+
+  const singleLabel = inst.parts.length === 1 && inst.parts[0].label === '';
+
+  const workingCol = settings.showWorking ? (
+    <div className="working-col">
+      <WorkingArea working={working} onChange={setWorking} exportName={`working-${inst.templateId}-${inst.seed}`} />
+    </div>
+  ) : null;
+
+  return (
+    <div className={`q-wrap year-${year}`}>
+      <div className="q-meta">
+        {chapter && <span className="chip chip-accent">{`${chapter.book === 'P1' || chapter.book === 'P2' ? 'Pure' : chapter.stream} Y${chapter.year} · Ch ${chapter.n} ${chapter.title}`}</span>}
+        <span className="chip">{meta.spec.join(', ')}</span>
+        <span className="chip" title={`Difficulty ${meta.difficulty} of 5`}>
+          <Difficulty d={meta.difficulty} /> <span className="sr-only">Difficulty {meta.difficulty} of 5</span>
+        </span>
+        <span className="chip">{total} marks</span>
+        <span className="chip">~{meta.time} min</span>
+        <span className="spacer" />
+        <button className="btn btn-small btn-ghost" onClick={() => setAnnotating((a) => !a)} aria-pressed={annotating} title="Write on the question">
+          <Icon name="annotate" /> {annotating ? 'Stop annotating' : 'Annotate'}
+        </button>
+        <button className="btn btn-small btn-ghost" onClick={share} title="Share this question">
+          <Icon name="share" /> Share
+        </button>
+      </div>
+      <div className={`q-layout ${workingCol ? 'with-working' : ''}`}>
+        <div className="q-col">
+          <article className="paper" ref={paperRef} aria-label={`Question ${number}`}>
+            {annotating && (
+              <div className={`annotate-layer ${settings.pencilOnly ? 'pencil-only' : ''}`}>
+                <Suspense fallback={null}>
+                  <DrawingCanvas
+                    strokes={working.annotate}
+                    onChange={(annotate) => setWorking((w) => ({ ...w, annotate }))}
+                    tool="pen"
+                    color="#c62828"
+                    size={3}
+                    paper="plain"
+                    transparent
+                    fixedHeight
+                    pencilOnly={settings.pencilOnly}
+                    height={paperH}
+                    label="Annotation layer over the question"
+                  />
+                </Suspense>
+              </div>
+            )}
+            {!annotating && working.annotate.length > 0 && (
+              <div className="annotate-layer" style={{ pointerEvents: 'none' }} aria-hidden="true">
+                <Suspense fallback={null}>
+                  <DrawingCanvas strokes={working.annotate} onChange={() => {}} tool="pen" color="#c62828" size={3} paper="plain" transparent fixedHeight pencilOnly={false} height={paperH} label="" />
+                </Suspense>
+              </div>
+            )}
+            <div className="stem">
+              <span className="q-num">{number}.</span>
+              {inst.stem ? <MathText src={inst.stem} inline /> : null}
+            </div>
+            {inst.diagram && (
+              <figure className="diagram">
+                <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: inst.diagram.svg }} />
+                <figcaption>Figure {number}</figcaption>
+              </figure>
+            )}
+            {inst.parts.map((p, i) => {
+              const st = parts[i];
+              const r = st.result;
+              const marked = !!r && r.verdict !== 'invalid' && r.verdict !== 'unanswered';
+              const locked = marked || gaveUp || done;
+              const awardable = selfAwardable(p.scheme);
+              const showSelf = r && r.score < r.max && (r.selfMarkable || p.answer.type === 'self' || r.verdict === 'unanswered');
+              return (
+                <section className="q-part" key={p.label || i} aria-label={p.label ? `Part ${p.label}` : 'Question'}>
+                  <div className="q-part-head">
+                    {!singleLabel && <span className="q-part-label">({p.label})</span>}
+                    <MathText className="q-part-prompt" src={p.prompt} />
+                    <span className="q-marks" aria-label={`${p.marks} marks`}>
+                      ({p.marks})
+                    </span>
+                  </div>
+                  {p.answer.type !== 'self' ? (
+                    <div className={`answer ${!locked ? 'sticky' : ''}`}>
+                      <div className="answer-row">
+                        <AnswerInput spec={p.answer} value={st.response} onChange={(response) => setPart(i, { response, result: st.result?.verdict === 'invalid' || st.result?.verdict === 'unanswered' ? undefined : st.result })} onSubmit={() => !locked && check(i)} disabled={locked} partLabel={p.label} />
+                        {!locked && (
+                          <button className="btn btn-primary" onClick={() => check(i)} disabled={!hasResponse(st.response)}>
+                            Check
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    !st.revealed && (
+                      <div className="part-actions">
+                        <button className="btn btn-primary" onClick={() => check(i)}>
+                          I've written my answer — show the model answer
+                        </button>
+                      </div>
+                    )
+                  )}
+                  {r && (
+                    <div className={`feedback ${r.verdict}`} role="status" aria-live="polite">
+                      <div className="feedback-head">
+                        <Icon name={r.verdict === 'correct' ? 'check' : r.verdict === 'partial' || r.verdict === 'self' ? 'info' : 'x'} />
+                        <span>{verdictText[r.verdict]}</span>
+                        {marked || r.verdict === 'self' || r.verdict === 'unanswered' ? (
+                          <span className="score-pill">
+                            {' '}
+                            · {r.score}/{r.max}
+                            {selfScore(p.scheme, st.ticks) > r.score ? ` (self-marked ${selfScore(p.scheme, st.ticks)}/${r.max})` : ''}
+                          </span>
+                        ) : null}
+                        {r.ft && <span className="chip">ft</span>}
+                      </div>
+                      {r.messages.length > 0 && (
+                        <ul>
+                          {r.messages.map((m, k) => (
+                            <li key={k}>
+                              <MathText src={m} inline />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+                  {p.answer.type === 'self' && st.revealed && (
+                    <div className="panel">
+                      <div className="panel-title">Model answer</div>
+                      <div className="panel-body">
+                        <MathText src={p.answer.model} />
+                      </div>
+                    </div>
+                  )}
+                  <div className="part-actions">
+                    {!locked && st.hints < 3 && (
+                      <button className="btn btn-small" onClick={() => setPart(i, { hints: st.hints + 1 })}>
+                        <Icon name="bulb" /> {st.hints === 0 ? 'Hint' : `Next hint (${st.hints + 1}/3)`}
+                      </button>
+                    )}
+                    {(r || gaveUp) && (
+                      <button className="btn btn-small" onClick={() => setPart(i, { showScheme: !st.showScheme })} aria-expanded={st.showScheme}>
+                        <Icon name="scheme" /> Mark scheme
+                      </button>
+                    )}
+                    {(marked || gaveUp || r?.verdict === 'self') && (
+                      <button className="btn btn-small" onClick={() => setPart(i, { showSolution: !st.showSolution })} aria-expanded={st.showSolution}>
+                        <Icon name="book" /> {st.showSolution ? 'Hide' : 'Show'} worked solution
+                      </button>
+                    )}
+                  </div>
+                  {st.hints > 0 && (
+                    <div aria-live="polite">
+                      {p.hints.slice(0, st.hints).map((h, k) => (
+                        <div className="hint" key={k}>
+                          <strong>{['Nudge', 'Method', 'First step'][k]}: </strong>
+                          <MathText src={h} inline />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {st.showScheme && (
+                    <div className="panel">
+                      <div className="panel-title">
+                        Mark scheme{showSelf ? ' — tick the marks your working shows' : ''}
+                      </div>
+                      <div className="panel-body">
+                        {p.scheme.map((l, k) => {
+                          const can = showSelf && awardable[k];
+                          return (
+                            <div className="scheme-line" key={k}>
+                              {showSelf ? (
+                                <input
+                                  type="checkbox"
+                                  aria-label={`Award ${l.code}`}
+                                  disabled={!can}
+                                  checked={st.ticks[k] && can}
+                                  onChange={(e) => {
+                                    const t = [...st.ticks];
+                                    t[k] = e.target.checked;
+                                    setPart(i, { ticks: t });
+                                  }}
+                                />
+                              ) : (
+                                <span />
+                              )}
+                              <span className="scheme-code">{l.code}</span>
+                              <MathText src={l.text} inline />
+                            </div>
+                          );
+                        })}
+                        {showSelf && (
+                          <p className="small muted" style={{ marginTop: 8 }}>
+                            Self-awarded: {selfScore(p.scheme, st.ticks)} of {p.scheme.filter((_, k) => awardable[k]).reduce((s, l) => s + codeMarks(l.code), 0)} available method marks. The final accuracy mark needs a correct answer.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {st.showSolution && (
+                    <div className="panel">
+                      <div className="panel-title">Worked solution</div>
+                      <div className="panel-body">
+                        {p.solution.map((s, k) => (
+                          <MathText className="solution-step" key={k} src={s} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+          </article>
+          <div className="q-footer">
+            {!allDone && !gaveUp && (
+              <button className="btn" onClick={giveUp}>
+                Give up &amp; show solutions
+              </button>
+            )}
+            {allDone && (
+              <span className="score-pill" aria-live="polite">
+                Total: {autoScore}/{total}
+                {selfTotal > autoScore ? ` · with self-marking ${selfTotal}/${total}` : ''}
+              </span>
+            )}
+            <span className="spacer" />
+            {onNext && (
+              <button className={`btn ${allDone ? 'btn-primary' : ''}`} onClick={onNext}>
+                {allDone ? nextLabel : 'Skip'} <Icon name="next" />
+              </button>
+            )}
+          </div>
+        </div>
+        {workingCol}
+      </div>
+      {toast && (
+        <div className="toast" role="status">
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function useInstanceKey(inst: Instance | null): string {
+  return useMemo(() => (inst ? `${inst.templateId}:${inst.seed}` : ''), [inst]);
+}
