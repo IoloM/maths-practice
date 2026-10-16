@@ -134,8 +134,6 @@ const triangleArea = defineTemplate({
       py = r.int(2, 8);
     const m1 = r.pick([1, 2, 3, Q.of(1, 2).value, Q.of(3, 2).value]),
       m2 = -r.pick([1, 2, 3, Q.of(1, 2).value, 4]);
-    const l1 = (x: number) => py + m1 * (x - px),
-      l2 = (x: number) => py + m2 * (x - px);
     const A = px - py / m1,
       B = px - py / m2;
     const base = Math.abs(B - A);

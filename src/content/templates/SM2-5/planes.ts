@@ -8,7 +8,6 @@ import type { Template } from '../../../engine/templates/types';
 import { G, U, deg, forceDiagram, pickAngle, planeDiagram, polar, rad, vAdd, vLen, vScale, type Angle, type V2 } from '../shared/mech';
 
 const NG = (v: number, unit?: string) => ans.num(v, ACC_G, unit ? { unit } : {});
-const g3 = (v: number) => fmtSF(v, 3);
 const up = (a: Angle): V2 => [a.cos, a.sin];
 const nrm = (a: Angle): V2 => [-a.sin, a.cos];
 const angleText = (a: Angle, what = 'a fixed rough plane', sym = '\\alpha') => (a.exact ? md`${what} inclined at an angle $${sym}$ to the horizontal, where ${a.given}` : md`${what} inclined at $${a.tex}$ to the horizontal`);

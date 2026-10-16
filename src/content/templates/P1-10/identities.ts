@@ -1,13 +1,13 @@
 /** Pure Year 1, Chapter 10 — exact values, identities and trigonometric equations (degrees). */
 import { evaluate } from '../../../engine/core/expr';
-import { expect, expectClose } from '../../../engine/core/numeric';
+import { expectClose } from '../../../engine/core/numeric';
 import { fmtNum, fmtSF } from '../../../engine/core/format';
 import { answerTex } from '../../../engine/marking/mark';
 import type { ExactSpec, ListSpec, NumericSpec } from '../../../engine/marking/types';
 import { A1, B1, M1, dM1, ans, defineTemplate, err, md, part } from '../../../engine/templates/helpers';
 import type { Template } from '../../../engine/templates/types';
 import { ex, sumTex } from '../shared/calculus';
-import { solveTrigDeg, type TrigF } from '../shared/trig';
+import { solveTrigDeg } from '../shared/trig';
 
 const rad = (d: number) => (d * Math.PI) / 180;
 
@@ -51,7 +51,7 @@ const exactValues = defineTemplate({
     const val = `${exactTrig(f1, d1)} ${k < 0 ? '-' : '+'} ${Math.abs(k) === 1 ? '' : Math.abs(k)}\\left(${exactTrig(f2, d2)}\\right)`;
     const A = ans.exact(ex(val), ['exact']);
     return {
-      parts: [part({ marks: 3, prompt: md`Find the exact value of $${tex}$.`, answer: A, scheme: [B1(md`$\${f1} ${d1}^{\circ} = ${exactTrig(f1, d1)}$`), B1(md`$\${f2} ${d2}^{\circ} = ${exactTrig(f2, d2)}$`), A1(md`$${answerTex(A)}$`)], hints: ['Find the related acute angle for each and decide the sign from the quadrant (CAST).', md`$${d1}^{\circ}$ is in quadrant $${Math.floor(d1 / 90) + 1}$; $${d2}^{\circ}$ is in quadrant $${Math.floor(d2 / 90) + 1}$.`, 'Use the exact values for 30°, 45° and 60°.'], errors: [err('decimal', ans.num(evaluate(ex(val)), { sf: 3 }), 'Give the exact value using surds.', 2)], solution: [md`$\${f1} ${d1}^{\circ} = ${exactTrig(f1, d1)}$, $\${f2} ${d2}^{\circ} = ${exactTrig(f2, d2)}$`, md`$${tex} = ${answerTex(A)}$`] })],
+      parts: [part({ marks: 3, prompt: md`Find the exact value of $${tex}$.`, answer: A, scheme: [B1(md`$${'\\' + f1} ${d1}^{\circ} = ${exactTrig(f1, d1)}$`), B1(md`$${'\\' + f2} ${d2}^{\circ} = ${exactTrig(f2, d2)}$`), A1(md`$${answerTex(A)}$`)], hints: ['Find the related acute angle for each and decide the sign from the quadrant (CAST).', md`$${d1}^{\circ}$ is in quadrant $${Math.floor(d1 / 90) + 1}$; $${d2}^{\circ}$ is in quadrant $${Math.floor(d2 / 90) + 1}$.`, 'Use the exact values for 30°, 45° and 60°.'], errors: [err('decimal', ans.num(evaluate(ex(val)), { sf: 3 }), 'Give the exact value using surds.', 2)], solution: [md`$${'\\' + f1} ${d1}^{\circ} = ${exactTrig(f1, d1)}$, $${'\\' + f2} ${d2}^{\circ} = ${exactTrig(f2, d2)}$`, md`$${tex} = ${answerTex(A)}$`] })],
       params: { d1, d2, f1, f2, k },
     };
   },
@@ -163,9 +163,9 @@ const pythag = defineTemplate({
     const range = quadrant === 2 ? '90^{\\circ} < \\theta < 180^{\\circ}' : '270^{\\circ} < \\theta < 360^{\\circ}';
     const otherF = given === 'sin' ? 'cos' : 'sin';
     return {
-      stem: md`Given that $\${given} \theta = \frac{${p}}{${q}}$ and $${range}$,`,
+      stem: md`Given that $${'\\' + given} \theta = \frac{${p}}{${q}}$ and $${range}$,`,
       parts: [
-        part({ label: 'a', marks: 2, prompt: md`find the exact value of $\${otherF} \theta$.`, answer: O, scheme: [M1(md`$\${otherF}^{2}\theta = 1 - \frac{${p * p}}{${q * q}}$`), A1(md`$${otherVal}$ (negative in this quadrant)`)], hints: ['Use sin²θ + cos²θ = 1.', md`$\${otherF}^{2}\theta = 1 - \left(\frac{${p}}{${q}}\right)^{2} = \frac{${q * q - p * p}}{${q * q}}$`, `Decide the sign from the quadrant (CAST).`], errors: [err('positive', ans.exact(ex(otherTex)), md`In this quadrant $\${otherF}\theta$ is negative.`, 1)], solution: [md`$\${otherF}^{2}\theta = \frac{${q * q - p * p}}{${q * q}}$; in this quadrant $\${otherF}\theta < 0$, so $\${otherF}\theta = ${answerTex(O)}$`] }),
+        part({ label: 'a', marks: 2, prompt: md`find the exact value of $${'\\' + otherF} \theta$.`, answer: O, scheme: [M1(md`$${'\\' + otherF}^{2}\theta = 1 - \frac{${p * p}}{${q * q}}$`), A1(md`$${otherVal}$ (negative in this quadrant)`)], hints: ['Use sin²θ + cos²θ = 1.', md`$${'\\' + otherF}^{2}\theta = 1 - \left(\frac{${p}}{${q}}\right)^{2} = \frac{${q * q - p * p}}{${q * q}}$`, `Decide the sign from the quadrant (CAST).`], errors: [err('positive', ans.exact(ex(otherTex)), md`In this quadrant $${'\\' + otherF}\theta$ is negative.`, 1)], solution: [md`$${'\\' + otherF}^{2}\theta = \frac{${q * q - p * p}}{${q * q}}$; in this quadrant $${'\\' + otherF}\theta < 0$, so $${'\\' + otherF}\theta = ${answerTex(O)}$`] }),
         part({ label: 'b', marks: 2, prompt: md`find the exact value of $\tan\theta$.`, answer: T, scheme: [M1(md`$\tan\theta = \frac{\sin\theta}{\cos\theta}$`), A1(md`$${answerTex(T)}$`)], hints: ['tan θ = sin θ ÷ cos θ.', 'Use your answer to part (a).', 'tan is negative in this quadrant.'], solution: [md`$\tan\theta = \dfrac{\sin\theta}{\cos\theta} = ${answerTex(T)}$`] }),
       ],
       params: { p, q, given, quadrant },
@@ -237,10 +237,10 @@ const quadraticCos = defineTemplate({
           marks: 6,
           prompt: md`Give your answers to 3 significant figures where appropriate.`,
           answer: L,
-          scheme: [M1(md`Uses $\${g}^{2} x = 1 - \${f}^{2} x$`), A1(md`$${qTex}$`), M1(md`Solves the quadratic in $\${f} x$`), A1(md`$\${f} x = ${fmtNum(Math.round(c1 * 1e4) / 1e4)}$${Math.abs(c2) <= 1 ? md`, $${fmtNum(c2)}$` : md` (reject $${fmtNum(c2)}$)`}`), dM1('Finds angles in the range'), A1(md`$${answerTex(L)}$`)],
-          hints: [md`Replace $\${g}^{2} x$ with $1 - \${f}^{2} x$ so everything is in terms of $\${f} x$.`, md`You get the quadratic $${qTex}$.`, md`Factorise; reject any solution with $|\${f} x| > 1$.`],
+          scheme: [M1(md`Uses $${'\\' + g}^{2} x = 1 - ${'\\' + f}^{2} x$`), A1(md`$${qTex}$`), M1(md`Solves the quadratic in $${'\\' + f} x$`), A1(md`$${'\\' + f} x = ${fmtNum(Math.round(c1 * 1e4) / 1e4)}$${Math.abs(c2) <= 1 ? md`, $${fmtNum(c2)}$` : md` (reject $${fmtNum(c2)}$)`}`), dM1('Finds angles in the range'), A1(md`$${answerTex(L)}$`)],
+          hints: [md`Replace $${'\\' + g}^{2} x$ with $1 - ${'\\' + f}^{2} x$ so everything is in terms of $${'\\' + f} x$.`, md`You get the quadratic $${qTex}$.`, md`Factorise; reject any solution with $|${'\\' + f} x| > 1$.`],
           errors: [err('not-rejected', DEG(xs.slice(0, 1)), 'Some solutions are missing — find every angle in the interval for each valid value.', 3)],
-          solution: [md`$${A}(1 - \${f}^{2} x) ${sumTex([[-B, `\\${f} x`]]).startsWith('-') ? '' : '+'} ${sumTex([[-B, `\\${f} x`], [-(A + C), '']])} = 0 \Rightarrow ${qTex}$`, md`$\${f} x = ${fmtNum(Math.round(c1 * 1e4) / 1e4)}$${Math.abs(c2) <= 1 ? ` or $${fmtNum(c2)}$` : ` (or $${fmtNum(c2)}$, which has no solutions)`}`, md`$${answerTex(L)}$`],
+          solution: [md`$${A}(1 - ${'\\' + f}^{2} x) ${sumTex([[-B, `\\${f} x`]]).startsWith('-') ? '' : '+'} ${sumTex([[-B, `\\${f} x`], [-(A + C), '']])} = 0 \Rightarrow ${qTex}$`, md`$${'\\' + f} x = ${fmtNum(Math.round(c1 * 1e4) / 1e4)}$${Math.abs(c2) <= 1 ? ` or $${fmtNum(c2)}$` : ` (or $${fmtNum(c2)}$, which has no solutions)`}`, md`$${answerTex(L)}$`],
         }),
       ],
       params: { A, B, C, f, g },
@@ -278,12 +278,12 @@ const shifted = defineTemplate({
       parts: [
         part({
           marks: 4,
-          prompt: md`Solve, for $0^{\circ} \leqslant x < 360^{\circ}$, $\${f}(x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}) = ${k}$, giving your answers to 3 significant figures.`,
+          prompt: md`Solve, for $0^{\circ} \leqslant x < 360^{\circ}$, $${'\\' + f}(x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}) = ${k}$, giving your answers to 3 significant figures.`,
           answer: L,
           scheme: [M1(md`Finds a principal value of $x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}$`), A1('One correct value of x'), M1('Uses symmetry to find a second value in range'), A1(md`$${answerTex(L)}$`)],
-          hints: [md`Let $\theta = x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}$. Find the range for $\theta$ first: $${alpha}^{\circ} \leqslant \theta < ${360 + alpha}^{\circ}$.`, md`Solve $\${f}\theta = ${k}$ in that range.`, md`Then $x = \theta ${alpha < 0 ? '+' : '-'} ${Math.abs(alpha)}^{\circ}$.`],
+          hints: [md`Let $\theta = x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}$. Find the range for $\theta$ first: $${alpha}^{\circ} \leqslant \theta < ${360 + alpha}^{\circ}$.`, md`Solve $${'\\' + f}\theta = ${k}$ in that range.`, md`Then $x = \theta ${alpha < 0 ? '+' : '-'} ${Math.abs(alpha)}^{\circ}$.`],
           errors: [err('wrong-shift', DEG(solveTrigDeg(f, k, 1, -alpha)), md`$x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)} = \theta$ means $x = \theta ${alpha < 0 ? '+' : '-'} ${Math.abs(alpha)}$ — check the direction.`, 1)],
-          solution: [md`$\theta = x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}$, so $\${f}\theta = ${k}$ for $${alpha}^{\circ} \leqslant \theta < ${360 + alpha}^{\circ}$`, md`$${answerTex(L)}$`],
+          solution: [md`$\theta = x ${alpha < 0 ? '-' : '+'} ${Math.abs(alpha)}^{\circ}$, so $${'\\' + f}\theta = ${k}$ for $${alpha}^{\circ} \leqslant \theta < ${360 + alpha}^{\circ}$`, md`$${answerTex(L)}$`],
         }),
       ],
       params: { f, alpha, k },
@@ -324,12 +324,12 @@ const multiple = defineTemplate({
       parts: [
         part({
           marks: 4,
-          prompt: md`Solve, for $${lo}^{\circ} \leqslant x < ${hi}^{\circ}$, the equation $\${f} ${b}x = ${kTex}$, giving your answers to 3 significant figures where appropriate.`,
+          prompt: md`Solve, for $${lo}^{\circ} \leqslant x < ${hi}^{\circ}$, the equation $${'\\' + f} ${b}x = ${kTex}$, giving your answers to 3 significant figures where appropriate.`,
           answer: L,
           scheme: [M1(md`Solves for $${b}x$ first`), M1(md`Considers the extended range $${b * lo}^{\circ} \leqslant ${b}x < ${b * hi}^{\circ}$`), A1('Half of the solutions'), A1(md`$${answerTex(L)}$`)],
-          hints: [md`Let $\theta = ${b}x$. The range becomes $${b * lo}^{\circ} \leqslant \theta < ${b * hi}^{\circ}$.`, md`Find all $\theta$ in that range with $\${f}\theta = ${kTex}$.`, md`Divide each by $${b}$.`],
+          hints: [md`Let $\theta = ${b}x$. The range becomes $${b * lo}^{\circ} \leqslant \theta < ${b * hi}^{\circ}$.`, md`Find all $\theta$ in that range with $${'\\' + f}\theta = ${kTex}$.`, md`Divide each by $${b}$.`],
           errors: [err('range-not-extended', DEG(solveTrigDeg(f, k, 1, 0, lo, hi).map((t) => t / b)), md`You need all values of $${b}x$ up to $${b * hi}^{\circ}$, not just up to $${hi}^{\circ}$.`, 2)],
-          solution: [md`$\theta = ${b}x$, $${b * lo}^{\circ} \leqslant \theta < ${b * hi}^{\circ}$; solving $\${f}\theta = ${kTex}$ and dividing by $${b}$:`, md`$${answerTex(L)}$`],
+          solution: [md`$\theta = ${b}x$, $${b * lo}^{\circ} \leqslant \theta < ${b * hi}^{\circ}$; solving $${'\\' + f}\theta = ${kTex}$ and dividing by $${b}$:`, md`$${answerTex(L)}$`],
         }),
       ],
       params: { f, b, k, lo, hi },

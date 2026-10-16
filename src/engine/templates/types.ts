@@ -35,7 +35,10 @@ export type CommandWord =
   | 'Factorise'
   | 'Give a reason'
   | 'Suggest'
-  | 'Describe';
+  | 'Describe'
+  | 'Write'
+  | 'Divide'
+  | 'Compare';
 
 export interface TemplateMeta {
   id: string;

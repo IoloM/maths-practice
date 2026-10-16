@@ -32,7 +32,7 @@ function makeHist(r: Rng) {
   const widths = r.shuffle(c.widths).slice(0, r.int(4, 5));
   const bounds = widths.reduce<number[]>((acc, w) => [...acc, acc[acc.length - 1] + w], [s]);
   // frequencies that give tidy frequency densities
-  const fd = widths.map((w) => {
+  const fd = widths.map(() => {
     const target = r.pick([0.4, 0.5, 0.8, 1, 1.2, 1.5, 1.6, 2, 2.4, 2.5, 3, 3.2, 3.5, 4, 4.5, 5, 6]);
     return target * (10 / Math.max(...c.widths)) * (r.int(1, 4));
   });

@@ -87,6 +87,8 @@ export function validateInstance(t: Template, inst: Instance, opts: { katex?: bo
   if (bad) p(`non-finite number in answer: ${bad}`);
   for (const s of texts) {
     if (/\bNaN\b|\bInfinity\b|undefined|\[object Object\]/.test(s)) p(`text contains NaN/Infinity/undefined: ${s.slice(0, 80)}`);
+    if (s.includes('${')) p(`text contains an uninterpolated \${…}: ${s.slice(0, 80)}`);
+    if (/\\\\(?:sin|cos|tan|sec|cosec|cot|ln|log|frac|sqrt|theta|mathbf)\b/.test(s)) p(`text contains a double backslash before a command: ${s.slice(0, 80)}`);
     if (checkKatex)
       for (const seg of mathSegments(s)) {
         const ke = katexError(seg);

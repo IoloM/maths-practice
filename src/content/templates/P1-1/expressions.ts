@@ -240,7 +240,7 @@ const simplifySurds = defineTemplate({
           answer: A,
           scheme: [M1(md`Writes each surd as a multiple of $\sqrt{${c}}$`), A1(md`$${answerTex(A)}$`)],
           hints: [md`Look for square factors: each number is a square times $${c}$.`, md`$\sqrt{ab} = \sqrt{a}\sqrt{b}$`, md`$\sqrt{${parts[0]}} = ${ks[0]}\sqrt{${c}}$`],
-          solution: [md`$${parts.map((p, i) => `${i === 0 ? '' : signs[i] < 0 ? ' - ' : ' + '}${ks[i] === 1 ? '' : ks[i]}\\sqrt{${c}}`).join('')} = ${answerTex(A)}$`],
+          solution: [md`$${parts.map((_p, i) => `${i === 0 ? '' : signs[i] < 0 ? ' - ' : ' + '}${ks[i] === 1 ? '' : ks[i]}\\sqrt{${c}}`).join('')} = ${answerTex(A)}$`],
         }),
       ],
       params: { parts, signs },

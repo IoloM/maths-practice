@@ -173,8 +173,7 @@ const percentError = defineTemplate({
     const k = r.pick([1, 2, 3]);
     const n = r.pick([3, 4, 5]);
     const h = r.pick([0.5, 1]);
-    const a = 0,
-      b = n * h;
+    const b = n * h;
     const A0 = r.pick([1, 2, 3]),
       c0 = r.int(0, 5);
     const f = (x: number) => A0 * Math.exp(k * x) + c0;

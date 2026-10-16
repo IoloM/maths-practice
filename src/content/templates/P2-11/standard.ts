@@ -60,7 +60,7 @@ const standard = defineTemplate({
           marks: 4,
           prompt: md`Given that $x > 0$, find $\displaystyle\int \left(${fTex}\right)${dx}$.`,
           answer: A,
-          scheme: [M1(md`$${ekx(k)} \to \frac{1}{${k}}${ekx(k)}$`), B1(md`$\frac{${b}}{x} \to ${b}\ln x$`), M1(md`$\${trigF} ${m === 1 ? '' : m}x \to ${trigF === 'sin' ? '-' : ''}\frac{1}{${m}}\\${trigF === 'sin' ? 'cos' : 'sin'} ${m === 1 ? '' : m}x$`), A1(md`$${answerTex(A)}$`)],
+          scheme: [M1(md`$${ekx(k)} \to \frac{1}{${k}}${ekx(k)}$`), B1(md`$\frac{${b}}{x} \to ${b}\ln x$`), M1(md`$${'\\' + trigF} ${m === 1 ? '' : m}x \to ${trigF === 'sin' ? '-' : ''}\frac{1}{${m}}${trigF === 'sin' ? '\\cos' : '\\sin'} ${m === 1 ? '' : m}x$`), A1(md`$${answerTex(A)}$`)],
           hints: [
             'Integrate each term using the standard results.',
             md`$\int e^{kx}\,\mathrm{d}x = \frac{1}{k}e^{kx}$, $\int \frac{1}{x}\,\mathrm{d}x = \ln|x|$, $\int \sin kx\,\mathrm{d}x = -\frac{1}{k}\cos kx$, $\int \cos kx\,\mathrm{d}x = \frac{1}{k}\sin kx$.`,

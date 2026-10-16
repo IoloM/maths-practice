@@ -338,7 +338,7 @@ const construct = defineTemplate({
           scheme: [M1(md`$${r1} = k${P.tex(String(q1))}$`), A1(md`$k = ${fmtSF(k, 4)}$`), A1(md`Rate $= ${answerTex(R2)}$`)],
           hints: ['Use the first piece of information to find k.', md`$${r1} = k \\times ${fmtSF(P.f(q1), 4)}$`, md`Then the rate is $k \\times ${fmtSF(P.f(q2), 4)}$.`],
           errors: [err('direct-instead', ans.num((r1 / q1) * q2, { sf: 3 }), 'Check the type of proportionality in the description.', 1)],
-          solution: [md`$k = \\frac{${r1}}{${fmtSF(P.f(q1), 5)}} = ${fmtSF(k, 5)}$`, md`Rate when $${v} = ${q2}$: $${fmtSF(k, 5)} \\times ${fmtSF(P.f(q2), 5)} = ${answerTex(R2)}$`],
+          solution: [md`$k = \frac{${r1}}{${fmtNum(Number(fmtSF(P.f(q1), 5)))}} = ${fmtNum(Number(fmtSF(k, 5)))}$`, md`Rate when $${v} = ${q2}$: $${fmtNum(Number(fmtSF(k, 5)))} \times ${fmtNum(Number(fmtSF(P.f(q2), 5)))} = ${answerTex(R2)}$`],
         }),
       ],
       params: { q1, q2, r1, which: PROPS.indexOf(P) },

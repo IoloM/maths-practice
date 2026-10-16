@@ -356,7 +356,7 @@ const lift = defineTemplate({
     };
   },
   verify(inst) {
-    const { M, m, a, up } = inst.params as { M: number; m: number; a: number; up: boolean };
+    const { M, a, up } = inst.params as { M: number; m: number; a: number; up: boolean };
     const T = (inst.parts[0].answer as NumericSpec).value,
       R = (inst.parts[1].answer as NumericSpec).value;
     // lift alone: T − Mg − R = M a  (Newton's third law: person pushes down on lift with R)
