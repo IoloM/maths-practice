@@ -3,6 +3,7 @@ import type { Template } from '../../engine/templates/types';
 
 export const loaders: Record<string, () => Promise<{ default: Template[] }>> = {
   'P1.13': () => import('./P1-13/index'),
+  'P2.11': () => import('./P2-11/index'),
   'SM1.2': () => import('./SM1-2/index'),
   'SM1.3': () => import('./SM1-3/index'),
   'SM1.4': () => import('./SM1-4/index'),

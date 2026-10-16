@@ -2,7 +2,7 @@
 import { Q } from '../../../engine/core/rational';
 import { Poly } from '../../../engine/core/poly';
 import { evaluate, tidy, toLatex } from '../../../engine/core/expr';
-import { derivative, expectClose } from '../../../engine/core/numeric';
+import { derivative, expectClose, integrate as integrateNum } from '../../../engine/core/numeric';
 import { parseExpr } from '../../../engine/marking/parse';
 import type { IntegralSpec } from '../../../engine/marking/types';
 import type { Instance } from '../../../engine/templates/types';
@@ -68,4 +68,47 @@ export function constantLast(p: Poly): import('../../../engine/core/expr').Expr 
 /** LaTeX of constantLast. */
 export function constantLastTex(p: Poly): string {
   return toLatex(tidy(constantLast(p)));
+}
+
+// ---------------------------------------------------------------- LaTeX builders for non-polynomial work
+/** Coefficient + body as a term: (2, 'x') → '2x', (-1, '\\sin x') → '-\\sin x', (1/3, 'e^{x}') → '\\frac{1}{3}e^{x}'. */
+export function coefBody(c: Q | number, body: string): string {
+  const q = Q.from(c);
+  if (!body) return q.toLatex();
+  if (q.eq(1)) return body;
+  if (q.eq(-1)) return `-${body}`;
+  return `${q.toLatex()}${body}`;
+}
+
+/** Sum of signed terms with clean "+ / −" joins. Zero terms are dropped. */
+export function sumTex(terms: [Q | number, string][]): string {
+  let s = '';
+  for (const [c, body] of terms) {
+    const q = Q.from(c);
+    if (q.isZero) continue;
+    const t = coefBody(q.abs(), body);
+    if (s === '') s = q.sign < 0 ? `-${t}` : t;
+    else s += q.sign < 0 ? ` - ${t}` : ` + ${t}`;
+  }
+  return s || '0';
+}
+
+/** "ax + b" as LaTeX. */
+export function linTex(a: number, b: number, v = 'x'): string {
+  return sumTex([
+    [a, v],
+    [b, ''],
+  ]);
+}
+
+/** Parse LaTeX into an Expr (for answers built from strings). */
+export function ex(tex: string) {
+  return parseExpr(tex);
+}
+
+/** Check a definite-integral value against numerical integration of an integrand given in LaTeX. */
+export function checkDefiniteTex(integrandTex: string, a: number, b: number, value: number, v = 'x'): void {
+  const f = parseExpr(integrandTex);
+  const I = integrateNum((x) => evaluate(f, { [v]: x }), a, b, 1e-12);
+  expectClose(I, value, 'definite integral (numerical)', 1e-7);
 }
