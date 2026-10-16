@@ -82,7 +82,7 @@ export async function ceNormalise(latex: string): Promise<string | null> {
   try {
     const { ComputeEngine } = await import('@cortex-js/compute-engine');
     const ce = new ComputeEngine();
-    const boxed = ce.parse(latex, { canonical: false });
+    const boxed = ce.parse(latex, { form: 'raw' });
     const e = mathJsonToExpr(boxed.json as MJ);
     return e ? toLatex(tidy(e)) : null;
   } catch {
