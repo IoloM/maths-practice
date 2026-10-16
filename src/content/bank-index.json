@@ -789,12 +789,2113 @@
     23,
     24
    ]
+  },
+  {
+   "id": "sm1.2.mean-sd-summary-statistics",
+   "family": "sm1.2.variance",
+   "title": "Mean and standard deviation from summary statistics",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Calculate"
+   ],
+   "tags": [
+    "standard deviation",
+    "variance",
+    "summary statistics"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.mean-sd-frequency-table",
+   "family": "sm1.2.variance",
+   "title": "Mean and standard deviation from a frequency table",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.1",
+    "2.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Calculate"
+   ],
+   "tags": [
+    "standard deviation",
+    "frequency table",
+    "discrete data"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.grouped-mean-sd",
+   "family": "sm1.2.grouped",
+   "title": "Estimating mean and standard deviation from grouped data",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.1",
+    "2.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Estimate"
+   ],
+   "tags": [
+    "grouped data",
+    "midpoints",
+    "standard deviation"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.coding",
+   "family": "sm1.2.coding",
+   "title": "Coding: mean and standard deviation of original data",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.5"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "coding",
+    "standard deviation",
+    "variance"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.combined-samples",
+   "family": "sm1.2.combined",
+   "title": "Combining two samples: mean and standard deviation",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "standard deviation",
+    "combined data",
+    "summary statistics"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.median-interpolation",
+   "family": "sm1.2.grouped",
+   "title": "Median and quartiles by linear interpolation",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Estimate"
+   ],
+   "tags": [
+    "median",
+    "interquartile range",
+    "interpolation",
+    "grouped data"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.2.add-a-value",
+   "family": "sm1.2.combined",
+   "title": "Effect of adding a value on the mean and standard deviation",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [
+    "2.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "standard deviation",
+    "summary statistics",
+    "problem solving"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.4.regression-interpret-predict",
+   "family": "sm1.4.regression",
+   "title": "Interpreting and using a regression line",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [
+    "4.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Interpret",
+    "Estimate",
+    "Comment"
+   ],
+   "tags": [
+    "regression",
+    "interpolation",
+    "extrapolation",
+    "context"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.4.describe-correlation",
+   "family": "sm1.4.correlation",
+   "title": "Describing correlation and causation",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [
+    "4.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 3,
+   "commands": [
+    "Describe",
+    "State"
+   ],
+   "tags": [
+    "correlation",
+    "causation",
+    "explanatory variable"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.4.regression-from-coded",
+   "family": "sm1.4.regression",
+   "title": "Using a regression line with changed units",
+   "spec": [
+    "S2.2",
+    "S2.3"
+   ],
+   "chapter": "SM1.4",
+   "sections": [
+    "4.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Estimate",
+    "Find"
+   ],
+   "tags": [
+    "regression",
+    "units",
+    "prediction"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-exact",
+   "family": "sm1.6.binomial-probabilities",
+   "title": "Binomial probability P(X = r)",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 2,
+   "time": 3,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "probability"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-cumulative",
+   "family": "sm1.6.binomial-cumulative",
+   "title": "Cumulative binomial probabilities: ⩽, <, ⩾, >",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "cumulative",
+    "inequalities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-between",
+   "family": "sm1.6.binomial-cumulative",
+   "title": "Binomial probability between two values",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "cumulative",
+    "inequalities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-model-context",
+   "family": "sm1.6.binomial-model",
+   "title": "Choose a binomial model and use it",
+   "spec": [
+    "S4.1",
+    "S4.3"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.2",
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Write down",
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "modelling",
+    "context"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-find-n",
+   "family": "sm1.6.binomial-model",
+   "title": "Smallest sample size for at least one success",
+   "spec": [
+    "S4.1",
+    "P6.5"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "logarithms",
+    "synoptic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-two-stage",
+   "family": "sm1.6.binomial-model",
+   "title": "Two-stage binomial probability",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "binomial",
+    "multi-step"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.discrete-distribution-k",
+   "family": "sm1.6.discrete",
+   "title": "Discrete probability distribution with an unknown constant",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that",
+    "Find"
+   ],
+   "tags": [
+    "discrete distribution",
+    "probability"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.6.binomial-conditions",
+   "family": "sm1.6.binomial-model",
+   "title": "Conditions for a binomial model",
+   "spec": [
+    "S4.3",
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "binomial",
+    "modelling",
+    "assumptions"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.binomial-test-upper",
+   "family": "sm1.7.binomial-test",
+   "title": "Binomial hypothesis test (one-tailed, increase)",
+   "spec": [
+    "S5.2",
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "binomial",
+    "one-tailed"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.binomial-test-lower",
+   "family": "sm1.7.binomial-test",
+   "title": "Binomial hypothesis test (one-tailed, decrease)",
+   "spec": [
+    "S5.2",
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "binomial",
+    "one-tailed"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.binomial-test-two-tailed",
+   "family": "sm1.7.binomial-test",
+   "title": "Binomial hypothesis test (two-tailed)",
+   "spec": [
+    "S5.2",
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "binomial",
+    "two-tailed"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.critical-region-one-tail",
+   "family": "sm1.7.critical-region",
+   "title": "Critical region for a one-tailed test",
+   "spec": [
+    "S5.1",
+    "S5.2"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.2",
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "State",
+    "Comment"
+   ],
+   "tags": [
+    "hypothesis test",
+    "critical region",
+    "binomial"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.critical-region-two-tail",
+   "family": "sm1.7.critical-region",
+   "title": "Critical region for a two-tailed test",
+   "spec": [
+    "S5.1",
+    "S5.2"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "hypothesis test",
+    "critical region",
+    "two-tailed",
+    "binomial"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.7.hypothesis-language",
+   "family": "sm1.7.language",
+   "title": "The language of hypothesis testing",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 4,
+   "commands": [
+    "State",
+    "Explain"
+   ],
+   "tags": [
+    "hypothesis test",
+    "language",
+    "significance level"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.1.pmcc-test-one-tail",
+   "family": "sm2.1.pmcc-test",
+   "title": "Hypothesis test for correlation (one-tailed)",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "correlation",
+    "PMCC"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.1.pmcc-test-two-tail",
+   "family": "sm2.1.pmcc-test",
+   "title": "Hypothesis test for correlation (two-tailed)",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "correlation",
+    "PMCC"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.1.exponential-model-log",
+   "family": "sm2.1.log-models",
+   "title": "Exponential model y = abᵗ from a log-linear regression line",
+   "spec": [
+    "S2.2",
+    "P6.6"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "regression",
+    "logarithms",
+    "exponential model",
+    "synoptic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.1.power-model-log",
+   "family": "sm2.1.log-models",
+   "title": "Power model y = axⁿ from a log–log regression line",
+   "spec": [
+    "S2.2",
+    "P6.6"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "regression",
+    "logarithms",
+    "power model"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.1.pmcc-calculate-interpret",
+   "family": "sm2.1.pmcc",
+   "title": "Calculate and interpret a PMCC",
+   "spec": [
+    "S2.2",
+    "S5.1"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.2"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Calculate",
+    "Interpret"
+   ],
+   "tags": [
+    "correlation",
+    "PMCC",
+    "calculator"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.normal-probabilities",
+   "family": "sm2.3.normal-probabilities",
+   "title": "Normal distribution probabilities",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.2"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "normal distribution",
+    "probability"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.inverse-normal",
+   "family": "sm2.3.inverse-normal",
+   "title": "Inverse normal: find a value from a probability",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "normal distribution",
+    "inverse normal"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.find-mu-sigma",
+   "family": "sm2.3.find-parameters",
+   "title": "Find μ and σ from two probabilities",
+   "spec": [
+    "S4.2",
+    "P2.4"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.5"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "normal distribution",
+    "simultaneous equations",
+    "synoptic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.find-sigma",
+   "family": "sm2.3.find-parameters",
+   "title": "Find σ given μ and a probability",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.4",
+    "3.5"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "normal distribution",
+    "standardising"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.binomial-normal-approximation",
+   "family": "sm2.3.approximation",
+   "title": "Normal approximation to the binomial",
+   "spec": [
+    "S4.2",
+    "S4.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.6"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "normal distribution",
+    "binomial",
+    "approximation",
+    "continuity correction"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.normal-properties",
+   "family": "sm2.3.normal-properties",
+   "title": "Properties of the normal curve: symmetry and inflection points",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 4,
+   "commands": [
+    "Write down",
+    "Find"
+   ],
+   "tags": [
+    "normal distribution",
+    "symmetry",
+    "points of inflection"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.normal-mean-test-one-tail",
+   "family": "sm2.3.normal-mean-test",
+   "title": "Hypothesis test for a normal mean (one-tailed)",
+   "spec": [
+    "S5.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "normal distribution",
+    "sample mean"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.normal-mean-test-two-tail",
+   "family": "sm2.3.normal-mean-test",
+   "title": "Hypothesis test for a normal mean (two-tailed)",
+   "spec": [
+    "S5.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Test"
+   ],
+   "tags": [
+    "hypothesis test",
+    "normal distribution",
+    "sample mean"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.normal-mean-critical-value",
+   "family": "sm2.3.normal-mean-test",
+   "title": "Critical value for the sample mean",
+   "spec": [
+    "S5.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "hypothesis test",
+    "normal distribution",
+    "critical region"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.3.choose-distribution",
+   "family": "sm2.3.choose-model",
+   "title": "Choosing a suitable distribution",
+   "spec": [
+    "S4.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.6"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "State",
+    "Give a reason"
+   ],
+   "tags": [
+    "modelling",
+    "distributions"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
   }
  ],
  "fixed": [],
  "totals": {
-  "templates": 14,
-  "questions": 336,
+  "templates": 53,
+  "questions": 1272,
   "fixed": 0
  }
 }

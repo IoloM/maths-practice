@@ -29,3 +29,24 @@ desktop Chrome, iPhone (WebKit), iPad landscape (WebKit) and Pixel (Chromium): a
 self-marking, drawing, offline, backup/restore.
 
 **Coverage**: 14 templates · 336 verified questions · spec points P8.1–P8.3 covered.
+
+## Phase 2 — Marking engine ✅ (16 Oct 2026)
+
+- Every answer type marks: numeric (awrt, s.f./d.p., 2–3 s.f. for g, tolerance, table-value
+  alternatives), exact (fractions, surds, π, e, ln; short decimals treated as exact), expressions
+  with form checks, integrals (+ c, additive constant only), equations (any rearrangement or a
+  required form), order-free lists (degrees vs radians), coordinates, vectors (i j k or column),
+  intervals and set notation (including integer critical regions), choice, structured hypothesis tests.
+- Common errors (auto-dropped when they coincide with the right answer for a seed), follow-through,
+  self-marking of method lines, a lazy Compute Engine fallback parser.
+- Suite: ~430 equivalent/non-equivalent answer pairs plus part-level tests (all green).
+
+## Phase 3 — Content waves (in progress)
+
+Wave A (priority topics) so far: binomial distribution (8), binomial hypothesis testing and
+critical regions (6), normal distribution incl. approximation and tests for a mean (10),
+correlation tests and log models (5), regression interpretation (3), measures of spread —
+variance, coding, combined samples, interpolation (7).
+
+**Still to do in Wave A:** Pure Year 2 integration, forces and motion, modelling assumptions
+(fixed questions), histograms, inclined planes. Then Waves B–E and fixed questions.
