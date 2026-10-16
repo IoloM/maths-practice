@@ -37,7 +37,7 @@ describe.each(ALL_TEMPLATES.map((t) => [t.id, t] as const))('%s', (_id, t) => {
       let problems: string[];
       try {
         const inst = generateInstance(t, seed);
-        seen.add(JSON.stringify(inst.parts.map((p) => p.prompt)) + (inst.stem ?? ''));
+        seen.add(JSON.stringify(inst.parts.map((p) => p.prompt)) + (inst.stem ?? '') + (inst.diagram?.svg ?? ''));
         problems = validateInstance(t, inst);
       } catch (e) {
         problems = [`generate threw: ${(e as Error).message}`];
