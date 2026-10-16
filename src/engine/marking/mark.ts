@@ -52,7 +52,12 @@ export function markPart(part: Part, response: Response | undefined, prev: Recor
     }
     case 'scored': {
       const s = Math.min(max, c.score ?? 0);
-      return base(s === max ? 'correct' : s > 0 ? 'partial' : 'incorrect', s, c, { selfMarkable: false });
+      const extra = commonErrorFor(part, response);
+      return base(s === max ? 'correct' : s > 0 ? 'partial' : 'incorrect', s, c, {
+        selfMarkable: false,
+        errorId: extra?.id,
+        messages: extra ? [extra.feedback, ...c.messages] : c.messages,
+      });
     }
     case 'invalid':
       return base('invalid', 0, c);
@@ -85,19 +90,30 @@ export function markPart(part: Part, response: Response | undefined, prev: Recor
     }
   }
   // common errors
+  const e = commonErrorFor(part, response);
+  if (e) {
+    const s = Math.min(max, e.marks ?? 0);
+    return base(s > 0 ? 'partial' : 'incorrect', s, c, { errorId: e.id, messages: [e.feedback] });
+  }
+  return base('incorrect', 0, { ...c, messages: c.messages.length ? c.messages : ['Not correct.'] });
+}
+
+/** First common error the response matches. For hypothesis tests a numeric error is checked against the statistic box. */
+function commonErrorFor(part: Part, response: Response | undefined) {
   for (const err of part.errors) {
+    let target = response;
+    if (part.answer.type === 'hypothesis' && err.spec.type === 'numeric') {
+      target = response && typeof response === 'object' && !Array.isArray(response) ? (response as Record<string, string>).stat : undefined;
+    }
     let m: Cmp;
     try {
-      m = compare(err.spec, response);
+      m = compare(err.spec, target);
     } catch {
       continue;
     }
-    if (m.status === 'correct' || m.status === 'accuracy') {
-      const s = Math.min(max, err.marks ?? 0);
-      return base(s > 0 ? 'partial' : 'incorrect', s, c, { errorId: err.id, messages: [err.feedback] });
-    }
+    if (m.status === 'correct' || m.status === 'accuracy') return err;
   }
-  return base('incorrect', 0, { ...c, messages: c.messages.length ? c.messages : ['Not correct.'] });
+  return undefined;
 }
 
 // ---------- presentation of answers ----------

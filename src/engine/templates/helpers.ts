@@ -24,6 +24,8 @@ import type {
   VectorSpec,
 } from '../marking/types';
 import type { FollowThrough, Part, Template } from './types';
+import { compare } from '../marking/compare';
+import { canonicalResponse } from '../marking/mark';
 
 /** Tagged template for LaTeX-heavy strings: backslashes are kept literally. */
 export const md = String.raw;
@@ -103,8 +105,20 @@ export interface PartInput {
   ft?: FollowThrough;
 }
 
+/**
+ * Build a part. Common errors whose wrong answer happens to coincide with the correct
+ * answer for this instance (e.g. p ↔ 1 − p when x = n/2) are dropped automatically.
+ */
 export function part(p: PartInput): Part {
-  return { label: p.label ?? '', errors: p.errors ?? [], ...p } as Part;
+  const errors = (p.errors ?? []).filter((e) => {
+    try {
+      const st = compare(p.answer, canonicalResponse(e.spec)).status;
+      return st !== 'correct' && st !== 'accuracy';
+    } catch {
+      return false;
+    }
+  });
+  return { ...p, label: p.label ?? '', errors } as Part;
 }
 
 // ---------- LaTeX snippets ----------
