@@ -5,7 +5,8 @@ import c1 from './SM1-2/index';
 import c2 from './SM1-4/index';
 import c3 from './SM1-6/index';
 import c4 from './SM1-7/index';
-import c5 from './SM2-1/index';
-import c6 from './SM2-3/index';
+import c5 from './SM1-10/index';
+import c6 from './SM2-1/index';
+import c7 from './SM2-3/index';
 
-export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6];
+export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7];
