@@ -1,0 +1,800 @@
+{
+ "version": 1,
+ "templates": [
+  {
+   "id": "p1.13.area-under-quadratic",
+   "family": "p1.13.area-under",
+   "title": "Area between a quadratic curve and the x-axis",
+   "spec": [
+    "P8.3"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "quadratic",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.area-below-axis-quadratic",
+   "family": "p1.13.area-below",
+   "title": "Region below the x-axis: signed integral and area",
+   "spec": [
+    "P8.3"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Hence",
+    "Write down"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "below axis",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.area-cubic-two-regions",
+   "family": "p1.13.area-below",
+   "title": "Total area of regions above and below the axis (cubic)",
+   "spec": [
+    "P8.3",
+    "P2.6"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "below axis",
+    "cubic",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.area-between-line-and-curve",
+   "family": "p1.13.area-between",
+   "title": "Area between a curve and a straight line",
+   "spec": [
+    "P8.3",
+    "P2.4"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "between curves",
+    "simultaneous",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.area-curve-chord-axis",
+   "family": "p1.13.area-between",
+   "title": "Region bounded by a curve, a chord and the x-axis",
+   "spec": [
+    "P8.3",
+    "P3.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 9,
+   "time": 12,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "straight line",
+    "synoptic",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.definite-polynomial",
+   "family": "p1.13.definite",
+   "title": "Exact value of a definite integral",
+   "spec": [
+    "P8.3",
+    "P8.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "definite",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.definite-fractional-powers",
+   "family": "p1.13.definite",
+   "title": "Definite integral with roots and negative powers",
+   "spec": [
+    "P8.3",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "definite",
+    "indices",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.definite-unknown-limit",
+   "family": "p1.13.definite-unknown",
+   "title": "Find an unknown limit of a definite integral",
+   "spec": [
+    "P8.3",
+    "P2.3"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Show that",
+    "Hence",
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "definite",
+    "quadratic",
+    "show that"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.integrate-polynomial",
+   "family": "p1.13.indefinite",
+   "title": "Integrate a polynomial",
+   "spec": [
+    "P8.1",
+    "P8.2"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.1",
+    "13.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 3,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "indefinite",
+    "polynomial"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.integrate-fractional-negative",
+   "family": "p1.13.indefinite",
+   "title": "Integrate terms with roots and negative powers",
+   "spec": [
+    "P8.2",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "indefinite",
+    "indices",
+    "surds"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.integrate-expand-divide",
+   "family": "p1.13.indefinite-algebra",
+   "title": "Expand and divide before integrating",
+   "spec": [
+    "P8.2",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "indefinite",
+    "indices",
+    "expand"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.integrate-split-fraction",
+   "family": "p1.13.indefinite-algebra",
+   "title": "Split a fraction then integrate",
+   "spec": [
+    "P8.2",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "indefinite",
+    "indices"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.find-curve-from-gradient",
+   "family": "p1.13.finding-functions",
+   "title": "Find the equation of a curve from its gradient function",
+   "spec": [
+    "P8.1",
+    "P8.2"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "finding functions",
+    "constant of integration"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.13.find-curve-fractional",
+   "family": "p1.13.finding-functions",
+   "title": "Find a curve from a gradient with roots and negative powers",
+   "spec": [
+    "P8.2",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "finding functions",
+    "indices"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  }
+ ],
+ "fixed": [],
+ "totals": {
+  "templates": 14,
+  "questions": 336,
+  "fixed": 0
+ }
+}

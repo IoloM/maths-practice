@@ -1,0 +1,110 @@
+/**
+ * Pearson Edexcel 9MA0 specification points (Issue 4, February 2020).
+ * P = Papers 1 & 2 (Pure), S = Paper 3 Section A (Statistics), M = Paper 3 Section B (Mechanics).
+ * `as` = whether the point is (wholly or partly) common AS content (bold in the spec).
+ */
+import type { SpecRef } from '../engine/templates/types';
+
+export interface SpecPoint {
+  ref: SpecRef;
+  topic: string;
+  title: string;
+  as: boolean | 'part';
+}
+
+export const SPEC: SpecPoint[] = [
+  // ---- Pure ----
+  { ref: 'P1.1', topic: 'Proof', title: 'Proof by deduction, exhaustion, counter-example and contradiction', as: 'part' },
+  { ref: 'P2.1', topic: 'Algebra and functions', title: 'Laws of indices for all rational exponents', as: true },
+  { ref: 'P2.2', topic: 'Algebra and functions', title: 'Surds, including rationalising the denominator', as: true },
+  { ref: 'P2.3', topic: 'Algebra and functions', title: 'Quadratic functions: discriminant, completing the square, solving', as: true },
+  { ref: 'P2.4', topic: 'Algebra and functions', title: 'Simultaneous equations, including one linear and one quadratic', as: true },
+  { ref: 'P2.5', topic: 'Algebra and functions', title: 'Linear and quadratic inequalities, set notation, graphical regions', as: true },
+  { ref: 'P2.6', topic: 'Algebra and functions', title: 'Polynomials, algebraic division, factor theorem, rational expressions', as: 'part' },
+  { ref: 'P2.7', topic: 'Algebra and functions', title: 'Curve sketching, modulus of a linear function, reciprocal graphs, proportion', as: 'part' },
+  { ref: 'P2.8', topic: 'Algebra and functions', title: 'Composite and inverse functions; domain and range', as: false },
+  { ref: 'P2.9', topic: 'Algebra and functions', title: 'Transformations of graphs y = af(x), f(x) + a, f(x + a), f(ax)', as: 'part' },
+  { ref: 'P2.10', topic: 'Algebra and functions', title: 'Partial fractions', as: false },
+  { ref: 'P2.11', topic: 'Algebra and functions', title: 'Functions in modelling; limitations and refinements', as: 'part' },
+  { ref: 'P3.1', topic: 'Coordinate geometry', title: 'Equations of straight lines; parallel and perpendicular lines', as: true },
+  { ref: 'P3.2', topic: 'Coordinate geometry', title: 'Equation of a circle; circle properties; tangents', as: true },
+  { ref: 'P3.3', topic: 'Coordinate geometry', title: 'Parametric equations; conversion to Cartesian form', as: false },
+  { ref: 'P3.4', topic: 'Coordinate geometry', title: 'Parametric equations in modelling', as: false },
+  { ref: 'P4.1', topic: 'Sequences and series', title: 'Binomial expansion (positive integer n, then rational n)', as: 'part' },
+  { ref: 'P4.2', topic: 'Sequences and series', title: 'Sequences: nth term, recurrence relations, increasing/decreasing/periodic', as: false },
+  { ref: 'P4.3', topic: 'Sequences and series', title: 'Sigma notation', as: false },
+  { ref: 'P4.4', topic: 'Sequences and series', title: 'Arithmetic sequences and series', as: false },
+  { ref: 'P4.5', topic: 'Sequences and series', title: 'Geometric sequences and series; sum to infinity', as: false },
+  { ref: 'P4.6', topic: 'Sequences and series', title: 'Sequences and series in modelling', as: false },
+  { ref: 'P5.1', topic: 'Trigonometry', title: 'Sine and cosine rules, area of a triangle, radians, arcs and sectors', as: 'part' },
+  { ref: 'P5.2', topic: 'Trigonometry', title: 'Small angle approximations', as: false },
+  { ref: 'P5.3', topic: 'Trigonometry', title: 'Graphs of sin, cos, tan; exact values; symmetry and periodicity', as: 'part' },
+  { ref: 'P5.4', topic: 'Trigonometry', title: 'sec, cosec, cot, arcsin, arccos, arctan', as: false },
+  { ref: 'P5.5', topic: 'Trigonometry', title: 'Identities: tan θ = sin θ/cos θ, sin² + cos² = 1, sec², cosec²', as: 'part' },
+  { ref: 'P5.6', topic: 'Trigonometry', title: 'Double angle and compound angle formulae; R cos(θ ± α)', as: false },
+  { ref: 'P5.7', topic: 'Trigonometry', title: 'Solving trigonometric equations in a given interval', as: 'part' },
+  { ref: 'P5.8', topic: 'Trigonometry', title: 'Proving trigonometric identities', as: 'part' },
+  { ref: 'P5.9', topic: 'Trigonometry', title: 'Trigonometric functions in context (vectors, kinematics, forces)', as: false },
+  { ref: 'P6.1', topic: 'Exponentials and logarithms', title: 'Graphs of a^x and e^x', as: true },
+  { ref: 'P6.2', topic: 'Exponentials and logarithms', title: 'Gradient of e^{kx} is ke^{kx}', as: true },
+  { ref: 'P6.3', topic: 'Exponentials and logarithms', title: 'Logarithms as inverse of a^x; ln x', as: true },
+  { ref: 'P6.4', topic: 'Exponentials and logarithms', title: 'Laws of logarithms', as: true },
+  { ref: 'P6.5', topic: 'Exponentials and logarithms', title: 'Solving equations a^x = b', as: true },
+  { ref: 'P6.6', topic: 'Exponentials and logarithms', title: 'Logarithmic graphs for y = ax^n and y = kb^x', as: true },
+  { ref: 'P6.7', topic: 'Exponentials and logarithms', title: 'Exponential growth and decay in modelling', as: true },
+  { ref: 'P7.1', topic: 'Differentiation', title: 'Derivative as gradient; first principles; second derivatives; convexity', as: 'part' },
+  { ref: 'P7.2', topic: 'Differentiation', title: 'Differentiate x^n, e^{kx}, a^{kx}, sin kx, cos kx, tan kx, ln x', as: 'part' },
+  { ref: 'P7.3', topic: 'Differentiation', title: 'Tangents, normals, stationary points, inflection, increasing/decreasing', as: 'part' },
+  { ref: 'P7.4', topic: 'Differentiation', title: 'Product, quotient and chain rules; connected rates of change', as: false },
+  { ref: 'P7.5', topic: 'Differentiation', title: 'Implicit and parametric differentiation', as: false },
+  { ref: 'P7.6', topic: 'Differentiation', title: 'Constructing differential equations', as: false },
+  { ref: 'P8.1', topic: 'Integration', title: 'Fundamental Theorem of Calculus', as: true },
+  { ref: 'P8.2', topic: 'Integration', title: 'Integrate x^n, e^{kx}, 1/x, sin kx, cos kx', as: 'part' },
+  { ref: 'P8.3', topic: 'Integration', title: 'Definite integrals; area under a curve and between curves', as: 'part' },
+  { ref: 'P8.4', topic: 'Integration', title: 'Integration as the limit of a sum', as: false },
+  { ref: 'P8.5', topic: 'Integration', title: 'Integration by substitution and by parts', as: false },
+  { ref: 'P8.6', topic: 'Integration', title: 'Integration using partial fractions', as: false },
+  { ref: 'P8.7', topic: 'Integration', title: 'Separable first order differential equations', as: false },
+  { ref: 'P8.8', topic: 'Integration', title: 'Interpreting solutions of differential equations in context', as: false },
+  { ref: 'P9.1', topic: 'Numerical methods', title: 'Locating roots by change of sign', as: false },
+  { ref: 'P9.2', topic: 'Numerical methods', title: 'Iteration x_{n+1} = f(x_n); cobweb and staircase diagrams', as: false },
+  { ref: 'P9.3', topic: 'Numerical methods', title: 'Newton–Raphson method; failure of methods', as: false },
+  { ref: 'P9.4', topic: 'Numerical methods', title: 'Trapezium rule; over- and under-estimates', as: false },
+  { ref: 'P9.5', topic: 'Numerical methods', title: 'Numerical methods in context', as: false },
+  { ref: 'P10.1', topic: 'Vectors', title: 'Vectors in two and three dimensions', as: 'part' },
+  { ref: 'P10.2', topic: 'Vectors', title: 'Magnitude and direction; unit vectors', as: true },
+  { ref: 'P10.3', topic: 'Vectors', title: 'Vector addition and scalar multiplication; parallel vectors', as: true },
+  { ref: 'P10.4', topic: 'Vectors', title: 'Position vectors; distance between points', as: true },
+  { ref: 'P10.5', topic: 'Vectors', title: 'Vectors in geometric problems and context', as: true },
+  // ---- Statistics ----
+  { ref: 'S1.1', topic: 'Statistical sampling', title: 'Populations, samples and sampling techniques', as: true },
+  { ref: 'S2.1', topic: 'Data presentation and interpretation', title: 'Single-variable diagrams; histograms (area = frequency)', as: true },
+  { ref: 'S2.2', topic: 'Data presentation and interpretation', title: 'Scatter diagrams, regression lines, correlation (not causation)', as: true },
+  { ref: 'S2.3', topic: 'Data presentation and interpretation', title: 'Measures of location and spread; standard deviation; coding', as: true },
+  { ref: 'S2.4', topic: 'Data presentation and interpretation', title: 'Outliers; cleaning data; choosing presentations', as: true },
+  { ref: 'S3.1', topic: 'Probability', title: 'Mutually exclusive and independent events', as: true },
+  { ref: 'S3.2', topic: 'Probability', title: 'Conditional probability: trees, Venn diagrams, two-way tables', as: false },
+  { ref: 'S3.3', topic: 'Probability', title: 'Modelling with probability; critiquing assumptions', as: false },
+  { ref: 'S4.1', topic: 'Statistical distributions', title: 'Discrete distributions; the binomial distribution', as: true },
+  { ref: 'S4.2', topic: 'Statistical distributions', title: 'The normal distribution; binomial approximation', as: false },
+  { ref: 'S4.3', topic: 'Statistical distributions', title: 'Selecting an appropriate distribution', as: 'part' },
+  { ref: 'S5.1', topic: 'Statistical hypothesis testing', title: 'Language of hypothesis testing; correlation coefficients', as: 'part' },
+  { ref: 'S5.2', topic: 'Statistical hypothesis testing', title: 'Hypothesis test for a binomial proportion', as: true },
+  { ref: 'S5.3', topic: 'Statistical hypothesis testing', title: 'Hypothesis test for the mean of a normal distribution', as: false },
+  // ---- Mechanics ----
+  { ref: 'M6.1', topic: 'Quantities and units', title: 'SI units; derived quantities; unit conversion', as: true },
+  { ref: 'M7.1', topic: 'Kinematics', title: 'Language of kinematics', as: true },
+  { ref: 'M7.2', topic: 'Kinematics', title: 'Displacement–time and velocity–time graphs', as: true },
+  { ref: 'M7.3', topic: 'Kinematics', title: 'Constant acceleration formulae (1-D and 2-D vectors)', as: 'part' },
+  { ref: 'M7.4', topic: 'Kinematics', title: 'Calculus in kinematics (1-D and 2-D vectors)', as: 'part' },
+  { ref: 'M7.5', topic: 'Kinematics', title: 'Projectiles', as: false },
+  { ref: 'M8.1', topic: 'Forces and Newton’s laws', title: 'Forces; Newton’s first law', as: true },
+  { ref: 'M8.2', topic: 'Forces and Newton’s laws', title: 'Newton’s second law, including resolving forces', as: 'part' },
+  { ref: 'M8.3', topic: 'Forces and Newton’s laws', title: 'Weight and motion under gravity', as: true },
+  { ref: 'M8.4', topic: 'Forces and Newton’s laws', title: 'Newton’s third law; connected particles; pulleys; equilibrium', as: 'part' },
+  { ref: 'M8.5', topic: 'Forces and Newton’s laws', title: 'Resultant forces; dynamics in a plane', as: false },
+  { ref: 'M8.6', topic: 'Forces and Newton’s laws', title: 'Friction F ⩽ μR', as: false },
+  { ref: 'M9.1', topic: 'Moments', title: 'Moments; equilibrium of rigid bodies (including ladders)', as: false },
+];
+
+export const SPEC_BY_REF = new Map(SPEC.map((s) => [s.ref, s]));
