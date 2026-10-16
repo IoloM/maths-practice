@@ -791,6 +791,2008 @@
    ]
   },
   {
+   "id": "p2.10.change-of-sign",
+   "family": "p2.10.locating-roots",
+   "title": "Show a root lies in an interval by change of sign",
+   "spec": [
+    "P9.1"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that",
+    "Calculate"
+   ],
+   "tags": [
+    "numerical methods",
+    "change of sign",
+    "root"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.sign-change-failure",
+   "family": "p2.10.locating-roots",
+   "title": "When the change-of-sign method fails",
+   "spec": [
+    "P9.1"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Explain",
+    "Calculate"
+   ],
+   "tags": [
+    "numerical methods",
+    "change of sign",
+    "asymptote"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.locate-root-integers",
+   "family": "p2.10.locating-roots",
+   "title": "Find consecutive integers between which a root lies",
+   "spec": [
+    "P9.1",
+    "P9.5"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 3,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "numerical methods",
+    "change of sign"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.iteration-values",
+   "family": "p2.10.iteration",
+   "title": "Use an iteration formula",
+   "spec": [
+    "P9.2"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "numerical methods",
+    "iteration"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.iteration-to-root",
+   "family": "p2.10.iteration",
+   "title": "Iterate to find a root to a given accuracy, and justify it",
+   "spec": [
+    "P9.2",
+    "P9.1"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "numerical methods",
+    "iteration",
+    "accuracy"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.iteration-convergence",
+   "family": "p2.10.iteration",
+   "title": "Convergence of an iteration: staircase or cobweb",
+   "spec": [
+    "P9.2"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Explain"
+   ],
+   "tags": [
+    "numerical methods",
+    "iteration",
+    "cobweb",
+    "staircase"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.newton-raphson",
+   "family": "p2.10.newton-raphson",
+   "title": "Newton–Raphson iterations",
+   "spec": [
+    "P9.3",
+    "P7.2"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "numerical methods",
+    "Newton–Raphson",
+    "differentiation"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.newton-raphson-failure",
+   "family": "p2.10.newton-raphson",
+   "title": "Why Newton–Raphson fails from a stationary point",
+   "spec": [
+    "P9.3"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Explain"
+   ],
+   "tags": [
+    "numerical methods",
+    "Newton–Raphson",
+    "stationary point"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.numerical-methods-context",
+   "family": "p2.10.context",
+   "title": "Numerical methods in context: when does a model reach a value?",
+   "spec": [
+    "P9.5",
+    "P9.3"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Show that",
+    "Use",
+    "Find"
+   ],
+   "tags": [
+    "numerical methods",
+    "modelling",
+    "Newton–Raphson"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.de-exponential-growth-decay",
+   "family": "p2.11.differential-equations",
+   "title": "Solve dy/dx = ky with an initial condition",
+   "spec": [
+    "P8.7",
+    "P6.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.10"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "differential equations",
+    "separation of variables",
+    "exponential"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.de-separable-particular",
+   "family": "p2.11.differential-equations",
+   "title": "Separable differential equation: particular solution",
+   "spec": [
+    "P8.7"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.10"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differential equations",
+    "separation of variables",
+    "particular solution"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.de-newton-cooling",
+   "family": "p2.11.de-modelling",
+   "title": "Modelling: Newton's law of cooling",
+   "spec": [
+    "P8.8",
+    "P8.7",
+    "P6.7"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.11"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 11,
+   "commands": [
+    "Show that",
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "exponential decay",
+    "context"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.de-population-model",
+   "family": "p2.11.de-modelling",
+   "title": "Modelling growth with dP/dt = kP and its limitations",
+   "spec": [
+    "P8.8",
+    "P8.7",
+    "P6.7"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.11"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Comment"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "exponential growth",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.construct-differential-equation",
+   "family": "p2.11.construct-de",
+   "title": "Constructing a differential equation and using it",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.11"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Write down",
+    "Find"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.construct-de-find-k",
+   "family": "p2.11.construct-de",
+   "title": "Form a differential equation and find the constant",
+   "spec": [
+    "P7.6",
+    "P8.8"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.11"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Write down",
+    "Find"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "rates of change"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.limit-of-sum",
+   "family": "p2.11.limit-of-sum",
+   "title": "Integration as the limit of a sum",
+   "spec": [
+    "P8.4",
+    "P8.3"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "integration",
+    "limit of a sum",
+    "definite integral"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.rectangle-estimate",
+   "family": "p2.11.limit-of-sum",
+   "title": "Rectangles under a curve compared with the integral",
+   "spec": [
+    "P8.4",
+    "P9.4"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Explain"
+   ],
+   "tags": [
+    "limit of a sum",
+    "rectangles",
+    "estimation"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.reverse-chain-f-prime-over-f",
+   "family": "p2.11.reverse-chain",
+   "title": "Integrals of the form k f′(x)/f(x)",
+   "spec": [
+    "P8.5",
+    "P8.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "reverse chain rule",
+    "logarithm"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.reverse-chain-power",
+   "family": "p2.11.reverse-chain",
+   "title": "Reverse chain rule: x(ax² + b)ⁿ and trig powers",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "reverse chain rule"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.substitution-definite",
+   "family": "p2.11.substitution",
+   "title": "Definite integral by substitution: x√(x + c)",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Use",
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "substitution",
+    "exact",
+    "limits"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.substitution-indefinite",
+   "family": "p2.11.substitution",
+   "title": "Indefinite integral by a given substitution",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Use",
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "substitution"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.parts-linear-times-exp-or-trig",
+   "family": "p2.11.parts",
+   "title": "Integration by parts: (ax + b)eᵏˣ or x sin/cos kx",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "by parts"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.parts-ln-definite",
+   "family": "p2.11.parts",
+   "title": "Integration by parts with ln x (exact definite)",
+   "spec": [
+    "P8.5",
+    "P8.3"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "by parts",
+    "logarithm",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.parts-twice",
+   "family": "p2.11.parts",
+   "title": "Integration by parts twice",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 6,
+   "time": 9,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "by parts",
+    "repeated"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.partial-fractions-definite",
+   "family": "p2.11.partial-fractions",
+   "title": "Partial fractions, then an exact definite integral",
+   "spec": [
+    "P8.6",
+    "P2.10"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 11,
+   "commands": [
+    "Express",
+    "Hence",
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "partial fractions",
+    "logarithms",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.partial-fractions-indefinite",
+   "family": "p2.11.partial-fractions",
+   "title": "Integrate a rational function using partial fractions",
+   "spec": [
+    "P8.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "partial fractions",
+    "logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.partial-fractions-repeated-factor",
+   "family": "p2.11.partial-fractions",
+   "title": "Partial fractions with a repeated factor, then integrate",
+   "spec": [
+    "P8.6",
+    "P2.10"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 9,
+   "time": 13,
+   "commands": [
+    "Express",
+    "Hence",
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "partial fractions",
+    "repeated factor",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.integrate-standard-functions",
+   "family": "p2.11.standard",
+   "title": "Integrate eᵏˣ, 1/x and sin kx",
+   "spec": [
+    "P8.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1",
+    "11.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "exponential",
+    "logarithm",
+    "trigonometry"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.integrate-cos-sec-squared",
+   "family": "p2.11.standard",
+   "title": "Integrate cos kx and sec² kx",
+   "spec": [
+    "P8.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1",
+    "11.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "trigonometry"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.integrate-f-ax-plus-b",
+   "family": "p2.11.standard",
+   "title": "Integrate f(ax + b)",
+   "spec": [
+    "P8.2",
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "chain rule",
+    "linear substitution"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.integrate-using-trig-identities",
+   "family": "p2.11.trig-identities",
+   "title": "Integrate sin²kx, cos²kx or tan²kx using identities",
+   "spec": [
+    "P8.2",
+    "P5.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "trigonometric identities",
+    "double angle"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.definite-exact-log-exp",
+   "family": "p2.11.definite-exact",
+   "title": "Exact definite integrals with ln and e",
+   "spec": [
+    "P8.3",
+    "P8.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "integration",
+    "exact",
+    "logarithms",
+    "exponentials"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.definite-exact-trig",
+   "family": "p2.11.definite-exact",
+   "title": "Exact definite integral of sin and cos",
+   "spec": [
+    "P8.3",
+    "P5.3"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1",
+    "11.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "integration",
+    "exact values",
+    "trigonometry",
+    "radians"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.trapezium-rule",
+   "family": "p2.11.trapezium",
+   "title": "Complete a table and use the trapezium rule",
+   "spec": [
+    "P9.4"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.9"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "trapezium rule",
+    "numerical integration",
+    "table"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.trapezium-over-under",
+   "family": "p2.11.trapezium",
+   "title": "Trapezium rule: overestimate or underestimate?",
+   "spec": [
+    "P9.4",
+    "P7.1"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.9"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find",
+    "State",
+    "Explain"
+   ],
+   "tags": [
+    "trapezium rule",
+    "concave",
+    "convex",
+    "estimation"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.trapezium-percentage-error",
+   "family": "p2.11.trapezium",
+   "title": "Trapezium rule versus exact integration: percentage error",
+   "spec": [
+    "P9.4",
+    "P8.3"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.9"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Calculate"
+   ],
+   "tags": [
+    "trapezium rule",
+    "exact integration",
+    "percentage error"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "sm1.2.mean-sd-summary-statistics",
    "family": "sm1.2.variance",
    "title": "Mean and standard deviation from summary statistics",
@@ -1138,6 +3140,387 @@
     "standard deviation",
     "summary statistics",
     "problem solving"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.histogram-frequency-density",
+   "family": "sm1.3.histograms",
+   "title": "Histograms: frequency density from a table",
+   "spec": [
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Calculate"
+   ],
+   "tags": [
+    "histogram",
+    "frequency density",
+    "unequal class widths"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.histogram-read",
+   "family": "sm1.3.histograms",
+   "title": "Reading frequencies from a histogram",
+   "spec": [
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "histogram",
+    "area = frequency",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.histogram-estimate-range",
+   "family": "sm1.3.histograms",
+   "title": "Estimating a frequency across classes by interpolation",
+   "spec": [
+    "S2.1",
+    "S2.3"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 5,
+   "commands": [
+    "Estimate"
+   ],
+   "tags": [
+    "histogram",
+    "interpolation",
+    "estimate"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.histogram-bar-dimensions",
+   "family": "sm1.3.histograms",
+   "title": "Histogram bar widths and heights from a given scale",
+   "spec": [
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "histogram",
+    "scale",
+    "area",
+    "problem solving"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.outliers-iqr",
+   "family": "sm1.3.outliers",
+   "title": "Outliers using Q₁ − 1.5 × IQR and Q₃ + 1.5 × IQR",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.1",
+    "3.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "outliers",
+    "interquartile range",
+    "box plot"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.outliers-mean-sd",
+   "family": "sm1.3.outliers",
+   "title": "Outliers using the mean ± k standard deviations",
+   "spec": [
+    "S2.4",
+    "S2.3"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that",
+    "Determine"
+   ],
+   "tags": [
+    "outliers",
+    "standard deviation",
+    "cleaning data"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.3.box-plots-compare",
+   "family": "sm1.3.box-plots",
+   "title": "Comparing distributions with box plots",
+   "spec": [
+    "S2.4",
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [
+    "3.2",
+    "3.5"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Compare"
+   ],
+   "tags": [
+    "box plot",
+    "interquartile range",
+    "comparing data"
    ],
    "seeds": [
     1,
@@ -2088,6 +4471,715 @@
    ]
   },
   {
+   "id": "sm1.10.constant-velocity",
+   "family": "sm1.10.newtons-laws",
+   "title": "Newton's first law: constant velocity on rough ground",
+   "spec": [
+    "M8.1",
+    "M8.2"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.1",
+    "10.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 4,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "forces",
+    "Newton's first law",
+    "resistance"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.equilibrium-vector-forces",
+   "family": "sm1.10.forces-vectors",
+   "title": "Equilibrium of forces given as vectors",
+   "spec": [
+    "M8.1",
+    "M8.5"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "forces",
+    "vectors",
+    "equilibrium",
+    "acceleration"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.car-driving-force",
+   "family": "sm1.10.f-ma",
+   "title": "F = ma for a car with resistance, then suvat",
+   "spec": [
+    "M8.2",
+    "M7.3"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "forces",
+    "F = ma",
+    "suvat",
+    "resistance"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.vertical-cable-tension",
+   "family": "sm1.10.vertical",
+   "title": "Tension in a vertical cable with acceleration",
+   "spec": [
+    "M8.3",
+    "M8.2"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "forces",
+    "weight",
+    "tension",
+    "vertical motion"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.weight-and-g",
+   "family": "sm1.10.vertical",
+   "title": "Weight, mass and g in different places",
+   "spec": [
+    "M8.3",
+    "M6.1"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 3,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "weight",
+    "mass",
+    "gravity"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.vector-forces-acceleration",
+   "family": "sm1.10.forces-vectors",
+   "title": "Acceleration from forces in vector form: magnitude and direction",
+   "spec": [
+    "M8.2",
+    "P10.2"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.2",
+    "10.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "forces",
+    "vectors",
+    "acceleration",
+    "direction"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.lift",
+   "family": "sm1.10.connected",
+   "title": "A person in an accelerating lift",
+   "spec": [
+    "M8.4",
+    "M8.2"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.5"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "connected particles",
+    "lift",
+    "normal reaction",
+    "Newton's third law"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.car-trailer",
+   "family": "sm1.10.connected",
+   "title": "Car towing a trailer: acceleration and tension",
+   "spec": [
+    "M8.4",
+    "M8.2"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.5"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "connected particles",
+    "tow bar",
+    "tension"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.pulley-hanging",
+   "family": "sm1.10.pulleys",
+   "title": "Two particles over a smooth pulley",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.6"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "pulleys",
+    "connected particles",
+    "tension"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.pulley-table",
+   "family": "sm1.10.pulleys",
+   "title": "Particle on a table connected to a hanging particle",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.6"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "pulleys",
+    "connected particles",
+    "resistance"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.pulley-hits-ground",
+   "family": "sm1.10.pulleys",
+   "title": "Pulley system: particle hits the ground, then free motion",
+   "spec": [
+    "M8.4",
+    "M7.3"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.6"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 9,
+   "time": 12,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "pulleys",
+    "suvat",
+    "multi-stage",
+    "synoptic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.newtons-laws-concepts",
+   "family": "sm1.10.newtons-laws",
+   "title": "Newton's laws: concepts",
+   "spec": [
+    "M8.1",
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.1"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 3,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "Newton's laws",
+    "forces",
+    "modelling"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm1.10.falling-with-resistance",
+   "family": "sm1.10.vertical",
+   "title": "Falling with constant air resistance",
+   "spec": [
+    "M8.3",
+    "M7.3"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "weight",
+    "resistance",
+    "suvat"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "sm2.1.pmcc-test-one-tail",
    "family": "sm2.1.pmcc-test",
    "title": "Hypothesis test for correlation (one-tailed)",
@@ -2890,12 +5982,719 @@
     23,
     24
    ]
+  },
+  {
+   "id": "sm2.5.resultant-of-forces",
+   "family": "sm2.5.resolving",
+   "title": "Resultant of forces given in magnitude–direction form",
+   "spec": [
+    "M8.5"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "resolving",
+    "resultant",
+    "forces"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.equilibrium-string-horizontal-force",
+   "family": "sm2.5.resolving",
+   "title": "Particle held by a string and a horizontal force",
+   "spec": [
+    "M8.4",
+    "M8.5"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "equilibrium",
+    "resolving",
+    "tension"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.smooth-plane-released",
+   "family": "sm2.5.inclined-planes",
+   "title": "Particle released on a smooth inclined plane",
+   "spec": [
+    "M8.2",
+    "M7.3"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.2"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "inclined plane",
+    "smooth",
+    "suvat"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.smooth-plane-held",
+   "family": "sm2.5.inclined-planes",
+   "title": "Particle held at rest on a smooth plane",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.2"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "inclined plane",
+    "equilibrium",
+    "resolving"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.rough-ground-angled-pull",
+   "family": "sm2.5.friction",
+   "title": "Pulled at an angle across rough horizontal ground",
+   "spec": [
+    "M8.6",
+    "M8.2"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "friction",
+    "resolving",
+    "F = ma"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.rough-plane-sliding-down",
+   "family": "sm2.5.inclined-planes",
+   "title": "Sliding down a rough inclined plane",
+   "spec": [
+    "M8.6",
+    "M8.2"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "inclined plane",
+    "friction",
+    "F = ma",
+    "suvat"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.limiting-friction-plane",
+   "family": "sm2.5.friction",
+   "title": "Limiting equilibrium on a rough plane: find μ",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "friction",
+    "limiting equilibrium",
+    "inclined plane"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.5.rough-plane-projected-up",
+   "family": "sm2.5.inclined-planes",
+   "title": "Projected up a rough plane: stopping distance and whether it slides back",
+   "spec": [
+    "M8.6",
+    "M7.3"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "Determine"
+   ],
+   "tags": [
+    "inclined plane",
+    "friction",
+    "suvat",
+    "multi-stage"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.7.horizontal-force-rough-plane",
+   "family": "sm2.7.statics-planes",
+   "title": "Horizontal force holding a particle on a rough plane (limiting)",
+   "spec": [
+    "M8.6",
+    "M8.4"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 8,
+   "time": 11,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "friction",
+    "limiting equilibrium",
+    "inclined plane",
+    "horizontal force"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.7.connected-plane-pulley",
+   "family": "sm2.7.connected",
+   "title": "Particle on a rough plane connected over a pulley to a hanging particle",
+   "spec": [
+    "M8.4",
+    "M8.6"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.6"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 9,
+   "time": 12,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "connected particles",
+    "pulley",
+    "inclined plane",
+    "friction"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.7.friction-range-equilibrium",
+   "family": "sm2.7.statics-planes",
+   "title": "Range of a force for equilibrium on a rough plane",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 7,
+   "time": 10,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "friction",
+    "limiting equilibrium",
+    "inclined plane",
+    "range"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.7.two-strings-equilibrium",
+   "family": "sm2.7.statics",
+   "title": "Particle suspended by two strings",
+   "spec": [
+    "M8.4",
+    "M8.5"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.1"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "equilibrium",
+    "resolving",
+    "tension",
+    "simultaneous equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "sm2.7.pulled-up-rough-plane",
+   "family": "sm2.7.dynamics-planes",
+   "title": "Pulled up a rough plane by a force parallel to the plane",
+   "spec": [
+    "M8.6",
+    "M7.3"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.5"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "inclined plane",
+    "friction",
+    "F = ma",
+    "suvat"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
   }
  ],
  "fixed": [],
  "totals": {
-  "templates": 53,
-  "questions": 1272,
+  "templates": 122,
+  "questions": 2928,
   "fixed": 0
  }
 }
