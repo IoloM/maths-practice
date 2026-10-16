@@ -32,6 +32,6 @@ fs.writeFileSync(
 );
 fs.writeFileSync(
   path.join(root, 'all.gen.ts'),
-  `${header}import type { Template } from '../../engine/templates/types';\n${dirs.map((d, i) => `import c${i} from './${d}/index';`).join('\n')}\n\nexport const ALL_TEMPLATES: Template[] = [${dirs.map((_, i) => `...c${i}`).join(', ')}];\n`,
+  `${header}import type { Template } from '../../engine/templates/types';\n${dirs.map((d, i) => `import c${i} from './${d}/index';`).join('\n')}\n\nexport const ALL_TEMPLATES: Template[] = [${dirs.map((_, i) => `...c${i}`).join(', ')}];\n\nexport const BY_CHAPTER: Record<string, Template[]> = {\n${dirs.map((d, i) => `  '${ref(d)}': c${i},`).join('\n')}\n};\n`,
 );
 console.log(`registry: ${dirs.length} chapters`);
