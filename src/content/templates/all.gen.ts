@@ -39,12 +39,13 @@ import c35 from './SM1-11/index';
 import c36 from './SM2-1/index';
 import c37 from './SM2-2/index';
 import c38 from './SM2-3/index';
-import c39 from './SM2-5/index';
-import c40 from './SM2-6/index';
-import c41 from './SM2-7/index';
-import c42 from './SM2-8/index';
+import c39 from './SM2-4/index';
+import c40 from './SM2-5/index';
+import c41 from './SM2-6/index';
+import c42 from './SM2-7/index';
+import c43 from './SM2-8/index';
 
-export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26, ...c27, ...c28, ...c29, ...c30, ...c31, ...c32, ...c33, ...c34, ...c35, ...c36, ...c37, ...c38, ...c39, ...c40, ...c41, ...c42];
+export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26, ...c27, ...c28, ...c29, ...c30, ...c31, ...c32, ...c33, ...c34, ...c35, ...c36, ...c37, ...c38, ...c39, ...c40, ...c41, ...c42, ...c43];
 
 export const BY_CHAPTER: Record<string, Template[]> = {
   'P1.1': c0,
@@ -86,8 +87,9 @@ export const BY_CHAPTER: Record<string, Template[]> = {
   'SM2.1': c36,
   'SM2.2': c37,
   'SM2.3': c38,
-  'SM2.5': c39,
-  'SM2.6': c40,
-  'SM2.7': c41,
-  'SM2.8': c42,
+  'SM2.4': c39,
+  'SM2.5': c40,
+  'SM2.6': c41,
+  'SM2.7': c42,
+  'SM2.8': c43,
 };

@@ -41,6 +41,7 @@ export const loaders: Record<string, () => Promise<{ default: Template[] }>> = {
   'SM2.1': () => import('./SM2-1/index'),
   'SM2.2': () => import('./SM2-2/index'),
   'SM2.3': () => import('./SM2-3/index'),
+  'SM2.4': () => import('./SM2-4/index'),
   'SM2.5': () => import('./SM2-5/index'),
   'SM2.6': () => import('./SM2-6/index'),
   'SM2.7': () => import('./SM2-7/index'),
