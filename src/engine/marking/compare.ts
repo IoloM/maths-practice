@@ -5,7 +5,7 @@ import { Q, toFraction } from '../core/rational';
 import { awrt, nearMiss, plainLiteral } from './accuracy';
 import { checkIntegral, close, equationsEquivalent, equivalent } from './equivalence';
 import { equationFormErrors, formErrors } from './forms';
-import { integerSetsEqual, setsEqual, statementToSet, toNumSet, endpoints } from './intervals';
+import { integerSetsEqual, setsEqual, statementToSet, toNumSet, endpoints, normalise, type NumSet } from './intervals';
 import { ParseError, parseExpr, parseStatement, expandPm, type Statement } from './parse';
 import type {
   AnswerSpec,
@@ -296,6 +296,9 @@ export function compareInterval(spec: IntervalSpec, r: Response): Cmp {
     const lo = Math.floor(Math.min(...eps, 0)) - 3,
       hi = Math.ceil(Math.max(...eps, 0)) + 3;
     equal = integerSetsEqual(S, T, lo, hi);
+  } else if (spec.endsEither) {
+    const closed = (A: NumSet) => normalise(A.map((i) => ({ ...i, loC: isFinite(i.lo) || i.loC, hiC: isFinite(i.hi) || i.hiC })));
+    equal = setsEqual(closed(S), closed(T));
   } else equal = setsEqual(S, T);
   if (equal) {
     if (spec.setNotation && !st.clauses.some((c) => c.kind === 'set' || c.kind === 'in')) {

@@ -140,6 +140,8 @@ export interface IntervalSpec extends Base {
   integer?: boolean;
   /** demand set notation */
   setNotation?: boolean;
+  /** finite endpoints may be strict or non-strict (e.g. increasing/decreasing intervals) */
+  endsEither?: boolean;
 }
 
 export interface ChoiceSpec extends Base {
