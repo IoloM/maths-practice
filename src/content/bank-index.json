@@ -6321,6 +6321,2491 @@
    ]
   },
   {
+   "id": "p2.1.partial-fractions-two-linear",
+   "family": "p2.1.partial-fractions",
+   "title": "Partial fractions with two distinct linear factors",
+   "spec": [
+    "P2.10"
+   ],
+   "chapter": "P2.1",
+   "sections": [
+    "1.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Express"
+   ],
+   "tags": [
+    "partial fractions",
+    "algebraic fractions"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.1.partial-fractions-three-or-repeated",
+   "family": "p2.1.partial-fractions",
+   "title": "Partial fractions with three linear factors or a repeated factor",
+   "spec": [
+    "P2.10"
+   ],
+   "chapter": "P2.1",
+   "sections": [
+    "1.3",
+    "1.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Express",
+    "Find"
+   ],
+   "tags": [
+    "partial fractions",
+    "repeated factor"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.1.improper-partial-fractions",
+   "family": "p2.1.partial-fractions",
+   "title": "Improper fractions: divide, then partial fractions",
+   "spec": [
+    "P2.10",
+    "P2.6"
+   ],
+   "chapter": "P2.1",
+   "sections": [
+    "1.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Express",
+    "Find"
+   ],
+   "tags": [
+    "partial fractions",
+    "algebraic division",
+    "improper fractions"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.2.composite-functions",
+   "family": "p2.2.composite-inverse",
+   "title": "Composite functions fg(x) and gf(x), and solving fg(x) = k",
+   "spec": [
+    "P2.8"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "functions",
+    "composite functions"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.2.inverse-functions",
+   "family": "p2.2.composite-inverse",
+   "title": "Find an inverse function and its domain",
+   "spec": [
+    "P2.8"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "functions",
+    "inverse functions",
+    "domain",
+    "range"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.2.range-and-restricted-inverse",
+   "family": "p2.2.domain-range",
+   "title": "Range of a quadratic function; restricting the domain to find an inverse",
+   "spec": [
+    "P2.8",
+    "P2.3"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.2",
+    "2.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "Explain",
+    "State"
+   ],
+   "tags": [
+    "functions",
+    "range",
+    "one-to-one",
+    "inverse functions",
+    "completing the square"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.2.modulus-equations",
+   "family": "p2.2.modulus",
+   "title": "Solve equations involving the modulus of a linear function",
+   "spec": [
+    "P2.7"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.1",
+    "2.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "modulus",
+    "equations",
+    "graphs"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.2.quadratic-model-in-context",
+   "family": "p2.2.modelling",
+   "title": "A quadratic function as a model: maximum, valid range and limitations",
+   "spec": [
+    "P2.11",
+    "P2.3"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "State",
+    "Give a reason"
+   ],
+   "tags": [
+    "functions",
+    "modelling",
+    "quadratic",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.nth-term-quadratic-sequence",
+   "family": "p2.3.sequences",
+   "title": "Terms of a sequence given by a formula; increasing or decreasing",
+   "spec": [
+    "P4.2"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 6,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Determine"
+   ],
+   "tags": [
+    "sequences",
+    "nth term",
+    "increasing",
+    "decreasing"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.recurrence-unknown-constant",
+   "family": "p2.3.recurrence",
+   "title": "Recurrence relation u_{n+1} = ku_n + c with an unknown k",
+   "spec": [
+    "P4.2"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "sequences",
+    "recurrence relations",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.periodic-sequence",
+   "family": "p2.3.recurrence",
+   "title": "A periodic sequence: identify the order and sum many terms",
+   "spec": [
+    "P4.2",
+    "P4.3"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.6",
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "sequences",
+    "periodic",
+    "sigma notation",
+    "recurrence relations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.sigma-arithmetic",
+   "family": "p2.3.sigma",
+   "title": "Evaluate an arithmetic sum written in sigma notation",
+   "spec": [
+    "P4.3",
+    "P4.4"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Evaluate"
+   ],
+   "tags": [
+    "sigma notation",
+    "arithmetic series"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.sigma-geometric",
+   "family": "p2.3.sigma",
+   "title": "Geometric sums in sigma notation, finite and infinite",
+   "spec": [
+    "P4.3",
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.6",
+    "3.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Evaluate"
+   ],
+   "tags": [
+    "sigma notation",
+    "geometric series",
+    "sum to infinity"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.sigma-find-n",
+   "family": "p2.3.sigma",
+   "title": "Find the upper limit n of a sigma sum",
+   "spec": [
+    "P4.3",
+    "P4.4"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.6",
+    "3.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "sigma notation",
+    "arithmetic series",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.arithmetic-from-two-terms",
+   "family": "p2.3.arithmetic",
+   "title": "Arithmetic sequence from two given terms, then a sum",
+   "spec": [
+    "P4.4"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.1",
+    "3.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "arithmetic sequences",
+    "arithmetic series",
+    "simultaneous equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.arithmetic-least-n",
+   "family": "p2.3.arithmetic",
+   "title": "Least number of terms for an arithmetic sum to exceed a value",
+   "spec": [
+    "P4.4",
+    "P2.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "arithmetic series",
+    "quadratic inequality"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.arithmetic-consecutive-terms-in-k",
+   "family": "p2.3.arithmetic",
+   "title": "Three consecutive terms in k form an arithmetic sequence",
+   "spec": [
+    "P4.4"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.1",
+    "3.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "arithmetic sequences",
+    "algebra"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.geometric-from-two-terms",
+   "family": "p2.3.geometric",
+   "title": "Geometric sequence from two terms: ratio, first term and a sum",
+   "spec": [
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.3",
+    "3.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "geometric sequences",
+    "geometric series"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.sum-to-infinity-with-x",
+   "family": "p2.3.geometric",
+   "title": "Convergence condition and sum to infinity with a ratio in x",
+   "spec": [
+    "P4.5",
+    "P2.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "geometric series",
+    "sum to infinity",
+    "convergence",
+    "inequalities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.geometric-least-n-logs",
+   "family": "p2.3.geometric",
+   "title": "Least n for a geometric sum or term to pass a value (using logs)",
+   "spec": [
+    "P4.5",
+    "P6.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "geometric series",
+    "logarithms",
+    "inequalities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.arithmetic-model-salary",
+   "family": "p2.3.modelling",
+   "title": "Arithmetic series in context: salary or savings",
+   "spec": [
+    "P4.6",
+    "P4.4"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "arithmetic series",
+    "modelling",
+    "money"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.geometric-model-bouncing-ball",
+   "family": "p2.3.modelling",
+   "title": "Geometric series in context: a bouncing ball",
+   "spec": [
+    "P4.6",
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Give a reason"
+   ],
+   "tags": [
+    "geometric series",
+    "sum to infinity",
+    "modelling",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.3.geometric-model-growth",
+   "family": "p2.3.modelling",
+   "title": "Geometric series in context: percentage growth each year",
+   "spec": [
+    "P4.6",
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "geometric series",
+    "modelling",
+    "percentage growth",
+    "logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.arc-length-and-sector-area",
+   "family": "p2.5.arcs-sectors",
+   "title": "Arc length, sector area and perimeter in radians",
+   "spec": [
+    "P5.1"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.1",
+    "5.2",
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 6,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "radians",
+    "arc length",
+    "sector",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.segment-area-and-perimeter",
+   "family": "p2.5.arcs-sectors",
+   "title": "Area and perimeter of a segment",
+   "spec": [
+    "P5.1"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "radians",
+    "segment",
+    "cosine rule",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.trig-equation-radians-exact",
+   "family": "p2.5.equations",
+   "title": "Solve f(bx + c) = k in radians, giving exact multiples of π",
+   "spec": [
+    "P5.7",
+    "P5.3"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "trigonometric equations",
+    "radians",
+    "exact values"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.small-angle-quadratic-approximation",
+   "family": "p2.5.small-angles",
+   "title": "Small angle approximation of an expression as a + bθ + cθ²",
+   "spec": [
+    "P5.2"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Show that",
+    "Find"
+   ],
+   "tags": [
+    "small angle approximations",
+    "radians"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.small-angle-limit",
+   "family": "p2.5.small-angles",
+   "title": "Use small angle approximations to find a limiting value",
+   "spec": [
+    "P5.2"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that",
+    "Find"
+   ],
+   "tags": [
+    "small angle approximations",
+    "radians",
+    "limits"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.5.small-angle-approximate-solution",
+   "family": "p2.5.small-angles",
+   "title": "Approximate solution of a trig equation using small angles",
+   "spec": [
+    "P5.2",
+    "P2.3"
+   ],
+   "chapter": "P2.5",
+   "sections": [
+    "5.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "small angle approximations",
+    "quadratic",
+    "radians"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.6.exact-sec-cosec-cot",
+   "family": "p2.6.reciprocal-functions",
+   "title": "Exact values of sec, cosec and cot",
+   "spec": [
+    "P5.4",
+    "P5.3"
+   ],
+   "chapter": "P2.6",
+   "sections": [
+    "6.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "sec",
+    "cosec",
+    "cot",
+    "exact values",
+    "non-calculator"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.6.solve-with-sec-cosec-identities",
+   "family": "p2.6.reciprocal-functions",
+   "title": "Solve equations using sec²x = 1 + tan²x or cosec²x = 1 + cot²x",
+   "spec": [
+    "P5.4",
+    "P5.5",
+    "P5.7"
+   ],
+   "chapter": "P2.6",
+   "sections": [
+    "6.3",
+    "6.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Show that",
+    "Solve"
+   ],
+   "tags": [
+    "sec",
+    "cosec",
+    "cot",
+    "identities",
+    "trigonometric equations",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.6.inverse-trig-exact-values",
+   "family": "p2.6.inverse-trig",
+   "title": "Exact values of arcsin, arccos and arctan, and a composite",
+   "spec": [
+    "P5.4"
+   ],
+   "chapter": "P2.6",
+   "sections": [
+    "6.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "arcsin",
+    "arccos",
+    "arctan",
+    "inverse functions",
+    "exact values"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.6.transformed-sec-cosec-graph",
+   "family": "p2.6.reciprocal-graphs",
+   "title": "Range and turning points of y = a + b sec x or y = a + b cosec x",
+   "spec": [
+    "P5.4",
+    "P2.9"
+   ],
+   "chapter": "P2.6",
+   "sections": [
+    "6.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Write down",
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "sec",
+    "cosec",
+    "graphs",
+    "range",
+    "transformations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.addition-formulae-exact-ratios",
+   "family": "p2.7.addition-formulae",
+   "title": "Exact values of sin(A ± B), cos(A ± B), tan(A ± B) from given ratios",
+   "spec": [
+    "P5.6",
+    "P5.5"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.1",
+    "7.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "addition formulae",
+    "compound angles",
+    "exact values"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.addition-formulae-exact-surds",
+   "family": "p2.7.addition-formulae",
+   "title": "Exact surd values of sin, cos, tan of 15°, 75°, 105°, 165°",
+   "spec": [
+    "P5.6"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "addition formulae",
+    "exact values",
+    "surds",
+    "non-calculator"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.double-angle-exact-values",
+   "family": "p2.7.double-angle",
+   "title": "Exact values of sin 2x, cos 2x and tan 2x from one ratio and a quadrant",
+   "spec": [
+    "P5.6"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "double-angle formulae",
+    "exact values",
+    "CAST"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.r-cos-theta-alpha",
+   "family": "p2.7.r-form",
+   "title": "Write a cos θ + b sin θ in the form R cos(θ ± α) or R sin(θ ± α); maximum and equation",
+   "spec": [
+    "P5.6",
+    "P5.7"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 9,
+   "time": 11,
+   "commands": [
+    "Express",
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "R cos(θ − α)",
+    "harmonic form",
+    "maximum",
+    "trigonometric equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.double-angle-equations",
+   "family": "p2.7.double-angle",
+   "title": "Solve equations using double-angle formulae",
+   "spec": [
+    "P5.7",
+    "P5.6"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Solve",
+    "Show that"
+   ],
+   "tags": [
+    "double-angle formulae",
+    "trigonometric equations",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.prove-double-angle-identity-hence-solve",
+   "family": "p2.7.proofs",
+   "title": "Prove a double-angle identity, then use it to solve an equation",
+   "spec": [
+    "P5.8",
+    "P5.7"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Prove",
+    "Hence"
+   ],
+   "tags": [
+    "proof",
+    "identities",
+    "double-angle formulae",
+    "trigonometric equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.show-equation-is-quadratic-hence-solve",
+   "family": "p2.7.proofs",
+   "title": "Show that a trigonometric equation can be written as a quadratic, then solve it",
+   "spec": [
+    "P5.8",
+    "P5.5",
+    "P5.7"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Show that",
+    "Hence",
+    "Solve"
+   ],
+   "tags": [
+    "identities",
+    "trigonometric equations",
+    "quadratic",
+    "proof"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.prove-compound-identity-hence-solve",
+   "family": "p2.7.proofs",
+   "title": "Prove a compound-angle identity, then solve",
+   "spec": [
+    "P5.8",
+    "P5.6"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.1",
+    "7.6"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Prove",
+    "Hence",
+    "Solve"
+   ],
+   "tags": [
+    "proof",
+    "addition formulae",
+    "identities",
+    "trigonometric equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.ferris-wheel-model",
+   "family": "p2.7.modelling",
+   "title": "Trigonometric model: height on a Ferris wheel",
+   "spec": [
+    "P5.9",
+    "P5.7"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "modelling",
+    "trigonometric functions",
+    "radians",
+    "periodic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.tide-model-r-form",
+   "family": "p2.7.modelling",
+   "title": "Depth of water modelled with R sin(30t + α)°",
+   "spec": [
+    "P5.9",
+    "P5.6"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.5",
+    "7.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Express",
+    "Find",
+    "Give a reason"
+   ],
+   "tags": [
+    "modelling",
+    "R sin(θ + α)",
+    "harmonic form",
+    "tides",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.7.projectile-range-model",
+   "family": "p2.7.modelling",
+   "title": "Trigonometry in mechanics: the range of a projectile, R = u² sin 2θ / g",
+   "spec": [
+    "P5.9",
+    "P5.7"
+   ],
+   "chapter": "P2.7",
+   "sections": [
+    "7.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2,
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Give a reason"
+   ],
+   "tags": [
+    "modelling",
+    "projectiles",
+    "double angle",
+    "trigonometric equations",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "p2.10.change-of-sign",
    "family": "p2.10.locating-roots",
    "title": "Show a root lies in an interval by change of sign",
@@ -12223,8 +14708,8 @@
  ],
  "fixed": [],
  "totals": {
-  "templates": 222,
-  "questions": 5328,
+  "templates": 266,
+  "questions": 6384,
   "fixed": 0
  }
 }
