@@ -165,7 +165,7 @@ export function answerTex(spec: AnswerSpec): string {
       return `${lab}${s || '\\mathbf{0}'}${unit}`;
     }
     case 'interval':
-      return setToLatex(spec.set, spec.v, { setNotation: spec.setNotation });
+      return setToLatex(spec.set, spec.v, { setNotation: spec.setNotation, vTex: spec.display });
     case 'choice':
       return spec.correct.map((i) => spec.options[i]).join('; ');
     case 'hypothesis': {

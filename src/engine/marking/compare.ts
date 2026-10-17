@@ -284,11 +284,33 @@ function evalCoef(e: Expr, basis: string[], b: string): Expr {
 }
 
 // ---------- intervals ----------
+/** Replace alternative names for the variable (e.g. "f(x)", "\\mathrm{g}^{-1}(x)") by the variable itself. */
+export function applyAliases(s: string, aliases: string[], v: string): string {
+  let t = s
+    .replace(/\\(?:mathrm|operatorname|text)\{([^{}]*)\}/g, '$1')
+    .replace(/\\left\(/g, '(')
+    .replace(/\\right\)/g, ')')
+    .replace(/\s*\(\s*/g, '(')
+    .replace(/\s*\)/g, ')')
+    .replace(/\^\{\s*-\s*1\s*\}/g, '^{-1}')
+    .replace(/\^-1(?![0-9])/g, '^{-1}');
+  for (const a of [...aliases].sort((x, y) => y.length - x.length)) {
+    const esc = a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    t = t.replace(new RegExp(`(?<![\\\\A-Za-z])${esc}(?![A-Za-z])`, 'g'), ` ${v} `);
+  }
+  return t;
+}
+
 export function compareInterval(spec: IntervalSpec, r: Response): Cmp {
-  const st = parseOrInvalid(() => parseStatement(asString(r)));
+  const raw = asString(r);
+  const st = parseOrInvalid(() => parseStatement(spec.aliases?.length ? applyAliases(raw, spec.aliases, spec.v) : raw));
   if (isCmp(st)) return st;
   const S = statementToSet(st, spec.v);
-  if (!S) return { status: 'invalid', messages: [`Write your answer as inequalities in ${spec.v === 'theta' ? 'θ' : spec.v}, e.g. ${spec.v} < 2 or ${spec.v} > 5, or in set notation.`] };
+  if (!S) {
+    const name = spec.aliases?.[0] ?? (spec.v === 'theta' ? 'θ' : spec.v);
+    if (spec.aliases?.length && spec.v !== 'x' && statementToSet(st, 'x')) return wrong([`This asks for a set of values of ${name}, not of x.`]);
+    return { status: 'invalid', messages: [`Write your answer as inequalities in ${name}, e.g. ${name} < 2 or ${name} > 5, or in set notation.`] };
+  }
   const T = toNumSet(spec.set);
   let equal: boolean;
   if (spec.integer) {

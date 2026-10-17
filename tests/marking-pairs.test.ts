@@ -673,6 +673,26 @@ cases('one-tailed critical region X ⩾ 9', ans.interval([iv(num(9), INF, true, 
   ['X>9', 'wrong'],
 ]);
 
+cases('range written with f(x): f(x) ⩾ 3', ans.interval([iv(num(3), INF, true, false)], 'y', { aliases: ['f(x)', 'f', 'y'], display: '\\mathrm{f}(x)' }), [
+  ['f(x) \\geq 3', 'correct'],
+  ['\\mathrm{f}\\left(x\\right)\\ge3', 'correct'],
+  ['f \\geqslant 3', 'correct'],
+  ['y >= 3', 'correct'],
+  ['f(x) > 3', 'accuracy'],
+  ['x \\geq 3', 'wrong'],
+]);
+cases('inverse-function domain: x > −2 written with g⁻¹', ans.interval([iv(num(-2), INF, false, false)], 'y', { aliases: ['g^{-1}(x)', 'g^{-1}', 'y'] }), [
+  ['g^{-1}(x) > -2', 'correct'],
+  ['g^-1(x)>-2', 'correct'],
+  ['\\mathrm{g}^{-1}(x) > -2', 'correct'],
+]);
+cases('increasing interval: either strict or non-strict ends', ans.interval([iv(num(1), num(4), true, true)], 'x', { endsEither: true }), [
+  ['1 < x < 4', 'correct'],
+  ['1 \\le x \\le 4', 'correct'],
+  ['1 \\le x < 4', 'correct'],
+  ['x < 1 \\text{ or } x > 4', 'accuracy'],
+]);
+
 // ---------------------------------------------------------------- choice & hypothesis
 cases('single choice', ans.choice(['A', 'B', 'C'], 1), [
   ['1', 'correct'],

@@ -142,6 +142,10 @@ export interface IntervalSpec extends Base {
   setNotation?: boolean;
   /** finite endpoints may be strict or non-strict (e.g. increasing/decreasing intervals) */
   endsEither?: boolean;
+  /** other names a student may write for the variable, e.g. ["f(x)", "f"] for a range */
+  aliases?: string[];
+  /** LaTeX shown for the variable in the model answer, e.g. "\\mathrm{f}(x)" */
+  display?: string;
 }
 
 export interface ChoiceSpec extends Base {

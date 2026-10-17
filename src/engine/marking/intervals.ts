@@ -189,8 +189,8 @@ const LE = '\\leqslant',
   GE = '\\geqslant';
 
 /** LaTeX for a solution set as inequalities: "x < 2 \text{ or } x > 5". */
-export function setToLatex(set: Interval[], v: string, opts: { setNotation?: boolean } = {}): string {
-  const V = symTex(v);
+export function setToLatex(set: Interval[], v: string, opts: { setNotation?: boolean; vTex?: string } = {}): string {
+  const V = opts.vTex ?? symTex(v);
   const parts = set.map((i) => {
     const loInf = i.lo.k === 'sym' && i.lo.n === 'infty' ? true : !Number.isFinite(evaluate(i.lo));
     const hiInf = !Number.isFinite(evaluate(i.hi));
