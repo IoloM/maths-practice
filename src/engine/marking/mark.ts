@@ -133,7 +133,7 @@ export function numericText(s: NumericSpec): string {
 /** LaTeX of the correct answer as it should appear at the end of the worked solution. */
 export function answerTex(spec: AnswerSpec): string {
   const lab = spec.label ? `${spec.label} ` : '';
-  const unit = spec.unit ? `\\text{ }${spec.unit}` : '';
+  const unit = spec.unit ? (spec.unit.startsWith('^') ? spec.unit : `\\text{ }${spec.unit}`) : '';
   switch (spec.type) {
     case 'numeric':
     case 'exact':
