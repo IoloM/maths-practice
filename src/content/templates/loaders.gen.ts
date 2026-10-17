@@ -20,6 +20,7 @@ export const loaders: Record<string, () => Promise<{ default: Template[] }>> = {
   'P2.2': () => import('./P2-2/index'),
   'P2.3': () => import('./P2-3/index'),
   'P2.5': () => import('./P2-5/index'),
+  'P2.6': () => import('./P2-6/index'),
   'P2.10': () => import('./P2-10/index'),
   'P2.11': () => import('./P2-11/index'),
   'SM1.2': () => import('./SM1-2/index'),
