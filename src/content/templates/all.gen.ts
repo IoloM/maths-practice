@@ -15,20 +15,21 @@ import c11 from './P1-12/index';
 import c12 from './P1-13/index';
 import c13 from './P1-14/index';
 import c14 from './P2-1/index';
-import c15 from './P2-10/index';
-import c16 from './P2-11/index';
-import c17 from './SM1-2/index';
-import c18 from './SM1-3/index';
-import c19 from './SM1-4/index';
-import c20 from './SM1-6/index';
-import c21 from './SM1-7/index';
-import c22 from './SM1-10/index';
-import c23 from './SM2-1/index';
-import c24 from './SM2-3/index';
-import c25 from './SM2-5/index';
-import c26 from './SM2-7/index';
+import c15 from './P2-2/index';
+import c16 from './P2-10/index';
+import c17 from './P2-11/index';
+import c18 from './SM1-2/index';
+import c19 from './SM1-3/index';
+import c20 from './SM1-4/index';
+import c21 from './SM1-6/index';
+import c22 from './SM1-7/index';
+import c23 from './SM1-10/index';
+import c24 from './SM2-1/index';
+import c25 from './SM2-3/index';
+import c26 from './SM2-5/index';
+import c27 from './SM2-7/index';
 
-export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26];
+export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26, ...c27];
 
 export const BY_CHAPTER: Record<string, Template[]> = {
   'P1.1': c0,
@@ -46,16 +47,17 @@ export const BY_CHAPTER: Record<string, Template[]> = {
   'P1.13': c12,
   'P1.14': c13,
   'P2.1': c14,
-  'P2.10': c15,
-  'P2.11': c16,
-  'SM1.2': c17,
-  'SM1.3': c18,
-  'SM1.4': c19,
-  'SM1.6': c20,
-  'SM1.7': c21,
-  'SM1.10': c22,
-  'SM2.1': c23,
-  'SM2.3': c24,
-  'SM2.5': c25,
-  'SM2.7': c26,
+  'P2.2': c15,
+  'P2.10': c16,
+  'P2.11': c17,
+  'SM1.2': c18,
+  'SM1.3': c19,
+  'SM1.4': c20,
+  'SM1.6': c21,
+  'SM1.7': c22,
+  'SM1.10': c23,
+  'SM2.1': c24,
+  'SM2.3': c25,
+  'SM2.5': c26,
+  'SM2.7': c27,
 };
