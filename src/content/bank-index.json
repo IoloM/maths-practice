@@ -3731,6 +3731,620 @@
    ]
   },
   {
+   "id": "p1.12.chord-gradient-quadratic",
+   "family": "p1.12.first-principles",
+   "title": "Gradient of a chord PQ and its limit as h → 0",
+   "spec": [
+    "P7.1"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.1",
+    "12.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Hence"
+   ],
+   "tags": [
+    "differentiation",
+    "first principles",
+    "chord",
+    "limit"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.first-principles-cubic",
+   "family": "p1.12.first-principles",
+   "title": "Differentiate a cubic from first principles",
+   "spec": [
+    "P7.1"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Prove"
+   ],
+   "tags": [
+    "differentiation",
+    "first principles",
+    "proof",
+    "limit"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.second-derivative",
+   "family": "p1.12.second-derivative",
+   "title": "First and second derivatives with fractional and negative powers",
+   "spec": [
+    "P7.1",
+    "P7.2"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.3",
+    "12.8"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "second derivative",
+    "indices"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.expand-then-differentiate",
+   "family": "p1.12.differentiate-xn",
+   "title": "Expand brackets, then differentiate and find a gradient",
+   "spec": [
+    "P7.2"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.4",
+    "12.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "expanding",
+    "gradient"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.rewrite-fraction-then-differentiate",
+   "family": "p1.12.differentiate-xn",
+   "title": "Write a fraction as powers of x, then differentiate",
+   "spec": [
+    "P7.2"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.3",
+    "12.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Write"
+   ],
+   "tags": [
+    "differentiation",
+    "indices",
+    "fractional powers",
+    "negative powers"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.find-constant-from-gradient",
+   "family": "p1.12.differentiate-xn",
+   "title": "Find an unknown constant from a given gradient",
+   "spec": [
+    "P7.2"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.5",
+    "12.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "unknown constant",
+    "gradient"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.tangent-equation",
+   "family": "p1.12.tangents-normals",
+   "title": "Equation of the tangent to a curve at a point",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "tangent",
+    "straight line"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.normal-equation",
+   "family": "p1.12.tangents-normals",
+   "title": "Equation of the normal and where it meets the axes",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "normal",
+    "straight line",
+    "perpendicular"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.stationary-points-cubic",
+   "family": "p1.12.stationary-points",
+   "title": "Stationary points of a cubic and their nature",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.8",
+    "12.9"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Determine"
+   ],
+   "tags": [
+    "differentiation",
+    "stationary points",
+    "second derivative",
+    "maximum",
+    "minimum"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.increasing-decreasing",
+   "family": "p1.12.stationary-points",
+   "title": "Interval where a function is increasing or decreasing",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "differentiation",
+    "increasing",
+    "decreasing",
+    "inequalities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.12.optimisation",
+   "family": "p1.12.modelling",
+   "title": "Optimisation: maximum volume or area, minimum surface area",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.11"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "differentiation",
+    "optimisation",
+    "modelling",
+    "maximum"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "p1.13.area-under-quadratic",
    "family": "p1.13.area-under",
    "title": "Area between a quadratic curve and the x-axis",
@@ -4491,6 +5105,1193 @@
     "integration",
     "finding functions",
     "indices"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.exponential-graph-features",
+   "family": "p1.14.exponential-graphs",
+   "title": "Intercept, asymptote and range of an exponential graph",
+   "spec": [
+    "P6.1"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.1",
+    "14.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 3,
+   "commands": [
+    "Write down",
+    "State"
+   ],
+   "tags": [
+    "exponentials",
+    "graphs",
+    "asymptote",
+    "range"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.exponential-graph-crossings",
+   "family": "p1.14.exponential-graphs",
+   "title": "Exact axis crossings of y = Ae^{kx} − B",
+   "spec": [
+    "P6.1",
+    "P6.3"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.2",
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "exponentials",
+    "graphs",
+    "natural logarithm",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.find-k-and-b-from-points",
+   "family": "p1.14.exponential-graphs",
+   "title": "Find k and b for y = kbˣ through two points",
+   "spec": [
+    "P6.1"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.1",
+    "14.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exponentials",
+    "simultaneous",
+    "graphs"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.differentiate-ekx",
+   "family": "p1.14.gradient-ekx",
+   "title": "Differentiate expressions involving e^{kx}",
+   "spec": [
+    "P6.2"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exponentials",
+    "differentiation",
+    "gradient"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.gradient-at-ln-point",
+   "family": "p1.14.gradient-ekx",
+   "title": "Exact gradient of y = Ae^{kx} at x = ln p, and where the gradient takes a value",
+   "spec": [
+    "P6.2",
+    "P6.3"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.2",
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exponentials",
+    "differentiation",
+    "natural logarithm",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.rate-of-change-exponential-model",
+   "family": "p1.14.gradient-ekx",
+   "title": "Rate of change in an exponential model",
+   "spec": [
+    "P6.2",
+    "P6.7"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.2",
+    "14.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Interpret"
+   ],
+   "tags": [
+    "exponentials",
+    "differentiation",
+    "modelling",
+    "rate of change"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.evaluate-logarithms",
+   "family": "p1.14.log-definition",
+   "title": "Evaluate logarithms without a calculator",
+   "spec": [
+    "P6.3"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 4,
+   "time": 4,
+   "commands": [
+    "Find",
+    "Write down"
+   ],
+   "tags": [
+    "logarithms",
+    "non-calculator",
+    "indices"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.log-to-index-form",
+   "family": "p1.14.log-definition",
+   "title": "Solve simple log equations by converting to index form",
+   "spec": [
+    "P6.3"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Solve",
+    "Find"
+   ],
+   "tags": [
+    "logarithms",
+    "index form",
+    "equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.ln-and-e-inverse-equations",
+   "family": "p1.14.log-definition",
+   "title": "Solve equations using ln and e as inverse functions",
+   "spec": [
+    "P6.3",
+    "P6.5"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "natural logarithm",
+    "exponentials",
+    "exact",
+    "equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.write-as-single-log",
+   "family": "p1.14.log-laws",
+   "title": "Write an expression as a single logarithm",
+   "spec": [
+    "P6.4"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Express",
+    "Write"
+   ],
+   "tags": [
+    "logarithms",
+    "laws of logarithms",
+    "single logarithm"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.logs-in-terms-of-p-and-q",
+   "family": "p1.14.log-laws",
+   "title": "Express logarithms in terms of given logarithms",
+   "spec": [
+    "P6.4"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Express",
+    "Find"
+   ],
+   "tags": [
+    "logarithms",
+    "laws of logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.log-equation-using-laws",
+   "family": "p1.14.log-laws",
+   "title": "Solve a logarithmic equation using the laws of logs",
+   "spec": [
+    "P6.4",
+    "P6.5"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.5",
+    "14.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 7,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "logarithms",
+    "laws of logarithms",
+    "equations",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.solve-a-to-the-x",
+   "family": "p1.14.solve-exponential",
+   "title": "Solve aˣ = b and a^{px+q} = b using logarithms",
+   "spec": [
+    "P6.5"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "logarithms",
+    "exponential equations",
+    "calculator"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.exponential-hidden-quadratic",
+   "family": "p1.14.solve-exponential",
+   "title": "Exponential equations that reduce to a quadratic",
+   "spec": [
+    "P6.5"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.6",
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Solve"
+   ],
+   "tags": [
+    "exponential equations",
+    "quadratic",
+    "substitution",
+    "logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.exponentials-both-sides",
+   "family": "p1.14.solve-exponential",
+   "title": "Solve a^{x+p} = b^{x+q}",
+   "spec": [
+    "P6.5",
+    "P6.4"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Show that",
+    "Find"
+   ],
+   "tags": [
+    "exponential equations",
+    "logarithms",
+    "laws of logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.log-graph-power-law",
+   "family": "p1.14.log-graphs",
+   "title": "Find a and n in y = axⁿ from a graph of log y against log x",
+   "spec": [
+    "P6.6"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.8"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Estimate"
+   ],
+   "tags": [
+    "logarithms",
+    "non-linear data",
+    "power law",
+    "modelling",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.log-graph-exponential-model",
+   "family": "p1.14.log-graphs",
+   "title": "Find k and b in y = kbᵗ from a graph of log y against t",
+   "spec": [
+    "P6.6",
+    "P6.7"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.8"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Interpret",
+    "Estimate"
+   ],
+   "tags": [
+    "logarithms",
+    "non-linear data",
+    "exponential model",
+    "modelling",
+    "diagram",
+    "interpret"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.reduce-to-linear-form",
+   "family": "p1.14.log-graphs",
+   "title": "Gradient and intercept of log graphs for y = abˣ and y = pxᑫ",
+   "spec": [
+    "P6.6"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.8"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 5,
+   "commands": [
+    "Write down",
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "logarithms",
+    "non-linear data",
+    "straight line",
+    "modelling"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.cooling-model",
+   "family": "p1.14.exponential-modelling",
+   "title": "Exponential decay towards a limit: T = A + Be^{−kt}",
+   "spec": [
+    "P6.7"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.3",
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "State",
+    "Write down"
+   ],
+   "tags": [
+    "exponentials",
+    "modelling",
+    "decay",
+    "logarithms",
+    "limit"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.exponential-growth-model",
+   "family": "p1.14.exponential-modelling",
+   "title": "Exponential growth model: find k, predict, and criticise",
+   "spec": [
+    "P6.7"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.3",
+    "14.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Give a reason"
+   ],
+   "tags": [
+    "exponentials",
+    "modelling",
+    "growth",
+    "logarithms",
+    "limitations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p1.14.depreciation-and-compound-growth",
+   "family": "p1.14.exponential-modelling",
+   "title": "Depreciation and compound interest: V = V₀bᵗ",
+   "spec": [
+    "P6.7",
+    "P6.1"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.3",
+    "14.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Write down",
+    "Find"
+   ],
+   "tags": [
+    "exponentials",
+    "modelling",
+    "depreciation",
+    "compound interest",
+    "logarithms"
    ],
    "seeds": [
     1,
@@ -10422,8 +12223,8 @@
  ],
  "fixed": [],
  "totals": {
-  "templates": 190,
-  "questions": 4560,
+  "templates": 222,
+  "questions": 5328,
   "fixed": 0
  }
 }
