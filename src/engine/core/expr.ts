@@ -464,6 +464,7 @@ function tex(e: Expr, prec: number): string {
         else p = tex(f, 3);
         if (s === '' || s === '-') s += p;
         else if (startsWithDigit(p)) s += ` \\times ${p}`;
+        else if (/\\[A-Za-z]+$/.test(s) && /^[A-Za-z]/.test(p)) s += ` ${p}`; // "\pi r", not "\pir"
         else s += p;
       }
       const neg0 = s.startsWith('-');
