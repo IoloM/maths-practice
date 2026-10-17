@@ -8806,6 +8806,904 @@
    ]
   },
   {
+   "id": "p2.8.parametric-to-cartesian-polynomial",
+   "family": "p2.8.cartesian-form",
+   "title": "Convert x = at + b, y = quadratic in t into a Cartesian equation, with its domain",
+   "spec": [
+    "P3.3"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "parametric equations",
+    "cartesian form",
+    "domain",
+    "diagram"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.8.trig-parametric-to-cartesian",
+   "family": "p2.8.cartesian-form",
+   "title": "Trigonometric parametric equations to Cartesian form using identities",
+   "spec": [
+    "P3.3",
+    "P5.5"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "parametric equations",
+    "cartesian form",
+    "identities"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.8.parametric-curve-meets-line",
+   "family": "p2.8.intersections",
+   "title": "Points where a parametric curve meets a straight line",
+   "spec": [
+    "P3.3",
+    "P2.4"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "parametric equations",
+    "intersection",
+    "quadratic"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.8.parametric-projectile-model",
+   "family": "p2.8.modelling",
+   "title": "Parametric model of a projectile: landing time, range, greatest height, Cartesian path",
+   "spec": [
+    "P3.4",
+    "M7.5"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "parametric equations",
+    "modelling",
+    "projectiles"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.8.parametric-closed-path-model",
+   "family": "p2.8.modelling",
+   "title": "Modelling a closed path with trigonometric parametric equations",
+   "spec": [
+    "P3.4",
+    "P5.9"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "parametric equations",
+    "modelling",
+    "ellipse",
+    "radians"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.8.parametric-particle-path",
+   "family": "p2.8.modelling",
+   "title": "Parametric path of a moving particle: crossing the axis and extreme position",
+   "spec": [
+    "P3.4",
+    "P3.3"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.1",
+    "8.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "parametric equations",
+    "modelling",
+    "kinematics",
+    "completing the square"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.chain-rule",
+   "family": "p2.9.chain-rule",
+   "title": "Differentiate using the chain rule and find a gradient",
+   "spec": [
+    "P7.4",
+    "P7.2"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "chain rule",
+    "differentiation",
+    "gradient"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.product-rule-stationary-points",
+   "family": "p2.9.product-quotient",
+   "title": "Product rule and exact stationary points",
+   "spec": [
+    "P7.4",
+    "P7.3"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "product rule",
+    "stationary points",
+    "exponentials",
+    "logarithms"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.quotient-rule",
+   "family": "p2.9.product-quotient",
+   "title": "Quotient rule: simplify the derivative and use it",
+   "spec": [
+    "P7.4"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.5"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that",
+    "Explain"
+   ],
+   "tags": [
+    "quotient rule",
+    "stationary points"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.connected-rates-of-change",
+   "family": "p2.9.connected-rates",
+   "title": "Connected rates of change using the chain rule",
+   "spec": [
+    "P7.4"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.9"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "connected rates of change",
+    "chain rule",
+    "modelling"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.parametric-differentiation",
+   "family": "p2.9.parametric-implicit",
+   "title": "Parametric differentiation: gradient, tangent and stationary point",
+   "spec": [
+    "P7.5",
+    "P3.3"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "parametric differentiation",
+    "tangent",
+    "stationary points"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.implicit-differentiation-tangent",
+   "family": "p2.9.parametric-implicit",
+   "title": "Implicit differentiation: gradient and normal at a point",
+   "spec": [
+    "P7.5"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "implicit differentiation",
+    "normal",
+    "tangent"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.9.implicit-stationary-points",
+   "family": "p2.9.parametric-implicit",
+   "title": "Stationary points on a curve defined implicitly",
+   "spec": [
+    "P7.5",
+    "P7.3"
+   ],
+   "chapter": "P2.9",
+   "sections": [
+    "9.8"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "implicit differentiation",
+    "stationary points"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.newton-raphson-transcendental",
+   "family": "p2.10.newton-raphson",
+   "title": "Newton–Raphson with exponential, logarithmic or trigonometric functions",
+   "spec": [
+    "P9.3",
+    "P7.2"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "Newton–Raphson",
+    "numerical methods",
+    "differentiation",
+    "radians"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.trapezium-rule-from-data-in-context",
+   "family": "p2.10.modelling",
+   "title": "Estimate a distance (or volume) from a table of rates using the trapezium rule",
+   "spec": [
+    "P9.5",
+    "P9.4"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Estimate",
+    "Explain"
+   ],
+   "tags": [
+    "trapezium rule",
+    "modelling",
+    "numerical methods",
+    "kinematics"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.10.iteration-in-context",
+   "family": "p2.10.modelling",
+   "title": "Use an iteration formula to solve a modelling equation",
+   "spec": [
+    "P9.5",
+    "P9.2",
+    "P9.1"
+   ],
+   "chapter": "P2.10",
+   "sections": [
+    "10.2",
+    "10.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Show that",
+    "Find",
+    "Interpret"
+   ],
+   "tags": [
+    "iteration",
+    "modelling",
+    "numerical methods",
+    "change of sign"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "p2.10.change-of-sign",
    "family": "p2.10.locating-roots",
    "title": "Show a root lies in an interval by change of sign",
@@ -9725,6 +10623,286 @@
     "limit of a sum",
     "rectangles",
     "estimation"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.construct-de-from-wording",
+   "family": "p2.11.differential-equations",
+   "title": "Form a differential equation from a description, then find the constant",
+   "spec": [
+    "P7.6",
+    "P8.8"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.10"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Write down",
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.find-limit-from-definite-integral",
+   "family": "p2.11.definite-integrals",
+   "title": "Find an unknown limit k given the value of a definite integral",
+   "spec": [
+    "P8.1",
+    "P8.3"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "definite integration",
+    "fundamental theorem of calculus",
+    "equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.limit-of-sum-exact",
+   "family": "p2.11.limit-of-sum",
+   "title": "Write the limit of a sum as an integral and evaluate it exactly",
+   "spec": [
+    "P8.4"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "limit of a sum",
+    "definite integration",
+    "exact"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.separable-de-particular-solution",
+   "family": "p2.11.differential-equations",
+   "title": "Separable differential equations: particular solutions in the form y = f(x)",
+   "spec": [
+    "P8.7"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.10"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "differential equations",
+    "separation of variables",
+    "particular solution"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.11.de-draining-tank",
+   "family": "p2.11.de-modelling",
+   "title": "Draining tank: dh/dt = −k√h, find k and the time to empty",
+   "spec": [
+    "P8.8",
+    "P8.7"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.11"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Show that",
+    "Find",
+    "Interpret"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "separation of variables"
    ],
    "seeds": [
     1,
@@ -10779,6 +11957,350 @@
     "trapezium rule",
     "exact integration",
     "percentage error"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.magnitude-unit-vector-angle-3d",
+   "family": "p2.12.magnitude-direction",
+   "title": "3D vectors: magnitude, unit vector and angle with a coordinate axis",
+   "spec": [
+    "P10.1",
+    "P10.2"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "magnitude",
+    "unit vector",
+    "angle"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.distance-and-ratio-3d",
+   "family": "p2.12.position-vectors",
+   "title": "3D points: vector AB, exact distance, and the point dividing AB in a ratio",
+   "spec": [
+    "P10.4",
+    "P10.5"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.1",
+    "12.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "distance",
+    "ratio",
+    "position vectors"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.parallel-vectors-3d",
+   "family": "p2.12.parallel",
+   "title": "Find unknown components so that two 3D vectors are parallel",
+   "spec": [
+    "P10.3",
+    "P10.1"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "parallel",
+    "scalar multiple"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.linear-combination-3d",
+   "family": "p2.12.parallel",
+   "title": "Find scalars s and t so that sa + tb = c in three dimensions",
+   "spec": [
+    "P10.3",
+    "P2.4"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "simultaneous equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.triangle-in-3d",
+   "family": "p2.12.geometry",
+   "title": "A triangle in 3D: side lengths, an angle and the area",
+   "spec": [
+    "P10.5",
+    "P5.1"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 7,
+   "time": 9,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "cosine rule",
+    "area",
+    "geometry"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.12.forces-in-3d",
+   "family": "p2.12.mechanics",
+   "title": "Forces as 3D vectors: resultant, acceleration and an unknown component",
+   "spec": [
+    "P10.1",
+    "P10.5",
+    "M8.2"
+   ],
+   "chapter": "P2.12",
+   "sections": [
+    "12.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2,
+    3
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "vectors",
+    "3D",
+    "forces",
+    "Newton's second law",
+    "mechanics"
    ],
    "seeds": [
     1,
@@ -14708,8 +16230,8 @@
  ],
  "fixed": [],
  "totals": {
-  "templates": 266,
-  "questions": 6384,
+  "templates": 293,
+  "questions": 7032,
   "fixed": 0
  }
 }
