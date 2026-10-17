@@ -1,4 +1,6 @@
 /** Helpers for trigonometric equations. */
+import { Q } from '../../../engine/core/rational';
+
 export type TrigF = 'sin' | 'cos' | 'tan';
 const R = Math.PI / 180;
 
@@ -44,3 +46,36 @@ export function trigVal(f: TrigF, deg: number): number {
   const t = deg * R;
   return f === 'sin' ? Math.sin(t) : f === 'cos' ? Math.cos(t) : Math.tan(t);
 }
+
+// ---------- radians ----------
+
+/** deg/180 as an exact rational multiple of π. */
+export function piMultiple(deg: number): Q {
+  return Q.from(Math.round((deg / 180) * 720720) / 720720);
+}
+
+/** LaTeX for qπ: "\frac{5\pi}{6}", "-\frac{\pi}{4}", "2\pi", "0". */
+export function piTex(q: Q): string {
+  if (q.isZero) return '0';
+  const n = Math.abs(q.n);
+  const s = q.sign < 0 ? '-' : '';
+  const top = `${n === 1 ? '' : n}\\pi`;
+  return q.d === 1 ? `${s}${top}` : `${s}\\frac{${top}}{${q.d}}`;
+}
+
+/** Exact LaTeX for the special values ±1/2, ±√2/2, ±√3/2, ±1, ±√3, ±1/√3, 0. */
+export const SPECIAL: { v: number; tex: string }[] = [
+  { v: 0.5, tex: '\\frac{1}{2}' },
+  { v: -0.5, tex: '-\\frac{1}{2}' },
+  { v: Math.SQRT1_2, tex: '\\frac{\\sqrt{2}}{2}' },
+  { v: -Math.SQRT1_2, tex: '-\\frac{\\sqrt{2}}{2}' },
+  { v: Math.sqrt(3) / 2, tex: '\\frac{\\sqrt{3}}{2}' },
+  { v: -Math.sqrt(3) / 2, tex: '-\\frac{\\sqrt{3}}{2}' },
+  { v: 1, tex: '1' },
+  { v: -1, tex: '-1' },
+  { v: Math.sqrt(3), tex: '\\sqrt{3}' },
+  { v: -Math.sqrt(3), tex: '-\\sqrt{3}' },
+  { v: 1 / Math.sqrt(3), tex: '\\frac{1}{\\sqrt{3}}' },
+  { v: -1 / Math.sqrt(3), tex: '-\\frac{1}{\\sqrt{3}}' },
+  { v: 0, tex: '0' },
+];
