@@ -85,14 +85,10 @@ test('back up and restore progress', async ({ page }) => {
   await page.goto('./#/settings');
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /Back up progress/ }).click()]);
   const file = await download.path();
-  // wipe IndexedDB
-  await page.evaluate(
-    () =>
-      new Promise<void>((res) => {
-        const r = indexedDB.deleteDatabase('maths-practice');
-        r.onsuccess = r.onerror = r.onblocked = () => res();
-      }),
-  );
+  // wipe progress with the app's own (confirmed) delete
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: /Delete all progress/ }).click();
+  await expect(page.getByText(/All progress on this device has been deleted/)).toBeVisible();
   await page.reload();
   await page.goto('./#/progress');
   await expect(page.locator('.kpi b').first()).toHaveText('0');
@@ -101,4 +97,12 @@ test('back up and restore progress', async ({ page }) => {
   await expect(page.getByText(/Restored 1 attempts/)).toBeVisible();
   await page.goto('./#/progress');
   await expect(page.locator('.kpi b').first()).toHaveText('1');
+});
+
+test('a fixed multiple-choice question loads lazily and marks the chosen option', async ({ page }) => {
+  await page.goto('./#/q/fx.lds.days-in-period/0');
+  await expect(page.getByText('fixed question')).toBeVisible();
+  await page.getByLabel('184', { exact: true }).check();
+  await page.getByRole('button', { name: 'Check' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
 });

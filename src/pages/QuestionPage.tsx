@@ -27,7 +27,7 @@ export function QuestionPage({ id, seed }: { id: string; seed: number }) {
       <div className="page-head">
         <div>
           <p className="small muted" style={{ margin: 0 }}>
-            <a href={href(`/chapter/${meta.chapter}`)}>← Chapter</a> · question #{seed}
+            <a href={href(`/chapter/${meta.chapter}`)}>← Chapter</a>{meta.fixed ? ' · fixed question' : ` · question #${seed}`}
           </p>
           <h1>{meta.title}</h1>
         </div>

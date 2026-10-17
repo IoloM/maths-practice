@@ -54,6 +54,17 @@ export function Settings() {
               Keep data safe on this device
             </button>
           )}
+          <button
+            className="btn btn-danger"
+            onClick={async () => {
+              if (!window.confirm('Delete all your progress on this device? This cannot be undone unless you have a backup.')) return;
+              await (await getStore()).clearAll();
+              notifyProgress();
+              setMsg('All progress on this device has been deleted.');
+            }}
+          >
+            Delete all progress…
+          </button>
         </div>
         <input
           ref={fileRef}

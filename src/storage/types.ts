@@ -124,4 +124,6 @@ export interface Store {
   putSetting(key: string, value: unknown): Promise<void>;
   exportAll(): Promise<BackupFile>;
   importAll(b: BackupFile, mode: 'replace' | 'merge'): Promise<void>;
+  /** delete every attempt, draft, review card, set and setting on this device */
+  clearAll(): Promise<void>;
 }

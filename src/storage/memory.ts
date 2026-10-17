@@ -71,6 +71,13 @@ export class MemoryStore implements Store {
       },
     };
   }
+  async clearAll() {
+    this.attempts = [];
+    this.drafts.clear();
+    this.cards.clear();
+    this.sets.clear();
+    this.settings.clear();
+  }
   async importAll(b: BackupFile, mode: 'replace' | 'merge') {
     if (mode === 'replace') {
       this.attempts = [];

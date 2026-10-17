@@ -327,6 +327,13 @@ main.app-main {
   border-color: var(--accent);
   color: #fff;
 }
+.btn-danger {
+  color: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 55%, transparent);
+}
+.btn-danger:hover {
+  background: var(--bad-soft);
+}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .btn-primary {
     color: #0b1416;

@@ -18246,12 +18246,4705 @@
     23,
     24
    ]
+  },
+  {
+   "id": "fx.proof.three-consecutive-integers",
+   "family": "fx.proof.deduction",
+   "title": "Sum of three consecutive integers",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "integers",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.product-of-odds",
+   "family": "fx.proof.deduction",
+   "title": "Product of two odd numbers is odd",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "odd",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.consecutive-odd-squares",
+   "family": "fx.proof.deduction",
+   "title": "Difference of squares of consecutive odd numbers",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "squares",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.n-squared-plus-n-even",
+   "family": "fx.proof.deduction",
+   "title": "n² + n is always even",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "even",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.quadratic-always-positive",
+   "family": "fx.proof.deduction",
+   "title": "A quadratic is always positive",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "completing the square",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.am-gm",
+   "family": "fx.proof.deduction",
+   "title": "Arithmetic mean is at least the geometric mean",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "inequalities",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.odd-square-mod-8",
+   "family": "fx.proof.deduction",
+   "title": "The square of an odd number",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "odd",
+    "squares",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.algebraic-identity",
+   "family": "fx.proof.deduction",
+   "title": "Prove an algebraic statement is a multiple",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.cube-minus-n",
+   "family": "fx.proof.deduction",
+   "title": "n³ − n is divisible by 6",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "divisibility",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.geometry-angle-sum",
+   "family": "fx.proof.deduction",
+   "title": "Exterior angle of a triangle",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "deduction",
+    "geometry",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.primes-6k-pm-1",
+   "family": "fx.proof.deduction",
+   "title": "Primes of the form 6k ± 1",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "exhaustion",
+    "primes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.square-last-digits",
+   "family": "fx.proof.deduction",
+   "title": "Last digits of square numbers",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "exhaustion",
+    "squares",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.cubes-mod-7",
+   "family": "fx.proof.deduction",
+   "title": "Cubes and multiples of 7",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "exhaustion",
+    "cubes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-euler-primes",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: n² + n + 41",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "primes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-mersenne",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: 2ⁿ − 1 for prime n",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "primes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-square-inequality",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: x² > 4",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "inequalities",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-irrational-sum",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: sums of irrationals",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "irrational",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-irrational-product",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: products of irrationals",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "irrational",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-squares-order",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: x > y implies x² > y²?",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "inequalities",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-sine-addition",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: sin(A + B)",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "trigonometry",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-reciprocal-inequality",
+   "family": "fx.proof.counterexample",
+   "title": "Counter-example: reciprocals",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "inequalities",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.ce-prime-plus-two",
+   "family": "fx.proof.counterexample",
+   "title": "Disprove a claim about primes",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "proof",
+    "counter-example",
+    "primes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.root-2-irrational",
+   "family": "fx.proof.contradiction",
+   "title": "√2 is irrational",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "irrational",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.root-3-irrational",
+   "family": "fx.proof.contradiction",
+   "title": "√3 is irrational",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "irrational",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.infinitely-many-primes",
+   "family": "fx.proof.contradiction",
+   "title": "There are infinitely many primes",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "primes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.no-largest-even",
+   "family": "fx.proof.contradiction",
+   "title": "There is no largest even number",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.n-squared-even",
+   "family": "fx.proof.contradiction",
+   "title": "If n² is even then n is even",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "even",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.log2-3-irrational",
+   "family": "fx.proof.contradiction",
+   "title": "log₂ 3 is irrational",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "logarithms",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.no-integer-solutions",
+   "family": "fx.proof.contradiction",
+   "title": "No integer solutions of a linear equation",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "integers",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.difference-of-squares-one",
+   "family": "fx.proof.contradiction",
+   "title": "x² − y² = 1 has no positive integer solutions",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "integers",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.rational-plus-irrational",
+   "family": "fx.proof.contradiction",
+   "title": "Rational plus irrational is irrational",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Prove"
+   ],
+   "tags": [
+    "proof",
+    "contradiction",
+    "irrational",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.error-in-proof-divide-zero",
+   "family": "fx.proof.deduction",
+   "title": "Find the error: dividing by zero",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "proof",
+    "errors",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.proof.error-in-proof-examples",
+   "family": "fx.proof.deduction",
+   "title": "Checking examples is not a proof",
+   "spec": [
+    "P1.1"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "proof",
+    "errors",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.reject-log-root",
+   "family": "fx.pure.explain",
+   "title": "Rejecting a root of a log equation",
+   "spec": [
+    "P6.4"
+   ],
+   "chapter": "P1.14",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "logarithms",
+    "equations",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.sign-change-asymptote",
+   "family": "fx.pure.explain",
+   "title": "A change of sign that is not a root",
+   "spec": [
+    "P9.1"
+   ],
+   "chapter": "P2.10",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "numerical methods",
+    "change of sign",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.iteration-diverges",
+   "family": "fx.pure.explain",
+   "title": "Why an iteration diverges",
+   "spec": [
+    "P9.2"
+   ],
+   "chapter": "P2.10",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "numerical methods",
+    "iteration",
+    "cobweb",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.newton-raphson-fails",
+   "family": "fx.pure.explain",
+   "title": "When Newton–Raphson fails",
+   "spec": [
+    "P9.3"
+   ],
+   "chapter": "P2.10",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "numerical methods",
+    "Newton–Raphson",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.trapezium-concave",
+   "family": "fx.pure.explain",
+   "title": "Trapezium rule and concavity",
+   "spec": [
+    "P9.4"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "trapezium rule",
+    "concave",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.no-inverse",
+   "family": "fx.pure.explain",
+   "title": "Why a function has no inverse",
+   "spec": [
+    "P2.8"
+   ],
+   "chapter": "P2.2",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "functions",
+    "inverse functions",
+    "one-to-one",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.inverse-domain",
+   "family": "fx.pure.explain",
+   "title": "Domain of an inverse function",
+   "spec": [
+    "P2.8"
+   ],
+   "chapter": "P2.2",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "functions",
+    "inverse functions",
+    "domain",
+    "range",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.binomial-validity",
+   "family": "fx.pure.explain",
+   "title": "Validity of a binomial expansion",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "binomial expansion",
+    "validity",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.binomial-approximation-choice",
+   "family": "fx.pure.explain",
+   "title": "Choosing x for a binomial approximation",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "binomial expansion",
+    "approximation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.integral-zero-area",
+   "family": "fx.pure.explain",
+   "title": "Integral and area",
+   "spec": [
+    "P8.3"
+   ],
+   "chapter": "P1.13",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "integration",
+    "area",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.small-angle-radians",
+   "family": "fx.pure.explain",
+   "title": "Small angle approximations need radians",
+   "spec": [
+    "P5.2"
+   ],
+   "chapter": "P2.5",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "small angle approximations",
+    "radians",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.interpret-dpdt-kp",
+   "family": "fx.pure.explain",
+   "title": "Interpreting dP/dt = kP",
+   "spec": [
+    "P8.8",
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.interpret-cooling-sign",
+   "family": "fx.pure.explain",
+   "title": "Sign in a cooling model",
+   "spec": [
+    "P8.8",
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.exponential-limitation",
+   "family": "fx.pure.explain",
+   "title": "Limitation of an exponential growth model",
+   "spec": [
+    "P6.7"
+   ],
+   "chapter": "P1.14",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "exponentials",
+    "modelling",
+    "limitations",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.discriminant-tangent",
+   "family": "fx.pure.explain",
+   "title": "Discriminant and tangency",
+   "spec": [
+    "P2.3"
+   ],
+   "chapter": "P1.2",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "discriminant",
+    "tangents",
+    "quadratics",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.second-derivative-zero",
+   "family": "fx.pure.explain",
+   "title": "When the second derivative is zero",
+   "spec": [
+    "P7.1",
+    "P7.3"
+   ],
+   "chapter": "P2.9",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "stationary points",
+    "second derivative",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.convex-meaning",
+   "family": "fx.pure.explain",
+   "title": "Convex and concave",
+   "spec": [
+    "P7.1"
+   ],
+   "chapter": "P2.9",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "convex",
+    "concave",
+    "second derivative",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.inflection-definition",
+   "family": "fx.pure.explain",
+   "title": "Point of inflection",
+   "spec": [
+    "P7.3"
+   ],
+   "chapter": "P2.9",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "point of inflection",
+    "second derivative",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.factor-theorem",
+   "family": "fx.pure.explain",
+   "title": "The factor theorem",
+   "spec": [
+    "P2.6"
+   ],
+   "chapter": "P1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "factor theorem",
+    "polynomials",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.square-of-sum",
+   "family": "fx.pure.explain",
+   "title": "A common algebra error",
+   "spec": [
+    "P2.1"
+   ],
+   "chapter": "P1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "algebra",
+    "expanding",
+    "errors",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.tangent-radius",
+   "family": "fx.pure.explain",
+   "title": "Tangent and radius",
+   "spec": [
+    "P3.2"
+   ],
+   "chapter": "P1.6",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "circles",
+    "tangents",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.chord-bisector",
+   "family": "fx.pure.explain",
+   "title": "Perpendicular bisector of a chord",
+   "spec": [
+    "P3.2"
+   ],
+   "chapter": "P1.6",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "circles",
+    "chords",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.divide-by-sin",
+   "family": "fx.pure.explain",
+   "title": "Losing solutions by dividing",
+   "spec": [
+    "P5.7"
+   ],
+   "chapter": "P1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "trigonometric equations",
+    "errors",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.arcsin-range",
+   "family": "fx.pure.explain",
+   "title": "Range of arcsin",
+   "spec": [
+    "P5.4"
+   ],
+   "chapter": "P2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "arcsin",
+    "inverse trigonometric functions",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.parts-choice-of-u",
+   "family": "fx.pure.explain",
+   "title": "Choosing u in integration by parts",
+   "spec": [
+    "P8.5"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "integration by parts",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.ln-modulus",
+   "family": "fx.pure.explain",
+   "title": "Why ∫ 1/x dx = ln|x| + c",
+   "spec": [
+    "P8.2"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "integration",
+    "natural logarithm",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.sum-to-infinity-condition",
+   "family": "fx.pure.explain",
+   "title": "When does a geometric series converge?",
+   "spec": [
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "geometric series",
+    "sum to infinity",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.why-log-graph",
+   "family": "fx.pure.explain",
+   "title": "Why plot log y against log x?",
+   "spec": [
+    "P6.6"
+   ],
+   "chapter": "P1.14",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "logarithms",
+    "non-linear data",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.parallel-vectors-meaning",
+   "family": "fx.pure.explain",
+   "title": "Parallel vectors",
+   "spec": [
+    "P10.3"
+   ],
+   "chapter": "P1.11",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "vectors",
+    "parallel",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.increasing-sequence",
+   "family": "fx.pure.explain",
+   "title": "Increasing sequences",
+   "spec": [
+    "P4.2"
+   ],
+   "chapter": "P2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "sequences",
+    "increasing",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.model-breaks-down",
+   "family": "fx.pure.explain",
+   "title": "When a model breaks down",
+   "spec": [
+    "P2.11"
+   ],
+   "chapter": "P2.2",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "modelling",
+    "functions",
+    "limitations",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-1",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-2",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-3",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-4",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-5",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.form-de-6",
+   "family": "fx.pure.form-de",
+   "title": "Form a differential equation from a description",
+   "spec": [
+    "P7.6"
+   ],
+   "chapter": "P2.11",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "differential equations",
+    "modelling",
+    "proportion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.correlation-causation",
+   "family": "fx.statistics.interpret",
+   "title": "Correlation and causation",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "correlation",
+    "interpretation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.extrapolation",
+   "family": "fx.statistics.interpret",
+   "title": "Extrapolation",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "regression",
+    "interpolation",
+    "extrapolation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.interpret-gradient",
+   "family": "fx.statistics.interpret",
+   "title": "Interpret the gradient of a regression line",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Interpret"
+   ],
+   "tags": [
+    "regression",
+    "interpretation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.interpret-intercept",
+   "family": "fx.statistics.interpret",
+   "title": "Interpret the intercept of a regression line",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Interpret",
+    "Comment"
+   ],
+   "tags": [
+    "regression",
+    "interpretation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.pmcc-meaning",
+   "family": "fx.statistics.interpret",
+   "title": "Interpret a PMCC",
+   "spec": [
+    "S2.2",
+    "S5.1"
+   ],
+   "chapter": "SM2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "correlation",
+    "pmcc",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.regression-explanatory",
+   "family": "fx.statistics.interpret",
+   "title": "Which regression line?",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.4",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "regression",
+    "variables",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.median-vs-mean",
+   "family": "fx.statistics.interpret",
+   "title": "Choosing an average for skewed data",
+   "spec": [
+    "S2.3",
+    "S2.4"
+   ],
+   "chapter": "SM1.2",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "measures of location",
+    "skew",
+    "outliers",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.outlier-rule",
+   "family": "fx.statistics.interpret",
+   "title": "Identifying outliers",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "outliers",
+    "IQR",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.compare-distributions",
+   "family": "fx.statistics.interpret",
+   "title": "Comparing two distributions",
+   "spec": [
+    "S2.4",
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Compare"
+   ],
+   "tags": [
+    "comparing data",
+    "box plots",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.histogram-area",
+   "family": "fx.statistics.interpret",
+   "title": "Histograms and frequency",
+   "spec": [
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "histograms",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.coding",
+   "family": "fx.statistics.interpret",
+   "title": "Effect of coding on mean and standard deviation",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "coding",
+    "standard deviation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.skew-boxplot",
+   "family": "fx.statistics.interpret",
+   "title": "Skewness from a box plot",
+   "spec": [
+    "S2.1"
+   ],
+   "chapter": "SM1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "skew",
+    "box plots",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.sd-units",
+   "family": "fx.statistics.interpret",
+   "title": "Units of standard deviation and variance",
+   "spec": [
+    "S2.3"
+   ],
+   "chapter": "SM1.2",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "standard deviation",
+    "variance",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.binomial-conditions",
+   "family": "fx.statistics.interpret",
+   "title": "Conditions for a binomial model",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "binomial",
+    "modelling",
+    "assumptions",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.normal-continuity",
+   "family": "fx.statistics.interpret",
+   "title": "Continuity correction",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "normal distribution",
+    "binomial approximation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.normal-approx-conditions",
+   "family": "fx.statistics.interpret",
+   "title": "When to approximate a binomial by a normal",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "normal distribution",
+    "binomial approximation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.normal-point-probability",
+   "family": "fx.statistics.interpret",
+   "title": "Probability of an exact value for a normal variable",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "normal distribution",
+    "continuous",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.normal-suitability",
+   "family": "fx.statistics.interpret",
+   "title": "Is a normal model suitable?",
+   "spec": [
+    "S4.2",
+    "S4.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "normal distribution",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.me-vs-independent",
+   "family": "fx.statistics.interpret",
+   "title": "Mutually exclusive or independent?",
+   "spec": [
+    "S3.1"
+   ],
+   "chapter": "SM1.5",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "probability",
+    "mutually exclusive",
+    "independence",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.significance-level",
+   "family": "fx.statistics.interpret",
+   "title": "Meaning of the significance level",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "significance level",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.critical-region-meaning",
+   "family": "fx.statistics.interpret",
+   "title": "Meaning of a critical region",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "critical region",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.conclusion-in-context",
+   "family": "fx.statistics.interpret",
+   "title": "Writing a hypothesis test conclusion",
+   "spec": [
+    "S5.2"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Give a reason"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "conclusions",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.one-or-two-tailed",
+   "family": "fx.statistics.interpret",
+   "title": "One-tailed or two-tailed?",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "tails",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.hypotheses-parameter",
+   "family": "fx.statistics.interpret",
+   "title": "Hypotheses are about the population",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "parameters",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.actual-significance",
+   "family": "fx.statistics.interpret",
+   "title": "Actual significance level",
+   "spec": [
+    "S5.2"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "critical region",
+    "binomial",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.mean-test-assumption",
+   "family": "fx.statistics.interpret",
+   "title": "Test for a mean: assumptions",
+   "spec": [
+    "S5.3"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "normal distribution",
+    "sample mean",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.zero-correlation-test",
+   "family": "fx.statistics.interpret",
+   "title": "Test for zero correlation: interpretation",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Interpret"
+   ],
+   "tags": [
+    "hypothesis testing",
+    "correlation",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.sampling-frame",
+   "family": "fx.statistics.interpret",
+   "title": "Sampling frame",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "sampling",
+    "sampling frame",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.opportunity-bias",
+   "family": "fx.statistics.interpret",
+   "title": "Bias in opportunity sampling",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "sampling",
+    "bias",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.larger-sample",
+   "family": "fx.statistics.interpret",
+   "title": "Why use a larger sample?",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "sampling",
+    "sample size",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.quota-vs-stratified",
+   "family": "fx.statistics.interpret",
+   "title": "Quota and stratified sampling",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "sampling",
+    "quota",
+    "stratified",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.simple-random-method",
+   "family": "fx.statistics.interpret",
+   "title": "Describe how to take a simple random sample",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Describe"
+   ],
+   "tags": [
+    "sampling",
+    "simple random sampling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.stats.cleaning-data",
+   "family": "fx.statistics.interpret",
+   "title": "Cleaning data",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "cleaning data",
+    "outliers",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.period",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: time period",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.uk-stations",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: UK stations",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.overseas-stations",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: overseas stations",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.perth-season",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: Perth is in the southern hemisphere",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.trace",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: “tr” in rainfall",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.trace-treatment",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: treating trace values",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.na",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: missing values",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.cloud-units",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: cloud cover units",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.visibility-units",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: visibility units",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.wind-units",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: wind speed units",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.knots-conversion",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: converting knots",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.beaufort",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: the Beaufort scale",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.humidity-units",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: relative humidity",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.sunshine-units",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: sunshine",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.most-northerly",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: most northerly UK station",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.most-southerly",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: most south-westerly UK station",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.inland",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: an inland station",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.days-in-period",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: number of days",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.sampling-frame",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: sampling from it",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.comparing-years",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: comparing 1987 and 2015",
+   "spec": [
+    "S1.1",
+    "S2.4"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.correlation-context",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: interpreting a correlation",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Interpret"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.outlier-rainfall",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: very large rainfall values",
+   "spec": [
+    "S2.4"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.temperature-type",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: type of data for temperature",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.cloud-type",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: type of data for cloud cover",
+   "spec": [
+    "S1.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.lds.relationship-pressure",
+   "family": "fx.statistics.large-data-set",
+   "title": "Large data set: choosing variables",
+   "spec": [
+    "S2.2",
+    "S5.1"
+   ],
+   "chapter": "SM1.1",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain",
+    "Suggest"
+   ],
+   "tags": [
+    "large data set",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.particle",
+   "family": "fx.mechanics.modelling",
+   "title": "Modelling an object as a particle",
+   "spec": [
+    "M8.1"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "particle",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.light-string",
+   "family": "fx.mechanics.modelling",
+   "title": "A light string",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "strings",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.inextensible",
+   "family": "fx.mechanics.modelling",
+   "title": "An inextensible string",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "strings",
+    "connected particles",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.smooth-pulley",
+   "family": "fx.mechanics.modelling",
+   "title": "A smooth pulley",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "pulleys",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.smooth-surface",
+   "family": "fx.mechanics.modelling",
+   "title": "A smooth surface",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.5",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "friction",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.uniform-rod",
+   "family": "fx.mechanics.modelling",
+   "title": "A uniform rod",
+   "spec": [
+    "M9.1"
+   ],
+   "chapter": "SM2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "rods",
+    "moments",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.rigid",
+   "family": "fx.mechanics.modelling",
+   "title": "Why model as rigid?",
+   "spec": [
+    "M9.1"
+   ],
+   "chapter": "SM2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "rigid body",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.lamina",
+   "family": "fx.mechanics.modelling",
+   "title": "A lamina",
+   "spec": [
+    "M8.1"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "lamina",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.bead-wire",
+   "family": "fx.mechanics.modelling",
+   "title": "A bead on a wire",
+   "spec": [
+    "M8.1"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "bead",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.air-resistance",
+   "family": "fx.mechanics.modelling",
+   "title": "Ignoring air resistance",
+   "spec": [
+    "M7.3"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling assumptions",
+    "air resistance",
+    "vertical motion",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.refine-projectile",
+   "family": "fx.mechanics.modelling",
+   "title": "Refining a projectile model",
+   "spec": [
+    "M7.5"
+   ],
+   "chapter": "SM2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "modelling",
+    "projectiles",
+    "refinement",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.friction-direction",
+   "family": "fx.mechanics.modelling",
+   "title": "Direction of friction on a slope",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.7",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "friction",
+    "inclined planes",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.normal-not-weight",
+   "family": "fx.mechanics.modelling",
+   "title": "Why R is not mg on a slope",
+   "spec": [
+    "M8.2"
+   ],
+   "chapter": "SM2.5",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "inclined planes",
+    "resolving",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.newton-first-law",
+   "family": "fx.mechanics.modelling",
+   "title": "Newton's first law",
+   "spec": [
+    "M8.1"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "Newton's laws",
+    "equilibrium",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.newton-third-law",
+   "family": "fx.mechanics.modelling",
+   "title": "Newton's third law pairs",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "Newton's laws",
+    "third law",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.string-slack",
+   "family": "fx.mechanics.modelling",
+   "title": "After the string breaks",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "connected particles",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.ladder-climbing",
+   "family": "fx.mechanics.modelling",
+   "title": "Why a ladder may slip as someone climbs",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.7",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "ladders",
+    "friction",
+    "moments",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.vt-area",
+   "family": "fx.mechanics.modelling",
+   "title": "Meaning of the area under a velocity–time graph",
+   "spec": [
+    "M7.2"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "kinematics",
+    "graphs",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.st-gradient",
+   "family": "fx.mechanics.modelling",
+   "title": "Gradient of a displacement–time graph",
+   "spec": [
+    "M7.2"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "kinematics",
+    "graphs",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.speed-vs-velocity",
+   "family": "fx.mechanics.modelling",
+   "title": "Speed and velocity",
+   "spec": [
+    "M7.1"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "kinematics",
+    "language",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.suvat-validity",
+   "family": "fx.mechanics.modelling",
+   "title": "When can the suvat formulae be used?",
+   "spec": [
+    "M7.3"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "kinematics",
+    "suvat",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.variable-acceleration-method",
+   "family": "fx.mechanics.modelling",
+   "title": "Choosing a method for variable acceleration",
+   "spec": [
+    "M7.4"
+   ],
+   "chapter": "SM1.11",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "kinematics",
+    "calculus",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.g-value",
+   "family": "fx.mechanics.modelling",
+   "title": "The value of g",
+   "spec": [
+    "M8.3"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "modelling",
+    "gravity",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.limiting-equilibrium",
+   "family": "fx.mechanics.modelling",
+   "title": "Meaning of limiting equilibrium",
+   "spec": [
+    "M8.6"
+   ],
+   "chapter": "SM2.5",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "friction",
+    "equilibrium",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.lift-reaction",
+   "family": "fx.mechanics.modelling",
+   "title": "Apparent weight in a lift",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "Newton's second law",
+    "lifts",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.tilting",
+   "family": "fx.mechanics.modelling",
+   "title": "On the point of tilting",
+   "spec": [
+    "M9.1"
+   ],
+   "chapter": "SM2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "moments",
+    "tilting",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.projectile-independence",
+   "family": "fx.mechanics.modelling",
+   "title": "Horizontal and vertical motion of a projectile",
+   "spec": [
+    "M7.5"
+   ],
+   "chapter": "SM2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "projectiles",
+    "modelling",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.equilibrium-vectors",
+   "family": "fx.mechanics.modelling",
+   "title": "Equilibrium of a particle under forces",
+   "spec": [
+    "M8.5"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "forces",
+    "vectors",
+    "equilibrium",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.base-units",
+   "family": "fx.mechanics.modelling",
+   "title": "SI base quantities",
+   "spec": [
+    "M6.1"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "units",
+    "SI units",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
+  },
+  {
+   "id": "fx.mech.units-of-acceleration",
+   "family": "fx.mechanics.modelling",
+   "title": "Units of acceleration",
+   "spec": [
+    "M6.1"
+   ],
+   "chapter": "SM1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 1,
+   "marks": 1,
+   "time": 1,
+   "commands": [
+    "State"
+   ],
+   "tags": [
+    "units",
+    "fixed"
+   ],
+   "seeds": [
+    0
+   ],
+   "fixed": true
   }
  ],
- "fixed": [],
  "totals": {
   "templates": 329,
   "questions": 7896,
-  "fixed": 0
+  "fixed": 158
  }
 }

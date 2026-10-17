@@ -8,6 +8,7 @@ import path from 'node:path';
 import { ALL_TEMPLATES } from '../src/content/templates/all.gen';
 import { FIXED } from '../src/content/fixed/index';
 import { validSeedInstance } from '../src/engine/templates/validate';
+import { fixedToTemplate } from '../src/content/fixed/adapter';
 import type { TemplateMeta } from '../src/engine/templates/types';
 
 const SEEDS_PER_TEMPLATE = 24;
@@ -15,6 +16,7 @@ const out = path.resolve(import.meta.dirname, '../src/content/bank-index.json');
 
 export interface BankEntry extends TemplateMeta {
   seeds: number[];
+  fixed?: boolean;
 }
 
 const entries: BankEntry[] = [];
@@ -29,13 +31,22 @@ for (const t of ALL_TEMPLATES) {
   const { generate: _g, verify: _v, ...meta } = t;
   entries.push({ ...meta, seeds });
 }
+const generatedCount = entries.length,
+  generatedQuestions = entries.reduce((s, e) => s + e.seeds.length, 0);
+for (const f of FIXED) {
+  const { generate: _g, verify: _v, ...meta } = fixedToTemplate(f);
+  if (!validSeedInstance(fixedToTemplate(f), 0)) {
+    console.error(`✗ fixed ${f.id} fails validation`);
+    failures++;
+  }
+  entries.push({ ...meta, seeds: [0], fixed: true });
+}
 const index = {
   version: 1,
   templates: entries,
-  fixed: FIXED.map(({ id, title, spec, chapter, sections, level, paper, difficulty, marks, time, commands, tags, kind }) => ({ id, title, spec, chapter, sections, level, paper, difficulty, marks, time, commands, tags, kind })),
   totals: {
-    templates: entries.length,
-    questions: entries.reduce((s, e) => s + e.seeds.length, 0),
+    templates: generatedCount,
+    questions: generatedQuestions,
     fixed: FIXED.length,
   },
 };

@@ -3,11 +3,11 @@ import bankJson from './bank-index.json';
 import { loaders } from './templates/loaders.gen';
 import { generateInstance, validateInstance } from '../engine/templates/validate';
 import type { ChapterRef, Instance, Template, TemplateMeta } from '../engine/templates/types';
-import { FIXED } from './fixed/index';
-import type { FixedQuestion } from '../engine/templates/types';
 
 export interface BankEntry extends TemplateMeta {
   seeds: number[];
+  /** a fixed (non-generated) question: single seed 0 */
+  fixed?: boolean;
 }
 
 export const BANK = bankJson as unknown as { version: number; templates: BankEntry[]; totals: { templates: number; questions: number; fixed: number } };
@@ -30,9 +30,17 @@ export function loadChapter(ch: string): Promise<Map<string, Template>> {
   return p;
 }
 
+let fixedPromise: Promise<Map<string, Template>> | null = null;
+
 export async function loadTemplate(id: string): Promise<Template> {
   const e = ENTRY_BY_ID.get(id);
   if (!e) throw new Error(`Unknown question type: ${id}`);
+  if (e.fixed) {
+    fixedPromise ??= import('./fixed/templates').then((m) => m.FIXED_TEMPLATES);
+    const t = (await fixedPromise).get(id);
+    if (!t) throw new Error(`Fixed question ${id} missing`);
+    return t;
+  }
   const t = (await loadChapter(e.chapter)).get(id);
   if (!t) throw new Error(`Template ${id} missing from its chapter bundle`);
   return t;
@@ -62,6 +70,7 @@ export class InvalidSeedError extends Error {
 
 /** A fresh random seed that passes validation (falls back to a bank seed). */
 export async function freshSeed(id: string, avoid: Set<number> = new Set()): Promise<number> {
+  if (ENTRY_BY_ID.get(id)?.fixed) return 0;
   const t = await loadTemplate(id);
   for (let i = 0; i < 40; i++) {
     const seed = 1000 + Math.floor(Math.random() * 2_000_000_000);
@@ -77,4 +86,3 @@ export async function freshSeed(id: string, avoid: Set<number> = new Set()): Pro
   return seeds[Math.floor(Math.random() * seeds.length)];
 }
 
-export const FIXED_BY_ID = new Map<string, FixedQuestion>(FIXED.map((f) => [f.id, f]));

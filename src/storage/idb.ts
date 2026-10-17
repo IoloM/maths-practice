@@ -88,6 +88,11 @@ class IdbStore implements Store {
     ]);
     return { app: 'maths-practice', version: 1, exportedAt: new Date().toISOString(), stores: { attempts, drafts, cards, sets, settings } };
   }
+  async clearAll() {
+    const tx = this.db.transaction(STORES, 'readwrite');
+    for (const s of STORES) await tx.objectStore(s).clear();
+    await tx.done;
+  }
   async importAll(b: BackupFile, mode: 'replace' | 'merge') {
     const tx = this.db.transaction(STORES, 'readwrite');
     if (mode === 'replace') for (const s of STORES) await tx.objectStore(s).clear();

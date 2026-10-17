@@ -41,12 +41,40 @@ self-marking, drawing, offline, backup/restore.
   self-marking of method lines, a lazy Compute Engine fallback parser.
 - Suite: ~430 equivalent/non-equivalent answer pairs plus part-level tests (all green).
 
-## Phase 3 — Content waves (in progress)
+## Phase 3 — Content (templates ✅, fixed questions in progress)
 
-Wave A (priority topics) so far: binomial distribution (8), binomial hypothesis testing and
-critical regions (6), normal distribution incl. approximation and tests for a mean (10),
-correlation tests and log models (5), regression interpretation (3), measures of spread —
-variance, coding, combined samples, interpolation (7).
+**Templates: 329 · verified questions in the bank index: 7,896 · spec points with ≥ 3 templates: 89 / 89.**
 
-**Still to do in Wave A:** Pure Year 2 integration, forces and motion, modelling assumptions
-(fixed questions), histograms, inclined planes. Then Waves B–E and fixed questions.
+Every Edexcel 9MA0 spec point now has at least three primary templates, across every chapter of the
+Pearson Pure 1 & 2 and Statistics & Mechanics 1 & 2 books. Each template generates text, computed
+answers, an Edexcel-style mark scheme, three hints, common errors and a worked solution, and is
+checked on 200 seeds by an independent method (numerical calculus, brute-force enumeration,
+simulation or direct substitution).
+
+Highlights by area
+- **Pure Year 1**: algebra and proof, quadratics, inequalities, graphs, lines, circles, factor
+  theorem, binomial expansion, trigonometry (ratios, graphs, identities, equations), 2D vectors,
+  differentiation (first principles to optimisation), integration (13.5–13.7 in depth),
+  exponentials and logarithms (laws, equations, log graphs of non-linear data, modelling).
+- **Pure Year 2**: partial fractions, functions (composite, inverse, range, modulus, modelling),
+  sequences and series (recurrence, sigma, AP, GP, sum to infinity, modelling), radians and small
+  angles, sec/cosec/cot and inverse trig, addition/double-angle formulae and R cos(θ − α), identity
+  proofs, trig modelling, parametric equations, chain/product/quotient rules, connected rates,
+  implicit and parametric differentiation, numerical methods, integration in depth (standard,
+  substitution, parts, partial fractions, trapezium rule, limits of sums, differential equations),
+  3D vectors.
+- **Statistics**: sampling and the large data set, measures and representations, histograms,
+  correlation and regression, probability (Venn, trees, two-way tables, conditional, modelling),
+  binomial and normal distributions, choosing a distribution, hypothesis tests.
+- **Mechanics**: units and derived quantities, kinematics (language, graphs, suvat, vertical
+  motion, variable acceleration, 2D vectors), forces and Newton's laws (connected particles,
+  pulleys, inclined planes, friction, dynamics in a plane), projectiles, moments (rods, tilting,
+  ladders).
+
+Engine improvements made along the way: interval answers accept either strict or non-strict
+inequalities where Edexcel does, and accept f(x), g⁻¹(x) etc. for ranges; the validator now catches
+un-interpolated `${…}` text and double backslashes; the LaTeX printer separates symbols from
+following letters (π r, not \\pir); degree units print without a stray space.
+
+**Still to do in Phase 3:** at least 150 fixed questions (proof, explain/interpret, modelling
+assumptions, large data set knowledge).

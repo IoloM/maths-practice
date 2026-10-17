@@ -1,4 +1,9 @@
 /** Fixed (non-generated) questions: proof, explain/interpret, modelling assumptions, large data set. */
 import type { FixedQuestion } from '../../engine/templates/types';
+import { PROOF } from './proof';
+import { MECHANICS } from './mechanics';
+import { STATISTICS } from './statistics';
+import { LARGE_DATA_SET } from './large-data-set';
+import { PURE } from './pure';
 
-export const FIXED: FixedQuestion[] = [];
+export const FIXED: FixedQuestion[] = [...PROOF, ...PURE, ...STATISTICS, ...LARGE_DATA_SET, ...MECHANICS];

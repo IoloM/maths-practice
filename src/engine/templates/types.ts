@@ -112,6 +112,9 @@ export interface FixedQuestion {
   commands: CommandWord[];
   tags: string[];
   kind: 'self' | 'choice';
+  /** groups related fixed questions (defaults to the chapter) */
+  family?: string;
+  stem?: string;
   prompt: string;
   diagram?: Diagram;
   /** for 'choice' */

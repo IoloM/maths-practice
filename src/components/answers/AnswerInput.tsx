@@ -2,6 +2,7 @@ import { useId } from 'react';
 import type { AnswerSpec, NumericSpec, ExactSpec, Response } from '../../engine/marking/types';
 import { MathText, Tex } from '../MathText';
 import { MathField } from './MathField';
+import { choiceOrder } from '../../lib/choiceOrder';
 
 interface Props {
   spec: AnswerSpec;
@@ -171,7 +172,7 @@ export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLab
       return (
         <fieldset className="choice-list" style={{ border: 'none', margin: 0, padding: 0 }}>
           <legend className="sr-only">Choose an answer for {where}</legend>
-          {spec.options.map((o, i) => (
+          {choiceOrder(spec.options).map((i) => ({ o: spec.options[i], i })).map(({ o, i }) => (
             <label className="check" key={i}>
               <input
                 type={spec.multi ? 'checkbox' : 'radio'}
@@ -250,7 +251,7 @@ export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLab
           <span>Conclusion</span>
           <fieldset className="choice-list" style={{ border: 'none', margin: 0, padding: 0 }}>
             <legend className="sr-only">Conclusion in context</legend>
-            {spec.conclusions.map((c, i) => (
+            {choiceOrder(spec.conclusions).map((i) => ({ c: spec.conclusions[i], i })).map(({ c, i }) => (
               <label className="check" key={i}>
                 <input type="radio" name={`${id}-concl`} checked={R.conclusion === String(i)} disabled={disabled} onChange={() => set('conclusion', String(i))} />
                 <MathText src={c} inline />

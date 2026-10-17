@@ -9,11 +9,13 @@ import { SPEC } from '../src/content/spec';
 
 const MIN = 3;
 const allowGaps = process.argv.includes('--allow-gaps');
-type E = { id: string; spec: string[]; seeds: number[] };
+type E = { id: string; spec: string[]; seeds: number[]; fixed?: boolean };
+const GEN = (bank.templates as E[]).filter((t) => !t.fixed);
+const FIX = (bank.templates as E[]).filter((t) => t.fixed);
 const rows = SPEC.map((sp) => {
-  const primary = (bank.templates as E[]).filter((t) => t.spec[0] === sp.ref);
-  const secondary = (bank.templates as E[]).filter((t) => t.spec.slice(1).includes(sp.ref));
-  const fixed = (bank.fixed as { spec: string[] }[]).filter((f) => f.spec.includes(sp.ref)).length;
+  const primary = GEN.filter((t) => t.spec[0] === sp.ref);
+  const secondary = GEN.filter((t) => t.spec.slice(1).includes(sp.ref));
+  const fixed = FIX.filter((f) => f.spec.includes(sp.ref)).length;
   return { ref: sp.ref, title: sp.title, t: primary.length, inst: primary.reduce((s, t) => s + t.seeds.length, 0), sec: secondary.length, fixed };
 });
 const pad = (s: string | number, n: number) => String(s).padEnd(n);
