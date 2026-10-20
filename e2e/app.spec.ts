@@ -106,3 +106,14 @@ test('a fixed multiple-choice question loads lazily and marks the chosen option'
   await page.getByRole('button', { name: 'Check' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
 });
+
+test('moving between questions with different numbers of parts does not crash', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('./#/q/sm2.4.uniform-rod-on-two-supports/2');
+  await expect(page.getByRole('heading', { name: /uniform rod/i })).toBeVisible();
+  await page.goto('./#/q/sm2.4.ladder-limiting-equilibrium/3');
+  await expect(page.getByRole('heading', { name: /Ladder/ })).toBeVisible();
+  await expect(page.getByText('Find the coefficient of friction')).toBeVisible();
+  expect(errors).toEqual([]);
+});

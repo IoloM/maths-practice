@@ -48,7 +48,15 @@ const verdictText: Record<string, string> = {
   self: 'Self-marked',
 };
 
-export function QuestionView({ inst, meta, number = 1, mode, setId, onFinished, onNext, nextLabel = 'Next question' }: Props) {
+/**
+ * Keyed on the instance itself so every new question gets fresh per-part state, whatever key the
+ * caller uses (a route change and a data load can arrive in the same render).
+ */
+export function QuestionView(props: Props) {
+  return <QuestionViewInner key={`${props.inst.templateId}:${props.inst.seed}`} {...props} />;
+}
+
+function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, onNext, nextLabel = 'Next question' }: Props) {
   const { settings } = useSettings();
   const key = `${inst.templateId}:${inst.seed}`;
   const total = inst.parts.reduce((s, p) => s + p.marks, 0);
