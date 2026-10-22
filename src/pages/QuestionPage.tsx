@@ -4,6 +4,9 @@ import type { Instance } from '../engine/templates/types';
 import { QuestionView } from '../components/QuestionView';
 import { Loading, ErrorBox } from '../components/bits';
 import { navigate, href } from '../router';
+import { useProgress } from '../lib/useProgress';
+import { scoreOf } from '../progress/mastery';
+import { formatDuration } from '../lib/attempt';
 
 /** A single question by template + seed (shareable URL). */
 export function QuestionPage({ id, seed }: { id: string; seed: number }) {
@@ -20,6 +23,8 @@ export function QuestionPage({ id, seed }: { id: string; seed: number }) {
       alive = false;
     };
   }, [id, seed]);
+  const { attempts } = useProgress();
+  const history = attempts.filter((a) => a.templateId === id).sort((a, b) => b.finishedAt - a.finishedAt);
   const meta = ENTRY_BY_ID.get(id);
   if (!meta) return <ErrorBox>Unknown question type “{id}”.</ErrorBox>;
   return (
@@ -35,6 +40,31 @@ export function QuestionPage({ id, seed }: { id: string; seed: number }) {
       {error && <ErrorBox>{error}</ErrorBox>}
       {!inst && !error && <Loading />}
       {inst && <QuestionView key={`${id}:${seed}`} inst={inst} meta={meta} mode="shared" onNext={() => navigate('/practice', { t: id })} nextLabel="More like this" />}
+      {history.length > 0 && (
+        <section className="card">
+          <h2>Your history with this question type</h2>
+          <ul className="list">
+            {history.slice(0, 20).map((a) => (
+              <li key={a.id}>
+                <a className="list-link" href={href(`/q/${a.templateId}/${a.seed}`)}>
+                  <span style={{ flex: 1 }}>
+                    {new Date(a.finishedAt).toLocaleString()}
+                    <span className="muted small">
+                      {' '}
+                      · #{a.seed} · {a.mode}
+                      {a.parts.some((p) => p.hints > 0) ? ' · hints used' : ''}
+                    </span>
+                  </span>
+                  <span className="muted small">{formatDuration(a.durationMs)}</span>
+                  <span className="score-pill">
+                    {scoreOf(a)}/{a.marks}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

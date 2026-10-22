@@ -117,3 +117,25 @@ test('moving between questions with different numbers of parts does not crash', 
   await expect(page.getByText('Find the coefficient of friction')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('a shared timed set runs under exam conditions and is marked at the end', async ({ page }) => {
+  const code = encodeURIComponent(`timed~5~${Q}:5~E2E set`);
+  await page.goto(`./#/set/import?c=${code}`);
+  await expect(page.getByRole('heading', { name: 'E2E set' })).toBeVisible();
+  await page.getByRole('button', { name: /Start — the timer begins now/ }).click();
+  await expect(page.getByText(/answered/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Check' })).toHaveCount(0);
+  await page.getByLabel('Answer for question 1').fill(String(answerFor(Q, 5)));
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: /Finish & mark/ }).first().click();
+  await expect(page.getByText(/marks \(100%\)/)).toBeVisible();
+});
+
+test('reference page shows generated statistical tables', async ({ page }) => {
+  await page.goto('./#/reference');
+  await page.getByRole('tab', { name: 'Normal table' }).click();
+  await expect(page.getByRole('cell', { name: '1.9600' })).toBeVisible();
+  await page.getByRole('tab', { name: 'PMCC table' }).click();
+  const row12 = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: '12', exact: true }) });
+  await expect(row12.getByRole('cell').nth(1)).toHaveText('0.4973'); // n = 12, 5% one-tailed
+});

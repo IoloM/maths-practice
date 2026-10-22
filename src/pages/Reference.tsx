@@ -11,8 +11,8 @@ const PURE: { h: string; f: F[] }[] = [
     f: [
       ['Arithmetic series', md`$S_{n} = \frac{1}{2}n(a + l) = \frac{1}{2}n\left[2a + (n - 1)d\right]$`],
       ['Geometric series', md`$S_{n} = \dfrac{a(1 - r^{n})}{1 - r}$, $\quad S_{\infty} = \dfrac{a}{1 - r}$ for $|r| < 1$`],
-      ['Binomial series ($n \in \mathbb{N}$)', md`$(a + b)^{n} = a^{n} + \binom{n}{1}a^{n-1}b + \binom{n}{2}a^{n-2}b^{2} + \cdots + \binom{n}{r}a^{n-r}b^{r} + \cdots + b^{n}$, where $\binom{n}{r} = \dfrac{n!}{r!(n - r)!}$`],
-      ['Binomial series ($|x| < 1$, $n \in \mathbb{R}$)', md`$(1 + x)^{n} = 1 + nx + \dfrac{n(n - 1)}{2!}x^{2} + \cdots + \dfrac{n(n - 1)\cdots(n - r + 1)}{r!}x^{r} + \cdots$`],
+      [md`Binomial series ($n \in \mathbb{N}$)`, md`$(a + b)^{n} = a^{n} + \binom{n}{1}a^{n-1}b + \binom{n}{2}a^{n-2}b^{2} + \cdots + \binom{n}{r}a^{n-r}b^{r} + \cdots + b^{n}$, where $\binom{n}{r} = \dfrac{n!}{r!(n - r)!}$`],
+      [md`Binomial series ($|x| < 1$, $n \in \mathbb{R}$)`, md`$(1 + x)^{n} = 1 + nx + \dfrac{n(n - 1)}{2!}x^{2} + \cdots + \dfrac{n(n - 1)\cdots(n - r + 1)}{r!}x^{r} + \cdots$`],
     ],
   },
   { h: 'Logarithms and exponentials', f: [['Change of base', md`$\log_{a} x = \dfrac{\log_{b} x}{\log_{b} a}$`], ['', md`$e^{x\ln a} = a^{x}$`]] },

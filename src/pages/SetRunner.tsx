@@ -267,7 +267,7 @@ function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instan
                 ) : (
                   <div className="answer">
                     <div className="answer-row">
-                      <AnswerInput spec={p.answer} value={responses[`${i}:${p.label}`]} onChange={(r) => setResponses((x) => ({ ...x, [`${i}:${p.label}`]: r }))} onSubmit={() => {}} partLabel={p.label} />
+                      <AnswerInput spec={p.answer} value={responses[`${i}:${p.label}`]} onChange={(r) => setResponses((x) => ({ ...x, [`${i}:${p.label}`]: r }))} onSubmit={() => {}} partLabel={p.label} questionNumber={i + 1} />
                     </div>
                   </div>
                 )}

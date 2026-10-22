@@ -11,6 +11,8 @@ interface Props {
   onSubmit: () => void;
   disabled?: boolean;
   partLabel: string;
+  /** in a set with many questions, include the question number in labels */
+  questionNumber?: number;
 }
 
 const asStr = (r: Response | undefined) => (typeof r === 'string' ? r : '');
@@ -44,9 +46,9 @@ function ValueBox({ spec, value, onChange, onSubmit, aria, disabled }: { spec: N
   return <MathField value={value} onChange={onChange} onEnter={onSubmit} ariaLabel={aria} disabled={disabled} />;
 }
 
-export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLabel }: Props) {
+export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLabel, questionNumber }: Props) {
   const id = useId();
-  const where = partLabel ? `part (${partLabel})` : 'the question';
+  const where = questionNumber ? `question ${questionNumber}${partLabel ? ` part (${partLabel})` : ''}` : partLabel ? `part (${partLabel})` : 'the question';
   const label = spec.label ? (
     <span className="answer-label">
       <Tex tex={spec.label} />
