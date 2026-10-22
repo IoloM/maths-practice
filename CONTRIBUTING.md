@@ -1,4 +1,4 @@
-# Contributing: writing a question template
+# Contributing: writing questions
 
 Every generated question is a **template**: a TypeScript object whose `generate(rng)` builds one
 complete question from random parameters, and whose `verify(instance)` re-derives the answers by a
@@ -119,3 +119,39 @@ export default [
 - Common errors are *values the wrong method would produce*, with feedback that names the mistake.
 
 Run `npx tsx scripts/show.ts <template-id> <seed>` to print a generated question.
+
+## Fixed questions (proof, explain, interpret, modelling, large data set)
+
+Questions that cannot be generated from parameters are written once in `src/content/fixed/`
+(`proof.ts`, `pure.ts`, `statistics.ts`, `large-data-set.ts`, `mechanics.ts`) with two helpers:
+
+```ts
+// self-marked against a model answer: one mark per point ("M1 …", "A1 …", "A1* …" set the code; plain text is B1)
+selfQ({ ...DED, id: 'fx.proof.three-consecutive-integers', title: 'Sum of three consecutive integers',
+  tags: ['proof', 'deduction'], difficulty: 1,
+  prompt: md`Prove that the sum of any three consecutive integers is a multiple of $3$.`,
+  model: md`Let the integers be $n$, $n + 1$, $n + 2$ … so the sum is a multiple of $3$.`,
+  points: ['M1 Uses n, n + 1, n + 2 for a general integer n', 'A1 Sum = 3(n + 1)', 'A1* Concludes'],
+  hints: ['…', '…', '…'] }),
+
+// auto-marked multiple choice: B1 for the right option (and B1 for the reason when marks: 2)
+choiceQ({ ...CEX, id: 'fx.proof.ce-square-inequality', title: '…', tags: ['proof', 'counter-example'],
+  prompt: md`Which value of $x$ is a counter-example to …?`,
+  options: [md`$x = -3$`, md`$x = 3$`, md`$x = 2$`, md`$x = 0$`], correct: 0,
+  why: md`$(-3)^{2} = 9 > 4$ but $-3 < 2$.`, hints: ['…', '…', '…'] }),
+```
+
+- Ids start `fx.` and never change (they appear in shared links and saved progress).
+- Options are shown in a stable shuffled order, so the correct one can be listed first. Options
+  written in maths get a spoken version for screen readers automatically (`src/lib/tex-speech.ts`).
+- Each fixed question is a single-seed question type (seed `0`), so practice, review, sets and
+  progress treat it like any other. `npm run bank` validates it; `tests/fixed.test.ts` requires at
+  least 150.
+
+## Sets and papers
+
+Mock papers, timed sets and today's set are lists of `(templateId, seed)` built in `src/lib/sets.ts`
+from the bank index alone (no engine code), so they are reproducible and shareable
+(`#/set/import?c=kind~minutes~id:seed,…~title`). Paper definitions (`PAPERS`) choose questions by
+stream and paper; `fillToMarks` hits the mark total exactly where it can, one question per family,
+easier first.

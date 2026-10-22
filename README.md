@@ -7,7 +7,14 @@ worked solutions and mark schemes.
 
 **Live:** https://iolom.github.io/maths-practice/
 
-- Works on iPhone, iPad (Apple Pencil), Android, Windows, Mac and Chromebook — installable PWA.
+- 329 question types (7,896 verified questions) covering every 9MA0 spec point, plus 158
+  explain-and-prove questions: proof, interpretation, modelling assumptions and the large data set.
+- Topic, mixed and spaced-repetition review practice; today's set; mock Papers 1–3 and timed sets
+  under exam conditions (1.2 minutes per mark, marked at the end); shareable links for questions and sets.
+- Progress dashboard (red/amber/green by chapter and spec point, trend, time per mark, frequent
+  mistakes); formulae and statistical tables generated in the app.
+- Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.
+- Works on iPhone, iPad, Android, Windows, Mac and Chromebook — installable PWA.
 - Fully offline after the first visit (no CDNs, no third-party calls, no tracking, no login).
 - Progress stays on your device (IndexedDB); one-tap backup/restore to a JSON file.
 
@@ -27,10 +34,16 @@ npm test                 # Vitest: engine, stats, marking pairs, every template 
 npm run bank             # regenerate the template registry + verified bank index
 npm run bank:check       # CI: bank index must be fresh
 npm run coverage         # templates + instances per spec point (fails if any < 3)
-npm run build && npm run e2e   # Playwright on phone / tablet / desktop
+npm run build && npm run e2e   # Playwright on phone / tablet / desktop, including axe accessibility checks
 ```
 
 `TEMPLATE_SEEDS=1000 npm test` runs more seeds per template.
+
+Quality bars: axe (WCAG 2.1 AA and best practice) passes on every page in light and dark mode;
+Lighthouse mobile performance ≥ 90 on every main page (accessibility, best practices and SEO 100).
+The HTML carries a static app frame and a per-route preload map (`scripts/vite-app-shell.ts`,
+`scripts/vite-route-preload.ts`), pages and question chapters load on demand, and the service
+worker precaches everything for offline use.
 
 ## Deploy
 

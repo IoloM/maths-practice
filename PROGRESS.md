@@ -41,7 +41,7 @@ self-marking, drawing, offline, backup/restore.
   self-marking of method lines, a lazy Compute Engine fallback parser.
 - Suite: ~430 equivalent/non-equivalent answer pairs plus part-level tests (all green).
 
-## Phase 3 — Content (templates ✅, fixed questions in progress)
+## Phase 3 — Content ✅
 
 **Templates: 329 · verified questions in the bank index: 7,896 · spec points with ≥ 3 templates: 89 / 89.**
 
@@ -109,3 +109,38 @@ correct answer is never always first.
 **Tests**: 1,707 unit tests (templates, fixed questions, marking pairs, stats, sets, dashboard
 statistics) and 36 Playwright runs across desktop Chrome, iPhone and iPad (WebKit) and Pixel
 (Chrome), including an exam set end to end and the generated tables.
+
+## Phase 5 — Accessibility, performance, polish ✅
+
+- **Accessibility**: axe-core (WCAG 2.1 A/AA and best practice, moderate impact or worse) runs on
+  every main page, a question with a diagram, fixed questions (including options that are all
+  maths), and the exam view, in light and dark mode on all four devices. Fixed along the way: tab
+  structure, a keyboard-focusable working canvas, duplicate diagram roles, dark-mode contrast,
+  heading order, and accessible names for maths-only options (a spoken version: "x squared",
+  "1 over 2", "H sub 0").
+- **Performance** (Lighthouse mobile, simulated slow 4G; accessibility, best practices and SEO are
+  100 on every page):
+
+  | page | performance | | page | performance |
+  |---|---|---|---|---|
+  | home | 98 | | progress | 93 |
+  | topics | 97 | | settings | 93 |
+  | chapter | 96 | | review | 92 |
+  | exams | 96 | | practice | 91 |
+  | reference | 94 | | question pages | 90 |
+
+  Desktop question page: 100. Main bundle 877 KB → 460 KB (115 KB gzipped): pages load on demand,
+  the bank index is separate from the maths engine, the HTML carries a static app frame (generated
+  from the same nav and icons) and a preload map so a deep link fetches its page and question
+  chapter alongside the main bundle, KaTeX fonts are preloaded, banners float rather than shift
+  the layout, and a saved dark theme applies before first paint.
+- **Robustness**: a page whose code fails to download (an old tab after an update, or offline before
+  caching finished) shows Reload / Home instead of a blank screen.
+- **iPad / Apple Pencil**: pressure, coalesced events, Pencil-only mode with palm rejection and
+  iOS stylus-touch filtering; drawing is covered by the tablet WebKit e2e run.
+- Docs: README feature list and quality bars; CONTRIBUTING covers fixed questions and sets.
+
+**Tests**: 1,725 unit tests and 154 Playwright runs across the four devices (13 app flows — offline on Chromium only — plus
+axe on 13 views in light and dark) — all green.
+
+**Deploy**: waiting on GitHub sign-in (`gh auth login`); everything is committed and ready to push.
