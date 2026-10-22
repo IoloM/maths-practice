@@ -76,5 +76,36 @@ inequalities where Edexcel does, and accept f(x), g⁻¹(x) etc. for ranges; the
 un-interpolated `${…}` text and double backslashes; the LaTeX printer separates symbols from
 following letters (π r, not \\pir); degree units print without a stray space.
 
-**Still to do in Phase 3:** at least 150 fixed questions (proof, explain/interpret, modelling
-assumptions, large data set knowledge).
+**Fixed questions: 158** — proof (deduction, exhaustion, counter-example, contradiction, spotting errors),
+explaining and interpreting in Pure, statistics interpretation and hypothesis-test language, large data
+set knowledge (Met Office stations, units, “tr”, n/a, Perth's seasons, sampling from it) and mechanics
+modelling assumptions. Proofs are self-marked against a model proof; the rest are auto-marked
+multiple choice. They work as single-seed question types, so practice, review and progress handle
+them like any other question. Multiple-choice options are shown in a stable shuffled order so the
+correct answer is never always first.
+
+## Phase 4 — Modes, mocks, dashboard, reference ✅
+
+- **Practice modes**: topic (chapter / spec point / question type), mixed (everything, or Pure /
+  Statistics / Mechanics), and **review** — spaced repetition by question family (FSRS), most
+  overdue first.
+- **Today's set**: five questions picked for you each day (due reviews, weakest chapters, something
+  new), with instant feedback.
+- **Mock papers**: Paper 1, Paper 2 (Pure, 100 marks), Paper 3 (Statistics section then Mechanics
+  section, 50 + 50), half papers and section practice; 1.2 minutes per mark; questions drawn at
+  random, easier first, one per family. **Timed sets** for any area or chapter (10–50 marks).
+- **Exam conditions**: countdown, autosaved answers and per-question working, no marking until you
+  finish (or time runs out). **Results**: score by section, time per mark, and a review of each
+  question with your answer, feedback, mark scheme (tick method marks you earned) and worked solution.
+- **Sharing**: single questions and whole sets have links that reproduce exactly the same questions.
+- **Progress dashboard**: weekly trend, red/amber/green by chapter and by spec point, time per mark
+  by area against exam pace, most frequent mistakes, mock/timed history, recent questions; each
+  question page shows your history with that question type.
+- **Reference**: formulae (Pure, Statistics, Mechanics) and statistical tables generated in the app
+  (cumulative binomial for n = 5…50, normal percentage points, PMCC critical values).
+- Settings: delete all progress (with confirmation).
+- Fixed a crash when a new question arrived in the same render as a route change.
+
+**Tests**: 1,707 unit tests (templates, fixed questions, marking pairs, stats, sets, dashboard
+statistics) and 36 Playwright runs across desktop Chrome, iPhone and iPad (WebKit) and Pixel
+(Chrome), including an exam set end to end and the generated tables.
