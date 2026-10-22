@@ -1,7 +1,7 @@
 /** Spaced repetition by template family (FSRS via ts-fsrs). */
 import { createEmptyCard, fsrs, Rating, type Card, type Grade } from 'ts-fsrs';
 import type { Attempt, CardRecord } from '../storage/types';
-import { effectiveScore } from '../lib/attempt';
+import { effectiveScore } from '../lib/score';
 
 const scheduler = fsrs({ enable_fuzz: false, maximum_interval: 120 });
 

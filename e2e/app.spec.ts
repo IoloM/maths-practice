@@ -102,7 +102,14 @@ test('back up and restore progress', async ({ page }) => {
 test('a fixed multiple-choice question loads lazily and marks the chosen option', async ({ page }) => {
   await page.goto('./#/q/fx.lds.days-in-period/0');
   await expect(page.getByText('fixed question')).toBeVisible();
-  await page.getByLabel('184', { exact: true }).check();
+  await page.getByRole('radio', { name: '184', exact: true }).check();
+  await page.getByRole('button', { name: 'Check' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
+});
+
+test('multiple-choice options written in maths have spoken names', async ({ page }) => {
+  await page.goto('./#/q/fx.proof.ce-square-inequality/0');
+  await page.getByRole('radio', { name: 'x = − 3' }).check();
   await page.getByRole('button', { name: 'Check' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
 });
@@ -138,4 +145,19 @@ test('reference page shows generated statistical tables', async ({ page }) => {
   await page.getByRole('tab', { name: 'PMCC table' }).click();
   const row12 = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: '12', exact: true }) });
   await expect(row12.getByRole('cell').nth(1)).toHaveText('0.4973'); // n = 12, 5% one-tailed
+});
+
+test('the page frame is in the HTML, so it paints before the scripts run', async ({ request }) => {
+  const html = await (await request.get('./')).text();
+  expect(html).toContain('class="app-header"');
+  expect(html).toMatch(/<nav class="tabbar" aria-label="Main">.*Settings<\/a><\/nav>/);
+});
+
+test('a page whose code fails to download shows a way out instead of a blank screen', async ({ page }) => {
+  await page.route('**/assets/Progress-*.js', (r) => r.abort());
+  await page.goto('./#/progress');
+  await expect(page.getByRole('alert')).toContainText('could not be loaded');
+  await expect(page.getByRole('button', { name: 'Reload' })).toBeVisible();
+  await page.getByRole('link', { name: 'Home' }).last().click();
+  await expect(page.getByRole('heading', { name: /Edexcel A Level Maths practice/ })).toBeVisible();
 });

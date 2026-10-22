@@ -2,13 +2,9 @@
  * Question sets: mock papers, timed sets and the daily set.
  * Building is deterministic given a random function, so sets can be reproduced and shared.
  */
-import { BANK, type BankEntry } from '../content/bank';
+import { BANK, type BankEntry } from '../content/bank-meta';
 import { CHAPTER_BY_REF } from '../content/chapters';
-import type { Instance } from '../engine/templates/types';
-import type { FtValue, MarkResult, Response } from '../engine/marking/types';
-import { markPart } from '../engine/marking/mark';
 import type { Attempt, CardRecord, SetItem, SetRecord } from '../storage/types';
-import { partAttemptFrom } from './attempt';
 import { mastery } from '../progress/mastery';
 import { isDue, toCard } from '../srs/fsrs';
 
@@ -148,7 +144,7 @@ export function buildTimed(pool: BankEntry[], targetMarks: number, seed: number)
   return fillToMarks(pool, targetMarks, rnd, 0.25).map((e) => ({ templateId: e.id, seed: pickSeed(e, rnd) }));
 }
 
-export const todayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+export { todayKey } from './dates';
 const hashString = (s: string) => {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
@@ -210,41 +206,4 @@ export function decodeSet(code: string): Pick<SetRecord, 'kind' | 'durationMin' 
   });
   if (parsed.some((p) => !p.templateId || !Number.isFinite(p.seed))) return null;
   return { kind: kind as SetRecord['kind'], durationMin: Number(min) || 0, items: parsed, title: title ? decodeURIComponent(title) : 'Shared set' };
-}
-
-/** Mark every part of an instance from stored responses, following through in order. */
-export function markInstance(inst: Instance, responses: Record<string, Response | undefined>): MarkResult[] {
-  const prev: Record<string, FtValue | undefined> = {};
-  return inst.parts.map((p) => {
-    const rr = markPart(p, responses[p.label], prev);
-    prev[p.label] = rr.value ? { ...rr.value, correct: rr.verdict === 'correct' && !rr.ft } : { correct: rr.verdict === 'correct' };
-    return rr;
-  });
-}
-
-/** Attempt records for a finished exam-style set (no hints; time shared out by marks). */
-export function attemptsForSet(set: SetRecord, insts: Instance[], metas: BankEntry[], totalMs: number): Attempt[] {
-  const marksAll = metas.reduce((s, m) => s + m.marks, 0) || 1;
-  return insts.map((inst, i) => {
-    const meta = metas[i];
-    const responses: Record<string, Response | undefined> = {};
-    for (const p of inst.parts) responses[p.label] = set.responses?.[`${i}:${p.label}`];
-    const results = markInstance(inst, responses);
-    return {
-      templateId: inst.templateId,
-      seed: inst.seed,
-      family: meta.family,
-      spec: meta.spec,
-      chapter: meta.chapter,
-      difficulty: meta.difficulty,
-      mode: set.kind === 'mock' ? 'mock' : 'timed',
-      setId: set.id,
-      startedAt: set.startedAt ?? Date.now(),
-      finishedAt: set.finishedAt ?? Date.now(),
-      durationMs: Math.round((totalMs * meta.marks) / marksAll),
-      marks: meta.marks,
-      parts: inst.parts.map((p, k) => partAttemptFrom(p.label, results[k], responses[p.label] ?? null, undefined, p.scheme, 0)),
-      gaveUp: false,
-    } satisfies Attempt;
-  });
 }

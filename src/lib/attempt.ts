@@ -27,10 +27,7 @@ export function selfScore(scheme: SchemeLine[], ticks: boolean[]): number {
   return scheme.reduce((s, l, i) => s + (ticks[i] && ok[i] ? codeMarks(l.code) : 0), 0);
 }
 
-/** Effective part score used in stats: the better of auto and self marks. */
-export function effectiveScore(p: PartAttempt): number {
-  return Math.max(p.auto?.score ?? 0, p.self?.score ?? 0);
-}
+export { effectiveScore } from './score';
 
 export function partAttemptFrom(label: string, result: MarkResult | undefined, response: PartAttempt['response'], ticks: boolean[] | undefined, scheme: SchemeLine[], hints: number): PartAttempt {
   const self = ticks && ticks.some(Boolean) ? { score: selfScore(scheme, ticks), ticks: ticks.map((t, i) => (t ? i : -1)).filter((i) => i >= 0) } : null;

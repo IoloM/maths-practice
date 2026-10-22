@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { execSync } from 'node:child_process';
 import pkg from './package.json' with { type: 'json' };
+import { routePreload } from './scripts/vite-route-preload';
+import { appShell } from './scripts/vite-app-shell';
 
 let sha = 'dev';
 try {
@@ -22,6 +24,8 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    appShell(),
+    routePreload(import.meta.dirname),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,

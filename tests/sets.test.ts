@@ -2,7 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import { BANK, ENTRY_BY_ID } from '../src/content/bank';
 import { CHAPTER_BY_REF } from '../src/content/chapters';
-import { PAPERS, buildDaily, buildPaper, buildTimed, decodeSet, encodeSet, markInstance, setMarks } from '../src/lib/sets';
+import { PAPERS, buildDaily, buildPaper, buildTimed, decodeSet, encodeSet, setMarks } from '../src/lib/sets';
+import { markInstance } from '../src/lib/set-marking';
 import { ALL_TEMPLATES } from '../src/content/templates/all.gen';
 import { generateInstance } from '../src/engine/templates/validate';
 import { canonicalResponse } from '../src/engine/marking/mark';

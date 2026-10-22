@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BANK } from '../content/bank';
+import { BANK } from '../content/bank-meta';
 import { CHAPTERS, BOOK_NAMES } from '../content/chapters';
 import { SPEC } from '../content/spec';
 import { href } from '../router';

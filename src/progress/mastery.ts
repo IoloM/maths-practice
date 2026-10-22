@@ -1,6 +1,6 @@
 /** Mastery: difficulty- and hint-weighted credit over recent attempts. */
 import type { Attempt } from '../storage/types';
-import { effectiveScore } from '../lib/attempt';
+import { effectiveScore } from '../lib/score';
 
 export const HINT_FACTOR = [1, 0.85, 0.7, 0.5];
 const RECENT = 10;

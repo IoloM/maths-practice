@@ -154,7 +154,8 @@ h1 {
 h2 {
   font-size: 1.25rem;
 }
-h3 {
+h3,
+.h3 {
   font-size: 1.05rem;
 }
 p {
@@ -206,6 +207,7 @@ p {
   place-items: center;
   font-family: var(--serif);
   font-size: 15px;
+  font-weight: 400; /* the preloaded regular face: no extra font download for the logo */
 }
 .nav {
   display: flex;
@@ -237,6 +239,9 @@ p {
   display: none;
 }
 @media (max-width: 720px) {
+  .banner {
+    bottom: calc(68px + env(safe-area-inset-bottom));
+  }
   .tabbar {
     display: flex;
     position: fixed;
@@ -278,8 +283,15 @@ main.app-main {
   padding: 20px 16px 48px;
 }
 .banner {
-  max-width: 1240px;
-  margin: 10px auto 0;
+  /* floats over the page so it never shifts the layout when it appears after load */
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 40;
+  max-width: 640px;
+  margin: 0 auto;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
   padding: 10px 14px;
   border-radius: var(--radius);
   background: var(--accent-soft);
@@ -453,8 +465,9 @@ label.check input {
 .tile:hover {
   border-color: var(--accent);
 }
-.tile h3 {
+.tile h2 {
   margin: 0;
+  font-size: 1.05rem;
 }
 .stack {
   display: flex;

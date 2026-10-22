@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BANK } from '../content/bank';
+import { BANK } from '../content/bank-meta';
 import { CHAPTERS, CHAPTER_BY_REF } from '../content/chapters';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';

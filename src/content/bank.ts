@@ -1,21 +1,10 @@
-/** App-side access to the question bank: metadata (eager) and templates (lazy, per chapter). */
-import bankJson from './bank-index.json';
+/** App-side access to the question bank: metadata (re-exported from bank-meta) and templates (lazy, per chapter). */
 import { loaders } from './templates/loaders.gen';
 import { generateInstance, validateInstance } from '../engine/templates/validate';
-import type { ChapterRef, Instance, Template, TemplateMeta } from '../engine/templates/types';
+import type { Instance, Template } from '../engine/templates/types';
+import { ENTRY_BY_ID } from './bank-meta';
 
-export interface BankEntry extends TemplateMeta {
-  seeds: number[];
-  /** a fixed (non-generated) question: single seed 0 */
-  fixed?: boolean;
-}
-
-export const BANK = bankJson as unknown as { version: number; templates: BankEntry[]; totals: { templates: number; questions: number; fixed: number } };
-export const ENTRY_BY_ID = new Map(BANK.templates.map((t) => [t.id, t]));
-
-export function entriesForChapter(ch: ChapterRef | string): BankEntry[] {
-  return BANK.templates.filter((t) => t.chapter === ch);
-}
+export { BANK, ENTRY_BY_ID, entriesForChapter, type BankEntry } from './bank-meta';
 
 const chapterCache = new Map<string, Promise<Map<string, Template>>>();
 

@@ -13,6 +13,16 @@
     <meta name="apple-mobile-web-app-title" content="Maths Practice" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon-180x180.png" />
+    <script>
+      // apply a saved light/dark choice before the first paint (src/lib/settings.tsx keeps it in sync)
+      try {
+        const theme = JSON.parse(localStorage.getItem('mp.settings.v1') || '{}').theme;
+        if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    </script>
+    <!-- the two KaTeX fonts most text uses (the paper-style serif reuses KaTeX_Main) -->
+    <link rel="preload" href="/node_modules/katex/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/node_modules/katex/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

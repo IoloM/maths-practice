@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { BANK } from '../content/bank';
+import { BANK } from '../content/bank-meta';
 import { CHAPTERS } from '../content/chapters';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { mastery, groupBy, scoreOf } from '../progress/mastery';
 import { isDue } from '../srs/fsrs';
-import { todayKey } from '../lib/sets';
+import { todayKey } from '../lib/dates';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { RagBadge } from '../components/bits';
@@ -47,34 +47,34 @@ export function Home() {
       <div className="grid">
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>
-            <h3>
+            <h2>
               <Icon name="play" /> Continue
-            </h3>
+            </h2>
             <span className="muted">{CHAPTERS.find((c) => c.ref === last.chapter)?.title ?? last.chapter}</span>
           </a>
         )}
         <a className="card tile" href={href('/exams')}>
-          <h3>
+          <h2>
             <Icon name="refresh" /> Today’s set
-          </h3>
+          </h2>
           <span className="muted">{daily ? `${dailyDone}/${daily.items.length} done` : '5 questions picked for you'}</span>
         </a>
         <a className="card tile" href={href('/review')}>
-          <h3>
+          <h2>
             <Icon name="review" /> Review
-          </h3>
+          </h2>
           <span className="muted">{due ? `${due} due now` : 'Nothing due'}</span>
         </a>
         <a className="card tile" href={href('/topics')}>
-          <h3>
+          <h2>
             <Icon name="book" /> Topic practice
-          </h3>
+          </h2>
           <span className="muted">Choose a textbook chapter or spec point</span>
         </a>
         <div className="card tile">
-          <h3>
+          <h2>
             <Icon name="grid" /> Mixed practice
-          </h3>
+          </h2>
           <span className="row-wrap small">
             <a href={href('/practice', { mixed: 1 })}>Everything</a>
             <a href={href('/practice', { mixed: 1, st: 'Pure' })}>Pure</a>
@@ -83,21 +83,21 @@ export function Home() {
           </span>
         </div>
         <a className="card tile" href={href('/exams')}>
-          <h3>
+          <h2>
             <Icon name="clock" /> Mock papers
-          </h3>
+          </h2>
           <span className="muted">Papers 1, 2 and 3 under timed conditions</span>
         </a>
         <a className="card tile" href={href('/progress')}>
-          <h3>
+          <h2>
             <Icon name="chart" /> Progress
-          </h3>
+          </h2>
           <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
         </a>
         <a className="card tile" href={href('/reference')}>
-          <h3>
+          <h2>
             <Icon name="scheme" /> Formulae & tables
-          </h3>
+          </h2>
           <span className="muted">Formula booklet, binomial, normal and PMCC tables</span>
         </a>
       </div>

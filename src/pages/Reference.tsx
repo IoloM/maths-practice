@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { binomCdf, invPhi, pmccCritical } from '../engine/stats/distributions';
 import { MathText } from '../components/MathText';
-import { md } from '../engine/templates/helpers';
+/** LaTeX-friendly string tag: backslashes are kept as written. */
+const md = String.raw;
 
 type F = [string, string];
 const PURE: { h: string; f: F[] }[] = [
@@ -99,7 +100,7 @@ function Formulae({ groups }: { groups: { h: string; f: F[] }[] }) {
     <div className="stack">
       {groups.map((g) => (
         <section className="card" key={g.h}>
-          <h3>{g.h}</h3>
+          <h2 className="h3">{g.h}</h2>
           {g.f.map(([label, tex], i) => (
             <div className="formula" key={i}>
               {label && (

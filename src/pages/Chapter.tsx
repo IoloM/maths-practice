@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { entriesForChapter } from '../content/bank';
+import { entriesForChapter } from '../content/bank-meta';
 import { CHAPTER_BY_REF, BOOK_NAMES } from '../content/chapters';
 import { href, navigate } from '../router';
 import { useProgress } from '../lib/useProgress';

@@ -2,28 +2,25 @@ import { useRoute, href } from './router';
 import { Home } from './pages/Home';
 import { Topics } from './pages/Topics';
 import { ChapterPage } from './pages/Chapter';
-import { Practice } from './pages/Practice';
-import { QuestionPage } from './pages/QuestionPage';
-import { Progress } from './pages/Progress';
-import { Settings } from './pages/Settings';
-import { Exams } from './pages/Exams';
-import { SetRunner, ImportSet } from './pages/SetRunner';
-import { Review } from './pages/Review';
-import { Reference } from './pages/Reference';
+import { lazy, Suspense } from 'react';
+import { Loading } from './components/bits';
+
+// heavier pages (marking engine, maths input, charts) load on demand; the service worker precaches them all
+const Practice = lazy(() => import('./pages/Practice').then((m) => ({ default: m.Practice })));
+const QuestionPage = lazy(() => import('./pages/QuestionPage').then((m) => ({ default: m.QuestionPage })));
+const Progress = lazy(() => import('./pages/Progress').then((m) => ({ default: m.Progress })));
+const Settings = lazy(() => import('./pages/Settings').then((m) => ({ default: m.Settings })));
+const Exams = lazy(() => import('./pages/Exams').then((m) => ({ default: m.Exams })));
+const SetRunner = lazy(() => import('./pages/SetRunner').then((m) => ({ default: m.SetRunner })));
+const ImportSet = lazy(() => import('./pages/SetRunner').then((m) => ({ default: m.ImportSet })));
+const Review = lazy(() => import('./pages/Review').then((m) => ({ default: m.Review })));
+const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 import { InstallBanner } from './components/Install';
 import { UpdateBanner } from './components/UpdateBanner';
 import { Icon } from './components/Icon';
 import { ErrorBox } from './components/bits';
-
-const NAV = [
-  { path: '/', label: 'Practise', icon: 'home', mobile: true },
-  { path: '/topics', label: 'Topics', icon: 'book', mobile: true },
-  { path: '/exams', label: 'Exams', icon: 'clock', mobile: true },
-  { path: '/review', label: 'Review', icon: 'review', mobile: false },
-  { path: '/progress', label: 'Progress', icon: 'chart', mobile: true },
-  { path: '/reference', label: 'Formulae', icon: 'scheme', mobile: false },
-  { path: '/settings', label: 'Settings', icon: 'settings', mobile: true },
-];
+import { NAV } from './nav';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
   switch (parts[0]) {
@@ -86,7 +83,11 @@ export default function App() {
       <UpdateBanner />
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>
-        <Page {...route} />
+        <ErrorBoundary key={route.path}>
+          <Suspense fallback={<Loading />}>
+            <Page {...route} />
+          </Suspense>
+        </ErrorBoundary>
       </main>
       <nav className="tabbar" aria-label="Main">
         {NAV.filter((n) => n.mobile).map((n) => (
