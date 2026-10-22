@@ -1086,3 +1086,124 @@ math-field::part(menu-toggle) {
     transition: none !important;
   }
 }
+
+/* ---------- exams and sets ---------- */
+.row-wrap {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.exam-bar {
+  position: sticky;
+  top: calc(56px + env(safe-area-inset-top));
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.exam-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.exam-clock.warn {
+  color: var(--bad);
+}
+.exam-section {
+  margin: 8px 0 0;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--border-strong);
+}
+button.list-link {
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ---------- reference ---------- */
+.tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tab {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.formula {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.formula:last-child {
+  border-bottom: none;
+}
+table.data {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+table.data caption {
+  text-align: left;
+  padding-bottom: 6px;
+  color: var(--text-2);
+}
+table.data th,
+table.data td {
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  text-align: right;
+}
+table.data thead th {
+  background: var(--surface-2, var(--surface));
+  position: sticky;
+  top: 0;
+}
+
+/* ---------- dashboard ---------- */
+.trend {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1.6fr) 3fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 4px 0;
+}
+.bar {
+  height: 10px;
+  border-radius: 6px;
+  background: var(--border);
+  overflow: hidden;
+}
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+}

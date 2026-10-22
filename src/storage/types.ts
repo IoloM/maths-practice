@@ -84,6 +84,10 @@ export interface SetRecord {
   status: 'new' | 'running' | 'finished';
   /** responses during an unmarked (exam-conditions) set, keyed `${i}:${label}` */
   responses?: Record<string, Response>;
+  /** paper sections as item index ranges [from, to) */
+  sections?: { name: string; from: number; to: number }[];
+  /** working (handwriting/typed) per item index */
+  working?: Record<number, Working>;
 }
 
 export interface Setting {

@@ -1,8 +1,13 @@
+import { useEffect, useState } from 'react';
 import { BANK } from '../content/bank';
 import { CHAPTERS } from '../content/chapters';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { mastery, groupBy, scoreOf } from '../progress/mastery';
+import { isDue } from '../srs/fsrs';
+import { todayKey } from '../lib/sets';
+import { getStore } from '../storage';
+import type { SetRecord } from '../storage/types';
 import { RagBadge } from '../components/bits';
 import { Icon } from '../components/Icon';
 
@@ -19,18 +24,24 @@ const PRIORITY = [
 ];
 
 export function Home() {
-  const { attempts } = useProgress();
+  const { attempts, cards } = useProgress();
+  const [daily, setDaily] = useState<SetRecord | null>(null);
+  const dailyId = `daily-${todayKey()}`;
+  useEffect(() => {
+    void getStore().then(async (s) => setDaily((await s.getSet(dailyId)) ?? null));
+  }, [dailyId]);
   const byCh = groupBy(attempts, (a) => a.chapter);
   const marks = attempts.reduce((s, a) => s + a.marks, 0);
   const got = attempts.reduce((s, a) => s + scoreOf(a), 0);
-  const available = new Set<string>(BANK.templates.map((t) => t.chapter));
   const last = attempts[attempts.length - 1];
+  const due = cards.filter((c) => isDue(c)).length;
+  const dailyDone = daily ? new Set(attempts.filter((a) => a.setId === dailyId).map((a) => `${a.templateId}:${a.seed}`)).size : 0;
   return (
     <div className="stack">
       <div>
         <h1>Edexcel A Level Maths practice</h1>
         <p className="muted">
-          9MA0 Pure, Statistics and Mechanics · {BANK.totals.templates} question types · {BANK.totals.questions.toLocaleString()} verified questions · works offline
+          9MA0 Pure, Statistics and Mechanics · {BANK.totals.templates} question types · {BANK.totals.questions.toLocaleString()} verified questions · {BANK.totals.fixed} explain-and-prove questions · works offline
         </p>
       </div>
       <div className="grid">
@@ -42,11 +53,40 @@ export function Home() {
             <span className="muted">{CHAPTERS.find((c) => c.ref === last.chapter)?.title ?? last.chapter}</span>
           </a>
         )}
+        <a className="card tile" href={href('/exams')}>
+          <h3>
+            <Icon name="refresh" /> Today’s set
+          </h3>
+          <span className="muted">{daily ? `${dailyDone}/${daily.items.length} done` : '5 questions picked for you'}</span>
+        </a>
+        <a className="card tile" href={href('/review')}>
+          <h3>
+            <Icon name="review" /> Review
+          </h3>
+          <span className="muted">{due ? `${due} due now` : 'Nothing due'}</span>
+        </a>
         <a className="card tile" href={href('/topics')}>
           <h3>
             <Icon name="book" /> Topic practice
           </h3>
           <span className="muted">Choose a textbook chapter or spec point</span>
+        </a>
+        <div className="card tile">
+          <h3>
+            <Icon name="grid" /> Mixed practice
+          </h3>
+          <span className="row-wrap small">
+            <a href={href('/practice', { mixed: 1 })}>Everything</a>
+            <a href={href('/practice', { mixed: 1, st: 'Pure' })}>Pure</a>
+            <a href={href('/practice', { mixed: 1, st: 'Statistics' })}>Statistics</a>
+            <a href={href('/practice', { mixed: 1, st: 'Mechanics' })}>Mechanics</a>
+          </span>
+        </div>
+        <a className="card tile" href={href('/exams')}>
+          <h3>
+            <Icon name="clock" /> Mock papers
+          </h3>
+          <span className="muted">Papers 1, 2 and 3 under timed conditions</span>
         </a>
         <a className="card tile" href={href('/progress')}>
           <h3>
@@ -54,32 +94,24 @@ export function Home() {
           </h3>
           <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
         </a>
+        <a className="card tile" href={href('/reference')}>
+          <h3>
+            <Icon name="scheme" /> Formulae & tables
+          </h3>
+          <span className="muted">Formula booklet, binomial, normal and PMCC tables</span>
+        </a>
       </div>
       <section className="card">
         <h2>Priority topics</h2>
         <ul className="list">
-          {PRIORITY.map((p) => {
-            const has = available.has(p.chapter);
-            const m = mastery(byCh.get(p.chapter) ?? []);
-            const ch = CHAPTERS.find((c) => c.ref === p.chapter);
-            return (
-              <li key={p.label}>
-                {has ? (
-                  <a className="list-link" href={href(`/chapter/${p.chapter}`)}>
-                    <span style={{ flex: 1 }}>{p.label}</span>
-                    <RagBadge mastery={m} />
-                  </a>
-                ) : (
-                  <div className="list-link" aria-disabled="true">
-                    <span style={{ flex: 1 }} className="muted">
-                      {p.label}
-                    </span>
-                    <span className="chip">{ch ? `${ch.book} ch ${ch.n}` : ''} · coming soon</span>
-                  </div>
-                )}
-              </li>
-            );
-          })}
+          {PRIORITY.map((p) => (
+            <li key={p.label}>
+              <a className="list-link" href={href(`/chapter/${p.chapter}`)}>
+                <span style={{ flex: 1 }}>{p.label}</span>
+                <RagBadge mastery={mastery(byCh.get(p.chapter) ?? [])} />
+              </a>
+            </li>
+          ))}
         </ul>
       </section>
     </div>

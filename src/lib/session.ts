@@ -2,11 +2,14 @@
 import { BANK, freshSeed, type BankEntry } from '../content/bank';
 import type { Attempt } from '../storage/types';
 import { effectiveScore } from './attempt';
+import { CHAPTER_BY_REF } from '../content/chapters';
 
 export interface SessionConfig {
   chapters?: string[];
   templates?: string[];
   specs?: string[];
+  /** Pure / Statistics / Mechanics */
+  streams?: string[];
   dmin: number;
   dmax: number;
 }
@@ -17,6 +20,7 @@ export function candidates(cfg: SessionConfig): BankEntry[] {
       (!cfg.chapters?.length || cfg.chapters.includes(t.chapter)) &&
       (!cfg.templates?.length || cfg.templates.includes(t.id)) &&
       (!cfg.specs?.length || t.spec.some((s) => cfg.specs!.includes(s))) &&
+      (!cfg.streams?.length || cfg.streams.includes(CHAPTER_BY_REF.get(t.chapter)?.stream ?? '')) &&
       t.difficulty >= cfg.dmin &&
       t.difficulty <= cfg.dmax,
   );
