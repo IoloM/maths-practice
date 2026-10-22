@@ -35,13 +35,15 @@ export function WorkingArea({ working, onChange, exportName }: Props) {
 
   return (
     <section className="working" aria-label="Working area">
-      <div className="working-tabs" role="tablist" aria-label="Working mode">
-        <button role="tab" aria-selected={working.mode === 'write'} onClick={() => set({ mode: 'write' })}>
-          <Icon name="pen" /> Write
-        </button>
-        <button role="tab" aria-selected={working.mode === 'type'} onClick={() => set({ mode: 'type' })}>
-          <Icon name="keyboard" /> Type
-        </button>
+      <div className="working-tabs">
+        <div className="tab-group" role="tablist" aria-label="Working mode">
+          <button role="tab" aria-selected={working.mode === 'write'} onClick={() => set({ mode: 'write' })}>
+            <Icon name="pen" /> Write
+          </button>
+          <button role="tab" aria-selected={working.mode === 'type'} onClick={() => set({ mode: 'type' })}>
+            <Icon name="keyboard" /> Type
+          </button>
+        </div>
         <span className="spacer" />
         {working.mode === 'write' && (
           <label className="small muted" style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '0 6px' }}>
@@ -91,7 +93,7 @@ export function WorkingArea({ working, onChange, exportName }: Props) {
               <Icon name="download" />
             </button>
           </div>
-          <div className="canvas-wrap">
+          <div className="canvas-wrap" tabIndex={0} role="region" aria-label="Handwriting area (grows as you write)">
             <Suspense fallback={<div style={{ height: 300 }} className="muted small" />}>
               <DrawingCanvas
                 handle={handle}

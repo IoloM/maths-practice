@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { diagramHtml } from '../components/diagram';
 import { getInstance, ENTRY_BY_ID, type BankEntry } from '../content/bank';
 import type { Instance } from '../engine/templates/types';
 import type { MarkResult, Response } from '../engine/marking/types';
@@ -249,7 +250,7 @@ function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instan
             </div>
             {inst.diagram && (
               <figure className="diagram">
-                <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: inst.diagram.svg }} />
+                <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: diagramHtml(inst.diagram.svg) }} />
                 <figcaption>Figure {i + 1}</figcaption>
               </figure>
             )}
@@ -317,7 +318,7 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
       </div>
       {inst.diagram && (
         <figure className="diagram">
-          <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: inst.diagram.svg }} />
+          <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: diagramHtml(inst.diagram.svg) }} />
         </figure>
       )}
       {inst.parts.map((p, k) => {

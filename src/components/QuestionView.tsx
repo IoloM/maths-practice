@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { diagramHtml } from './diagram';
 import type { Instance } from '../engine/templates/types';
 import type { TemplateMeta } from '../engine/templates/types';
 import type { FtValue, MarkResult, Response } from '../engine/marking/types';
@@ -298,7 +299,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
             </div>
             {inst.diagram && (
               <figure className="diagram">
-                <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: inst.diagram.svg }} />
+                <div role="img" aria-label={inst.diagram.alt} dangerouslySetInnerHTML={{ __html: diagramHtml(inst.diagram.svg) }} />
                 <figcaption>Figure {number}</figcaption>
               </figure>
             )}

@@ -339,8 +339,14 @@ main.app-main {
     color: #0b1416;
   }
 }
-:root[data-theme='dark'] .btn-primary {
+:root[data-theme='dark'] .btn-primary,
+:root[data-theme='dark'] .tab.active {
   color: #0b1416;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .tab.active {
+    color: #0b1416;
+  }
 }
 .btn-primary:hover {
   background: color-mix(in srgb, var(--accent) 88%, black);
@@ -919,6 +925,10 @@ math-field::part(menu-toggle) {
   gap: 2px;
   padding: 4px;
   flex-wrap: wrap;
+}
+.working-tabs .tab-group {
+  display: flex;
+  gap: 2px;
 }
 .working-tabs [role='tab'] {
   appearance: none;
