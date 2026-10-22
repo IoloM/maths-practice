@@ -3,6 +3,7 @@ import type { AnswerSpec, NumericSpec, ExactSpec, Response } from '../../engine/
 import { MathText, Tex } from '../MathText';
 import { MathField } from './MathField';
 import { choiceOrder } from '../../lib/choiceOrder';
+import { speakText } from '../../lib/tex-speech';
 
 interface Props {
   spec: AnswerSpec;
@@ -191,7 +192,7 @@ export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLab
                   }
                 }}
               />
-              <MathText src={o} inline />
+              <OptionText src={o} />
             </label>
           ))}
         </fieldset>
@@ -256,7 +257,7 @@ export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLab
             {choiceOrder(spec.conclusions).map((i) => ({ c: spec.conclusions[i], i })).map(({ c, i }) => (
               <label className="check" key={i}>
                 <input type="radio" name={`${id}-concl`} checked={R.conclusion === String(i)} disabled={disabled} onChange={() => set('conclusion', String(i))} />
-                <MathText src={c} inline />
+                <OptionText src={c} />
               </label>
             ))}
           </fieldset>
@@ -266,6 +267,18 @@ export function AnswerInput({ spec, value, onChange, onSubmit, disabled, partLab
     case 'self':
       return null;
   }
+}
+
+/** An option's maths for the eye, and a spoken version for screen readers (also its accessible name). */
+function OptionText({ src }: { src: string }) {
+  return (
+    <>
+      <span aria-hidden="true">
+        <MathText src={src} inline />
+      </span>
+      <span className="sr-only">{speakText(src)}</span>
+    </>
+  );
 }
 
 /** Is there anything to mark? */
