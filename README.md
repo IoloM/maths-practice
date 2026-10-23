@@ -20,21 +20,8 @@ worked solutions and mark schemes.
 - Flashcards (formulae to learn and key facts, spaced repetition), formulae and statistical tables
   generated in the app, and calculator tips.
 - Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.
-- Handwriting: Apple Pencil Scribble (and Windows / Android handwriting) straight into plain-text
-  answer boxes, free and offline. **Ask your AI app**: after checking an answer, the question, mark
-  scheme and a picture of the working go to the student's own Claude, ChatGPT or Gemini (share
-  sheet, or copy and paste), which marks it line by line — no API key, nothing for the app to pay.
-- Optional, with the small server in `server/` (Cloudflare's free plan):
-  - **Logins** that an admin makes for people (Settings → Manage logins): each person's progress,
-    history and settings are saved to their account and follow them to any device. Passwords are
-    stretched in the app (PBKDF2) before they are sent; temporary passwords must be changed at first
-    sign-in; admins can reset passwords, switch logins off and see who is practising.
-  - **Sync without a login**, end-to-end encrypted with a sync code.
-  - **Built-in AI** (only with a paid Anthropic API key on the server): Claude reads a handwritten
-    answer into the box, or marks working inside the app.
 - Works on iPhone, iPad, Android, Windows, Mac and Chromebook — installable PWA.
-- Fully offline after the first visit (no CDNs, no tracking, no login). Without the server it makes
-  no third-party calls at all.
+- Fully offline after the first visit (no CDNs, no third-party calls, no tracking, no login).
 - Progress stays on your device (IndexedDB); one-tap backup/restore to a JSON file.
 
 ## Run locally
@@ -54,7 +41,6 @@ npm run bank             # regenerate the template registry + verified bank inde
 npm run bank:check       # CI: bank index must be fresh
 npm run coverage         # templates + instances per spec point (fails if any < 3)
 npm run build && npm run e2e   # Playwright on phone / tablet / desktop, including axe accessibility checks
-cd server && npm test          # the Worker: logins, admin, saved data, sync, access code, daily cap, AI calls (mocked)
 ```
 
 `TEMPLATE_SEEDS=1000 npm test` runs more seeds per template.
@@ -68,24 +54,8 @@ worker precaches everything for offline use.
 ## Deploy
 
 Every push to `main` runs `.github/workflows/deploy.yml`: type check → tests → bank freshness →
-coverage gate → server tests → build → Playwright (in the Playwright container) → GitHub Pages. The
+coverage gate → build → Playwright (in the Playwright container) → GitHub Pages. The
 site is served from `/maths-practice/` with hash routing (`#/q/<template>/<seed>` deep links).
-
-### The server (logins, sync, optional AI)
-
-`server/` is a Cloudflare Worker with a D1 database (the free plan is plenty). One command sets it up
-or re-deploys it — double-click `Set up logins and sync.command`, or:
-
-```bash
-server/setup.sh                 # sign in, create the database, deploy, make your admin login, connect the app
-server/setup.sh --skip-secrets  # re-deploy only
-server/setup.sh --new-admin     # add another admin login (or reset yours)
-```
-
-It sets the repository variable `API_URL` and rebuilds the site so the app knows the address. The
-built-in AI step is optional and skipped by default: it needs an Anthropic API key (a Claude
-subscription doesn't include API use), costs about 1p to read an answer and 3–5p to mark working
-with `claude-opus-5-5`, and is capped at 200 calls a day (`DAILY_AI_LIMIT` in `server/wrangler.toml`).
 
 ## Project layout
 

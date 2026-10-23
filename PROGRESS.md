@@ -143,9 +143,9 @@ statistics) and 36 Playwright runs across desktop Chrome, iPhone and iPad (WebKi
 **Tests**: 1,725 unit tests and 154 Playwright runs across the four devices (13 app flows — offline on Chromium only — plus
 axe on 13 views in light and dark) — all green.
 
-**Deploy**: waiting on GitHub sign-in (`gh auth login`); everything is committed and ready to push.
+**Deploy**: live at https://iolom.github.io/maths-practice/ (GitHub Pages, deployed by CI on every push).
 
-## Phase 6 — More questions, past papers, sync and AI ✅ (23 Oct 2026)
+## Phase 6 — More questions, past papers, flashcards, predicted grade ✅ (23 Oct 2026)
 
 - **Questions**: 349 question types and **62,948 verified questions** (the bank keeps up to 200
   distinct verified seeds per type, stored as compact seed runs). New: binomial expansion for
@@ -160,32 +160,7 @@ axe on 13 views in light and dark) — all green.
 - **Predicted grade** from mock papers using the June 2023–2026 grade boundaries.
 - **Flashcards** (89 cards: formulae to learn and key facts, FSRS spaced repetition) and
   **calculator tips** on the formulae page.
-- **Sync between devices** (`src/lib/sync.ts`, `server/`): a 20-character sync code gives the row id
-  (SHA-256) and an AES-GCM key (PBKDF2), so the server stores only compressed ciphertext. Syncs on
-  start, after progress changes and when back online; merging never loses an attempt (union),
-  keeps the newest card and draft, and the most advanced mock; handwriting strokes stay on the
-  device that drew them. Writes use optimistic versions and retry on a clash.
-- **AI handwriting and marking** (`server/src/ai.ts`, Claude `claude-opus-5-5` with structured
-  output and the server-side refusal fallback):
-  - *Write it*: a pad next to answer boxes; the AI reads the handwriting into the box to check.
-  - *AI: mark my working*: after checking a part (or reviewing a mock), the working is marked line
-    by line against the mark scheme with short feedback and a next step; its ticks can be taken as
-    self-marks.
-  - Apple Pencil Scribble into plain-text answer boxes (free, offline) is explained in Settings.
-  - The key lives only in Cloudflare secrets; the app sends an access code; a daily cap (200)
-    limits spending.
-- **Logins** (`server/src/auth.ts`, `src/lib/account.ts`, `#/account`, `#/admin`): the admin makes
-  logins in the app and gets a temporary password to pass on (must be changed at first sign-in).
-  Signed in, progress, history, mocks, review cards and preferences (theme, answer boxes, paper,
-  working) are saved to the account and merged across devices; signing out removes them from the
-  device. Passwords are stretched in the browser (PBKDF2, 100k rounds) and the Worker keeps a salted
-  SHA-256 of that — the free plan's 10 ms CPU limit rules out PBKDF2 on the server. Bearer tokens
-  (hashed in the database, 90 days), 20 wrong passwords a day per login before it pauses, admins
-  can reset, switch off and delete logins and see questions, score and last active.
-- **Free AI marking** (`src/components/AskAi.tsx`): a Claude subscription doesn't cover API use, so
-  rather than pay for the API the app hands the question, mark scheme, model solution, answer and a
-  picture of the working to the student's own AI app (share sheet on phones and iPads; copy and
-  paste on computers). The paid built-in AI stays available but is off unless a key is set.
-- **Server**: Cloudflare Worker + D1, one-step `server/setup.sh` (double-click
-  `Set up logins and sync.command`) that also makes the admin login.
-- **CI**: e2e runs in the Playwright container (42 → 9 minutes); the server is type-checked and tested.
+- Sync between devices, admin-made logins and AI reading/marking of handwriting (built on a
+  Cloudflare Worker) were built and then removed at the owner's request: the app stays a static,
+  offline site with no server. Moving progress between devices is the backup file.
+- **CI**: e2e runs in the Playwright container (42 → 9 minutes).

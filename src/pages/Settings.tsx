@@ -5,7 +5,6 @@ import { notifyProgress } from '../progress/record';
 import { BANK } from '../content/bank';
 import { Icon } from '../components/Icon';
 import { InstallHelp } from '../components/Install';
-import { OnlineSettings } from '../components/OnlineSettings';
 
 export function Settings() {
   const { settings, update } = useSettings();
@@ -28,7 +27,7 @@ export function Settings() {
       <section className="card stack">
         <h2>Your progress</h2>
         <p className="muted small">
-          Progress is stored on this device{settings.syncCode ? ' and synced (encrypted) to your other devices' : ' only'} ({storeKind === 'memory' ? 'temporary memory — this browser blocks storage' : 'IndexedDB'}). Storage is{' '}
+          Progress is stored on this device only ({storeKind === 'memory' ? 'temporary memory — this browser blocks storage' : 'IndexedDB'}). Storage is{' '}
           {persisted === true ? <b>persistent</b> : persisted === false ? <b>not yet persistent</b> : 'unknown'}.
           {lastBackup ? ` Last backup: ${new Date(lastBackup).toLocaleString()}.` : ' No backup yet.'}
         </p>
@@ -92,7 +91,6 @@ export function Settings() {
           </p>
         )}
       </section>
-      <OnlineSettings />
       <section className="card stack">
         <h2>Appearance & input</h2>
         <label className="row">

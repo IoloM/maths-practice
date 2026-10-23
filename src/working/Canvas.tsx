@@ -74,39 +74,6 @@ function drawStroke(ctx: CanvasRenderingContext2D, s: Stroke, live = false) {
   ctx.restore();
 }
 
-/**
- * Pen strokes as a cropped PNG (base64, no data: prefix) for the AI to read: black ink on white,
- * highlighter left out, longest side at most `maxSide` px. Null if nothing is written.
- */
-export function strokesToPng(strokes: Stroke[], maxSide = 1200, pad = 24): string | null {
-  const ink = strokes.filter((s) => s.tool !== 'highlighter' && s.points.length);
-  if (!ink.length) return null;
-  let x0 = Infinity,
-    y0 = Infinity,
-    x1 = -Infinity,
-    y1 = -Infinity;
-  for (const s of ink)
-    for (let i = 0; i < s.points.length; i += 3) {
-      x0 = Math.min(x0, s.points[i] - s.size);
-      y0 = Math.min(y0, s.points[i + 1] - s.size);
-      x1 = Math.max(x1, s.points[i] + s.size);
-      y1 = Math.max(y1, s.points[i + 1] + s.size);
-    }
-  const w = x1 - x0 + 2 * pad,
-    h = y1 - y0 + 2 * pad;
-  const scale = Math.min(2, maxSide / Math.max(w, h));
-  const c = document.createElement('canvas');
-  c.width = Math.max(1, Math.round(w * scale));
-  c.height = Math.max(1, Math.round(h * scale));
-  const ctx = c.getContext('2d');
-  if (!ctx) return null;
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, c.width, c.height);
-  ctx.setTransform(scale, 0, 0, scale, (pad - x0) * scale, (pad - y0) * scale);
-  for (const s of ink) drawStroke(ctx, { ...s, color: '#000' });
-  return c.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
-}
-
 export function paperCss(paper: Paper, transparent?: boolean): React.CSSProperties {
   if (transparent) return { background: 'transparent' };
   const line = 'color-mix(in srgb, var(--accent) 16%, transparent)';

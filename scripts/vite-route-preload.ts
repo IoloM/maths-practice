@@ -19,8 +19,6 @@ const PAGES: Record<string, string> = {
   flashcards: 'src/pages/Flashcards.tsx',
   'past-papers': 'src/pages/PastPapers.tsx',
   settings: 'src/pages/Settings.tsx',
-  account: 'src/pages/Account.tsx',
-  admin: 'src/pages/Admin.tsx',
 };
 const QUESTION_VIEW = 'src/components/QuestionView.tsx';
 const WITH_QUESTIONS = ['q', 'practice', 'review', 'set'];
