@@ -18,7 +18,7 @@ const surd = (n: number) => {
 const sq = (v: string, a: number) => (a === 0 ? `${v}^{2}` : `(${v} ${a < 0 ? '+' : '-'} ${Math.abs(a)})^{2}`);
 const circleEq = (a: number, b: number, r2: number | Q) => ans.eq(ex(`${sq('x', a)} + ${sq('y', b)}`), num(Q.from(r2)), ['x', 'y']);
 
-function circleSvg(a: number, b: number, rad: number, extra: { x: number; y: number; label?: string }[] = []) {
+export function circleSvg(a: number, b: number, rad: number, extra: { x: number; y: number; label?: string }[] = []) {
   return plot({
     x: [Math.min(a - rad, 0) - 1.5, Math.max(a + rad, 0) + 1.5],
     y: [Math.min(b - rad, 0) - 1.5, Math.max(b + rad, 0) + 1.5],
