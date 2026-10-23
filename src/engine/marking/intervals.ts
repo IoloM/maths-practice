@@ -63,10 +63,60 @@ function complementPoint(a: number): NumSet {
   ];
 }
 
-/** One relation "x < 3", "−2 ⩽ x < 5", "4 > x" → set, or null if not about v. */
+const FLIP: Record<RelOp, RelOp> = { '<': '>', '>': '<', '<=': '>=', '>=': '<=', '=': '=', '!=': '!=' };
+
+/** "|a·x + b| op c" or "c op |a·x + b|" (e.g. validity |x| < 1/2) → set, or null if not that shape. */
+function absRelToSet(terms: Expr[], ops: RelOp[], v: string): NumSet | null {
+  if (terms.length !== 2) return null;
+  const i = terms.findIndex((t) => t.k === 'fn' && t.f === 'abs');
+  const t = terms[i];
+  if (i < 0 || t.k !== 'fn') return null;
+  const inner = t.a,
+    other = terms[1 - i];
+  const syms = freeSyms(inner);
+  if (freeSyms(other).size || syms.size !== 1 || !syms.has(v)) return null;
+  const f = (x: number) => evaluate(inner, { [v]: x });
+  const b = f(0),
+    a = f(1) - b;
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a === 0 || Math.abs(f(2) - (2 * a + b)) > 1e-9 * Math.max(1, Math.abs(a), Math.abs(b))) return null;
+  const c = constVal(other);
+  if (Number.isNaN(c)) return null;
+  // set of u = a·x + b with |u| op c
+  const op = i === 0 ? ops[0] : FLIP[ops[0]];
+  const both = (lo: number, hi: number, closed: boolean): NumSet => [{ lo, hi, loC: closed, hiC: closed }];
+  const tails = (closed: boolean): NumSet => [
+    { lo: -Infinity, hi: -c, loC: false, hiC: closed },
+    { lo: c, hi: Infinity, loC: closed, hiC: false },
+  ];
+  let U: NumSet;
+  switch (op) {
+    case '<':
+      U = c > 0 ? both(-c, c, false) : [];
+      break;
+    case '<=':
+      U = c >= 0 ? both(-c, c, true) : [];
+      break;
+    case '>':
+      U = c < 0 ? ALL : tails(false);
+      break;
+    case '>=':
+      U = c <= 0 ? ALL : tails(true);
+      break;
+    case '=':
+      U = c < 0 ? [] : normalise([...both(-c, -c, true), ...both(c, c, true)]);
+      break;
+    case '!=':
+      U = c < 0 ? ALL : normalise([{ lo: -Infinity, hi: -c, loC: false, hiC: false }, { lo: -c, hi: c, loC: false, hiC: false }, { lo: c, hi: Infinity, loC: false, hiC: false }]);
+      break;
+  }
+  // back to x = (u − b)/a; a negative a reverses the ends
+  return normalise(U.map((I) => (a > 0 ? { lo: (I.lo - b) / a, hi: (I.hi - b) / a, loC: I.loC, hiC: I.hiC } : { lo: (I.hi - b) / a, hi: (I.lo - b) / a, loC: I.hiC, hiC: I.loC })));
+}
+
+/** One relation "x < 3", "−2 ⩽ x < 5", "4 > x", "|x| < 1/2" → set, or null if not about v. */
 function relToSet(terms: Expr[], ops: RelOp[], v: string): NumSet | null {
   const idx = terms.findIndex((t) => t.k === 'sym' && t.n === v);
-  if (idx < 0) return null;
+  if (idx < 0) return absRelToSet(terms, ops, v);
   if (terms.some((t, i) => i !== idx && freeSyms(t).size)) return null;
   let set: NumSet = ALL;
   // left of x: terms[idx-1] op x
@@ -85,8 +135,7 @@ function relToSet(terms: Expr[], ops: RelOp[], v: string): NumSet | null {
 
 /** Bound from "a op x" (side 'left') or "x op b" (side 'right'). */
 function bound(a: number, op: RelOp, side: 'left' | 'right'): NumSet {
-  const flip: Record<RelOp, RelOp> = { '<': '>', '>': '<', '<=': '>=', '>=': '<=', '=': '=', '!=': '!=' };
-  const o = side === 'left' ? flip[op] : op; // now "x o a"
+  const o = side === 'left' ? FLIP[op] : op; // now "x o a""
   switch (o) {
     case '<':
       return [{ lo: -Infinity, hi: a, loC: false, hiC: false }];
@@ -150,7 +199,8 @@ export function statementToSet(st: Statement, v: string): NumSet | null {
   return groups.reduce((a, b) => union(a, b), [] as NumSet);
 }
 
-const close = (a: number, b: number) => a === b || Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+// infinite ends must match exactly (a relative tolerance would become infinite)
+const close = (a: number, b: number) => a === b || (Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b)));
 
 export function setsEqual(a: NumSet, b: NumSet): boolean {
   const A = normalise(a),

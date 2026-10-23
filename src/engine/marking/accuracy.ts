@@ -5,7 +5,7 @@ import type { Accuracy } from './types';
 
 export type AwrtResult = 'ok' | 'low' | 'wrong';
 
-const eqR = (a: number, b: number) => Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+const eqR = (a: number, b: number) => Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
 
 /** Significant figures in a typed literal; an integer's trailing zeros count (1200 to 3 s.f. is "1200"). */
 export function litSF(lit: string): number {

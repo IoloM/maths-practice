@@ -693,6 +693,28 @@ cases('increasing interval: either strict or non-strict ends', ans.interval([iv(
   ['x < 1 \\text{ or } x > 4', 'accuracy'],
 ]);
 
+cases('validity of an expansion: −1/2 < x < 1/2', ans.interval([iv(num(Q.of(-1, 2)), num(Q.of(1, 2)), false, false)]), [
+  ['|x|<\\frac{1}{2}', 'correct'],
+  ['\\left|x\\right|<0.5', 'correct'],
+  ['|2x|<1', 'correct'],
+  ['|-2x| < 1', 'correct'],
+  ['-\\frac{1}{2}<x<\\frac{1}{2}', 'correct'],
+  ['|x|\\le\\frac{1}{2}', 'accuracy'],
+  ['|x|<2', 'wrong'],
+  // one-sided answers must not match a bounded interval (infinite ends compared exactly)
+  ['x<\\frac{1}{2}', 'wrong'],
+  ['x>-\\frac{1}{2}', 'wrong'],
+]);
+cases('modulus inequality |x − 3| ⩾ 2: x ⩽ 1 or x ⩾ 5', ans.interval([iv(NINF, num(1), false, true), iv(num(5), INF, true, false)]), [
+  ['|x-3|\\ge 2', 'correct'],
+  ['x\\le 1 \\text{ or } x\\ge 5', 'correct'],
+  ['x\\le 1', 'wrong'],
+]);
+cases('a bounded interval is not a one-sided one: x < 4', ans.interval([iv(NINF, num(4), false, false)]), [
+  ['x<4', 'correct'],
+  ['-1<x<4', 'wrong'],
+]);
+
 // ---------------------------------------------------------------- choice & hypothesis
 cases('single choice', ans.choice(['A', 'B', 'C'], 1), [
   ['1', 'correct'],

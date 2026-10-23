@@ -8,13 +8,15 @@ import { answerTex } from '../../../engine/marking/mark';
 import type { ExactSpec, ExprSpec, ListSpec, NumericSpec } from '../../../engine/marking/types';
 import { A1, B1, M1, ans, defineTemplate, err, md, part } from '../../../engine/templates/helpers';
 import type { Template } from '../../../engine/templates/types';
-import { sumTex } from '../shared/calculus';
+import { ex, sumTex } from '../shared/calculus';
 
 /** First k+1 terms (ascending) of (a + bx)^n as a Poly. */
 function expansion(a: Q, b: Q, n: number, terms: number): Poly {
   return Poly.coeffs(Array.from({ length: terms }, (_, r0) => Q.of(nCr(n, r0)).mul(a.pow(n - r0)).mul(b.pow(r0))));
 }
 const brk = (a: Q, b: Q) => `\\left(${sumTex([[a, ''], [b, 'x']])}\\right)`;
+/** Ascending order (1 + 3x + …), as "in ascending powers of x" questions expect; `v` may be a bracketed value. */
+const ascTex = (P: Poly, v = 'x') => sumTex(Array.from({ length: P.degree + 1 }, (_, i): [Q, string] => [P.coef(i), i === 0 ? '' : i === 1 ? v : `${v}^{${i}}`]));
 
 const coefficient = defineTemplate({
   id: 'p1.8.coefficient-of-term',
@@ -82,7 +84,7 @@ const firstTerms = defineTemplate({
       b = r.pick([Q.of(1, 2), Q.of(2), Q.of(-3), Q.of(-1, 2), Q.of(3), Q.of(-2), Q.of(1, 3)]);
     const P = expansion(a, b, n, 4);
     r.require(P.terms.every((t) => Math.abs(t.c.value) < 1e5));
-    const E: ExprSpec = ans.expr(P.toExpr(), ['x']);
+    const E: ExprSpec = ans.expr(ex(ascTex(P)), ['x']);
     return {
       parts: [
         part({
@@ -92,7 +94,7 @@ const firstTerms = defineTemplate({
           scheme: [B1(md`$${P.coef(0).toLatex()}$`), M1(md`Correct structure: $\binom{${n}}{r}(${a.toLatex()})^{${n}-r}(${b.toLatex()}x)^{r}$`), A1('Two of the x terms correct'), A1(md`$${answerTex(E)}$`)],
           hints: [md`$(a + bx)^{n} = a^{n} + \binom{n}{1}a^{n-1}(bx) + \binom{n}{2}a^{n-2}(bx)^{2} + \dots$`, md`Here $a = ${a.toLatex()}$, $b = ${b.toLatex()}$ and $n = ${n}$.`, md`$\binom{${n}}{1} = ${n}$, $\binom{${n}}{2} = ${nCr(n, 2)}$, $\binom{${n}}{3} = ${nCr(n, 3)}$`],
           errors: [err('no-bracket', ans.expr(Poly.coeffs(Array.from({ length: 4 }, (_, r0) => Q.of(nCr(n, r0)).mul(a.pow(n - r0)).mul(b))).toExpr(), ['x']), md`Put brackets round $(${b.toLatex()}x)$ — the coefficient must be raised to the power as well.`, 2)],
-          solution: [md`$${brk(a, b)}^{${n}} = ${P.toLatex()} + \dots$`, md`$${answerTex(E)}$`],
+          solution: [md`$${brk(a, b)}^{${n}} = ${answerTex(E)} + \dots$`],
         }),
       ],
       params: { a: a.value, b: b.value, n },
@@ -124,17 +126,17 @@ const estimate = defineTemplate({
     const n = r.int(6, 12);
     const k = r.pick([2, 3, 4, 5]);
     const P = expansion(Q.ONE, Q.of(k), n, 3);
-    const target = r.pick([0.01, 0.02, 0.001, 0.005]);
-    const xv = target / k;
-    r.require(Number.isFinite(xv));
-    const base = 1 + target;
+    // choose a clean x first, so 1 + kx is the number to estimate (e.g. x = 0.01, k = 3: 1.03ⁿ)
+    const xv = r.pick([0.001, 0.002, 0.005, 0.01]);
+    const target = Number((k * xv).toFixed(6));
+    const base = Number((1 + target).toFixed(6));
     const est = P.eval(xv);
-    const E: ExprSpec = ans.expr(P.toExpr(), ['x']);
+    const E: ExprSpec = ans.expr(ex(ascTex(P)), ['x']);
     const S = ans.num(est, { dp: 4 });
     return {
       parts: [
         part({ label: 'a', marks: 3, prompt: md`Find the first 3 terms, in ascending powers of $x$, of the expansion of $(1 + ${k}x)^{${n}}$.`, answer: E, scheme: [B1('1'), M1(md`$\binom{${n}}{2}(${k}x)^{2}$`), A1(md`$${answerTex(E)}$`)], hints: ['Use (1 + y)ⁿ = 1 + ny + n(n − 1)/2 · y² + … with y = kx.', md`$y = ${k}x$`, md`$\binom{${n}}{2} = ${nCr(n, 2)}$`], solution: [md`$(1 + ${k}x)^{${n}} = ${answerTex(E)} + \dots$`] }),
-        part({ label: 'b', marks: 2, prompt: md`Use your expansion with a suitable value of $x$ to estimate $${fmtNum(base)}^{${n}}$, giving your answer to 4 decimal places.`, answer: S, ft: (prev) => (prev.a?.expr ? ans.num(evaluate(prev.a.expr, { x: xv }), { dp: 4 }) : null), scheme: [M1(md`Uses $x = ${fmtNum(xv)}$`), A1(md`$${answerTex(S)}$`)], hints: [md`Choose $x$ so that $1 + ${k}x = ${fmtNum(base)}$.`, md`$x = ${fmtNum(xv)}$`, 'Substitute into your three terms.'], errors: [err('wrong-x', ans.num(P.eval(target), { dp: 4 }), md`You need $1 + ${k}x = ${fmtNum(base)}$, so $x = ${fmtNum(xv)}$, not $${fmtNum(target)}$.`, 1)], solution: [md`$x = ${fmtNum(xv)}$: $${P.toLatex().replace(/x/g, `(${fmtNum(xv)})`)} = ${answerTex(S)}$`] }),
+        part({ label: 'b', marks: 2, prompt: md`Use your expansion with a suitable value of $x$ to estimate $${fmtNum(base)}^{${n}}$, giving your answer to 4 decimal places.`, answer: S, ft: (prev) => (prev.a?.expr ? ans.num(evaluate(prev.a.expr, { x: xv }), { dp: 4 }) : null), scheme: [M1(md`Uses $x = ${fmtNum(xv)}$`), A1(md`$${answerTex(S)}$`)], hints: [md`Choose $x$ so that $1 + ${k}x = ${fmtNum(base)}$.`, md`$x = ${fmtNum(xv)}$`, 'Substitute into your three terms.'], errors: [err('wrong-x', ans.num(P.eval(target), { dp: 4 }), md`You need $1 + ${k}x = ${fmtNum(base)}$, so $x = ${fmtNum(xv)}$, not $${fmtNum(target)}$.`, 1)], solution: [md`$x = ${fmtNum(xv)}$: $${ascTex(P, `(${fmtNum(xv)})`)} = ${answerTex(S)}$`] }),
       ],
       params: { n, base },
     };

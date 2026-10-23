@@ -17,35 +17,36 @@ import c13 from './P1-14/index';
 import c14 from './P2-1/index';
 import c15 from './P2-2/index';
 import c16 from './P2-3/index';
-import c17 from './P2-5/index';
-import c18 from './P2-6/index';
-import c19 from './P2-7/index';
-import c20 from './P2-8/index';
-import c21 from './P2-9/index';
-import c22 from './P2-10/index';
-import c23 from './P2-11/index';
-import c24 from './P2-12/index';
-import c25 from './SM1-1/index';
-import c26 from './SM1-2/index';
-import c27 from './SM1-3/index';
-import c28 from './SM1-4/index';
-import c29 from './SM1-5/index';
-import c30 from './SM1-6/index';
-import c31 from './SM1-7/index';
-import c32 from './SM1-8/index';
-import c33 from './SM1-9/index';
-import c34 from './SM1-10/index';
-import c35 from './SM1-11/index';
-import c36 from './SM2-1/index';
-import c37 from './SM2-2/index';
-import c38 from './SM2-3/index';
-import c39 from './SM2-4/index';
-import c40 from './SM2-5/index';
-import c41 from './SM2-6/index';
-import c42 from './SM2-7/index';
-import c43 from './SM2-8/index';
+import c17 from './P2-4/index';
+import c18 from './P2-5/index';
+import c19 from './P2-6/index';
+import c20 from './P2-7/index';
+import c21 from './P2-8/index';
+import c22 from './P2-9/index';
+import c23 from './P2-10/index';
+import c24 from './P2-11/index';
+import c25 from './P2-12/index';
+import c26 from './SM1-1/index';
+import c27 from './SM1-2/index';
+import c28 from './SM1-3/index';
+import c29 from './SM1-4/index';
+import c30 from './SM1-5/index';
+import c31 from './SM1-6/index';
+import c32 from './SM1-7/index';
+import c33 from './SM1-8/index';
+import c34 from './SM1-9/index';
+import c35 from './SM1-10/index';
+import c36 from './SM1-11/index';
+import c37 from './SM2-1/index';
+import c38 from './SM2-2/index';
+import c39 from './SM2-3/index';
+import c40 from './SM2-4/index';
+import c41 from './SM2-5/index';
+import c42 from './SM2-6/index';
+import c43 from './SM2-7/index';
+import c44 from './SM2-8/index';
 
-export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26, ...c27, ...c28, ...c29, ...c30, ...c31, ...c32, ...c33, ...c34, ...c35, ...c36, ...c37, ...c38, ...c39, ...c40, ...c41, ...c42, ...c43];
+export const ALL_TEMPLATES: Template[] = [...c0, ...c1, ...c2, ...c3, ...c4, ...c5, ...c6, ...c7, ...c8, ...c9, ...c10, ...c11, ...c12, ...c13, ...c14, ...c15, ...c16, ...c17, ...c18, ...c19, ...c20, ...c21, ...c22, ...c23, ...c24, ...c25, ...c26, ...c27, ...c28, ...c29, ...c30, ...c31, ...c32, ...c33, ...c34, ...c35, ...c36, ...c37, ...c38, ...c39, ...c40, ...c41, ...c42, ...c43, ...c44];
 
 export const BY_CHAPTER: Record<string, Template[]> = {
   'P1.1': c0,
@@ -65,31 +66,32 @@ export const BY_CHAPTER: Record<string, Template[]> = {
   'P2.1': c14,
   'P2.2': c15,
   'P2.3': c16,
-  'P2.5': c17,
-  'P2.6': c18,
-  'P2.7': c19,
-  'P2.8': c20,
-  'P2.9': c21,
-  'P2.10': c22,
-  'P2.11': c23,
-  'P2.12': c24,
-  'SM1.1': c25,
-  'SM1.2': c26,
-  'SM1.3': c27,
-  'SM1.4': c28,
-  'SM1.5': c29,
-  'SM1.6': c30,
-  'SM1.7': c31,
-  'SM1.8': c32,
-  'SM1.9': c33,
-  'SM1.10': c34,
-  'SM1.11': c35,
-  'SM2.1': c36,
-  'SM2.2': c37,
-  'SM2.3': c38,
-  'SM2.4': c39,
-  'SM2.5': c40,
-  'SM2.6': c41,
-  'SM2.7': c42,
-  'SM2.8': c43,
+  'P2.4': c17,
+  'P2.5': c18,
+  'P2.6': c19,
+  'P2.7': c20,
+  'P2.8': c21,
+  'P2.9': c22,
+  'P2.10': c23,
+  'P2.11': c24,
+  'P2.12': c25,
+  'SM1.1': c26,
+  'SM1.2': c27,
+  'SM1.3': c28,
+  'SM1.4': c29,
+  'SM1.5': c30,
+  'SM1.6': c31,
+  'SM1.7': c32,
+  'SM1.8': c33,
+  'SM1.9': c34,
+  'SM1.10': c35,
+  'SM1.11': c36,
+  'SM2.1': c37,
+  'SM2.2': c38,
+  'SM2.3': c39,
+  'SM2.4': c40,
+  'SM2.5': c41,
+  'SM2.6': c42,
+  'SM2.7': c43,
+  'SM2.8': c44,
 };

@@ -7607,6 +7607,338 @@
    ]
   },
   {
+   "id": "p2.4.expand-one-plus-kx",
+   "family": "p2.4.binomial-rational",
+   "title": "Binomial expansion of (1 + kx)ⁿ for rational n, with validity",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "binomial expansion",
+    "rational powers",
+    "validity"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.4.expand-a-plus-bx",
+   "family": "p2.4.binomial-rational",
+   "title": "Binomial expansion of (a + bx)ⁿ for rational n, with validity",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "binomial expansion",
+    "rational powers",
+    "validity"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.4.approximate-a-surd",
+   "family": "p2.4.binomial-approximation",
+   "title": "Use a binomial expansion to approximate a square root as a fraction",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "Hence"
+   ],
+   "tags": [
+    "binomial expansion",
+    "approximation",
+    "surds"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.4.partial-fractions-then-expand",
+   "family": "p2.4.binomial-partial-fractions",
+   "title": "Partial fractions, then a binomial expansion and its validity",
+   "spec": [
+    "P4.1",
+    "P2.10"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.3"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 9,
+   "time": 11,
+   "commands": [
+    "Express",
+    "Hence",
+    "Find"
+   ],
+   "tags": [
+    "binomial expansion",
+    "partial fractions",
+    "validity"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.4.find-n-and-k",
+   "family": "p2.4.binomial-coefficients",
+   "title": "Find n and k from the start of a binomial expansion",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.1"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "binomial expansion",
+    "rational powers",
+    "simultaneous equations"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": "p2.4.product-with-binomial",
+   "family": "p2.4.binomial-rational",
+   "title": "Expand a product such as (p + qx)(a + bx)ⁿ",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P2.4",
+   "sections": [
+    "4.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 8,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "binomial expansion",
+    "rational powers",
+    "products"
+   ],
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
    "id": "p2.5.arc-length-and-sector-area",
    "family": "p2.5.arcs-sectors",
    "title": "Arc length, sector area and perimeter in radians",
@@ -22943,8 +23275,8 @@
   }
  ],
  "totals": {
-  "templates": 329,
-  "questions": 7896,
+  "templates": 335,
+  "questions": 8040,
   "fixed": 158
  }
 }
