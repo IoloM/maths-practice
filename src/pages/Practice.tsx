@@ -8,6 +8,10 @@ import { useProgress } from '../lib/useProgress';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { SPEC_BY_REF } from '../content/spec';
 import { href } from '../router';
+import { PastPaperRefs } from '../components/PastPaperRefs';
+import { PAST_QUESTIONS } from '../content/past-papers';
+
+const PPQ_FAMILIES = [...new Set(PAST_QUESTIONS.flatMap((q) => q.families))];
 import type { Mode } from '../storage/types';
 
 export function Practice({ query }: { query: URLSearchParams }) {
@@ -18,6 +22,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
       specs: query.get('s')?.split(',').filter(Boolean),
       streams: query.get('st')?.split(',').filter(Boolean),
       minMarks: Number(query.get('mm') ?? 0),
+      families: query.get('pp') ? PPQ_FAMILIES : undefined,
       dmin: Number(query.get('dmin') ?? 1),
       dmax: Number(query.get('dmax') ?? 5),
     }),
@@ -53,7 +58,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
     if (!loading && !inst) void next();
   }, [loading, inst, next]);
 
-  const title = cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
+  const title = cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.families ? 'Topics that have come up on past papers' : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
   const pool = candidates(cfg).length;
 
   return (
@@ -81,6 +86,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
           }}
         />
       )}
+      {inst && ENTRY_BY_ID.get(inst.templateId) && <PastPaperRefs family={ENTRY_BY_ID.get(inst.templateId)!.family} />}
     </div>
   );
 }

@@ -1310,3 +1310,7 @@ ul.tips {
   font: 700 1.6rem/1 var(--serif);
   flex: none;
 }
+/* deep links into the past papers list land below the sticky header */
+[id^='paper-'] {
+  scroll-margin-top: 76px;
+}

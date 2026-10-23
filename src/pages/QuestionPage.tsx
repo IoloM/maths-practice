@@ -7,6 +7,7 @@ import { navigate, href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { scoreOf } from '../progress/mastery';
 import { formatDuration } from '../lib/attempt';
+import { PastPaperRefs } from '../components/PastPaperRefs';
 
 /** A single question by template + seed (shareable URL). */
 export function QuestionPage({ id, seed }: { id: string; seed: number }) {
@@ -40,6 +41,7 @@ export function QuestionPage({ id, seed }: { id: string; seed: number }) {
       {error && <ErrorBox>{error}</ErrorBox>}
       {!inst && !error && <Loading />}
       {inst && <QuestionView key={`${id}:${seed}`} inst={inst} meta={meta} mode="shared" onNext={() => navigate('/practice', { t: id })} nextLabel="More like this" />}
+      {inst && <PastPaperRefs family={meta.family} />}
       {history.length > 0 && (
         <section className="card">
           <h2>Your history with this question type</h2>

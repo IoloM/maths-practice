@@ -10,6 +10,8 @@ export interface SessionConfig {
   specs?: string[];
   /** Pure / Statistics / Mechanics */
   streams?: string[];
+  /** only these question families (e.g. topics that have come up on past papers) */
+  families?: string[];
   /** only question types worth at least this many marks (long exam-style questions) */
   minMarks?: number;
   dmin: number;
@@ -23,6 +25,7 @@ export function candidates(cfg: SessionConfig): BankEntry[] {
       (!cfg.templates?.length || cfg.templates.includes(t.id)) &&
       (!cfg.specs?.length || t.spec.some((s) => cfg.specs!.includes(s))) &&
       (!cfg.streams?.length || cfg.streams.includes(CHAPTER_BY_REF.get(t.chapter)?.stream ?? '')) &&
+      (!cfg.families?.length || cfg.families.includes(t.family)) &&
       t.marks >= (cfg.minMarks ?? 0) &&
       t.difficulty >= cfg.dmin &&
       t.difficulty <= cfg.dmax,

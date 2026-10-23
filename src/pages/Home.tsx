@@ -96,6 +96,12 @@ export function Home() {
           </h2>
           <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
         </a>
+        <a className="card tile" href={href('/past-papers')}>
+          <h2>
+            <Icon name="scheme" /> Past papers
+          </h2>
+          <span className="muted">Every 9MA0 paper 2018–2025 by question, with practice on each topic</span>
+        </a>
         <a className="card tile" href={href('/flashcards')}>
           <h2>
             <Icon name="bulb" /> Flashcards

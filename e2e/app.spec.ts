@@ -195,3 +195,13 @@ test('a finished mock gives a grade and a predicted grade on the progress page',
   await expect(page.getByText('Predicted grade A*.')).toBeAttached();
   await expect(page.locator('.grade-badge')).toHaveText('A*');
 });
+
+test('past papers: official links, question topics and practice for each question', async ({ page }) => {
+  await page.goto('./#/past-papers?p=2023-06-1');
+  const paper = page.locator('#paper-2023-06-1');
+  await expect(paper.getByRole('link', { name: 'Question paper (PDF)' })).toHaveAttribute('href', /qualifications\.pearson\.com\/.+9ma0-01-que-20230607\.pdf$/);
+  await expect(paper.getByText('Q12')).toBeVisible();
+  await paper.getByRole('link', { name: /Differentiate sin x from first principles/ }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Past paper questions like this/ })).toBeVisible();
+});

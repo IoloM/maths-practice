@@ -17,6 +17,7 @@ const PAGES: [string, string][] = [
   ['progress', './#/progress'],
   ['reference', './#/reference'],
   ['flashcards', './#/flashcards'],
+  ['past papers', './#/past-papers?p=2022-06-2'],
   ['settings', './#/settings'],
 ];
 

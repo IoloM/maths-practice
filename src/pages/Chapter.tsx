@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { entriesForChapter } from '../content/bank-meta';
+import { usePastPapers } from '../components/PastPaperRefs';
 import { CHAPTER_BY_REF, BOOK_NAMES } from '../content/chapters';
 import { href, navigate } from '../router';
 import { useProgress } from '../lib/useProgress';
@@ -10,6 +11,12 @@ import { Icon } from '../components/Icon';
 export function ChapterPage({ chapter: chRef }: { chapter: string }) {
   const ch = CHAPTER_BY_REF.get(chRef as never);
   const entries = entriesForChapter(chRef);
+  const pp = usePastPapers();
+  const ppq = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const q of pp?.PAST_QUESTIONS ?? []) for (const f of q.families) m.set(f, (m.get(f) ?? 0) + 1);
+    return m;
+  }, [pp]);
   const [dmin, setDmin] = useState(1);
   const [dmax, setDmax] = useState(5);
   const { attempts } = useProgress();
@@ -65,6 +72,11 @@ export function ChapterPage({ chapter: chRef }: { chapter: string }) {
                     <span style={{ flex: 1 }}>{e.title}</span>
                     <Difficulty d={e.difficulty} />
                     <span className="chip">{e.marks} marks</span>
+                    {(ppq.get(e.family) ?? 0) > 0 && (
+                      <span className="chip chip-accent" title={`Like ${ppq.get(e.family)} question(s) on real Edexcel papers`}>
+                        PPQ × {ppq.get(e.family)}
+                      </span>
+                    )}
                     <RagBadge mastery={mastery(byT.get(e.id) ?? [])} />
                   </a>
                 </li>
