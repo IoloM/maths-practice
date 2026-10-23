@@ -35,3 +35,7 @@ export function review(rec: CardRecord | undefined, family: string, grade: Grade
 export function isDue(rec: CardRecord, now = new Date()): boolean {
   return toCard(rec).due.getTime() <= now.getTime();
 }
+
+/** Flashcard records share the cards store under this prefix; question review ignores them. */
+export const FLASH_PREFIX = 'flash:';
+export const isQuestionCard = (c: CardRecord) => !c.family.startsWith(FLASH_PREFIX);

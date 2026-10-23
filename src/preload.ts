@@ -13,6 +13,7 @@ const PAGES: Record<string, () => Promise<unknown>> = {
   exams: () => import('./pages/Exams'),
   progress: () => import('./pages/Progress'),
   reference: () => import('./pages/Reference'),
+  flashcards: () => import('./pages/Flashcards'),
   settings: () => import('./pages/Settings'),
 };
 

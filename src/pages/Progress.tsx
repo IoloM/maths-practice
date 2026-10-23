@@ -8,7 +8,7 @@ import { frequentErrors, humanise, minutesPerMark, specMastery, weeklyTrend, typ
 import { RagBadge, Loading, ragOf } from '../components/bits';
 import { href } from '../router';
 import { formatDuration } from '../lib/attempt';
-import { isDue } from '../srs/fsrs';
+import { isDue, isQuestionCard } from '../srs/fsrs';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { MINUTES_PER_MARK } from '../lib/sets';
@@ -92,7 +92,7 @@ export function Progress() {
   const got = attempts.reduce((s, a) => s + scoreOf(a), 0);
   const time = attempts.reduce((s, a) => s + a.durationMs, 0);
   const recent = [...attempts].sort((a, b) => b.finishedAt - a.finishedAt).slice(0, 30);
-  const due = cards.filter((c) => isDue(c)).length;
+  const due = cards.filter((c) => isQuestionCard(c) && isDue(c)).length;
   const topics = [...new Set(SPEC.map((s) => s.topic))];
   const finishedSets = sets.filter((s) => s.status === 'finished' && s.kind !== 'daily').sort((a, b) => (b.finishedAt ?? 0) - (a.finishedAt ?? 0));
   return (

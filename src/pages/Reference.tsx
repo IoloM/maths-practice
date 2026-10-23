@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { binomCdf, invPhi, pmccCritical } from '../engine/stats/distributions';
 import { MathText } from '../components/MathText';
+import { CALCULATOR } from '../content/calculator';
 /** LaTeX-friendly string tag: backslashes are kept as written. */
 const md = String.raw;
 
@@ -217,6 +218,25 @@ function PmccTable() {
   );
 }
 
+function Calculator() {
+  return (
+    <div className="stack">
+      {CALCULATOR.map((sec) => (
+        <section className="card" key={sec.h}>
+          <h2 className="h3">{sec.h}</h2>
+          <ul className="tips">
+            {sec.points.map((p, i) => (
+              <li key={i}>
+                <MathText src={p} inline />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 const TABS = [
   { id: 'pure', label: 'Pure formulae' },
   { id: 'stats', label: 'Statistics formulae' },
@@ -224,6 +244,7 @@ const TABS = [
   { id: 'binomial', label: 'Binomial tables' },
   { id: 'normal', label: 'Normal table' },
   { id: 'pmcc', label: 'PMCC table' },
+  { id: 'calculator', label: 'Calculator' },
 ];
 
 export function Reference() {
@@ -247,6 +268,9 @@ export function Reference() {
       <div>
         <h1>Formulae and statistical tables</h1>
         <p className="muted small">Key formulae of the kind given in the exam, and tables calculated in the app from exact distribution functions. Values are rounded to 4 decimal places.</p>
+        <p className="small">
+          Some formulae are <em>not</em> in the exam booklet and must be learnt — <a href="#/flashcards">practise them with flashcards</a>.
+        </p>
       </div>
       <div className="tabs" role="tablist" aria-label="Reference sections">
         {TABS.map((t) => (
@@ -262,6 +286,7 @@ export function Reference() {
         {tab === 'binomial' && <BinomialTable />}
         {tab === 'normal' && <NormalTable />}
         {tab === 'pmcc' && <PmccTable />}
+        {tab === 'calculator' && <Calculator />}
       </div>
     </div>
   );

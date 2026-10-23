@@ -16,6 +16,7 @@ const PAGES: [string, string][] = [
   ['review', './#/review'],
   ['progress', './#/progress'],
   ['reference', './#/reference'],
+  ['flashcards', './#/flashcards'],
   ['settings', './#/settings'],
 ];
 

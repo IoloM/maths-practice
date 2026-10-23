@@ -16,6 +16,7 @@ const PAGES: Record<string, string> = {
   exams: 'src/pages/Exams.tsx',
   progress: 'src/pages/Progress.tsx',
   reference: 'src/pages/Reference.tsx',
+  flashcards: 'src/pages/Flashcards.tsx',
   settings: 'src/pages/Settings.tsx',
 };
 const QUESTION_VIEW = 'src/components/QuestionView.tsx';

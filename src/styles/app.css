@@ -1250,3 +1250,50 @@ a.kpi {
 a.kpi:hover b {
   color: var(--accent);
 }
+
+/* ---------- flashcards ---------- */
+.flashcard {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+.flash-front,
+.flash-back {
+  font-size: 1.15rem;
+  width: 100%;
+}
+.flash-back {
+  border-top: 1px dashed var(--border);
+  padding-top: 14px;
+}
+.flash-grades .btn {
+  flex: 1;
+  min-width: 72px;
+}
+.flash-list {
+  margin: 0;
+}
+.flash-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.flash-row dd {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .flash-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+ul.tips {
+  margin: 0;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 8px;
+}

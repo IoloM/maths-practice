@@ -161,3 +161,23 @@ test('a page whose code fails to download shows a way out instead of a blank scr
   await page.getByRole('link', { name: 'Home' }).last().click();
   await expect(page.getByRole('heading', { name: /Edexcel A Level Maths practice/ })).toBeVisible();
 });
+
+test('flashcards: study a card, rate it, and it counts as started', async ({ page }) => {
+  await page.goto('./#/flashcards');
+  await page.getByRole('button', { name: /^Study \d+ cards?/ }).first().click();
+  await page.getByRole('button', { name: 'Show answer' }).click();
+  await page.getByRole('button', { name: 'Good' }).click();
+  await expect(page.getByText(/1 done/)).toBeVisible();
+  await page.keyboard.press(' ');
+  await page.keyboard.press('1'); // Again: the card comes back later in the session
+  await expect(page.getByText(/2 done/)).toBeVisible();
+  await page.getByRole('button', { name: 'Stop' }).click();
+  await expect(page.getByText(/2 of \d+ started/)).toBeVisible();
+});
+
+test('formulae page has calculator tips', async ({ page }) => {
+  await page.goto('./#/reference');
+  await page.getByRole('tab', { name: 'Calculator' }).click();
+  await expect(page.getByRole('heading', { name: 'Normal distribution' })).toBeVisible();
+  await expect(page.getByText(/not the variance/)).toBeVisible();
+});

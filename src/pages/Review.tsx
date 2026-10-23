@@ -5,7 +5,7 @@ import { QuestionView } from '../components/QuestionView';
 import { ErrorBox, Loading } from '../components/bits';
 import { Icon } from '../components/Icon';
 import { useProgress } from '../lib/useProgress';
-import { isDue, toCard } from '../srs/fsrs';
+import { isDue, isQuestionCard, toCard } from '../srs/fsrs';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { href } from '../router';
 
@@ -28,7 +28,7 @@ export function Review() {
         .sort((a, b) => toCard(a).due.getTime() - toCard(b).due.getTime()),
     [cards, byFamily],
   );
-  const nextDue = useMemo(() => cards.filter((c) => !isDue(c)).map((c) => toCard(c).due.getTime()).sort((a, b) => a - b)[0], [cards]);
+  const nextDue = useMemo(() => cards.filter((c) => isQuestionCard(c) && !isDue(c)).map((c) => toCard(c).due.getTime()).sort((a, b) => a - b)[0], [cards]);
 
   const next = useCallback(async () => {
     setError(null);

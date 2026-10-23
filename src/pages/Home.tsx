@@ -4,7 +4,7 @@ import { CHAPTERS } from '../content/chapters';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { mastery, groupBy, scoreOf } from '../progress/mastery';
-import { isDue } from '../srs/fsrs';
+import { isDue, isQuestionCard } from '../srs/fsrs';
 import { todayKey } from '../lib/dates';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
@@ -34,7 +34,8 @@ export function Home() {
   const marks = attempts.reduce((s, a) => s + a.marks, 0);
   const got = attempts.reduce((s, a) => s + scoreOf(a), 0);
   const last = attempts[attempts.length - 1];
-  const due = cards.filter((c) => isDue(c)).length;
+  const due = cards.filter((c) => isQuestionCard(c) && isDue(c)).length;
+  const flashDue = cards.filter((c) => !isQuestionCard(c) && isDue(c)).length;
   const dailyDone = daily ? new Set(attempts.filter((a) => a.setId === dailyId).map((a) => `${a.templateId}:${a.seed}`)).size : 0;
   return (
     <div className="stack">
@@ -93,6 +94,12 @@ export function Home() {
             <Icon name="chart" /> Progress
           </h2>
           <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
+        </a>
+        <a className="card tile" href={href('/flashcards')}>
+          <h2>
+            <Icon name="bulb" /> Flashcards
+          </h2>
+          <span className="muted">{flashDue ? `${flashDue} due now` : 'Formulae you must learn (not in the booklet)'}</span>
         </a>
         <a className="card tile" href={href('/reference')}>
           <h2>
