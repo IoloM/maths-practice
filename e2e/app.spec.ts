@@ -89,8 +89,9 @@ test('back up and restore progress', async ({ page }) => {
   page.once('dialog', (d) => d.accept());
   await page.getByRole('button', { name: /Delete all progress/ }).click();
   await expect(page.getByText(/All progress on this device has been deleted/)).toBeVisible();
-  await page.reload();
+  // reload the progress page itself (a hash change straight after reload() can race the reload in WebKit)
   await page.goto('./#/progress');
+  await page.reload();
   await expect(page.locator('.kpi b').first()).toHaveText('0');
   await page.goto('./#/settings');
   await page.getByTestId('restore-input').setInputFiles(file!);
