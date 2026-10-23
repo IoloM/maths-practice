@@ -40,7 +40,11 @@ test('wrong answer shows feedback and the mark scheme for self-marking', async (
 test('draw in the working canvas', async ({ page }) => {
   await page.goto(`./#/q/${Q}/3`);
   const canvas = page.getByRole('img', { name: /Handwritten working/ });
-  await canvas.scrollIntoViewIfNeeded();
+  // the canvas can be taller than a phone screen: bring its top (not its middle) into view, below the sticky header
+  await canvas.evaluate((el) => {
+    el.scrollIntoView({ block: 'start' });
+    window.scrollBy(0, -100);
+  });
   const b = (await canvas.boundingBox())!;
   await page.mouse.move(b.x + 40, b.y + 40);
   await page.mouse.down();
