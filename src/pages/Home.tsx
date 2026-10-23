@@ -81,6 +81,7 @@ export function Home() {
             <a href={href('/practice', { mixed: 1, st: 'Pure' })}>Pure</a>
             <a href={href('/practice', { mixed: 1, st: 'Statistics' })}>Statistics</a>
             <a href={href('/practice', { mixed: 1, st: 'Mechanics' })}>Mechanics</a>
+            <a href={href('/practice', { mixed: 1, mm: 10 })}>Long questions</a>
           </span>
         </div>
         <a className="card tile" href={href('/exams')}>

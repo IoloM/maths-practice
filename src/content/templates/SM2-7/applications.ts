@@ -7,13 +7,13 @@ import { A1, B1, M1, dM1, ACC_G, ans, defineTemplate, err, md, part } from '../.
 import type { Template } from '../../../engine/templates/types';
 import { G, U, forceDiagram, pickAngle, planeDiagram, polar, rad, vAdd, vScale, type Angle, type V2 } from '../shared/mech';
 
-const NG = (v: number, unit?: string) => ans.num(v, ACC_G, unit ? { unit } : {});
+export const NG = (v: number, unit?: string) => ans.num(v, ACC_G, unit ? { unit } : {});
 const up = (a: Angle): V2 => [a.cos, a.sin];
 const nrm = (a: Angle): V2 => [-a.sin, a.cos];
-const angleText = (a: Angle, what = 'a fixed rough plane') => (a.exact ? md`${what} inclined at an angle $\alpha$ to the horizontal, where ${a.given}` : md`${what} inclined at $${a.tex}$ to the horizontal`);
-const sinT = (a: Angle) => (a.exact ? a.sinTex : `\\sin ${a.tex}`);
-const cosT = (a: Angle) => (a.exact ? a.cosTex : `\\cos ${a.tex}`);
-const lbl = (a: Angle) => (a.exact ? 'α' : `${a.deg}°`);
+export const angleText = (a: Angle, what = 'a fixed rough plane') => (a.exact ? md`${what} inclined at an angle $\alpha$ to the horizontal, where ${a.given}` : md`${what} inclined at $${a.tex}$ to the horizontal`);
+export const sinT = (a: Angle) => (a.exact ? a.sinTex : `\\sin ${a.tex}`);
+export const cosT = (a: Angle) => (a.exact ? a.cosTex : `\\cos ${a.tex}`);
+export const lbl = (a: Angle) => (a.exact ? 'α' : `${a.deg}°`);
 
 function balance(forces: V2[], m: number, acc: number, dir: V2) {
   const net = vAdd(...forces);

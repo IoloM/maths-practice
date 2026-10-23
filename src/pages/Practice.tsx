@@ -17,6 +17,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
       templates: query.get('t')?.split(',').filter(Boolean),
       specs: query.get('s')?.split(',').filter(Boolean),
       streams: query.get('st')?.split(',').filter(Boolean),
+      minMarks: Number(query.get('mm') ?? 0),
       dmin: Number(query.get('dmin') ?? 1),
       dmax: Number(query.get('dmax') ?? 5),
     }),
@@ -52,7 +53,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
     if (!loading && !inst) void next();
   }, [loading, inst, next]);
 
-  const title = cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
+  const title = cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
   const pool = candidates(cfg).length;
 
   return (

@@ -10,6 +10,7 @@ export type SpecRef = `${'P' | 'S' | 'M'}${number}.${number}`;
 export type CommandWord =
   | 'Find'
   | 'Calculate'
+  | 'Give'
   | 'Show that'
   | 'Hence'
   | 'Hence or otherwise'

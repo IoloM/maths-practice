@@ -1113,6 +1113,40 @@
    "n": 200
   },
   {
+   "id": "p1.6.long-circle-tangent-and-triangle",
+   "family": "p1.6.exam-style",
+   "title": "Exam-style: centre and radius, tangent at a point, and a triangle",
+   "spec": [
+    "P3.2",
+    "P3.1"
+   ],
+   "chapter": "P1.6",
+   "sections": [
+    "6.2",
+    "6.4",
+    "6.5"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "exam-style",
+    "circles",
+    "tangents",
+    "coordinate geometry"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.7.factor-theorem-find-k",
    "family": "p1.7.factor-theorem",
    "title": "Factor theorem: find a constant, then factorise fully",
@@ -2626,6 +2660,39 @@
    "n": 200
   },
   {
+   "id": "p1.13.long-cubic-stationary-points-and-area",
+   "family": "p1.13.exam-style",
+   "title": "Exam-style: stationary points of a cubic and the area it encloses",
+   "spec": [
+    "P8.3",
+    "P7.3"
+   ],
+   "chapter": "P1.13",
+   "sections": [
+    "13.5",
+    "12.9"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "exam-style",
+    "stationary points",
+    "area under a curve",
+    "cubic"
+   ],
+   "n": 119
+  },
+  {
    "id": "p1.13.integrate-polynomial",
    "family": "p1.13.indefinite",
    "title": "Integrate a polynomial",
@@ -2805,6 +2872,41 @@
     "integration",
     "finding functions",
     "indices"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.14.long-exponential-model",
+   "family": "p1.14.exam-style",
+   "title": "Exam-style: an exponential model — constants, exact k, a time, a rate and a limitation",
+   "spec": [
+    "P6.7",
+    "P6.5",
+    "P6.2"
+   ],
+   "chapter": "P1.14",
+   "sections": [
+    "14.3",
+    "14.7",
+    "14.2"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "Find",
+    "Suggest"
+   ],
+   "tags": [
+    "exam-style",
+    "exponential modelling",
+    "logarithms",
+    "rates of change"
    ],
    "n": 200
   },
@@ -3560,6 +3662,43 @@
    "n": 200
   },
   {
+   "id": "p2.2.long-exponential-and-log-functions",
+   "family": "p2.2.exam-style",
+   "title": "Exam-style: exponential and log functions — range, inverse, composite and an equation",
+   "spec": [
+    "P2.8",
+    "P6.3",
+    "P6.5"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.3",
+    "2.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "State",
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "exam-style",
+    "composite functions",
+    "inverse functions",
+    "domain and range",
+    "exponentials",
+    "logarithms"
+   ],
+   "n": 200
+  },
+  {
    "id": "p2.2.composite-functions",
    "family": "p2.2.composite-inverse",
    "title": "Composite functions fg(x) and gf(x), and solving fg(x) = k",
@@ -3714,6 +3853,43 @@
     "modelling",
     "quadratic",
     "limitations"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p2.3.long-arithmetic-versus-geometric-salary",
+   "family": "p2.3.exam-style",
+   "title": "Exam-style: arithmetic versus geometric salary schemes",
+   "spec": [
+    "P4.6",
+    "P4.4",
+    "P4.5"
+   ],
+   "chapter": "P2.3",
+   "sections": [
+    "3.8",
+    "3.2",
+    "3.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Show that",
+    "State"
+   ],
+   "tags": [
+    "exam-style",
+    "arithmetic series",
+    "geometric series",
+    "modelling",
+    "logarithms"
    ],
    "n": 200
   },
@@ -5038,6 +5214,41 @@
    "n": 54
   },
   {
+   "id": "p2.8.long-parametric-tangent-cartesian-area",
+   "family": "p2.8.exam-style",
+   "title": "Exam-style: parametric curve — gradient, tangent, Cartesian equation and area",
+   "spec": [
+    "P8.3",
+    "P7.5",
+    "P3.3"
+   ],
+   "chapter": "P2.8",
+   "sections": [
+    "8.1",
+    "8.2"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "exam-style",
+    "parametric equations",
+    "parametric differentiation",
+    "parametric integration",
+    "area"
+   ],
+   "n": 60
+  },
+  {
    "id": "p2.8.parametric-to-cartesian-polynomial",
    "family": "p2.8.cartesian-form",
    "title": "Convert x = at + b, y = quadratic in t into a Cartesian equation, with its domain",
@@ -6057,6 +6268,44 @@
     "estimation"
    ],
    "n": 200
+  },
+  {
+   "id": "p2.11.long-x-power-ln-x-stationary-point-and-area",
+   "family": "p2.11.exam-style",
+   "title": "Exam-style: y = axⁿ ln x — stationary point, integration by parts and an exact area",
+   "spec": [
+    "P8.5",
+    "P8.3",
+    "P7.4"
+   ],
+   "chapter": "P2.11",
+   "sections": [
+    "11.6",
+    "11.8",
+    "9.4"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Use",
+    "Show that"
+   ],
+   "tags": [
+    "exam-style",
+    "integration by parts",
+    "product rule",
+    "stationary points",
+    "area",
+    "logarithms"
+   ],
+   "n": 42
   },
   {
    "id": "p2.11.construct-de-from-wording",
@@ -7925,6 +8174,42 @@
    "n": 108
   },
   {
+   "id": "sm1.7.long-binomial-model-and-two-tailed-test",
+   "family": "sm1.7.exam-style",
+   "title": "Exam-style: binomial model, probabilities, two-tailed critical region and conclusion",
+   "spec": [
+    "S5.2",
+    "S4.1",
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.4",
+    "7.2",
+    "6.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Give",
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "exam-style",
+    "binomial distribution",
+    "hypothesis test",
+    "critical region",
+    "two-tailed"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm1.7.binomial-test-upper",
    "family": "sm1.7.binomial-test",
    "title": "Binomial hypothesis test (one-tailed, increase)",
@@ -8440,6 +8725,39 @@
     "modelling"
    ],
    "n": 168
+  },
+  {
+   "id": "sm1.9.long-car-overtakes-a-lorry",
+   "family": "sm1.9.exam-style",
+   "title": "Exam-style: a car accelerates to its top speed and overtakes a lorry",
+   "spec": [
+    "M7.3",
+    "M7.2"
+   ],
+   "chapter": "SM1.9",
+   "sections": [
+    "9.3",
+    "9.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "exam-style",
+    "constant acceleration",
+    "suvat",
+    "velocity–time graphs",
+    "modelling"
+   ],
+   "n": 150
   },
   {
    "id": "sm1.10.forces-as-vectors-acceleration",
@@ -9100,6 +9418,42 @@
    "n": 200
   },
   {
+   "id": "sm2.1.long-exponential-model-and-correlation-test",
+   "family": "sm2.1.exam-style",
+   "title": "Exam-style: exponential model from log data, prediction, reliability and a correlation test",
+   "spec": [
+    "S2.2",
+    "S5.1",
+    "P6.6"
+   ],
+   "chapter": "SM2.1",
+   "sections": [
+    "1.1",
+    "1.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Explain",
+    "Test"
+   ],
+   "tags": [
+    "exam-style",
+    "regression",
+    "logarithms",
+    "exponential model",
+    "hypothesis test",
+    "PMCC"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm2.2.two-way-table-conditional",
    "family": "sm2.2.conditional",
    "title": "Conditional probability from a two-way table, and independence",
@@ -9281,6 +9635,41 @@
     "normal",
     "discrete uniform",
     "modelling"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.3.long-normal-probabilities-and-test-for-mean",
+   "family": "sm2.3.exam-style",
+   "title": "Exam-style: normal distribution — probabilities, inverse normal, three items and a test for the mean",
+   "spec": [
+    "S4.2",
+    "S5.3",
+    "S4.1"
+   ],
+   "chapter": "SM2.3",
+   "sections": [
+    "3.2",
+    "3.3",
+    "3.7"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 13,
+   "time": 16,
+   "commands": [
+    "Find",
+    "Test"
+   ],
+   "tags": [
+    "exam-style",
+    "normal distribution",
+    "inverse normal",
+    "hypothesis test",
+    "sample mean"
    ],
    "n": 200
   },
@@ -9902,6 +10291,38 @@
    "n": 200
   },
   {
+   "id": "sm2.6.long-projectile-from-a-cliff",
+   "family": "sm2.6.exam-style",
+   "title": "Exam-style: projectile from a cliff — greatest height, time of flight, range, impact speed, refinement",
+   "spec": [
+    "M7.5",
+    "M7.3"
+   ],
+   "chapter": "SM2.6",
+   "sections": [
+    "6.3",
+    "6.4"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 13,
+   "time": 16,
+   "commands": [
+    "Find",
+    "Suggest"
+   ],
+   "tags": [
+    "exam-style",
+    "projectiles",
+    "suvat",
+    "modelling"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm2.6.horizontal-projection",
    "family": "sm2.6.projectiles",
    "title": "Horizontal projection from a height: time, distance and landing velocity",
@@ -10140,6 +10561,72 @@
     "friction",
     "F = ma",
     "suvat"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.7.long-plane-pulley-hits-ground",
+   "family": "sm2.7.exam-style",
+   "title": "Exam-style: rough plane and pulley — acceleration, tension, impact, and how far the particle then slides",
+   "spec": [
+    "M8.4",
+    "M8.6",
+    "M7.3"
+   ],
+   "chapter": "SM2.7",
+   "sections": [
+    "7.6",
+    "7.5"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 14,
+   "time": 17,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exam-style",
+    "connected particles",
+    "pulley",
+    "inclined plane",
+    "friction",
+    "suvat"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.8.long-velocity-vector-calculus",
+   "family": "sm2.8.exam-style",
+   "title": "Exam-style: a velocity vector in t — acceleration, direction, speed and position by integration",
+   "spec": [
+    "M7.4",
+    "P10.4"
+   ],
+   "chapter": "SM2.8",
+   "sections": [
+    "8.4",
+    "8.5"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exam-style",
+    "vectors",
+    "variable acceleration",
+    "differentiation",
+    "integration"
    ],
    "n": 200
   },
@@ -14584,8 +15071,8 @@
   }
  ],
  "totals": {
-  "templates": 335,
-  "questions": 60577,
+  "templates": 349,
+  "questions": 62948,
   "fixed": 158
  }
 }

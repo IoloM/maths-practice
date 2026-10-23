@@ -26,14 +26,14 @@ const CONTEXTS: NormCtx[] = [
   { what: 'the journey time, in minutes, of a bus route', unit: '\\text{minutes}', mu: [30, 60], sigma: [3, 9], step: 0.5 },
 ];
 
-function pickNorm(r: Rng) {
+export function pickNorm(r: Rng) {
   const c = r.pick(CONTEXTS);
   const mu = r.step(c.mu[0], c.mu[1], c.step);
   const sigma = r.step(c.sigma[0], c.sigma[1], c.step > 0.5 ? 1 : 0.05);
   return { c, mu, sigma };
 }
 
-const N = (mu: number, sigma: number) => md`\mathrm{N}(${fmtNum(mu)}, ${fmtNum(sigma)}^{2})`;
+export const N = (mu: number, sigma: number) => md`\mathrm{N}(${fmtNum(mu)}, ${fmtNum(sigma)}^{2})`;
 const P4 = (v: number, extra: Partial<NumericSpec> = {}) => ans.num(v, { dp: 4 }, extra);
 const pdfInt = (mu: number, s: number, a: number, b: number) => integrate((x) => normalPdf(x, mu, s), a, b, 1e-13);
 

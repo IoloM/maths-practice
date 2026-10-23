@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BANK } from '../content/bank-meta';
+import { BANK, type BankEntry } from '../content/bank-meta';
 import { CHAPTERS, CHAPTER_BY_REF } from '../content/chapters';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
@@ -10,12 +10,13 @@ import { href, navigate } from '../router';
 import { Icon } from '../components/Icon';
 import { Loading } from '../components/bits';
 
-const AREAS: { id: string; label: string; test: (ch: string) => boolean }[] = [
-  { id: 'pure1', label: 'Pure Year 1', test: (c) => c.startsWith('P1.') },
-  { id: 'pure2', label: 'Pure Year 2', test: (c) => c.startsWith('P2.') },
-  { id: 'pure', label: 'All Pure', test: (c) => c.startsWith('P') },
-  { id: 'stats', label: 'All Statistics', test: (c) => CHAPTER_BY_REF.get(c as never)?.stream === 'Statistics' },
-  { id: 'mech', label: 'All Mechanics', test: (c) => CHAPTER_BY_REF.get(c as never)?.stream === 'Mechanics' },
+const AREAS: { id: string; label: string; test: (e: BankEntry) => boolean }[] = [
+  { id: 'pure1', label: 'Pure Year 1', test: (e) => e.chapter.startsWith('P1.') },
+  { id: 'pure2', label: 'Pure Year 2', test: (e) => e.chapter.startsWith('P2.') },
+  { id: 'pure', label: 'All Pure', test: (e) => e.chapter.startsWith('P') },
+  { id: 'stats', label: 'All Statistics', test: (e) => CHAPTER_BY_REF.get(e.chapter)?.stream === 'Statistics' },
+  { id: 'mech', label: 'All Mechanics', test: (e) => CHAPTER_BY_REF.get(e.chapter)?.stream === 'Mechanics' },
+  { id: 'long', label: 'Long exam-style questions (10+ marks)', test: (e) => e.marks >= 10 },
   { id: 'all', label: 'Everything', test: () => true },
 ];
 
@@ -50,7 +51,7 @@ export function Exams() {
 
   const startTimed = async () => {
     const areaDef = AREAS.find((a) => a.id === area);
-    const pool = BANK.templates.filter((e) => (areaDef ? areaDef.test(e.chapter) : e.chapter === area));
+    const pool = BANK.templates.filter((e) => (areaDef ? areaDef.test(e) : e.chapter === area));
     const items = buildTimed(pool, marks, Date.now() % 2 ** 31);
     const got = setMarks(items);
     const label = areaDef?.label ?? CHAPTER_BY_REF.get(area as never)?.title ?? area;

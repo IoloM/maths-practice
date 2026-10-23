@@ -54,6 +54,11 @@ export function validateInstance(t: Template, inst: Instance, opts: { katex?: bo
     if (labels.has(part.label)) p(`${where}: duplicate label`);
     labels.add(part.label);
     if (schemeTotal(part.scheme) !== part.marks) p(`${where}: scheme total ${schemeTotal(part.scheme)} ≠ marks ${part.marks}`);
+    if (part.answer.type === 'hypothesis') {
+      const m = part.answer.marks;
+      const t = m.hyp + m.stat + m.decision + m.conclusion;
+      if (t !== part.marks) p(`${where}: hypothesis test marks add to ${t} ≠ marks ${part.marks}`);
+    }
     if (part.hints.length !== 3 || part.hints.some((h) => !h.trim())) p(`${where}: needs three hints`);
     if (!part.solution.length) p(`${where}: no worked solution`);
     texts.push(part.prompt, ...part.hints, ...part.solution, ...part.scheme.map((l) => l.text), ...part.errors.map((e) => e.feedback));
