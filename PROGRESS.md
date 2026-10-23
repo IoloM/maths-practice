@@ -144,3 +144,36 @@ statistics) and 36 Playwright runs across desktop Chrome, iPhone and iPad (WebKi
 axe on 13 views in light and dark) — all green.
 
 **Deploy**: waiting on GitHub sign-in (`gh auth login`); everything is committed and ready to push.
+
+## Phase 6 — More questions, past papers, sync and AI ✅ (23 Oct 2026)
+
+- **Questions**: 349 question types and **62,948 verified questions** (the bank keeps up to 200
+  distinct verified seeds per type, stored as compact seed runs). New: binomial expansion for
+  rational n (approximating surds, partial fractions then expand, finding n and k, products), and
+  13 long exam-style questions (10–14 marks) across Pure, Statistics and Mechanics with a
+  "Long questions" practice mode.
+- **Past papers (PPQ)**: every 9MA0 paper from June 2018 to June 2025 (31 papers) indexed
+  question by question — topic, marks and the matching question types — with links to Pearson's
+  question papers and mark schemes (no Pearson content is copied). Question pages show "Past paper
+  questions on this topic"; chapters show PPQ counts; a past-papers page filters by year, paper and
+  topic and builds a timed set on any paper's topics.
+- **Predicted grade** from mock papers using the June 2023–2026 grade boundaries.
+- **Flashcards** (89 cards: formulae to learn and key facts, FSRS spaced repetition) and
+  **calculator tips** on the formulae page.
+- **Sync between devices** (`src/lib/sync.ts`, `server/`): a 20-character sync code gives the row id
+  (SHA-256) and an AES-GCM key (PBKDF2), so the server stores only compressed ciphertext. Syncs on
+  start, after progress changes and when back online; merging never loses an attempt (union),
+  keeps the newest card and draft, and the most advanced mock; handwriting strokes stay on the
+  device that drew them. Writes use optimistic versions and retry on a clash.
+- **AI handwriting and marking** (`server/src/ai.ts`, Claude `claude-opus-5-5` with structured
+  output and the server-side refusal fallback):
+  - *Write it*: a pad next to answer boxes; the AI reads the handwriting into the box to check.
+  - *AI: mark my working*: after checking a part (or reviewing a mock), the working is marked line
+    by line against the mark scheme with short feedback and a next step; its ticks can be taken as
+    self-marks.
+  - Apple Pencil Scribble into plain-text answer boxes (free, offline) is explained in Settings.
+  - The key lives only in Cloudflare secrets; the app sends an access code; a daily cap (200)
+    limits spending.
+- **Server**: Cloudflare Worker + D1, one-step `server/setup.sh` (double-click
+  `Set up AI and sync.command`).
+- **CI**: e2e runs in the Playwright container (42 → 9 minutes); the server is type-checked and tested.

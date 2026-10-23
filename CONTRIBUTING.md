@@ -155,3 +155,12 @@ from the bank index alone (no engine code), so they are reproducible and shareab
 (`#/set/import?c=kind~minutes~id:seed,…~title`). Paper definitions (`PAPERS`) choose questions by
 stream and paper; `fillToMarks` hits the mark total exactly where it can, one question per family,
 easier first.
+
+## Working on the server
+
+`server/` is a separate package (Cloudflare Worker). `cd server && npm ci && npm test` runs its
+tests against an in-memory SQLite stand-in for D1 and a mocked Anthropic client — no account or key
+needed. `npx wrangler dev` runs it locally (put `ANTHROPIC_API_KEY` and `ACCESS_CODE` in
+`server/.dev.vars`, which git ignores); set the app's server address to `http://localhost:8787` in
+Settings. Prompts for reading and marking are in `server/src/ai.ts`. The app side is
+`src/lib/api.ts`, `src/lib/sync.ts` and `src/lib/sync-merge.ts` (unit tested in `tests/sync.test.ts`).

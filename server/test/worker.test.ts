@@ -5,6 +5,7 @@ import type Anthropic from '@anthropic-ai/sdk';
 import { handle } from '../src/index';
 import type { Env } from '../src/env';
 import { MODEL } from '../src/ai';
+import { MAX_BAD_CODES } from '../src/limits';
 
 /** Just enough of D1 on top of SQLite for these queries. */
 function fakeD1(): D1Database {
@@ -85,6 +86,11 @@ describe('AI', () => {
     for (let i = 0; i < 5; i++) expect((await check('let-me-in')).status).toBe(200);
     expect(calls).toHaveLength(0);
     expect((await read('let-me-in')).status).toBe(200);
+  });
+  it('pauses AI for the day after too many wrong access codes', async () => {
+    for (let i = 0; i < MAX_BAD_CODES; i++) expect((await read('guess' + i)).status).toBe(401);
+    expect((await read('let-me-in')).status).toBe(429);
+    expect(calls).toHaveLength(0);
   });
   it('reads handwriting with the default model, an image block and server-side fallback', async () => {
     const res = await read('let-me-in');

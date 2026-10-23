@@ -28,17 +28,17 @@ export async function handle(req: Request, env: Env, makeClient: ClientFactory =
       if (req.method === 'PUT') return await putSync(env, sync[1], req, cors);
     }
     if (pathname === '/ai/check' && req.method === 'GET') {
-      requireAi(env, req);
+      await requireAi(env, req);
       return json({ ok: true }, 200, cors);
     }
     if (pathname === '/ai/read' && req.method === 'POST') {
-      requireAi(env, req);
+      await requireAi(env, req);
       const body = await readJson<ReadRequest>(req, MAX_IMAGE_CHARS + 10_000);
       await countAiCall(env);
       return json(await readHandwriting(makeClient(env), body), 200, cors);
     }
     if (pathname === '/ai/mark' && req.method === 'POST') {
-      requireAi(env, req);
+      await requireAi(env, req);
       const body = await readJson<MarkRequest>(req, MAX_IMAGE_CHARS + 40_000);
       await countAiCall(env);
       return json(await markWorking(makeClient(env), body), 200, cors);

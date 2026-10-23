@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS sync (
 );
 CREATE TABLE IF NOT EXISTS usage (
   day TEXT NOT NULL,            -- YYYY-MM-DD (UTC)
-  kind TEXT NOT NULL,           -- 'ai'
+  kind TEXT NOT NULL,           -- 'ai' (calls) or 'bad-code' (wrong access codes)
   n INTEGER NOT NULL,
   PRIMARY KEY (day, kind)
 );
