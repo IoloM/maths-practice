@@ -400,6 +400,8 @@ main.app-main {
 }
 input[type='text'],
 input[type='search'],
+input[type='number'],
+input[type='date'],
 input:not([type]),
 select,
 textarea {
@@ -1101,7 +1103,10 @@ math-field::part(menu-toggle) {
   .tabbar,
   .working,
   .part-actions,
-  .q-footer {
+  .q-footer,
+  .no-print,
+  .skip-link,
+  .banner {
     display: none !important;
   }
 }
@@ -1313,4 +1318,142 @@ ul.tips {
 /* deep links into the past papers list land below the sticky header */
 [id^='paper-'] {
   scroll-margin-top: 76px;
+}
+
+/* ---------- past paper marks ---------- */
+.mark-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.mark-row + .mark-row {
+  border-top: 1px solid var(--border);
+}
+.mark-topic {
+  flex: 1;
+  min-width: 0;
+}
+.mark-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.mark-input input {
+  width: 4.2em;
+  text-align: right;
+}
+
+/* ---------- exam countdown ---------- */
+.countdown {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+}
+.countdown-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 260px;
+}
+.countdown-days {
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.countdown-rest {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- printable papers ---------- */
+.print-paper {
+  padding: 24px;
+}
+.print-paper h2,
+.print-paper h3,
+.print-cover p,
+.print-cover li {
+  font-family: var(--sans);
+}
+.print-cover {
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 18px;
+}
+.print-cover h2 {
+  margin-top: 0;
+}
+.print-question {
+  margin-bottom: 22px;
+}
+.print-part {
+  margin: 10px 0 0;
+  break-inside: avoid;
+}
+.print-options {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 1.5em;
+}
+.print-options li {
+  margin: 4px 0;
+}
+/* real lines (borders print; background images usually don't) */
+.answer-lines {
+  margin: 8px 0 4px;
+}
+.answer-lines > div {
+  height: 2em;
+  border-bottom: 1px solid var(--border-strong);
+}
+.print-end {
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+.print-ms {
+  break-before: page;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 2px dashed var(--border-strong);
+}
+.print-ms-part {
+  break-inside: avoid;
+  margin-bottom: 14px;
+}
+.print-solution {
+  margin-top: 6px;
+  padding-left: 12px;
+  border-left: 3px solid var(--border);
+}
+@media print {
+  /* black on white whatever the theme (the :not(#…) outranks the dark-mode token rules) */
+  :root:not(#print) {
+    --paper: #fff;
+    --surface: #fff;
+    --surface-2: #f2f2f2;
+    --text-2: #333;
+    --text-3: #555;
+    --text: #000;
+    --border: #bbb;
+    --border-strong: #999;
+  }
+  body {
+    background: #fff !important;
+  }
+  .print-paper {
+    border: none;
+    padding: 0;
+  }
+  .print-ms {
+    border-top: none;
+    margin-top: 0;
+  }
+  .print-question {
+    break-inside: auto;
+  }
 }

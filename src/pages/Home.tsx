@@ -10,6 +10,8 @@ import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { RagBadge } from '../components/bits';
 import { Icon } from '../components/Icon';
+import { useSettings } from '../lib/settings';
+import { formatExamDate, upcomingExams } from '../lib/exams';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -25,6 +27,9 @@ const PRIORITY = [
 
 export function Home() {
   const { attempts, cards } = useProgress();
+  const { settings } = useSettings();
+  const exams = upcomingExams(settings.examDates);
+  const anyDates = Object.values(settings.examDates).some(Boolean);
   const [daily, setDaily] = useState<SetRecord | null>(null);
   const dailyId = `daily-${todayKey()}`;
   useEffect(() => {
@@ -45,6 +50,36 @@ export function Home() {
           9MA0 Pure, Statistics and Mechanics · {BANK.totals.templates} question types · {BANK.totals.questions.toLocaleString()} verified questions · {BANK.totals.fixed} explain-and-prove questions · works offline
         </p>
       </div>
+      {exams.length > 0 ? (
+        <section className="card countdown" aria-label="Exam countdown">
+          <div className="countdown-main">
+            <b className="countdown-days">{exams[0].days === 0 ? 'Today' : exams[0].days}</b>
+            <span>
+              {exams[0].days === 0 ? `${exams[0].label} — good luck!` : `day${exams[0].days === 1 ? '' : 's'} to ${exams[0].label}`}
+              <br />
+              <span className="muted small">{formatExamDate(exams[0].date)}</span>
+            </span>
+          </div>
+          {exams.length > 1 && (
+            <ul className="countdown-rest small">
+              {exams.slice(1).map((e) => (
+                <li key={e.id}>
+                  {e.label.split(':')[0]}: <b>{e.days}</b> days ({formatExamDate(e.date)})
+                </li>
+              ))}
+            </ul>
+          )}
+          <a className="small" href={href('/settings')}>
+            Change dates
+          </a>
+        </section>
+      ) : (
+        !anyDates && (
+          <p className="small" style={{ margin: 0 }}>
+            <a href={href('/settings')}>Add your exam dates</a> for a countdown.
+          </p>
+        )
+      )}
       <div className="grid">
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>

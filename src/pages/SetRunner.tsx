@@ -163,6 +163,9 @@ function ExamIntro({ set, metas, onStart }: { set: SetRecord; metas: BankEntry[]
           <button className="btn btn-primary" onClick={onStart}>
             <Icon name="clock" /> Start — the timer begins now
           </button>
+          <a className="btn" href={href(`/print/${set.id}`)}>
+            <Icon name="download" /> Print it instead
+          </a>
         </div>
       </div>
     </div>
@@ -481,7 +484,9 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
           </a>
         )}
       </div>
-      <p className="small muted">Auto-marked answers are scored already. Open each question to compare your working with the mark scheme and tick any method marks you earned.</p>
+      <p className="small muted">
+        Auto-marked answers are scored already. Open each question to compare your working with the mark scheme and tick any method marks you earned. <a href={href(`/print/${set.id}`)}>Print this paper and its mark scheme</a>
+      </p>
       {sections.map((sec) => (
         <section className="card" key={sec.name}>
           <h2>

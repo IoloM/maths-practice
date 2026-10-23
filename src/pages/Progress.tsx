@@ -13,6 +13,9 @@ import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { MINUTES_PER_MARK, setMarks } from '../lib/sets';
 import { PredictedGrade } from '../components/PredictedGrade';
+import { finishedPapers, lossesByFamily, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
+import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
+import { BANK } from '../content/bank-meta';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
 
@@ -77,8 +80,75 @@ function Bar({ value, label, right }: { value: number | null; label: ReactNode; 
   );
 }
 
+const FAMILY_IDS = new Map<string, string[]>();
+const FAMILY_TITLE = new Map<string, string>();
+for (const e of BANK.templates) {
+  FAMILY_IDS.set(e.family, [...(FAMILY_IDS.get(e.family) ?? []), e.id]);
+  if (!FAMILY_TITLE.has(e.family)) FAMILY_TITLE.set(e.family, e.title.replace(/^Exam-style: /, ''));
+}
+
+/** Real past papers you've marked, and the topics that lose you marks in them. */
+function RealPapers({ results }: { results: PaperResults }) {
+  const papers = Object.entries(results)
+    .map(([id, r]) => ({ id, r, s: paperScore(id, r), p: PAST_PAPER_BY_ID.get(id) }))
+    .filter((x) => x.p && x.s.marked)
+    .sort((a, b) => b.r.updatedAt - a.r.updatedAt);
+  const losses = lossesByFamily(results).slice(0, 8);
+  return (
+    <section className="card stack" aria-labelledby="real-papers">
+      <h2 id="real-papers">Real past papers</h2>
+      {papers.length ? (
+        <>
+          <ul className="list">
+            {papers.map(({ id, s, p }) => (
+              <li key={id}>
+                <a className="list-link" href={href('/past-papers', { p: id })}>
+                  <span style={{ flex: 1 }}>
+                    {p!.series} · {PAPER_TITLES[p!.paper]}
+                  </span>
+                  {s.complete ? (
+                    <span className="chip chip-accent">
+                      {s.got}/{s.max} · {s.grade}
+                    </span>
+                  ) : (
+                    <span className="chip">
+                      {s.got}/{s.of} so far ({s.marked} of {s.questions} questions)
+                    </span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+          {losses.length > 0 && (
+            <>
+              <h3 className="h3">Where real papers lose you marks</h3>
+              <ul className="list">
+                {losses.map((l) => (
+                  <li key={l.family}>
+                    <a className="list-link" href={href('/practice', { t: (FAMILY_IDS.get(l.family) ?? []).join(',') })}>
+                      <span style={{ flex: 1 }}>{FAMILY_TITLE.get(l.family) ?? l.family}</span>
+                      <span className="chip">
+                        lost {Math.round(l.lost)} of {Math.round(l.of)} marks
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      ) : (
+        <p className="muted">
+          Done a real Pearson paper? <a href={href('/past-papers')}>Enter your marks question by question</a> to see your score and grade, and which topics lose you marks.
+        </p>
+      )}
+    </section>
+  );
+}
+
 export function Progress() {
   const { attempts, cards, loading } = useProgress();
+  const results = usePaperResults();
   const [sets, setSets] = useState<SetRecord[]>([]);
   useEffect(() => {
     void getStore().then(async (s) => setSets(await s.allSets()));
@@ -127,7 +197,8 @@ export function Progress() {
         </a>
       </div>
 
-      <PredictedGrade mocks={mocks} />
+      <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results) : []} />
+      {results && <RealPapers results={results} />}
 
       <section className="card">
         <h2>Trend</h2>

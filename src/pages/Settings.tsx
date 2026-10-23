@@ -5,6 +5,7 @@ import { notifyProgress } from '../progress/record';
 import { BANK } from '../content/bank';
 import { Icon } from '../components/Icon';
 import { InstallHelp } from '../components/Install';
+import { EXAM_PAPERS, daysUntil } from '../lib/exams';
 
 export function Settings() {
   const { settings, update } = useSettings();
@@ -90,6 +91,23 @@ export function Settings() {
             {msg}
           </p>
         )}
+      </section>
+      <section className="card stack" id="exams">
+        <h2>Your exams</h2>
+        <p className="muted small">Add your exam dates (from your school's exam timetable) for a countdown on the home page.</p>
+        {EXAM_PAPERS.map((p) => {
+          const v = settings.examDates[p.id] ?? '';
+          const days = v ? daysUntil(v) : null;
+          return (
+            <label className="row" key={p.id}>
+              <span style={{ flex: 1 }}>{p.label}</span>
+              <input type="date" value={v} onChange={(e) => update({ examDates: { ...settings.examDates, [p.id]: e.target.value || undefined } })} />
+              <span className="muted small" style={{ minWidth: '6.5em' }}>
+                {days === null ? '' : days > 0 ? `${days} days to go` : days === 0 ? 'today' : 'done'}
+              </span>
+            </label>
+          );
+        })}
       </section>
       <section className="card stack">
         <h2>Appearance & input</h2>

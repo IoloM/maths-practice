@@ -6,6 +6,7 @@ import { MINUTES_PER_MARK } from '../lib/sets';
 import { href } from '../router';
 import { Icon } from '../components/Icon';
 import { startSet } from './Exams';
+import { boundariesFor, clearPaper, paperScore, savePaperMark, usePaperResults, type PaperResult } from '../lib/paper-results';
 
 type Filter = 'all' | 'pure' | 'stats' | 'mech';
 const FILTERS: { id: Filter; label: string; test: (p: PastPaper) => boolean }[] = [
@@ -30,10 +31,83 @@ function paperSet(qs: PastQuestion[]) {
   });
 }
 
+/** Enter your marks question by question, from the official mark scheme. */
+function MarkEntry({ paperId, qs, result }: { paperId: string; qs: PastQuestion[]; result?: PaperResult }) {
+  const score = paperScore(paperId, result);
+  const b = boundariesFor(paperId);
+  return (
+    <div className="stack" style={{ gap: 8 }}>
+      <p className="small muted" style={{ margin: 0 }}>
+        Do the paper on paper, mark it with the official mark scheme, then type your mark for each question. Leave a box empty if you didn't do that question yet.
+      </p>
+      <ul className="list mark-entry">
+        {qs.map((q) => {
+          const m = result?.marks[q.q];
+          const lost = m !== undefined && m < q.marks;
+          return (
+            <li key={q.q} className="mark-row">
+              <span className="chip">Q{q.q}</span>
+              <span className="mark-topic">
+                {q.topic}
+                {lost && (
+                  <>
+                    {' '}
+                    <a className="small" href={href('/practice', { t: templatesFor(q).map((e) => e.id).join(',') })}>
+                      Practise this
+                    </a>
+                  </>
+                )}
+              </span>
+              <label className="mark-input">
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={q.marks}
+                  step={1}
+                  value={m ?? ''}
+                  aria-label={`Your marks for question ${q.q}, out of ${q.marks}`}
+                  onChange={(e) => void savePaperMark(paperId, q.q, e.target.value === '' ? null : Number(e.target.value))}
+                />
+                <span className="muted">/ {q.marks}</span>
+              </label>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="row-wrap">
+        <span role="status" style={{ flex: 1 }}>
+          {score.complete ? (
+            <>
+              <b>
+                {score.got} / {score.max}
+              </b>{' '}
+              ({Math.round((100 * score.got) / score.max)}%) — about grade <b>{score.grade}</b> <span className="muted small">on {b.series} overall boundaries (a rough guide from one paper)</span>
+            </>
+          ) : score.marked ? (
+            <>
+              {score.got} / {score.of} on the {score.marked} question{score.marked === 1 ? '' : 's'} marked so far ({score.questions - score.marked} to go)
+            </>
+          ) : (
+            <span className="muted">No marks entered yet.</span>
+          )}
+        </span>
+        {score.marked > 0 && (
+          <button className="btn btn-small btn-ghost" onClick={() => window.confirm('Clear your marks for this paper?') && void clearPaper(paperId)}>
+            Clear my marks
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function PastPapers({ open }: { open?: string }) {
   const [filter, setFilter] = useState<Filter>('all');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(open ?? null);
+  const [marking, setMarking] = useState<string | null>(null);
+  const results = usePaperResults();
   useEffect(() => {
     if (open) document.getElementById(`paper-${open}`)?.scrollIntoView({ block: 'start' });
   }, [open]);
@@ -105,11 +179,22 @@ export function PastPapers({ open }: { open?: string }) {
               const shown = qs.filter(matches);
               if (needle && !shown.length) return null;
               const isOpen = expanded === p.id || !!needle;
+              const isMarking = marking === p.id;
               const marks = qs.reduce((t, q) => t + q.marks, 0);
+              const score = paperScore(p.id, results?.[p.id]);
               return (
                 <article key={p.id} id={`paper-${p.id}`} className="card stack" style={{ gap: 8 }}>
                   <div className="row-wrap">
                     <h3 style={{ flex: 1, margin: 0 }}>{PAPER_TITLES[p.paper]}</h3>
+                    {score.complete ? (
+                      <span className="chip chip-accent">
+                        You: {score.got}/{score.max} · {score.grade}
+                      </span>
+                    ) : score.marked ? (
+                      <span className="chip">
+                        Marked {score.marked} of {score.questions}
+                      </span>
+                    ) : null}
                     <span className="muted small">
                       {qs.length} questions · {marks} marks
                     </span>
@@ -132,12 +217,18 @@ export function PastPapers({ open }: { open?: string }) {
                       Timed set on these topics
                     </button>
                     {!needle && (
-                      <button className="btn btn-small" aria-expanded={isOpen} onClick={() => setExpanded(isOpen ? null : p.id)}>
-                        {isOpen ? 'Hide questions' : 'Show questions'}
+                      <button className="btn btn-small" aria-expanded={isOpen && !isMarking} onClick={() => (setMarking(null), setExpanded(isOpen && !isMarking ? null : p.id))}>
+                        {isOpen && !isMarking ? 'Hide questions' : 'Show questions'}
                       </button>
                     )}
+                    <button className="btn btn-small" aria-expanded={isMarking} onClick={() => setMarking(isMarking ? null : p.id)}>
+                      {isMarking ? 'Done entering marks' : score.marked ? 'Edit my marks' : 'Enter my marks'}
+                    </button>
                   </div>
-                  {isOpen && (
+                  {isMarking ? (
+                    <MarkEntry paperId={p.id} qs={qs} result={results?.[p.id]} />
+                  ) : (
+                    isOpen && (
                     <ul className="list">
                       {shown.map((q) => (
                         <li key={q.q}>
@@ -152,6 +243,7 @@ export function PastPapers({ open }: { open?: string }) {
                         </li>
                       ))}
                     </ul>
+                    )
                   )}
                 </article>
               );

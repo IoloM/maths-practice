@@ -4,9 +4,16 @@ import { TableWrap } from './bits';
 
 const pct = (f: number) => `${Math.round(100 * f)}%`;
 
-/** Predicted A level grade from the most recent mock papers, with the boundaries it uses. */
-export function PredictedGrade({ mocks }: { mocks: MockResult[] }) {
-  const p = predict(mocks);
+const papersText = (n: number, real: number) => {
+  const app = n - real;
+  if (!real) return app === 1 ? 'mock paper' : `${app} mock papers`;
+  if (!app) return real === 1 ? 'real past paper' : `${real} real past papers`;
+  return `${n} papers (${real} real past paper${real === 1 ? '' : 's'}, ${app} app mock${app === 1 ? '' : 's'})`;
+};
+
+/** Predicted A level grade from the most recent mock papers and real past papers, with the boundaries it uses. */
+export function PredictedGrade({ mocks, papers = [] }: { mocks: MockResult[]; papers?: MockResult[] }) {
+  const p = predict([...mocks.map((m) => ({ ...m, kind: 'mock' as const })), ...papers.map((m) => ({ ...m, kind: 'paper' as const }))]);
   return (
     <section className="card stack" aria-labelledby="predicted-grade">
       <h2 id="predicted-grade">Predicted grade</h2>
@@ -19,7 +26,7 @@ export function PredictedGrade({ mocks }: { mocks: MockResult[] }) {
             <span className="sr-only">Predicted grade {p.grade}.</span>
             <div className="stack" style={{ gap: 4, flex: 1 }}>
               <span>
-                <strong>{pct(p.frac)}</strong> of the marks on your last {p.papers === 1 ? 'mock paper' : `${p.papers} mock papers`} ({p.marks} marks).
+                <strong>{pct(p.frac)}</strong> of the marks on your last {papersText(p.papers, p.real)} ({p.marks} marks).
               </span>
               <span className="muted small">
                 Grade {p.grade} on {LATEST.series} boundaries
@@ -33,12 +40,12 @@ export function PredictedGrade({ mocks }: { mocks: MockResult[] }) {
             </div>
           </div>
           <p className="muted small" style={{ margin: 0 }}>
-            A guide only: the mock papers are built from this app's questions, not real papers, and boundaries change every year.
+            {p.real === p.papers ? 'A guide only: boundaries change every year.' : "A guide only: app mocks are built from this app's questions, not real papers, and boundaries change every year."}
           </p>
         </>
       ) : (
         <p className="muted">
-          Finish a <a href={href('/exams')}>mock paper</a> to get a predicted grade. It uses your most recent mocks (up to three full papers) and real 9MA0 grade boundaries.
+          Finish a <a href={href('/exams')}>mock paper</a>, or <a href={href('/past-papers')}>enter your marks for a real past paper</a>, to get a predicted grade. It uses your most recent papers (up to three full papers) and real 9MA0 grade boundaries.
         </p>
       )}
       <details>

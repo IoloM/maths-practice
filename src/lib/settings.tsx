@@ -1,6 +1,7 @@
 /** Per-device UI preferences (localStorage). Progress lives in IndexedDB. */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Paper } from '../storage/types';
+import type { ExamDates } from './exams';
 
 export interface Settings {
   theme: 'system' | 'light' | 'dark';
@@ -11,6 +12,8 @@ export interface Settings {
   showWorking: boolean;
   installDismissed: number;
   persistAsked: boolean;
+  /** the student's exam dates (YYYY-MM-DD), for the countdown */
+  examDates: ExamDates;
 }
 
 const DEFAULTS: Settings = {
@@ -22,6 +25,7 @@ const DEFAULTS: Settings = {
   showWorking: true,
   installDismissed: 0,
   persistAsked: false,
+  examDates: {},
 };
 const KEY = 'mp.settings.v1';
 

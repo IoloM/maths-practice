@@ -34,6 +34,8 @@ export interface MockResult {
   got: number;
   of: number;
   finishedAt: number;
+  /** an app mock, or a real past paper marked with the official scheme */
+  kind?: 'mock' | 'paper';
 }
 
 export interface Prediction {
@@ -41,6 +43,8 @@ export interface Prediction {
   /** marks the prediction is based on */
   marks: number;
   papers: number;
+  /** how many of those were real past papers */
+  real: number;
   grade: Grade;
   /** lowest and highest grade across the recent series' boundaries */
   range: [Grade, Grade];
@@ -48,7 +52,7 @@ export interface Prediction {
   next?: { grade: (typeof GRADES)[number]; gap: number };
 }
 
-/** Use the most recent mocks covering at least `window` marks (three full papers = 300). */
+/** Use the most recent mocks and real past papers covering at least `window` marks (three full papers = 300). */
 export function predict(mocks: MockResult[], window = 300): Prediction | null {
   const recent = [...mocks].filter((m) => m.of > 0).sort((a, b) => b.finishedAt - a.finishedAt);
   const used: MockResult[] = [];
@@ -71,6 +75,7 @@ export function predict(mocks: MockResult[], window = 300): Prediction | null {
     frac,
     marks: of,
     papers: used.length,
+    real: used.filter((m) => m.kind === 'paper').length,
     grade,
     range: [sorted[0], sorted[sorted.length - 1]],
     next: up ? { grade: up, gap: needed(up) - frac } : undefined,

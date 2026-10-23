@@ -16,6 +16,7 @@ const ImportSet = lazy(() => import('./pages/SetRunner').then((m) => ({ default:
 const Review = lazy(() => import('./pages/Review').then((m) => ({ default: m.Review })));
 const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 const Flashcards = lazy(() => import('./pages/Flashcards').then((m) => ({ default: m.Flashcards })));
+const PrintSet = lazy(() => import('./pages/PrintSet').then((m) => ({ default: m.PrintSet })));
 const PastPapers = lazy(() => import('./pages/PastPapers').then((m) => ({ default: m.PastPapers })));
 import { InstallBanner } from './components/Install';
 import { UpdateBanner } from './components/UpdateBanner';
@@ -52,6 +53,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return <PastPapers open={query.get('p') ?? undefined} />;
     case 'settings':
       return <Settings />;
+    case 'print':
+      return <PrintSet key={parts[1]} id={parts[1]} />;
     default:
       return (
         <ErrorBox>
@@ -63,7 +66,7 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
 
 export default function App() {
   const route = useRoute();
-  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && route.parts[0] === 'set') || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
+  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
   return (
     <>
       <a className="skip-link" href="#main" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus())}>
