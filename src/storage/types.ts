@@ -130,4 +130,6 @@ export interface Store {
   importAll(b: BackupFile, mode: 'replace' | 'merge'): Promise<void>;
   /** delete every attempt, draft, review card, set and setting on this device */
   clearAll(): Promise<void>;
+  /** let go of the database (so it can be deleted) */
+  close(): void;
 }

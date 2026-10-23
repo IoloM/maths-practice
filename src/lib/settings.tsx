@@ -2,6 +2,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Paper } from '../storage/types';
 import type { ExamDates } from './exams';
+import { settingsKey } from './logins';
 
 export interface Settings {
   theme: 'system' | 'light' | 'dark';
@@ -27,7 +28,8 @@ const DEFAULTS: Settings = {
   persistAsked: false,
   examDates: {},
 };
-const KEY = 'mp.settings.v1';
+/** each login on the device has its own settings */
+const KEY = settingsKey();
 
 function load(): Settings {
   try {

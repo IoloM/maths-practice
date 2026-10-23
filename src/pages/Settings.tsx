@@ -6,9 +6,12 @@ import { BANK } from '../content/bank';
 import { Icon } from '../components/Icon';
 import { InstallHelp } from '../components/Install';
 import { EXAM_PAPERS, daysUntil } from '../lib/exams';
+import { currentLogin } from '../lib/logins';
+import { href } from '../router';
 
 export function Settings() {
   const { settings, update } = useSettings();
+  const me = currentLogin();
   const [persisted, setPersisted] = useState<boolean | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [mode, setMode] = useState<'merge' | 'replace'>('merge');
@@ -25,6 +28,35 @@ export function Settings() {
   return (
     <div className="stack">
       <h1>Settings</h1>
+      <section className="card stack">
+        <h2>Logins</h2>
+        {me ? (
+          <>
+            <p className="small">
+              Signed in as <b>{me.name}</b> ({me.username}). Everything below is for this login only.
+            </p>
+            <div className="btn-row">
+              <a className="btn" href={href('/account')}>
+                Your login
+              </a>
+              {me.admin && (
+                <a className="btn btn-primary" href={href('/logins')}>
+                  Manage logins
+                </a>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="small">Share this device, or set friends up on theirs: give each person their own login with their own progress, history and settings.</p>
+            <div className="btn-row">
+              <a className="btn btn-primary" href={href('/account')}>
+                Set up logins
+              </a>
+            </div>
+          </>
+        )}
+      </section>
       <section className="card stack">
         <h2>Your progress</h2>
         <p className="muted small">

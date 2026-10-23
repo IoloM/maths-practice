@@ -78,6 +78,7 @@ export class MemoryStore implements Store {
     this.sets.clear();
     this.settings.clear();
   }
+  close() {}
   async importAll(b: BackupFile, mode: 'replace' | 'merge') {
     if (mode === 'replace') {
       this.attempts = [];

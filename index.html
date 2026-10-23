@@ -16,7 +16,10 @@
     <script>
       // apply a saved light/dark choice before the first paint (src/lib/settings.tsx keeps it in sync)
       try {
-        const theme = JSON.parse(localStorage.getItem('mp.settings.v1') || '{}').theme;
+        // each login on the device has its own settings (src/lib/logins.ts)
+        const logins = JSON.parse(localStorage.getItem('mp.logins.v1') || 'null');
+        const me = logins && logins.users.find((u) => u.id === logins.current);
+        const theme = JSON.parse(localStorage.getItem((me && me.settings) || 'mp.settings.v1') || '{}').theme;
         if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
       } catch (e) {}
     </script>

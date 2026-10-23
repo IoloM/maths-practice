@@ -22,6 +22,14 @@ worked solutions and mark schemes.
 - Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.
 - Works on iPhone, iPad, Android, Windows, Mac and Chromebook — installable PWA.
 - Fully offline after the first visit (no CDNs, no third-party calls, no tracking, no login).
+- Real past papers: enter your marks question by question from Pearson's mark scheme for a score,
+  a grade, the topics that lose you marks, and a predicted grade that counts them.
+- Exam countdown from your own exam dates; any mock or timed set prints as a paper with answer
+  lines and a separate mark scheme.
+- **Logins on the device**: an admin makes logins (Settings → Manage logins), each with its own
+  progress, history and settings, and a "Who's practising?" sign-in screen. A setup link makes
+  someone's login on their own phone or tablet, where they choose the password. With no server,
+  logins stay on the device they were made on.
 - Progress stays on your device (IndexedDB); one-tap backup/restore to a JSON file.
 
 ## Run locally

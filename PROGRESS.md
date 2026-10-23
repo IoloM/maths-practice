@@ -164,3 +164,24 @@ axe on 13 views in light and dark) — all green.
   Cloudflare Worker) were built and then removed at the owner's request: the app stays a static,
   offline site with no server. Moving progress between devices is the backup file.
 - **CI**: e2e runs in the Playwright container (42 → 9 minutes).
+
+## Phase 7 — Past-paper marks, countdown, printing, logins on the device ✅ (23 Oct 2026)
+
+- **Real past-paper marks** (`src/lib/paper-results.ts`): on the past papers page, enter your mark
+  for each question (capped at its maximum) after marking the official paper. Each paper shows your
+  score and a grade on that year's boundaries (or the latest); Progress lists the papers you've
+  marked and the topics where real papers lose you marks (a question's dropped marks are shared
+  between the topics it tests), with practice links. Finished papers count towards the predicted
+  grade alongside app mocks.
+- **Exam countdown**: your three exam dates in Settings; the home page counts down calendar days.
+- **Printable papers** (`#/print/<set>`): any mock or timed set as a paper — instructions, questions
+  and diagrams, lettered options, ruled answer lines (borders, so they print), then the mark scheme
+  from a new page, optionally with worked solutions. Black on white whatever the theme.
+- **Logins on the device** (`src/lib/logins.ts`, `src/pages/Logins.tsx`): Settings → Set up logins
+  makes your admin login (keeping the progress already there); Manage logins makes logins for
+  people with a temporary password (changed at first sign-in), resets passwords, shares admin and
+  removes logins (and their data). Each login has its own IndexedDB database and settings; signed
+  out, the app shows only a "Who's practising?" screen. A setup link (`#/join?c=…`, name and
+  username only) makes someone's login on their own device, where they choose the password.
+  Passwords are salted PBKDF2. There is no server, so logins don't follow people between devices
+  (backups do).

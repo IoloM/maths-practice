@@ -16,6 +16,10 @@ const ImportSet = lazy(() => import('./pages/SetRunner').then((m) => ({ default:
 const Review = lazy(() => import('./pages/Review').then((m) => ({ default: m.Review })));
 const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 const Flashcards = lazy(() => import('./pages/Flashcards').then((m) => ({ default: m.Flashcards })));
+const Account = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Account })));
+const ManageLogins = lazy(() => import('./pages/Logins').then((m) => ({ default: m.ManageLogins })));
+const Join = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Join })));
+const SignInScreen = lazy(() => import('./pages/Logins').then((m) => ({ default: m.SignInScreen })));
 const PrintSet = lazy(() => import('./pages/PrintSet').then((m) => ({ default: m.PrintSet })));
 const PastPapers = lazy(() => import('./pages/PastPapers').then((m) => ({ default: m.PastPapers })));
 import { InstallBanner } from './components/Install';
@@ -24,6 +28,7 @@ import { Icon } from './components/Icon';
 import { ErrorBox } from './components/bits';
 import { NAV } from './nav';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { currentLogin, needsSignIn } from './lib/logins';
 
 function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
   switch (parts[0]) {
@@ -55,6 +60,12 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return <Settings />;
     case 'print':
       return <PrintSet key={parts[1]} id={parts[1]} />;
+    case 'account':
+      return <Account />;
+    case 'logins':
+      return <ManageLogins />;
+    case 'join':
+      return <Join code={query.get('c') ?? ''} />;
     default:
       return (
         <ErrorBox>
@@ -66,7 +77,10 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
 
 export default function App() {
   const route = useRoute();
-  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
+  // logins are set up on this device but nobody is signed in: only the sign-in screen (or a setup link)
+  const locked = needsSignIn() && route.parts[0] !== 'join';
+  const me = currentLogin();
+  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join'].includes(route.parts[0])) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
   return (
     <>
       <a className="skip-link" href="#main" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus())}>
@@ -80,6 +94,7 @@ export default function App() {
             </span>
             <span>Maths Practice</span>
           </a>
+          {!locked && (
           <nav className="nav nav-desktop" aria-label="Main">
             {NAV.map((n) => (
               <a key={n.path} href={href(n.path)} aria-current={active(n.path) ? 'page' : undefined}>
@@ -87,17 +102,25 @@ export default function App() {
               </a>
             ))}
           </nav>
+          )}
+          {me && (
+            <a className="who-chip" href={href('/account')} aria-label={`Signed in as ${me.name}`} title="Your login">
+              <span className="who-initial" aria-hidden="true">
+                {me.name.slice(0, 1).toUpperCase()}
+              </span>
+              <span className="who-name">{me.name}</span>
+            </a>
+          )}
         </div>
       </header>
       <UpdateBanner />
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>
         <ErrorBoundary key={route.path}>
-          <Suspense fallback={<Loading />}>
-            <Page {...route} />
-          </Suspense>
+          <Suspense fallback={<Loading />}>{locked ? <SignInScreen /> : <Page {...route} />}</Suspense>
         </ErrorBoundary>
       </main>
+      {!locked && (
       <nav className="tabbar" aria-label="Main">
         {NAV.filter((n) => n.mobile).map((n) => (
           <a key={n.path} href={href(n.path)} aria-current={active(n.path) ? 'page' : undefined}>
@@ -106,6 +129,7 @@ export default function App() {
           </a>
         ))}
       </nav>
+      )}
     </>
   );
 }

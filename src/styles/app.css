@@ -401,6 +401,7 @@ main.app-main {
 input[type='text'],
 input[type='search'],
 input[type='number'],
+input[type='password'],
 input[type='date'],
 input:not([type]),
 select,
@@ -1456,4 +1457,90 @@ ul.tips {
   .print-question {
     break-inside: auto;
   }
+}
+
+/* ---------- logins on this device ---------- */
+.who-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap);
+  padding: 0 8px;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+.who-chip:hover {
+  background: var(--surface-2);
+}
+.who-initial {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--surface);
+  font-weight: 700;
+  flex: none;
+}
+@media (max-width: 720px) {
+  .who-name {
+    max-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.signin {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.who-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.btn.who {
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 10px;
+  height: auto;
+  font-size: 1.05rem;
+}
+.btn.who .who-initial {
+  width: 48px;
+  height: 48px;
+  font-size: 1.3rem;
+}
+.grow {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.login-slip {
+  margin: 0;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font: 0.92rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  user-select: all;
+}
+table.logins-table {
+  width: 100%;
+}
+table.logins-table th:first-child,
+table.logins-table td:first-child,
+table.logins-table td:last-child {
+  text-align: left;
+}
+table.logins-table td .btn-row {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.error-text {
+  color: var(--bad);
 }

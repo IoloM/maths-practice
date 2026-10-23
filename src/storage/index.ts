@@ -1,4 +1,5 @@
 import { openIdbStore } from './idb';
+import { dbName } from '../lib/logins';
 import { MemoryStore } from './memory';
 import type { BackupFile, Store } from './types';
 
@@ -10,7 +11,7 @@ export function getStore(): Promise<Store> {
     storePromise = (async () => {
       try {
         if (typeof indexedDB === 'undefined') throw new Error('no IndexedDB');
-        return await openIdbStore();
+        return await openIdbStore(dbName());
       } catch {
         return new MemoryStore();
       }

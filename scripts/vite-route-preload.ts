@@ -20,6 +20,9 @@ const PAGES: Record<string, string> = {
   'past-papers': 'src/pages/PastPapers.tsx',
   settings: 'src/pages/Settings.tsx',
   print: 'src/pages/PrintSet.tsx',
+  account: 'src/pages/Logins.tsx',
+  logins: 'src/pages/Logins.tsx',
+  join: 'src/pages/Logins.tsx',
 };
 const QUESTION_VIEW = 'src/components/QuestionView.tsx';
 const WITH_QUESTIONS = ['q', 'practice', 'review', 'set'];
