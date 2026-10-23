@@ -17,7 +17,13 @@ export interface Settings {
   aiCode: string;
   /** this device's sync code (empty: not syncing) */
   syncCode: string;
+  /** when a preference that follows the person (SYNCED_PREFS) last changed (ms) */
+  prefsAt: number;
 }
+
+/** Preferences that follow a person between devices; the rest belong to the device. */
+export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking'] as const;
+export type SyncedPrefs = Pick<Settings, (typeof SYNCED_PREFS)[number]>;
 
 const DEFAULTS: Settings = {
   theme: 'system',
@@ -31,6 +37,7 @@ const DEFAULTS: Settings = {
   apiUrl: '',
   aiCode: '',
   syncCode: '',
+  prefsAt: 0,
 };
 const KEY = 'mp.settings.v1';
 
@@ -45,20 +52,49 @@ function load(): Settings {
 let current: Settings | null = null;
 /** The current settings (also read outside React, e.g. by background sync). */
 export const readSettings = (): Settings => (current ??= load());
+const listeners = new Set<(s: Settings) => void>();
+const watchers = new Set<(s: Settings, old: Settings) => void>();
+/** Called after any settings change (outside React). */
+export function onSettingsChange(f: (s: Settings, old: Settings) => void): () => void {
+  watchers.add(f);
+  return () => watchers.delete(f);
+}
+
+function save(p: Partial<Settings>): Settings {
+  const old = readSettings();
+  const n: Settings = { ...old, ...p };
+  if (p.prefsAt === undefined && SYNCED_PREFS.some((k) => k in p && p[k] !== old[k])) n.prefsAt = Date.now();
+  current = n;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(n));
+  } catch {
+    /* private mode */
+  }
+  listeners.forEach((f) => f(n));
+  watchers.forEach((f) => f(n, old));
+  return n;
+}
+
+export const syncedPrefs = (s: Settings = readSettings()): SyncedPrefs => Object.fromEntries(SYNCED_PREFS.map((k) => [k, s[k]])) as SyncedPrefs;
+
+/** Take preferences changed on another device (only known keys, only if newer). */
+export function applySyncedPrefs(values: Partial<SyncedPrefs>, at: number): boolean {
+  if (at <= readSettings().prefsAt) return false;
+  const p: Partial<Settings> = {};
+  for (const k of SYNCED_PREFS) if (k in values && typeof values[k] === typeof DEFAULTS[k]) (p as Record<string, unknown>)[k] = values[k];
+  save({ ...p, prefsAt: at });
+  return true;
+}
 
 const Ctx = createContext<{ settings: Settings; update: (p: Partial<Settings>) => void }>({ settings: DEFAULTS, update: () => {} });
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(readSettings);
-  const update = useCallback((p: Partial<Settings>) => {
-    const n = (current = { ...readSettings(), ...p });
-    try {
-      localStorage.setItem(KEY, JSON.stringify(n));
-    } catch {
-      /* private mode */
-    }
-    setSettings(n);
+  useEffect(() => {
+    listeners.add(setSettings);
+    return () => void listeners.delete(setSettings);
   }, []);
+  const update = useCallback((p: Partial<Settings>) => void save(p), []);
   useEffect(() => {
     const root = document.documentElement;
     if (settings.theme === 'system') root.removeAttribute('data-theme');

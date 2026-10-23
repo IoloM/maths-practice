@@ -8,8 +8,14 @@ import { preloadForHash } from './preload';
 
 preloadForHash(window.location.hash);
 
-// sync with the user's other devices (only loaded once a sync code is set)
-if (readSettings().syncCode) void import('./lib/sync').then((m) => m.startAutoSync());
+// save to the person's account or sync with their other devices (only loaded once signed in or a sync code is set)
+let signedIn = false;
+try {
+  signedIn = !!localStorage.getItem('mp.account.v1');
+} catch {
+  /* private mode */
+}
+if (signedIn || readSettings().syncCode) void import('./lib/sync').then((m) => m.startAutoSync());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

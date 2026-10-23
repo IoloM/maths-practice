@@ -1,8 +1,10 @@
-/** Settings for the optional server: sync between devices, AI handwriting reading and marking. */
+/** Settings for the optional server (logins, sync between devices, built-in AI) and the free ways to answer by hand and get AI marking. */
 import { useEffect, useState } from 'react';
 import { useSettings } from '../lib/settings';
 import { ApiError, BUILT_IN_API, aiCheck, apiBase, health } from '../lib/api';
 import { newSyncCode, normaliseCode, onSyncStatus, startAutoSync, syncNow, syncStatus, type SyncStatus } from '../lib/sync';
+import { readAccount, onAccountChange } from '../lib/account';
+import { href } from '../router';
 import { Icon } from './Icon';
 
 const message = (e: unknown) => (e instanceof ApiError || e instanceof Error ? e.message : 'Something went wrong');
@@ -33,7 +35,7 @@ function SyncPanel() {
     return (
       <>
         <p className="small">
-          Keep your progress, review cards and mocks the same on all your devices. On your <b>first</b> device press <b>Start syncing</b>; on each other device, type in the code it shows.
+          No login? You can still keep your devices in step: on your <b>first</b> device press <b>Start syncing</b>; on each other device, type in the code it shows.
         </p>
         <div className="btn-row">
           <button className="btn btn-primary" onClick={() => begin(newSyncCode())}>
@@ -118,6 +120,47 @@ function SyncPanel() {
   );
 }
 
+function AccountPanel() {
+  const [account, setAccount] = useState(readAccount);
+  useEffect(() => onAccountChange(() => setAccount(readAccount())), []);
+  const { settings } = useSettings();
+  if (!apiBase(settings)) return <SyncPanel />;
+  if (account)
+    return (
+      <>
+        <p className="small">
+          Signed in as <b>{account.user.name}</b> ({account.user.username}). Your progress, history and settings are saved to your account and follow you to any device.
+        </p>
+        <div className="btn-row">
+          <a className="btn" href={href('/account')}>
+            Account
+          </a>
+          {account.user.admin && (
+            <a className="btn" href={href('/admin')}>
+              Manage logins
+            </a>
+          )}
+        </div>
+      </>
+    );
+  return (
+    <>
+      <p className="small">Sign in to keep your progress, history and settings with you on any device. Logins are made by the person who runs this app.</p>
+      <div className="btn-row">
+        <a className="btn btn-primary" href={href('/account')}>
+          Sign in
+        </a>
+      </div>
+      <details>
+        <summary className="small">No login? Sync your own devices with a code</summary>
+        <div className="stack" style={{ marginTop: 8 }}>
+          <SyncPanel />
+        </div>
+      </details>
+    </>
+  );
+}
+
 function AiPanel() {
   const { settings, update } = useSettings();
   const [code, setCode] = useState(settings.aiCode);
@@ -127,10 +170,10 @@ function AiPanel() {
 
   return (
     <>
-      <p className="small">Three ways to answer in handwriting:</p>
+      <p className="small">Free ways to answer by hand and get your work marked:</p>
       <ol className="small ai-ways">
         <li>
-          <b>Apple Pencil Scribble (iPad, free, works offline).</b> Choose <i>Answer boxes → Plain text</i>, then write straight into any answer box with your Pencil; iPadOS turns it into typed text (e.g. write <code>3x^2</code>, <code>sqrt(x)</code>, <code>pi/4</code>).{' '}
+          <b>Write straight into answer boxes.</b> On iPad, choose <i>Answer boxes → Plain text</i> and write with your Apple Pencil — Scribble turns it into typed text (e.g. write <code>3x^2</code>, <code>sqrt(x)</code>, <code>pi/4</code>). Windows pens and Android handwriting keyboards work the same way. Free, and works offline.{' '}
           {settings.input !== 'plain' && (
             <button className="btn btn-small" onClick={() => update({ input: 'plain' })}>
               Use plain text boxes
@@ -138,12 +181,15 @@ function AiPanel() {
           )}
         </li>
         <li>
-          <b>Write it (AI).</b> Press <i>Write it</i> next to an answer box, write the answer as you would on paper, and the AI types it in for you to check.
-        </li>
-        <li>
-          <b>AI: mark my working.</b> After you check an answer, the AI examiner marks your working (handwritten or typed) line by line against the mark scheme and tells you what to fix.
+          <b>Ask your AI app to mark it.</b> After you check an answer, press <i>Ask your AI app</i>: your working (as a picture), the question and the mark scheme go to Claude, ChatGPT or Gemini on your own account, which marks it line by line like an examiner. Nothing to set up and nothing for this app to pay.
         </li>
       </ol>
+      <details>
+        <summary className="small">Built-in AI (optional — needs a paid Anthropic API key on the server)</summary>
+        <div className="stack" style={{ marginTop: 8 }}>
+          <p className="small muted">
+            With a key on the server, two more buttons appear: <i>Write it</i> (the AI reads a handwritten answer into the box) and <i>AI: mark my working</i> (marked inside the app, with ticks you can keep).
+          </p>
       {!base ? (
         <p className="muted small">The AI options need the app's server, which isn't set up yet.</p>
       ) : (
@@ -195,6 +241,8 @@ function AiPanel() {
           <p className="small muted">Reading an answer costs about 1p and marking working about 3–5p, paid from the Anthropic account on the server, which stops after 200 AI requests a day. Your working is sent to Anthropic’s Claude to be read; nothing else about you is.</p>
         </form>
       )}
+        </div>
+      </details>
     </>
   );
 }
@@ -244,8 +292,8 @@ export function OnlineSettings() {
   return (
     <>
       <section className="card stack">
-        <h2>Sync between devices</h2>
-        <SyncPanel />
+        <h2>Your account</h2>
+        <AccountPanel />
       </section>
       <section className="card stack">
         <h2>Handwriting and AI marking</h2>

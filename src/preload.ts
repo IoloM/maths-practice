@@ -16,6 +16,8 @@ const PAGES: Record<string, () => Promise<unknown>> = {
   flashcards: () => import('./pages/Flashcards'),
   'past-papers': () => import('./pages/PastPapers'),
   settings: () => import('./pages/Settings'),
+  account: () => import('./pages/Account'),
+  admin: () => import('./pages/Admin'),
 };
 
 export function preloadForHash(hash: string): void {

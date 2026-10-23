@@ -114,6 +114,7 @@ test('settings: test the access code, and start syncing', async ({ page }) => {
   await plainInput(page, { apiUrl: API });
   const seen = await fakeServer(page);
   await page.goto('./#/settings');
+  await page.getByText(/Built-in AI \(optional/).click();
   const code = page.getByLabel(/AI access code/);
   await code.fill('wrong-code');
   await page.getByRole('button', { name: 'Save and test' }).click();
@@ -122,10 +123,11 @@ test('settings: test the access code, and start syncing', async ({ page }) => {
   await page.getByRole('button', { name: 'Save and test' }).click();
   await expect(page.getByText(/Access code works/)).toBeVisible();
 
+  await page.getByText(/No login\? Sync your own devices/).click();
   await page.getByRole('button', { name: /Start syncing/ }).click();
   await expect(page.getByLabel('Sync code')).toHaveText(/^[2-9A-HJ-NP-Z]{4}(-[2-9A-HJ-NP-Z]{4}){4}$/);
   await expect(page.getByText(/last synced/)).toBeVisible();
-  expect(seen.puts).toHaveLength(1);
+  expect(seen.puts.length).toBeGreaterThanOrEqual(1);
   expect(seen.puts[0].postData()).not.toContain('maths-practice'); // only ciphertext leaves the device
 
   const a11y = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']).exclude('.katex-mathml').analyze();
@@ -142,6 +144,7 @@ test('a second device joins with the code and gets the progress', async ({ page,
   await page.getByRole('button', { name: 'Check' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
   await page.goto('./#/settings');
+  await page.getByText(/No login\? Sync your own devices/).click();
   await page.getByRole('button', { name: /Start syncing/ }).click();
   await expect(page.getByText(/last synced/)).toBeVisible();
   const syncCode = (await page.getByLabel('Sync code').textContent())!.trim();
@@ -151,6 +154,7 @@ test('a second device joins with the code and gets the progress', async ({ page,
   await plainInput(two, { apiUrl: API });
   await routeShared(two, rows);
   await two.goto('./#/settings');
+  await two.getByText(/No login\? Sync your own devices/).click();
   await two.getByLabel(/Have a code from another device/).fill(syncCode.toLowerCase().replace(/-/g, ' '));
   await two.getByRole('button', { name: 'Use this code' }).click();
   await expect(two.getByText(/progress from your other devices added/)).toBeVisible();

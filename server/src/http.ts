@@ -13,8 +13,8 @@ export function corsHeaders(origin: string | null, allowed: string): Record<stri
   if (!origin || !list.includes(origin)) return {};
   return {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'content-type, x-access-code',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'content-type, x-access-code, authorization',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
   };

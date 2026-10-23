@@ -1,5 +1,6 @@
 /**
- * Cross-device sync, end-to-end encrypted. A sync code (100 random bits, shown once and typed on the
+ * Cross-device sync: to the signed-in account (account.ts), or, without a login, end-to-end encrypted
+ * with a sync code. A sync code (100 random bits, shown once and typed on the
  * other device) gives both the row id (a SHA-256 hash) and the AES-GCM key (PBKDF2); the server only
  * ever sees ciphertext. A sync pulls, merges (sync-merge.ts), then pushes with the version it pulled,
  * retrying if another device got there first.
@@ -8,7 +9,9 @@ import { getStore } from '../storage';
 import type { Store } from '../storage/types';
 import { notifyProgress, onProgressChange } from '../progress/record';
 import { ApiError, apiBase, request } from './api';
-import { readSettings } from './settings';
+import { applySyncedPrefs, onSettingsChange, readSettings, syncedPrefs, type SyncedPrefs } from './settings';
+import { authHeader, forgetAccount, onAccountChange, readAccount, updateUser, type AccountUser } from './account';
+import { effectiveScore } from './score';
 import { incoming, isEmpty, outgoing, type Snapshot } from './sync-merge';
 
 // ---------------------------------------------------------------- the sync code
@@ -61,15 +64,28 @@ function toBase64(bytes: Uint8Array): string {
 }
 const fromBase64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 
-/** base64( version 1 | iv (12) | AES-GCM( flag (1 = gzip) | body ) ) */
-export async function seal(key: CryptoKey, text: string): Promise<string> {
+async function compress(text: string): Promise<Uint8Array> {
   const gzip = typeof CompressionStream !== 'undefined';
   const body = gzip ? await pipe(enc.encode(text), new CompressionStream('gzip')) : enc.encode(text);
-  const plain = new Uint8Array(body.length + 1);
-  plain[0] = gzip ? 1 : 0;
-  plain.set(body, 1);
+  const out = new Uint8Array(body.length + 1);
+  out[0] = gzip ? 1 : 0;
+  out.set(body, 1);
+  return out;
+}
+async function decompress(plain: Uint8Array): Promise<string> {
+  const body = plain.subarray(1);
+  if (plain[0] === 1) {
+    if (typeof DecompressionStream === 'undefined') throw new Error('This browser is too old to sync — update it');
+    return new TextDecoder().decode(await pipe(body, new DecompressionStream('gzip')));
+  }
+  return new TextDecoder().decode(body);
+}
+
+/** Sync code: base64( version 1 | iv (12) | AES-GCM( flag (1 = gzip) | body ) ) */
+export async function seal(key: CryptoKey, text: string): Promise<string> {
+  const plain = await compress(text);
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plain));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plain as BufferSource));
   const out = new Uint8Array(13 + ct.length);
   out[0] = 1;
   out.set(iv, 1);
@@ -86,12 +102,22 @@ export async function open(key: CryptoKey, data: string): Promise<string> {
   } catch {
     throw new Error('Could not unlock the synced progress — check the sync code');
   }
-  const body = plain.subarray(1);
-  if (plain[0] === 1) {
-    if (typeof DecompressionStream === 'undefined') throw new Error('This browser is too old to sync — update it');
-    return new TextDecoder().decode(await pipe(body, new DecompressionStream('gzip')));
-  }
-  return new TextDecoder().decode(body);
+  return decompress(plain);
+}
+
+/** Account: base64( version 2 | flag (1 = gzip) | body ) — private to the login, so not encrypted again. */
+export async function pack(text: string): Promise<string> {
+  const c = await compress(text);
+  const out = new Uint8Array(c.length + 1);
+  out[0] = 2;
+  out.set(c, 1);
+  return toBase64(out);
+}
+
+export async function unpack(data: string): Promise<string> {
+  const bytes = fromBase64(data);
+  if (bytes[0] !== 2) throw new Error('This saved progress was made by a newer version of the app — update this device');
+  return decompress(bytes.subarray(1));
 }
 
 // ---------------------------------------------------------------- status (for the Settings page)
@@ -127,6 +153,66 @@ interface Payload {
   version: 1;
   savedAt: number;
   stores: Snapshot;
+  /** preferences that follow the person, with when they last changed */
+  prefs?: { values: SyncedPrefs; at: number };
+}
+
+/** For the admin's list of logins. */
+export interface Summary {
+  attempts: number;
+  marks: number;
+  scored: number;
+  lastActive: number;
+}
+export function summarise(s: Snapshot): Summary {
+  let marks = 0,
+    scored = 0,
+    lastActive = 0;
+  for (const a of s.attempts) {
+    marks += a.marks;
+    scored += a.parts.reduce((t, p) => t + effectiveScore(p), 0);
+    lastActive = Math.max(lastActive, a.finishedAt);
+  }
+  return { attempts: s.attempts.length, marks, scored, lastActive };
+}
+
+/** Where progress is kept: the signed-in account, or the row a sync code points at. */
+interface Target {
+  get(): Promise<{ v: number; text: string | null }>;
+  /** false: another device saved first */
+  put(base: number, text: string, summary: Summary): Promise<boolean>;
+}
+
+function accountTarget(base: string): Target {
+  return {
+    async get() {
+      const { body } = await request<{ v: number; data?: string; user?: AccountUser }>('/me', { base, headers: authHeader() });
+      if (body.user) updateUser(body.user);
+      return { v: body.v, text: body.data ? await unpack(body.data) : null };
+    },
+    async put(v, text, summary) {
+      const data = await pack(text);
+      if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to save — back it up to a file instead');
+      const r = await request('/me', { base, method: 'PUT', headers: authHeader(), body: JSON.stringify({ base: v, data, summary }), ok: [200, 409] });
+      return r.status === 200;
+    },
+  };
+}
+
+async function codeTarget(base: string, code: string): Promise<Target> {
+  const { id, key } = await syncKeys(code);
+  return {
+    async get() {
+      const { body } = await request<{ v: number; data?: string }>(`/sync/${id}`, { base, ok: [200, 404] });
+      return { v: body.v ?? 0, text: body.data ? await open(key, body.data) : null };
+    },
+    async put(v, text) {
+      const data = await seal(key, text);
+      if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to sync — back it up to a file instead');
+      const r = await request(`/sync/${id}`, { base, method: 'PUT', body: JSON.stringify({ base: v, data }), ok: [200, 409] });
+      return r.status === 200;
+    },
+  };
 }
 
 async function localSnapshot(store: Store): Promise<Snapshot> {
@@ -151,6 +237,9 @@ export const MAX_SYNC_CHARS = 1_500_000;
 let quiet = false;
 let running: Promise<void> | null = null;
 
+/** Is there anywhere to sync to? */
+export const syncConfigured = () => !!apiBase() && (!!readAccount() || !!readSettings().syncCode);
+
 /** Pull, merge and push now. Resolves when done; rejects with a readable message. */
 export function syncNow(): Promise<void> {
   if (!running)
@@ -163,24 +252,24 @@ export function syncNow(): Promise<void> {
 async function run(): Promise<void> {
   const s = readSettings();
   const base = apiBase(s);
-  if (!s.syncCode || !base) return setStatus({ state: 'off', message: '' });
-  setStatus({ state: 'syncing', message: 'Syncing…' });
+  const account = readAccount();
+  if (!base || (!account && !s.syncCode)) return setStatus({ state: 'off', message: '' });
+  setStatus({ state: 'syncing', message: account ? 'Saving to your account…' : 'Syncing…' });
   try {
-    const { id, key } = await syncKeys(s.syncCode);
+    const target = account ? accountTarget(base) : await codeTarget(base, s.syncCode);
     const store = await getStore();
     let changed = false;
     for (let tries = 0; ; tries++) {
-      const got = await request<{ v: number; data?: string }>(`/sync/${id}`, { base, ok: [200, 404] });
-      const remoteText = got.body.data ? await open(key, got.body.data) : null;
-      const remote = remoteText ? (JSON.parse(remoteText) as Payload).stores : null;
-      if (remote && (await apply(store, remote))) changed = true;
-      const out = outgoing(await localSnapshot(store));
-      if (remote && JSON.stringify(out) === JSON.stringify(outgoing(remote))) break;
-      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out };
-      const data = await seal(key, JSON.stringify(payload));
-      if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to sync — back it up to a file instead');
-      const put = await request<{ v: number }>(`/sync/${id}`, { base, method: 'PUT', body: JSON.stringify({ base: got.body.v ?? 0, data }), ok: [200, 409] });
-      if (put.status === 200) break;
+      const got = await target.get();
+      const remote = got.text ? (JSON.parse(got.text) as Payload) : null;
+      if (remote && (await apply(store, remote.stores))) changed = true;
+      if (remote?.prefs && applySyncedPrefs(remote.prefs.values, remote.prefs.at)) changed = true;
+      const prefs = { values: syncedPrefs(), at: readSettings().prefsAt };
+      const snapshot = await localSnapshot(store);
+      const out = outgoing(snapshot);
+      if (remote && JSON.stringify([out, prefs]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null])) break;
+      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs };
+      if (await target.put(got.v, JSON.stringify(payload), summarise(snapshot))) break;
       if (tries >= 3) throw new Error('Another device keeps syncing at the same time — try again in a moment');
     }
     if (changed) {
@@ -194,9 +283,14 @@ async function run(): Promise<void> {
     } catch {
       /* private mode */
     }
-    setStatus({ state: 'idle', message: changed ? 'Synced — progress from your other devices added' : 'Synced', lastSync: now });
+    const where = account ? 'Saved to your account' : 'Synced';
+    setStatus({ state: 'idle', message: changed ? `${where} — progress from your other devices added` : where, lastSync: now });
   } catch (e) {
-    setStatus({ state: 'error', message: e instanceof ApiError || e instanceof Error ? e.message : 'Sync failed' });
+    if (account && e instanceof ApiError && e.status === 401) {
+      // the sign-in expired or the login was switched off: keep this device's progress, ask to sign in again
+      forgetAccount();
+      setStatus({ state: 'error', message: `${e.message}. Your progress on this device is kept.` });
+    } else setStatus({ state: 'error', message: e instanceof ApiError || e instanceof Error ? e.message : 'Sync failed' });
     throw e;
   }
 }
@@ -212,13 +306,17 @@ export function startAutoSync(): void {
   const soon = (ms: number) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      if (readSettings().syncCode && apiBase()) syncNow().catch(() => {});
+      if (syncConfigured()) syncNow().catch(() => {});
     }, ms);
   };
   soon(3000);
   onProgressChange(() => {
     if (!quiet) soon(15_000);
   });
+  onSettingsChange((n, old) => {
+    if (n.prefsAt !== old.prefsAt && !quiet) soon(15_000);
+  });
+  onAccountChange(() => soon(500));
   window.addEventListener('online', () => soon(2000));
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && Date.now() - status.lastSync > 5 * 60_000) soon(1000);

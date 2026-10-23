@@ -16,6 +16,7 @@ import { useSettings } from '../lib/settings';
 import { aiReady } from '../lib/api';
 import { AnswerPad, PAD_TYPES } from '../components/AnswerPad';
 import { AiMark } from '../components/AiMark';
+import { AskAi } from '../components/AskAi';
 import { QuestionView } from '../components/QuestionView';
 import { AnswerInput } from '../components/answers/AnswerInput';
 import { MathText } from '../components/MathText';
@@ -400,6 +401,9 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
                   </p>
                 )}
               </div>
+            </div>
+            <div className="part-actions">
+              <AskAi stem={inst.stem ?? ''} part={p} working={attempt.working ?? emptyWorking('plain', 'write')} response={attempt.parts[k]?.response ?? undefined} result={r} />
             </div>
             {ai && attempt.working && (
               <div className="ai-mark">

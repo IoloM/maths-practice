@@ -163,4 +163,7 @@ tests against an in-memory SQLite stand-in for D1 and a mocked Anthropic client 
 needed. `npx wrangler dev` runs it locally (put `ANTHROPIC_API_KEY` and `ACCESS_CODE` in
 `server/.dev.vars`, which git ignores); set the app's server address to `http://localhost:8787` in
 Settings. Prompts for reading and marking are in `server/src/ai.ts`. The app side is
-`src/lib/api.ts`, `src/lib/sync.ts` and `src/lib/sync-merge.ts` (unit tested in `tests/sync.test.ts`).
+`src/lib/api.ts`, `src/lib/account.ts`, `src/lib/sync.ts` and `src/lib/sync-merge.ts` (unit tested in
+`tests/sync.test.ts`; logins and the admin page in `e2e/accounts.spec.ts` against a mocked server).
+To make an admin login on a local database: `ADMIN_USER=me ADMIN_PASSWORD=… node scripts/admin-hash.mjs`
+gives the stored password to insert into `users` (see `server/setup.sh`).

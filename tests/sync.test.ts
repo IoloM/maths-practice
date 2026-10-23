@@ -205,3 +205,99 @@ describe('syncing two devices', () => {
     expect(await other.store.allAttempts()).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------- signed in: progress and settings follow the person
+describe('saving to an account', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const user = { id: 7, username: 'sam', name: 'Sam', admin: false, mustChange: false };
+
+  /** A fake /me endpoint for one account; `expired` makes it answer 401. */
+  function accountServer() {
+    const state = { row: null as { v: number; data: string } | null, summary: null as unknown, expired: false, puts: 0 };
+    const fetchFn = (input: string | URL | Request, init: RequestInit = {}) => {
+      const res = (status: number, body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status }));
+      const auth = (init.headers as Record<string, string>)?.authorization;
+      if (new URL(String(input)).pathname !== '/me') return res(404, {});
+      if (state.expired || auth !== 'Bearer token-for-sam') return res(401, { error: 'Your sign-in has expired — please sign in again' });
+      if (init.method === 'PUT') {
+        state.puts++;
+        const b = JSON.parse(String(init.body)) as { base: number; data: string; summary: unknown };
+        if ((state.row?.v ?? 0) !== b.base) return res(409, { v: state.row?.v ?? 0 });
+        state.row = { v: b.base + 1, data: b.data };
+        state.summary = b.summary;
+        return res(200, { v: b.base + 1 });
+      }
+      return res(200, { user, v: state.row?.v ?? 0, data: state.row?.data });
+    };
+    return { state, fetchFn };
+  }
+
+  async function signedInDevice(prefs: Record<string, unknown> = {}) {
+    vi.resetModules();
+    const ls = new Map<string, string>([
+      ['mp.settings.v1', JSON.stringify({ apiUrl: 'https://api.test', ...prefs })],
+      ['mp.account.v1', JSON.stringify({ token: 'token-for-sam', user })],
+    ]);
+    vi.stubGlobal('localStorage', { getItem: (k: string) => ls.get(k) ?? null, setItem: (k: string, v: string) => ls.set(k, v), removeItem: (k: string) => ls.delete(k) });
+    const settings = await import('../src/lib/settings');
+    settings.readSettings();
+    const sync = await import('../src/lib/sync');
+    const account = await import('../src/lib/account');
+    account.readAccount();
+    const store = await (await import('../src/storage')).getStore();
+    return { sync, store, settings, account, ls };
+  }
+
+  it('brings progress and settings to another device signed in to the same login', async () => {
+    const server = accountServer();
+    vi.stubGlobal('fetch', server.fetchFn);
+    const laptop = await signedInDevice({ theme: 'dark', paper: 'lined', prefsAt: NOW - 1000 });
+    await laptop.store.addAttempt(attempt('a', NOW - 3000));
+    await laptop.sync.syncNow();
+    expect(server.state.summary).toMatchObject({ attempts: 1, marks: 3, scored: 1, lastActive: NOW - 3000 });
+
+    const ipad = await signedInDevice({ theme: 'light', apiUrl: 'https://api.test' }); // never changed here: prefsAt 0
+    await ipad.sync.syncNow();
+    expect((await ipad.store.allAttempts()).map((a) => a.templateId)).toEqual(['a']);
+    expect(ipad.settings.readSettings()).toMatchObject({ theme: 'dark', paper: 'lined' });
+    expect(ipad.sync.syncStatus().message).toMatch(/Saved to your account/);
+
+    // a change on the iPad wins next time the laptop syncs
+    ipad.settings.applySyncedPrefs({ theme: 'system' }, NOW);
+    await ipad.sync.syncNow();
+    await laptop.sync.syncNow();
+    expect(laptop.settings.readSettings().theme).toBe('system');
+    // device-only settings never travel
+    expect(JSON.parse(laptop.ls.get('mp.settings.v1')!).apiUrl).toBe('https://api.test');
+  });
+
+  it('an expired sign-in signs this device out but keeps its progress', async () => {
+    const server = accountServer();
+    vi.stubGlobal('fetch', server.fetchFn);
+    const phone = await signedInDevice();
+    await phone.store.addAttempt(attempt('b', NOW - 1000));
+    server.state.expired = true;
+    await expect(phone.sync.syncNow()).rejects.toThrow(/sign in again/);
+    expect(phone.account.readAccount()).toBeNull();
+    expect(phone.ls.has('mp.account.v1')).toBe(false);
+    expect(await phone.store.allAttempts()).toHaveLength(1);
+    expect(phone.sync.syncStatus().message).toMatch(/progress on this device is kept/);
+  });
+
+  it('packs account data compressed (not encrypted) and reads it back', async () => {
+    const { pack, unpack } = await import('../src/lib/sync');
+    const text = JSON.stringify({ x: 'y'.repeat(4000) });
+    const packed = await pack(text);
+    expect(packed.length).toBeLessThan(500);
+    expect(await unpack(packed)).toBe(text);
+  });
+
+  it('stretches passwords the same way as the server tests and setup script expect', async () => {
+    const { stretch, tempPassword } = await import('../src/lib/account');
+    const k = await stretch(' Sam ', 'correct horse');
+    expect(k).toMatch(/^[A-Za-z0-9+/]{43}=$/);
+    expect(await stretch('sam', 'correct horse')).toBe(k); // case and spaces in the username don't matter
+    expect(await stretch('sam', 'correct horsE')).not.toBe(k);
+    expect(tempPassword()).toMatch(/^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/);
+  });
+});

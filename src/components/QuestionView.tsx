@@ -18,6 +18,7 @@ import { Icon } from './Icon';
 import { Difficulty } from './bits';
 import { AnswerPad, PAD_TYPES } from './AnswerPad';
 import { AiMark } from './AiMark';
+import { AskAi } from './AskAi';
 import { aiReady } from '../lib/api';
 
 const DrawingCanvas = lazy(() => import('../working/Canvas'));
@@ -393,6 +394,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                         <Icon name="book" /> {st.showSolution ? 'Hide' : 'Show'} worked solution
                       </button>
                     )}
+                    {(marked || gaveUp || r?.verdict === 'self') && <AskAi stem={inst.stem ?? ''} part={p} working={working} response={st.response} result={r} />}
                   </div>
                   {ai && (marked || gaveUp || r?.verdict === 'self') && (
                     <div className="ai-mark">

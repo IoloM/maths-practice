@@ -3,6 +3,9 @@
  *   GET  /health                  → { ok, ai }
  *   GET  /sync/:id, PUT /sync/:id → encrypted progress sync
  *   GET  /ai/check                → is the access code right?         (free; not counted)
+ *   POST /auth/login, /auth/logout, /auth/password                    → logins (bearer token)
+ *   GET  /me, PUT /me             → the signed-in person's progress, history and settings
+ *   GET  /admin/users, POST /admin/users, PATCH|DELETE /admin/users/:id → managing logins (admins)
  *   POST /ai/read                 → handwritten answer → LaTeX        (needs x-access-code)
  *   POST /ai/mark                 → working marked against the scheme (needs x-access-code)
  */
@@ -11,6 +14,7 @@ import type { Env } from './env';
 import { HttpError, corsHeaders, json, readJson } from './http';
 import { getSync, putSync } from './sync';
 import { countAiCall, requireAi } from './limits';
+import { changePassword, createUser, deleteUser, getData, listUsers, login, logout, putData, updateUser } from './auth';
 import { MAX_IMAGE_CHARS, markWorking, readHandwriting, type MarkRequest, type ReadRequest } from './ai';
 
 type ClientFactory = (env: Env) => Anthropic;
@@ -27,6 +31,19 @@ export async function handle(req: Request, env: Env, makeClient: ClientFactory =
       if (req.method === 'GET') return await getSync(env, sync[1], cors);
       if (req.method === 'PUT') return await putSync(env, sync[1], req, cors);
     }
+    if (pathname === '/auth/login' && req.method === 'POST') return json(await login(env, req), 200, cors);
+    if (pathname === '/auth/logout' && req.method === 'POST') return json(await logout(env, req), 200, cors);
+    if (pathname === '/auth/password' && req.method === 'POST') return json(await changePassword(env, req), 200, cors);
+    if (pathname === '/me' && req.method === 'GET') return json(await getData(env, req), 200, cors);
+    if (pathname === '/me' && req.method === 'PUT') {
+      const r = await putData(env, req);
+      return json(r.body, r.status, cors);
+    }
+    if (pathname === '/admin/users' && req.method === 'GET') return json(await listUsers(env, req), 200, cors);
+    if (pathname === '/admin/users' && req.method === 'POST') return json(await createUser(env, req), 200, cors);
+    const user = /^\/admin\/users\/(\d+)$/.exec(pathname);
+    if (user && req.method === 'PATCH') return json(await updateUser(env, req, Number(user[1])), 200, cors);
+    if (user && req.method === 'DELETE') return json(await deleteUser(env, req, Number(user[1])), 200, cors);
     if (pathname === '/ai/check' && req.method === 'GET') {
       await requireAi(env, req);
       return json({ ok: true }, 200, cors);

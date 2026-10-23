@@ -174,6 +174,18 @@ axe on 13 views in light and dark) — all green.
   - Apple Pencil Scribble into plain-text answer boxes (free, offline) is explained in Settings.
   - The key lives only in Cloudflare secrets; the app sends an access code; a daily cap (200)
     limits spending.
+- **Logins** (`server/src/auth.ts`, `src/lib/account.ts`, `#/account`, `#/admin`): the admin makes
+  logins in the app and gets a temporary password to pass on (must be changed at first sign-in).
+  Signed in, progress, history, mocks, review cards and preferences (theme, answer boxes, paper,
+  working) are saved to the account and merged across devices; signing out removes them from the
+  device. Passwords are stretched in the browser (PBKDF2, 100k rounds) and the Worker keeps a salted
+  SHA-256 of that — the free plan's 10 ms CPU limit rules out PBKDF2 on the server. Bearer tokens
+  (hashed in the database, 90 days), 20 wrong passwords a day per login before it pauses, admins
+  can reset, switch off and delete logins and see questions, score and last active.
+- **Free AI marking** (`src/components/AskAi.tsx`): a Claude subscription doesn't cover API use, so
+  rather than pay for the API the app hands the question, mark scheme, model solution, answer and a
+  picture of the working to the student's own AI app (share sheet on phones and iPads; copy and
+  paste on computers). The paid built-in AI stays available but is off unless a key is set.
 - **Server**: Cloudflare Worker + D1, one-step `server/setup.sh` (double-click
-  `Set up AI and sync.command`).
+  `Set up logins and sync.command`) that also makes the admin login.
 - **CI**: e2e runs in the Playwright container (42 → 9 minutes); the server is type-checked and tested.

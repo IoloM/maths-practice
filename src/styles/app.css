@@ -1394,3 +1394,36 @@ ul.tips {
   padding-top: 8px;
   border-top: 1px solid var(--border);
 }
+/* ---------- accounts ---------- */
+.grow {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.login-slip {
+  margin: 0;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 0.95rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  user-select: all;
+}
+table.data td .btn-row {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ask-ai-text {
+  width: 100%;
+  margin-top: 6px;
+  font: 0.85rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+table.admin-table {
+  width: 100%;
+}
+table.admin-table th:first-child,
+table.admin-table td:first-child,
+table.admin-table td:last-child {
+  text-align: left;
+}

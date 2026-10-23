@@ -4,7 +4,7 @@
  */
 import { readSettings, type Settings } from './settings';
 
-export const BUILT_IN_API = ((import.meta.env.VITE_API_URL as string | undefined) ?? '').trim().replace(/\/+$/, '');
+export const BUILT_IN_API = ((import.meta.env?.VITE_API_URL as string | undefined) ?? '').trim().replace(/\/+$/, '');
 
 export function apiBase(s: Pick<Settings, 'apiUrl'> = readSettings()): string {
   return (s.apiUrl.trim() || BUILT_IN_API).replace(/\/+$/, '');
