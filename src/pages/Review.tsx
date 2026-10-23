@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { BANK, ENTRY_BY_ID, freshSeed, getInstance, type BankEntry } from '../content/bank';
+import { BANK, ENTRY_BY_ID, freshSeed, getInstance, seedsFor, type BankEntry } from '../content/bank';
 import type { Instance } from '../engine/templates/types';
 import { QuestionView } from '../components/QuestionView';
 import { ErrorBox, Loading } from '../components/bits';
@@ -42,7 +42,7 @@ export function Review() {
     const entries = byFamily.get(card.family)!;
     const e = entries[Math.floor(Math.random() * entries.length)];
     const seen = new Set(attempts.filter((a) => a.templateId === e.id).map((a) => a.seed));
-    const unseen = e.seeds.filter((s) => !seen.has(s));
+    const unseen = seedsFor(e.id).filter((s) => !seen.has(s));
     try {
       const seed = unseen.length ? unseen[Math.floor(Math.random() * unseen.length)] : await freshSeed(e.id, seen);
       setInst(await getInstance(e.id, seed));

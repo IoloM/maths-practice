@@ -1,5 +1,5 @@
 /** Choosing the next question for a practice session. */
-import { BANK, freshSeed, type BankEntry } from '../content/bank';
+import { BANK, freshSeed, seedsFor, type BankEntry } from '../content/bank';
 import type { Attempt } from '../storage/types';
 import { effectiveScore } from './attempt';
 import { CHAPTER_BY_REF } from '../content/chapters';
@@ -56,7 +56,7 @@ export async function pickNext(cfg: SessionConfig, history: Attempt[], recent: s
     }
   }
   const done = new Set((byT.get(chosen.id) ?? []).map((a) => a.seed));
-  const unseen = chosen.seeds.filter((s) => !done.has(s));
+  const unseen = seedsFor(chosen.id).filter((s) => !done.has(s));
   const seed = unseen.length ? unseen[Math.floor(Math.random() * unseen.length)] : await freshSeed(chosen.id, done);
   return { templateId: chosen.id, seed };
 }

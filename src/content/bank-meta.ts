@@ -3,7 +3,8 @@ import bankJson from './bank-index.json';
 import type { ChapterRef, TemplateMeta } from '../engine/templates/types';
 
 export interface BankEntry extends TemplateMeta {
-  seeds: number[];
+  /** number of verified questions (the seeds themselves are in bank-seeds, loaded lazily) */
+  n: number;
   /** a fixed (non-generated) question: single seed 0 */
   fixed?: boolean;
 }

@@ -7,7 +7,7 @@ import { answerTex } from '../../../engine/marking/mark';
 import type { ChoiceSpec, CommonError, CoordSpec, EquationSpec, ExactSpec, ExprSpec, ListSpec, NumericSpec } from '../../../engine/marking/types';
 import { A1, B1, M1, ans, defineTemplate, dM1, err, md, part, sgn } from '../../../engine/templates/helpers';
 import type { Template } from '../../../engine/templates/types';
-import { ex, sumTex } from '../shared/calculus';
+import { ex, sumTex, unitTex } from '../shared/calculus';
 
 const exq = (q: Q | number) => num(Q.from(q));
 const valOf = (s: ExactSpec | NumericSpec) => (s.type === 'exact' ? evaluate(s.value) : s.value);
@@ -271,7 +271,7 @@ const rates = defineTemplate({
     const R = r.int(2, 12);
     const ans1 = rate / C.f(R);
     const dV: ExprSpec = ans.expr(ex(C.dV), [C.r], { domain: { [C.r]: [0.5, 5] } });
-    const Ans = ans.num(ans1, { sf: 3 }, { unit: `\\text{${C.units[2].replace('^{-1}', '')}}^{-1}` }); // e.g. \text{cm s}^{-1}
+    const Ans = ans.num(ans1, { sf: 3 }, { unit: unitTex(C.units[2]) });
     const dvdt = `\\frac{\\mathrm{d}${C.V}}{\\mathrm{d}t}`,
       drdt = `\\frac{\\mathrm{d}${C.r}}{\\mathrm{d}t}`,
       dvdr = `\\frac{\\mathrm{d}${C.V}}{\\mathrm{d}${C.r}}`;

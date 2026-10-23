@@ -1,6 +1,6 @@
 /** Mock papers, timed sets, daily sets, share codes and exam marking. */
 import { describe, expect, it } from 'vitest';
-import { BANK, ENTRY_BY_ID } from '../src/content/bank';
+import { BANK, ENTRY_BY_ID, seedsFor } from '../src/content/bank';
 import { CHAPTER_BY_REF } from '../src/content/chapters';
 import { PAPERS, buildDaily, buildPaper, buildTimed, decodeSet, encodeSet, setMarks } from '../src/lib/sets';
 import { markInstance } from '../src/lib/set-marking';
@@ -22,7 +22,7 @@ describe('mock papers', () => {
         sections.forEach((sec, k) => {
           for (const it of items.slice(sec.from, sec.to)) expect(p.sections[k].filter(ENTRY_BY_ID.get(it.templateId)!)).toBe(true);
         });
-        for (const it of items) expect(ENTRY_BY_ID.get(it.templateId)!.seeds).toContain(it.seed);
+        for (const it of items) expect(seedsFor(it.templateId)).toContain(it.seed);
       }
     });
   }
@@ -63,7 +63,7 @@ describe('share codes', () => {
 describe('exam marking', () => {
   it('canonical responses score full marks through follow-through chains', () => {
     for (const t of ALL_TEMPLATES.slice(0, 120)) {
-      const inst = generateInstance(t, ENTRY_BY_ID.get(t.id)!.seeds[0]);
+      const inst = generateInstance(t, seedsFor(t.id)[0]);
       const responses = Object.fromEntries(inst.parts.map((p) => [p.label, p.answer.type === 'self' ? undefined : canonicalResponse(p.answer)]));
       const results = markInstance(inst, responses);
       results.forEach((r, k) => {

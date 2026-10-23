@@ -6,7 +6,7 @@ import { answerTex } from '../../../engine/marking/mark';
 import type { ChoiceSpec, ExactSpec, ExprSpec, NumericSpec } from '../../../engine/marking/types';
 import { A1, B1, M1, ans, defineTemplate, err, md, part } from '../../../engine/templates/helpers';
 import type { Template } from '../../../engine/templates/types';
-import { ex } from '../shared/calculus';
+import { ex, unitTex } from '../shared/calculus';
 
 const valOf = (s: NumericSpec) => s.value;
 
@@ -115,7 +115,7 @@ const trapData = defineTemplate({
     const over = shape === 'convex';
     const opts = [over ? 'An overestimate, because the curve is convex (bends upwards), so each trapezium lies above the curve' : 'An underestimate, because the curve is concave (bends downwards), so each trapezium lies below the curve', over ? 'An underestimate, because the curve is convex' : 'An overestimate, because the curve is concave', 'Exact, because the trapezium rule always gives the exact area'];
     const C: ChoiceSpec = ans.choice(opts, 0);
-    const head = `\\begin{array}{c|${'c'.repeat(n + 1)}} ${ctx.t}\\ (${ctx.u[0]}) & ${ys.map((_, k) => fmtNum(k * h)).join(' & ')} \\\\ \\hline ${ctx.v}\\ (\\text{${ctx.u[1].replace('^{-1}', '⁻¹')}}) & ${ys.map((y) => fmtNum(y)).join(' & ')} \\end{array}`;
+    const head = `\\begin{array}{c|${'c'.repeat(n + 1)}} ${ctx.t}\\ (${ctx.u[0]}) & ${ys.map((_, k) => fmtNum(k * h)).join(' & ')} \\\\ \\hline ${ctx.v}\\ (${unitTex(ctx.u[1])}) & ${ys.map((y) => fmtNum(y)).join(' & ')} \\end{array}`;
     return {
       stem: md`${ctx.what} is recorded in the table.` + `\n\n$$${head}$$`,
       parts: [

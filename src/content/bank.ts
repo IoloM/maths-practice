@@ -3,8 +3,10 @@ import { loaders } from './templates/loaders.gen';
 import { generateInstance, validateInstance } from '../engine/templates/validate';
 import type { Instance, Template } from '../engine/templates/types';
 import { ENTRY_BY_ID } from './bank-meta';
+import { isVerifiedSeed, seedsFor } from './bank-seeds';
 
 export { BANK, ENTRY_BY_ID, entriesForChapter, type BankEntry } from './bank-meta';
+export { seedsFor } from './bank-seeds';
 
 const chapterCache = new Map<string, Promise<Map<string, Template>>>();
 
@@ -38,7 +40,7 @@ export async function loadTemplate(id: string): Promise<Template> {
 /** Instance for template + seed. Seeds outside the verified bank are validated before use. */
 export async function getInstance(id: string, seed: number): Promise<Instance> {
   const t = await loadTemplate(id);
-  const verified = ENTRY_BY_ID.get(id)?.seeds.includes(seed);
+  const verified = isVerifiedSeed(id, seed);
   const inst = generateInstance(t, seed);
   if (!verified) {
     const problems = validateInstance(t, inst);
@@ -71,7 +73,7 @@ export async function freshSeed(id: string, avoid: Set<number> = new Set()): Pro
       /* try another */
     }
   }
-  const seeds = ENTRY_BY_ID.get(id)?.seeds ?? [1];
+  const seeds = seedsFor(id);
   return seeds[Math.floor(Math.random() * seeds.length)];
 }
 

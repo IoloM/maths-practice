@@ -3,6 +3,7 @@
  * Building is deterministic given a random function, so sets can be reproduced and shared.
  */
 import { BANK, type BankEntry } from '../content/bank-meta';
+import { seedsFor } from '../content/bank-seeds';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import type { Attempt, CardRecord, SetItem, SetRecord } from '../storage/types';
 import { mastery } from '../progress/mastery';
@@ -104,7 +105,10 @@ export function fillToMarks(pool: BankEntry[], target: number, rnd: () => number
   return chosen.sort((a, b) => a.difficulty - b.difficulty || a.marks - b.marks);
 }
 
-const pickSeed = (e: BankEntry, rnd: () => number) => e.seeds[Math.floor(rnd() * e.seeds.length)];
+const pickSeed = (e: BankEntry, rnd: () => number) => {
+  const seeds = seedsFor(e.id);
+  return seeds[Math.floor(rnd() * seeds.length)];
+};
 
 function group<T, K>(xs: T[], key: (x: T) => K): Map<K, T[]> {
   const m = new Map<K, T[]>();

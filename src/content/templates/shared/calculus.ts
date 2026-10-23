@@ -102,6 +102,14 @@ export function linTex(a: number, b: number, v = 'x'): string {
 }
 
 /** Parse LaTeX into an Expr (for answers built from strings). */
+/** Units such as "cm^{3} s^{-1}" as LaTeX: \text{cm}^{3}\text{ s}^{-1} (KaTeX can't typeset unicode ⁻¹ in text). */
+export const unitTex = (u: string) =>
+  u
+    .split(/(\^\{-?\d+\})/)
+    .filter(Boolean)
+    .map((p) => (p.startsWith('^') ? p : `\\text{${p}}`))
+    .join('');
+
 export function ex(tex: string) {
   return parseExpr(tex);
 }
