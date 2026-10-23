@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["node"]
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"]
   },
   "include": ["vite.config.ts", "vitest.config.ts", "playwright.config.ts", "scripts", "tests", "e2e"]
 }

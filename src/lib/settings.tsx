@@ -11,6 +11,12 @@ export interface Settings {
   showWorking: boolean;
   installDismissed: number;
   persistAsked: boolean;
+  /** sync / AI server address; empty uses the one built into the app (if any) */
+  apiUrl: string;
+  /** access code for AI reading and marking */
+  aiCode: string;
+  /** this device's sync code (empty: not syncing) */
+  syncCode: string;
 }
 
 const DEFAULTS: Settings = {
@@ -22,6 +28,9 @@ const DEFAULTS: Settings = {
   showWorking: true,
   installDismissed: 0,
   persistAsked: false,
+  apiUrl: '',
+  aiCode: '',
+  syncCode: '',
 };
 const KEY = 'mp.settings.v1';
 
@@ -33,21 +42,22 @@ function load(): Settings {
     return { ...DEFAULTS };
   }
 }
+let current: Settings | null = null;
+/** The current settings (also read outside React, e.g. by background sync). */
+export const readSettings = (): Settings => (current ??= load());
 
 const Ctx = createContext<{ settings: Settings; update: (p: Partial<Settings>) => void }>({ settings: DEFAULTS, update: () => {} });
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<Settings>(load);
+  const [settings, setSettings] = useState<Settings>(readSettings);
   const update = useCallback((p: Partial<Settings>) => {
-    setSettings((s) => {
-      const n = { ...s, ...p };
-      try {
-        localStorage.setItem(KEY, JSON.stringify(n));
-      } catch {
-        /* private mode */
-      }
-      return n;
-    });
+    const n = (current = { ...readSettings(), ...p });
+    try {
+      localStorage.setItem(KEY, JSON.stringify(n));
+    } catch {
+      /* private mode */
+    }
+    setSettings(n);
   }, []);
   useEffect(() => {
     const root = document.documentElement;

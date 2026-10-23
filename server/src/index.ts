@@ -2,6 +2,7 @@
  * Maths Practice API (Cloudflare Worker).
  *   GET  /health                  → { ok, ai }
  *   GET  /sync/:id, PUT /sync/:id → encrypted progress sync
+ *   GET  /ai/check                → is the access code right?         (free; not counted)
  *   POST /ai/read                 → handwritten answer → LaTeX        (needs x-access-code)
  *   POST /ai/mark                 → working marked against the scheme (needs x-access-code)
  */
@@ -25,6 +26,10 @@ export async function handle(req: Request, env: Env, makeClient: ClientFactory =
     if (sync) {
       if (req.method === 'GET') return await getSync(env, sync[1], cors);
       if (req.method === 'PUT') return await putSync(env, sync[1], req, cors);
+    }
+    if (pathname === '/ai/check' && req.method === 'GET') {
+      requireAi(env, req);
+      return json({ ok: true }, 200, cors);
     }
     if (pathname === '/ai/read' && req.method === 'POST') {
       requireAi(env, req);

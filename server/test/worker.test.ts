@@ -79,6 +79,13 @@ describe('AI', () => {
     expect((await read('wrong')).status).toBe(401);
     expect(calls).toHaveLength(0);
   });
+  it('checks the access code without calling the AI or counting it', async () => {
+    const check = (code: string) => call('/ai/check', { headers: { 'x-access-code': code } });
+    expect((await check('wrong')).status).toBe(401);
+    for (let i = 0; i < 5; i++) expect((await check('let-me-in')).status).toBe(200);
+    expect(calls).toHaveLength(0);
+    expect((await read('let-me-in')).status).toBe(200);
+  });
   it('reads handwriting with the default model, an image block and server-side fallback', async () => {
     const res = await read('let-me-in');
     expect(res.status).toBe(200);

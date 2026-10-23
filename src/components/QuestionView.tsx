@@ -16,6 +16,9 @@ import { AnswerInput, hasResponse } from './answers/AnswerInput';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { Icon } from './Icon';
 import { Difficulty } from './bits';
+import { AnswerPad, PAD_TYPES } from './AnswerPad';
+import { AiMark } from './AiMark';
+import { aiReady } from '../lib/api';
 
 const DrawingCanvas = lazy(() => import('../working/Canvas'));
 
@@ -239,6 +242,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
   const selfTotal = parts.reduce((s, p, i) => s + Math.max(p.result?.score ?? 0, selfScore(inst.parts[i].scheme, p.ticks)), 0);
 
   const singleLabel = inst.parts.length === 1 && inst.parts[0].label === '';
+  const ai = aiReady(settings);
 
   const workingCol = settings.showWorking ? (
     <div className="working-col">
@@ -323,6 +327,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                     <div className={`answer ${!locked ? 'sticky' : ''}`}>
                       <div className="answer-row">
                         <AnswerInput spec={p.answer} value={st.response} onChange={(response) => setPart(i, { response, result: st.result?.verdict === 'invalid' || st.result?.verdict === 'unanswered' ? undefined : st.result })} onSubmit={() => !locked && check(i)} disabled={locked} partLabel={p.label} />
+                        {ai && !locked && PAD_TYPES.has(p.answer.type) && <AnswerPad spec={p.answer} question={`${inst.stem}\n\n${p.prompt}`} where={p.label ? `part (${p.label})` : 'the question'} onAnswer={(response) => setPart(i, { response, result: undefined })} />}
                         {!locked && (
                           <button className="btn btn-primary" onClick={() => check(i)} disabled={!hasResponse(st.response)}>
                             Check
@@ -389,6 +394,11 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                       </button>
                     )}
                   </div>
+                  {ai && (marked || gaveUp || r?.verdict === 'self') && (
+                    <div className="ai-mark">
+                      <AiMark stem={inst.stem ?? ''} part={p} working={working} response={st.response} result={r} awardable={showSelf ? awardable : null} onTicks={(t) => setPart(i, { ticks: t.map((x, k) => x || st.ticks[k]), showScheme: true })} />
+                    </div>
+                  )}
                   {st.hints > 0 && (
                     <div aria-live="polite">
                       {p.hints.slice(0, st.hints).map((h, k) => (

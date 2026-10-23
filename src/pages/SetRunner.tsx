@@ -13,6 +13,9 @@ import { recordAttempt, updateAttempt } from '../progress/record';
 import { scoreOf } from '../progress/mastery';
 import { useProgress } from '../lib/useProgress';
 import { useSettings } from '../lib/settings';
+import { aiReady } from '../lib/api';
+import { AnswerPad, PAD_TYPES } from '../components/AnswerPad';
+import { AiMark } from '../components/AiMark';
 import { QuestionView } from '../components/QuestionView';
 import { AnswerInput } from '../components/answers/AnswerInput';
 import { MathText } from '../components/MathText';
@@ -180,6 +183,7 @@ const mmss = (ms: number) => {
 // ---------------------------------------------------------------- exam: answering under timed conditions
 function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instance[]; metas: BankEntry[]; onSave: (s: SetRecord) => Promise<void> }) {
   const { settings } = useSettings();
+  const ai = aiReady(settings);
   const [responses, setResponses] = useState<Record<string, Response>>(set.responses ?? {});
   const [working, setWorking] = useState<Record<number, Working>>(set.working ?? {});
   const [openWork, setOpenWork] = useState<number | null>(null);
@@ -271,6 +275,7 @@ function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instan
                   <div className="answer">
                     <div className="answer-row">
                       <AnswerInput spec={p.answer} value={responses[`${i}:${p.label}`]} onChange={(r) => setResponses((x) => ({ ...x, [`${i}:${p.label}`]: r }))} onSubmit={() => {}} partLabel={p.label} questionNumber={i + 1} />
+                      {ai && PAD_TYPES.has(p.answer.type) && <AnswerPad spec={p.answer} question={`${inst.stem}\n\n${p.prompt}`} where={`question ${i + 1}${p.label ? ` part (${p.label})` : ''}`} onAnswer={(r) => setResponses((x) => ({ ...x, [`${i}:${p.label}`]: r }))} />}
                     </div>
                   </div>
                 )}
@@ -305,6 +310,8 @@ function responseText(inst: Instance, k: number, r: Response | undefined | null)
 }
 
 function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: number; attempt: Attempt; results: MarkResult[] }) {
+  const { settings } = useSettings();
+  const ai = aiReady(settings) && !!attempt.working;
   const [ticks, setTicks] = useState<boolean[][]>(() => inst.parts.map((p, k) => p.scheme.map((_, j) => attempt.parts[k]?.self?.ticks.includes(j) ?? false)));
   const [showSol, setShowSol] = useState(false);
   const save = (next: boolean[][]) => {
@@ -394,6 +401,11 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
                 )}
               </div>
             </div>
+            {ai && attempt.working && (
+              <div className="ai-mark">
+                <AiMark stem={inst.stem ?? ''} part={p} working={attempt.working} response={attempt.parts[k]?.response ?? undefined} result={r} awardable={canSelf ? ok : null} onTicks={(t) => save(ticks.map((row, kk) => (kk === k ? row.map((v, jj) => v || t[jj]) : row)))} />
+              </div>
+            )}
             {showSol && (
               <div className="panel">
                 <div className="panel-title">Worked solution</div>
