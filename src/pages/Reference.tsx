@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { binomCdf, invPhi, pmccCritical } from '../engine/stats/distributions';
 import { MathText } from '../components/MathText';
 import { CALCULATOR } from '../content/calculator';
+import { TableWrap } from '../components/bits';
 /** LaTeX-friendly string tag: backslashes are kept as written. */
 const md = String.raw;
 
@@ -133,7 +134,7 @@ function BinomialTable() {
           ))}
         </select>
       </label>
-      <div className="table-wrap">
+      <TableWrap label="Binomial table">
         <table className="data">
           <caption>
             Cumulative binomial probabilities P(X ≤ x) for X ~ B({n}, p)
@@ -159,14 +160,14 @@ function BinomialTable() {
             ))}
           </tbody>
         </table>
-      </div>
+      </TableWrap>
     </div>
   );
 }
 
 function NormalTable() {
   return (
-    <div className="table-wrap">
+    <TableWrap label="Normal table">
       <table className="data">
         <caption>Percentage points of the standard normal distribution: P(Z ≤ z) = p</caption>
         <thead>
@@ -184,13 +185,13 @@ function NormalTable() {
           ))}
         </tbody>
       </table>
-    </div>
+    </TableWrap>
   );
 }
 
 function PmccTable() {
   return (
-    <div className="table-wrap">
+    <TableWrap label="PMCC table">
       <table className="data">
         <caption>Critical values of the product moment correlation coefficient (one-tailed significance level; double it for two-tailed)</caption>
         <thead>
@@ -214,7 +215,7 @@ function PmccTable() {
           ))}
         </tbody>
       </table>
-    </div>
+    </TableWrap>
   );
 }
 

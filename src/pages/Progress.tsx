@@ -11,7 +11,8 @@ import { formatDuration } from '../lib/attempt';
 import { isDue, isQuestionCard } from '../srs/fsrs';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
-import { MINUTES_PER_MARK } from '../lib/sets';
+import { MINUTES_PER_MARK, setMarks } from '../lib/sets';
+import { PredictedGrade } from '../components/PredictedGrade';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
 
@@ -86,6 +87,13 @@ export function Progress() {
   const bySpec = useMemo(() => specMastery(attempts), [attempts]);
   const mpmStream = useMemo(() => minutesPerMark(attempts, (a) => CHAPTER_BY_REF.get(a.chapter as never)?.stream ?? 'Other'), [attempts]);
   const errors = useMemo(() => frequentErrors(attempts), [attempts]);
+  const mocks = useMemo(
+    () =>
+      sets
+        .filter((s) => s.kind === 'mock' && s.status === 'finished')
+        .map((s) => ({ got: attempts.filter((a) => a.setId === s.id).reduce((t, a) => t + scoreOf(a), 0), of: setMarks(s.items), finishedAt: s.finishedAt ?? s.createdAt })),
+    [sets, attempts],
+  );
   if (loading) return <Loading />;
   const byCh = groupBy(attempts, (a) => a.chapter);
   const marks = attempts.reduce((s, a) => s + a.marks, 0);
@@ -118,6 +126,8 @@ export function Progress() {
           <span className="muted small">due for review</span>
         </a>
       </div>
+
+      <PredictedGrade mocks={mocks} />
 
       <section className="card">
         <h2>Trend</h2>

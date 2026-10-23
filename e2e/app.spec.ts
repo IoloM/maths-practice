@@ -181,3 +181,16 @@ test('formulae page has calculator tips', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Normal distribution' })).toBeVisible();
   await expect(page.getByText(/not the variance/)).toBeVisible();
 });
+
+test('a finished mock gives a grade and a predicted grade on the progress page', async ({ page }) => {
+  await page.goto(`./#/set/import?c=${encodeURIComponent(`mock~5~${Q}:5~E2E mock`)}`);
+  await page.getByRole('button', { name: /Start — the timer begins now/ }).click();
+  await page.getByLabel('Answer for question 1').fill(String(answerFor(Q, 5)));
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: /Finish & mark/ }).first().click();
+  await expect(page.getByText(/grade for 100% on June 2026 boundaries/)).toBeVisible();
+  await page.goto('./#/progress');
+  await expect(page.getByRole('heading', { name: 'Predicted grade' })).toBeVisible();
+  await expect(page.getByText('Predicted grade A*.')).toBeAttached();
+  await expect(page.locator('.grade-badge')).toHaveText('A*');
+});

@@ -21,6 +21,7 @@ import { ErrorBox, Loading } from '../components/bits';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { href, navigate, shareUrl } from '../router';
 import { startSet } from './Exams';
+import { LATEST, gradeFor } from '../lib/grades';
 
 /** `#/set/import?c=<code>` — create a set from a shared link, then open it. */
 export function ImportSet({ code }: { code: string }) {
@@ -437,6 +438,7 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
   const got = mine.reduce((s, a) => s + (a ? scoreOf(a) : 0), 0);
   const used = (set.finishedAt ?? 0) - (set.startedAt ?? 0);
   const pct = total ? Math.round((100 * got) / total) : 0;
+  const grade = set.kind === 'mock' && total ? gradeFor(got / total) : null;
   const sections = set.sections?.length ? set.sections : [{ name: 'Questions', from: 0, to: insts.length }];
   const share = async () => {
     const url = shareUrl(`/set/import?c=${encodeURIComponent(encodeSet(set))}`);
@@ -472,6 +474,12 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
           <b>{total ? (used / 60000 / total).toFixed(2) : '–'}</b>
           <span className="muted small">minutes per mark (target 1.2)</span>
         </div>
+        {grade && (
+          <a className="card kpi" href={href('/progress')}>
+            <b>{grade}</b>
+            <span className="muted small">grade for {pct}% on {LATEST.series} boundaries</span>
+          </a>
+        )}
       </div>
       <p className="small muted">Auto-marked answers are scored already. Open each question to compare your working with the mark scheme and tick any method marks you earned.</p>
       {sections.map((sec) => (

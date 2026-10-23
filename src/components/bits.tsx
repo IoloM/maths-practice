@@ -43,3 +43,12 @@ export function ErrorBox({ children }: { children: ReactNode }) {
     </div>
   );
 }
+
+/** A table that may scroll sideways on small screens: focusable so keyboard users can scroll it. */
+export function TableWrap({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="table-wrap" tabIndex={0} role="region" aria-label={label}>
+      {children}
+    </div>
+  );
+}

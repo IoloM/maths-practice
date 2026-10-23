@@ -47,3 +47,23 @@ for (const scheme of ['light', 'dark'] as const) {
     });
   });
 }
+
+test('progress page with a predicted grade has no accessibility violations', async ({ page }) => {
+  await plainInput(page);
+  await page.goto(`./#/set/import?c=${encodeURIComponent(`mock~5~${Q}:5~A11y mock`)}`);
+  await page.getByRole('button', { name: /Start — the timer begins now/ }).click();
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: /Finish & mark/ }).first().click();
+  await page.goto('./#/progress');
+  await expect(page.locator('.grade-badge')).toBeVisible();
+  await page.locator('details summary').first().click();
+  await audit(page, 'progress with predicted grade');
+});
+
+test('every formulae and tables tab has no accessibility violations', async ({ page }) => {
+  await page.goto('./#/reference');
+  for (const name of ['Pure formulae', 'Statistics formulae', 'Mechanics formulae', 'Binomial tables', 'Normal table', 'PMCC table', 'Calculator']) {
+    await page.getByRole('tab', { name }).click();
+    await audit(page, `reference: ${name}`);
+  }
+});

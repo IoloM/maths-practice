@@ -347,11 +347,13 @@ main.app-main {
   background: var(--bad-soft);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .btn-primary {
+  :root:not([data-theme='light']) .btn-primary,
+  :root:not([data-theme='light']) .grade-badge {
     color: #0b1416;
   }
 }
 :root[data-theme='dark'] .btn-primary,
+:root[data-theme='dark'] .grade-badge,
 :root[data-theme='dark'] .tab.active {
   color: #0b1416;
 }
@@ -1296,4 +1298,15 @@ ul.tips {
   padding-left: 1.2em;
   display: grid;
   gap: 8px;
+}
+.grade-badge {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font: 700 1.6rem/1 var(--serif);
+  flex: none;
 }

@@ -57,7 +57,7 @@ function table(lines: string[]): string {
   const rows = lines.filter((l) => !/^\s*\|?\s*:?-{2,}/.test(l));
   const hasHeader = lines.length > 1 && /^\s*\|?\s*:?-{2,}/.test(lines[1]);
   const head = hasHeader ? rows.shift()! : null;
-  let h = '<div class="table-wrap"><table class="md-table">';
+  let h = '<div class="table-wrap" tabindex="0" role="region" aria-label="Table"><table class="md-table">';
   if (head) h += `<thead><tr>${cells(head).map((c) => `<th scope="col">${inline(c)}</th>`).join('')}</tr></thead>`;
   h += `<tbody>${rows.map((r) => `<tr>${cells(r).map((c, i) => (i === 0 && !head ? `<th scope="row">${inline(c)}</th>` : `<td>${inline(c)}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
   return h;
