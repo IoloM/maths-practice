@@ -67,6 +67,13 @@ SECRET="$(printf '%s' "$KEYS" | json 'x=>(x.find(k=>String(k.api_key).startsWith
 [ -n "$PUBLISHABLE" ] && [ -n "$SECRET" ] || { echo "Couldn't read the project's API keys."; exit 1; }
 case "$PUBLISHABLE" in sb_publishable_*) ;; *) echo "(Using the older API keys: create new ones under Project Settings → API Keys and run this again before the end of 2026.)" ;; esac
 
+# check what people will actually meet: usernames can sign in, and nobody can sign themselves up
+PROBE='{"email":"setup-check@login.invalid","password":"not-a-real-password"}'
+SIGNIN="$(curl -s -X POST "$URL/auth/v1/token?grant_type=password" -H "apikey: $PUBLISHABLE" -H "content-type: application/json" -d "$PROBE" || true)"
+case "$SIGNIN" in *invalid_credentials*) echo "✓ Sign-in with usernames works" ;; *) echo "✗ Sign-in isn't working: $SIGNIN"; exit 1 ;; esac
+SIGNUP="$(curl -s -X POST "$URL/auth/v1/signup" -H "apikey: $PUBLISHABLE" -H "content-type: application/json" -d "$PROBE" || true)"
+case "$SIGNUP" in *signup_disabled*) echo "✓ Nobody can sign themselves up" ;; *) echo "✗ Public sign-up is open — check [auth] enable_signup in supabase/config.toml: $SIGNUP"; exit 1 ;; esac
+
 say "4/5  Your admin login"
 ADMINS="$(SUPABASE_URL="$URL" SECRET_KEY="$SECRET" node -e '
   const k = process.env.SECRET_KEY;
