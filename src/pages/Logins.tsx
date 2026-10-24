@@ -31,7 +31,9 @@ import { ErrorBox, TableWrap } from '../components/bits';
 const message = (e: unknown) => (e instanceof Error ? e.message : 'Something went wrong');
 /** Everything (progress, settings, theme) belongs to the login, so start the app afresh. */
 const restart = (path = '/') => {
-  window.location.hash = `#${path}`;
+  // one reload, straight to the new page: setting location.hash first would render it once and could
+  // race the reload in Safari
+  history.replaceState(null, '', `#${path}`);
   window.location.reload();
 };
 const suggestUsername = (name: string) =>

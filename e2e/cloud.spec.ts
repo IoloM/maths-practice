@@ -142,6 +142,7 @@ test('an admin sets work for the group; it is done and handed in', async ({ page
   await plainInput(page);
   await signIn(page, 'iolo', 'admin-pass-1');
   await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await expect(page.getByRole('link', { name: 'Signed in as Iolo' })).toBeVisible();
   await page.goto(`./#/set/import?c=${encodeURIComponent(`timed~10~${Q}:23~Integration check`)}`);
   await page.getByRole('button', { name: 'Set this for the group' }).click();
   await page.getByLabel('Due (optional)').fill('2030-01-10');
