@@ -14,7 +14,10 @@ export function supabaseBackend(sb: SupabaseClient): Backend {
       return error ? null : (data.user?.id ?? null);
     },
     async profile(id) {
-      return check(await sb.from('profiles').select('id, username, admin, disabled').eq('id', id).maybeSingle<ProfileRow>());
+      return check(await sb.from('profiles').select('id, username, admin, disabled, must_change').eq('id', id).maybeSingle<ProfileRow>());
+    },
+    async profileByUsername(username) {
+      return check(await sb.from('profiles').select('id, username, admin, disabled, must_change').eq('username', username).maybeSingle<ProfileRow>());
     },
     async usernameTaken(username) {
       return !!check(await sb.from('profiles').select('id').eq('username', username).maybeSingle());

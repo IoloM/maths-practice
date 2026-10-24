@@ -200,8 +200,11 @@ axe on 13 views in light and dark) — all green.
   merged across devices on start, after practising, when back online and when leaving the app;
   handwriting stays on the device it was drawn on. Signing in on a device brings across what was
   practised there before (as a guest or with a device login of the same username).
-- **Admin**: make logins (temporary password to pass on, changed at first sign-in), reset passwords,
-  share admin, switch off, remove; move device logins online with the same usernames.
+- **Admin**: make logins with just a name and username — each person chooses their own password the
+  first time they sign in (no passwords to pass on; until then, anyone who knew the username could
+  claim it, so admins see who hasn't); reset (back to "choose a password"), share admin, switch off,
+  remove; move device logins online with the same usernames. The setup script makes the owner's
+  admin login the same way.
 - **Study group** (`#/group`): this week's leaderboard and set work — an admin turns any mock or
   timed set into work for everyone (with a due date); results are handed in automatically and
   update when self-marking changes them.

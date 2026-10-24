@@ -32,13 +32,26 @@ async function answerOne(page: Page, seed: number) {
   await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
 }
 
+/** Username first; then the password (or, the first time, a new one). Leaves the last click to the caller. */
 async function signIn(page: Page, username: string, password: string) {
   await page.goto('./#/account');
   await page.getByLabel('Username').fill(username);
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByLabel('Password', { exact: true }).fill(password);
 }
 
-test('an admin makes a login; the new person signs in on their own devices and their progress follows them', async ({ page, browser, baseURL }) => {
+/** First sign-in on a new (or reset) login: choose a password, and the app restarts signed in. */
+async function firstSignIn(page: Page, username: string, password: string) {
+  await page.goto('./#/account');
+  await page.getByLabel('Username').fill(username);
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByRole('heading', { name: 'Choose your password' })).toBeVisible();
+  await page.getByLabel(/^New password \(/).fill(password);
+  await page.getByLabel('New password again').fill(password);
+  await reloads(page, page.getByRole('button', { name: 'Set my password and sign in' }).click());
+}
+
+test('an admin makes a login with just a username; the person chooses their password and their progress follows them', async ({ page, browser, baseURL }) => {
   const s = fakeState([{ username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true }]);
   await serveSupabase(page.context(), s);
   await plainInput(page);
@@ -46,6 +59,10 @@ test('an admin makes a login; the new person signs in on their own devices and t
   // practised without signing in, then signs in: that progress comes along
   await answerOne(page, 21);
   await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+  await page.goto('./#/account');
+  await page.getByLabel('Username').fill('nobody');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByText(/no login with that username/)).toBeVisible();
   await signIn(page, 'iolo', 'wrong-pass');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByText('Wrong username or password.')).toBeVisible();
@@ -56,44 +73,64 @@ test('an admin makes a login; the new person signs in on their own devices and t
   await expect(attempted(page)).toHaveText('1');
   await expect.poll(() => s.progress.size).toBe(1); // saved online
 
-  // make a login for Ana
+  // make a login for Ana: no password involved
   await page.goto('./#/logins');
   await page.getByLabel('Their name').fill('Ana Bell');
   await page.getByRole('button', { name: 'Make login' }).click();
   const slip = page.locator('.login-slip');
   await expect(slip).toContainText('Username: ana.bell');
-  const temp = (await slip.textContent())!.match(/Temporary password: (\S+)/)![1];
+  await expect(slip).toContainText('choose your own password');
+  await expect(slip).not.toContainText(/password:/i);
   await axe(page);
   await page.getByRole('button', { name: 'Done' }).click();
-  await expect(page.getByRole('row', { name: /Ana Bell/ })).toContainText('hasn’t chosen a password yet');
+  await expect(page.getByRole('row', { name: /Ana Bell/ })).toContainText('hasn’t set a password yet');
 
-  // Ana on her phone: temporary password, then her own
+  // Ana on her phone: chooses her own password the first time
   const phone = await device(browser, baseURL, s);
-  await signIn(phone, 'ana.bell', temp);
-  await phone.getByRole('button', { name: 'Sign in' }).click();
-  await expect(phone.getByText(/temporary password/)).toBeVisible();
-  await phone.getByLabel(/^New password \(/).fill('anas-password');
-  await phone.getByLabel('New password again').fill('anas-password');
-  await reloads(phone, phone.getByRole('button', { name: 'Set my password' }).click());
+  await firstSignIn(phone, 'ana.bell', 'anas-password');
   await expect(phone.getByRole('link', { name: 'Signed in as Ana Bell' })).toBeVisible();
   await answerOne(phone, 22);
   await phone.goto('./#/account');
   await phone.getByRole('button', { name: 'Save now' }).click();
   await expect(phone.getByRole('status').filter({ hasText: /Saved/ })).toBeVisible();
 
-  // ...and on her laptop: the same progress
+  // ...and on her laptop: her password, and the same progress
   const laptop = await device(browser, baseURL, s);
   await signIn(laptop, 'ana.bell', 'anas-password');
   await reloads(laptop, laptop.getByRole('button', { name: 'Sign in' }).click());
   await laptop.goto('./#/progress');
   await expect(attempted(laptop)).toHaveText('1');
 
-  // the group sees her week (totals only)
+  // the group sees her week (totals only); she now has a password
   await page.goto('./#/group');
   await expect(page.getByRole('row', { name: /Ana Bell/ })).toContainText('1');
   await axe(page);
+  await page.goto('./#/logins');
+  await expect(page.getByRole('row', { name: /Ana Bell/ })).not.toContainText('hasn’t set a password yet');
   await phone.context().close();
   await laptop.context().close();
+});
+
+test('a reset password: the old one stops working and they choose a new one', async ({ page, browser, baseURL }) => {
+  const s = fakeState([
+    { username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true },
+    { username: 'ben', name: 'Ben', password: 'forgotten-1' },
+  ]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/logins');
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: 'Reset password for Ben' }).click();
+  await expect(page.locator('.login-slip')).toContainText('has been reset');
+  expect(s.profiles.find((p) => p.username === 'ben')!.must_change).toBe(true);
+
+  const ben = await device(browser, baseURL, s);
+  await firstSignIn(ben, 'ben', 'bens-new-pass');
+  await expect(ben.getByRole('link', { name: 'Signed in as Ben' })).toBeVisible();
+  expect(s.users.find((u) => u.email.startsWith('ben@'))!.password).toBe('bens-new-pass');
+  await ben.context().close();
 });
 
 test('an admin sets work for the group; it is done and handed in', async ({ page, browser, baseURL }) => {
@@ -137,10 +174,12 @@ test('an admin sets work for the group; it is done and handed in', async ({ page
 
 test('a switched-off login can’t sign in', async ({ page }) => {
   const s = fakeState([{ username: 'ben', name: 'Ben', password: 'ben-pass-1' }]);
+  s.profiles[0].disabled = true;
   s.users[0].banned = true;
   await serveSupabase(page.context(), s);
   await plainInput(page);
-  await signIn(page, 'ben', 'ben-pass-1');
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page.getByText('Wrong username or password.')).toBeVisible();
+  await page.goto('./#/account');
+  await page.getByLabel('Username').fill('ben');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByText(/switched off/)).toBeVisible();
 });

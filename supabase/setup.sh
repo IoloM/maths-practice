@@ -6,7 +6,8 @@
 #   4. makes your admin login
 #   5. tells the website where the project is (GitHub repository variables) and rebuilds it
 # Safe to run again: it updates what is there. The database password is kept in supabase/.db-password
-# (never committed). Run with --new-admin to add another admin or reset your password.
+# (never committed). Run with --new-admin to add another admin (or reset yours). Like every login,
+# the admin login gets its password when you first sign in on the website.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$HOME/.local/bin:$PATH"
@@ -82,14 +83,7 @@ else
     [[ "$AUSER" =~ ^[a-z0-9][a-z0-9._-]{0,30}[a-z0-9]$ ]] && break
     echo "2–32 letters, numbers, dots, dashes or underscores, please."
   done
-  while :; do
-    read -rs -p "Choose a password (6+ characters; nothing shows as you type): " P1; echo
-    read -rs -p "Type it again: " P2; echo
-    [ "$P1" = "$P2" ] && [ ${#P1} -ge 6 ] && break
-    echo "They didn't match, or it's shorter than 6 characters — try again."
-  done
-  SUPABASE_URL="$URL" SECRET_KEY="$SECRET" ADMIN_USER="$AUSER" ADMIN_NAME="${ANAME:-$AUSER}" ADMIN_PASSWORD="$P1" node supabase/scripts/make-admin.mjs
-  unset P1 P2
+  SUPABASE_URL="$URL" SECRET_KEY="$SECRET" ADMIN_USER="$AUSER" ADMIN_NAME="${ANAME:-$AUSER}" node supabase/scripts/make-admin.mjs
 fi
 
 say "5/5  Connecting the website"
@@ -105,5 +99,6 @@ unset SECRET KEYS
 
 say "Done."
 echo "Project:      $URL"
-[ -n "${AUSER:-}" ] && echo "Admin login:  $AUSER (with the password you chose)"
-echo "Next: in about 10 minutes open the app → Settings → Sign in, then Manage logins to make logins for people."
+[ -n "${AUSER:-}" ] && echo "Admin login:  $AUSER"
+echo "Next: in about 10 minutes open the app → Settings → Sign in → type your username → choose your password."
+echo "      Then Manage logins makes logins for people: they choose their own passwords the same way."

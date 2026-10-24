@@ -171,7 +171,20 @@ export async function refreshMe(): Promise<Me | null> {
   return next;
 }
 
-/** Set your own password (after a temporary one, or any time). Checks the current one first. */
+/** Is this username new (choose a password), ready (sign in), switched off, or unknown? */
+export async function loginStatus(username: string): Promise<'new' | 'ready' | 'off' | 'none'> {
+  const r = await adminCall({ action: 'status', username: username.trim().toLowerCase() });
+  return (r as { status?: 'new' | 'ready' | 'off' | 'none' }).status ?? 'none';
+}
+
+/** First sign-in on a new login (or after a reset): choose the password, then sign in with it. */
+export async function claimLogin(username: string, password: string): Promise<Me> {
+  if (password.length < MIN_PASSWORD) throw new CloudError(`Use at least ${MIN_PASSWORD} characters.`);
+  await adminCall({ action: 'claim', username: username.trim().toLowerCase(), password });
+  return signIn(username, password);
+}
+
+/** Change your own password. Checks the current one first. */
 export async function setPassword(current: string, next: string): Promise<void> {
   const m = cloudMe();
   if (!m) throw new CloudError('Sign in first.');
@@ -281,8 +294,8 @@ export async function handIn(assignmentId: string, got: number, of: number): Pro
   if (error) fail(error, 'Couldn’t hand it in');
 }
 
-// ---------------------------------------------------------------- admin: managing logins (the admin function)
-async function adminCall(body: Record<string, unknown>): Promise<{ id?: string }> {
+// ---------------------------------------------------------------- the admin function (logins)
+async function adminCall(body: Record<string, unknown>): Promise<{ id?: string; status?: string }> {
   const sb = await supabase();
   const { data, error } = await sb.functions.invoke('admin', { body });
   if (error) {
@@ -291,11 +304,13 @@ async function adminCall(body: Record<string, unknown>): Promise<{ id?: string }
     const detail = res && typeof res.json === 'function' ? ((await res.json().catch(() => null)) as { error?: string } | null) : null;
     fail({ message: detail?.error ?? error.message, status: res?.status }, 'Couldn’t do that');
   }
-  return (data ?? {}) as { id?: string };
+  return (data ?? {}) as { id?: string; status?: string };
 }
 
-export const createLogin = (p: { username: string; name: string; password: string; admin: boolean }) => adminCall({ action: 'create', ...p, username: p.username.trim().toLowerCase() });
-export const resetLogin = (id: string, password: string) => adminCall({ action: 'reset', id, password });
+/** A login with just a name and username: they choose their password the first time they sign in. */
+export const createLogin = (p: { username: string; name: string; admin: boolean }) => adminCall({ action: 'create', ...p, username: p.username.trim().toLowerCase() });
+/** Back to "choose a password": the old one stops working. */
+export const resetLogin = (id: string) => adminCall({ action: 'reset', id });
 export const setLoginAdmin = (id: string, admin: boolean) => adminCall({ action: 'admin', id, admin });
 export const setLoginDisabled = (id: string, disabled: boolean) => adminCall({ action: 'disable', id, disabled });
 export const renameLogin = (id: string, name: string) => adminCall({ action: 'rename', id, name });

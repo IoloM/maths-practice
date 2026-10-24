@@ -7,10 +7,12 @@ import { href, shareUrl } from '../router';
 import {
   MIN_PASSWORD,
   USERNAME,
+  claimLogin,
   cloudMe,
   createLogin,
   deleteLogin,
   group,
+  loginStatus,
   recentPeople,
   resetLogin,
   setLoginAdmin,
@@ -21,7 +23,7 @@ import {
   type Me,
   type Member,
 } from '../lib/cloud';
-import { deviceLogins, tempPassword } from '../lib/logins';
+import { deviceLogins } from '../lib/logins';
 import { onSyncStatus, startAutoSync, syncNow, syncStatus, type SyncStatus } from '../lib/sync';
 import { ErrorBox, Loading, TableWrap } from '../components/bits';
 import { Icon } from '../components/Icon';
@@ -45,7 +47,7 @@ const when = (t: number | string | null | undefined) => (t ? new Date(t).toLocal
 
 /**
  * Who is signed in, as of when the page opened. Signing in or out always restarts the app, so pages
- * don't switch mid-way (a sign-in form must stay put to ask for a new password after a temporary one).
+ * don't switch mid-way (a sign-in form must stay put while it asks for a password).
  */
 export function useCloudMe(): Me | null {
   const [m] = useState(cloudMe);
@@ -77,14 +79,16 @@ function NewPassword({ value, again, onValue, onAgain }: { value: string; again:
 const pairProblem = (a: string, b: string) => (a.length < MIN_PASSWORD ? `Use at least ${MIN_PASSWORD} characters.` : a !== b ? 'The two passwords are different.' : null);
 
 // ---------------------------------------------------------------- signing in
-/** The sign-in form: on its own page, or as the whole screen on a device that needs a login. */
+/**
+ * The sign-in form, on its own page or as the whole screen on a device that needs a login. Username
+ * first: a login that is new (or was reset) chooses its password here; otherwise, the password.
+ */
 export function CloudSignIn({ screen = false }: { screen?: boolean }) {
   const recent = recentPeople();
   const [username, setUsername] = useState(recent.length === 1 ? recent[0].username : '');
   const [password, setPw] = useState('');
-  const [step, setStep] = useState<'password' | 'choose'>('password');
-  const [next, setNext] = useState('');
   const [again, setAgain] = useState('');
+  const [step, setStep] = useState<'username' | 'password' | 'choose'>('username');
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const old = deviceLogins();
@@ -94,38 +98,64 @@ export function CloudSignIn({ screen = false }: { screen?: boolean }) {
     await adoptLocalProgress(m).catch(() => 0);
     restart(screen ? window.location.hash.replace(/^#/, '') || '/' : '/');
   };
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
+  /** New login → choose a password; otherwise ask for it. */
+  const check = async (name: string) => {
     setProblem(null);
+    if (!USERNAME.test(name.trim().toLowerCase())) return setProblem('Type your username (lower-case letters and numbers).');
     setBusy(true);
     try {
-      if (step === 'password') {
-        const m = await signIn(username, password);
-        if (m.mustChange) setStep('choose');
-        else await finish(m);
-      } else {
-        const p = pairProblem(next, again);
-        if (p) return setProblem(p);
-        await setPassword(password, next);
-        await finish(cloudMe()!);
-      }
+      const status = await loginStatus(name);
+      if (status === 'none') setProblem('There’s no login with that username — check it with whoever runs the app.');
+      else if (status === 'off') setProblem('This login has been switched off — ask whoever runs the app.');
+      else setStep(status === 'new' ? 'choose' : 'password');
+    } catch {
+      setStep('password'); // can't check (offline?): just try signing in
+    } finally {
+      setBusy(false);
+    }
+  };
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (step === 'username') return void check(username);
+    setProblem(null);
+    if (step === 'choose') {
+      const p = pairProblem(password, again);
+      if (p) return setProblem(p);
+    }
+    setBusy(true);
+    try {
+      await finish(step === 'choose' ? await claimLogin(username, password) : await signIn(username, password));
     } catch (err) {
       setProblem(message(err));
     } finally {
       setBusy(false);
     }
   };
+  const back = () => {
+    setStep('username');
+    setPw('');
+    setAgain('');
+    setProblem(null);
+  };
 
   return (
     <form className={`stack ${screen ? 'signin' : 'card'}`} onSubmit={submit}>
-      <h2 className={screen ? 'h1' : undefined}>{step === 'password' ? 'Sign in' : `Welcome, ${cloudMe()?.name ?? ''}`}</h2>
-      {step === 'password' ? (
+      <h2 className={screen ? 'h1' : undefined}>{step === 'choose' ? 'Choose your password' : 'Sign in'}</h2>
+      {step === 'username' ? (
         <>
-          {screen && old.length > 0 && <p className="small">Logins now work on every device. Sign in with the username and password your admin gave you — what you practised on this device comes with you.</p>}
+          {screen && old.length > 0 && <p className="small">Logins now work on every device. Sign in with your username — what you practised on this device comes with you.</p>}
           {recent.length > 1 && (
             <div className="who-list" role="group" aria-label="People who have signed in here">
               {recent.map((p) => (
-                <button type="button" key={p.username} className={`btn who ${username === p.username ? 'who-picked' : ''}`} onClick={() => setUsername(p.username)} aria-pressed={username === p.username}>
+                <button
+                  type="button"
+                  key={p.username}
+                  className="btn who"
+                  onClick={() => {
+                    setUsername(p.username);
+                    void check(p.username);
+                  }}
+                >
                   <span className="who-initial" aria-hidden="true">
                     {p.name.slice(0, 1).toUpperCase()}
                   </span>
@@ -136,35 +166,45 @@ export function CloudSignIn({ screen = false }: { screen?: boolean }) {
           )}
           <label className="stack">
             <span className="small">Username</span>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" autoCapitalize="none" spellCheck={false} required />
-          </label>
-          <label className="stack">
-            <span className="small">Password</span>
-            <input type="password" value={password} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" required />
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" autoCapitalize="none" spellCheck={false} required autoFocus={!screen} />
           </label>
         </>
       ) : (
         <>
-          <p className="small">You signed in with a temporary password. Choose your own now — only you will know it, and it works on every device.</p>
+          <p className="small">
+            <b>{username.trim().toLowerCase()}</b>{' '}
+            <button type="button" className="btn btn-small btn-ghost" onClick={back}>
+              Not you?
+            </button>
+          </p>
           <input type="text" value={username} autoComplete="username" readOnly hidden />
-          <NewPassword value={next} again={again} onValue={setNext} onAgain={setAgain} />
+          {step === 'password' ? (
+            <label className="stack">
+              <span className="small">Password</span>
+              <input type="password" value={password} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" required autoFocus />
+            </label>
+          ) : (
+            <>
+              <p className="small">Welcome! This is your first time signing in, so choose your own password. Only you will know it, and it works on every device.</p>
+              <NewPassword value={password} again={again} onValue={setPw} onAgain={setAgain} />
+            </>
+          )}
         </>
       )}
       <div className="btn-row">
         <button className="btn btn-primary" type="submit" disabled={busy}>
-          {busy ? 'Signing in…' : step === 'password' ? 'Sign in' : 'Set my password'}
+          {busy ? 'One moment…' : step === 'username' ? 'Continue' : step === 'password' ? 'Sign in' : 'Set my password and sign in'}
         </button>
       </div>
       <Problem text={problem} />
-      {step === 'password' && <p className="muted small">Logins are made by the person who runs this app. Forgotten your password? Ask them to reset it.</p>}
+      {step !== 'choose' && <p className="muted small">Logins are made by the person who runs this app. Forgotten your password? Ask them to reset it, then sign in and choose a new one.</p>}
     </form>
   );
 }
 
-/** Signed in with a temporary password and left before choosing one: ask now. */
+/** Signed in here when an admin reset the password: choose a new one to carry on. */
 export function ChoosePasswordScreen() {
   const m = cloudMe()!;
-  const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [again, setAgain] = useState('');
   const [problem, setProblem] = useState<string | null>(null);
@@ -176,7 +216,7 @@ export function ChoosePasswordScreen() {
         const p = pairProblem(next, again);
         if (p) return setProblem(p);
         try {
-          await setPassword(current, next);
+          await claimLogin(m.username, next);
           restart('/');
         } catch (err) {
           setProblem(message(err));
@@ -184,12 +224,8 @@ export function ChoosePasswordScreen() {
       }}
     >
       <h1>Choose your password, {m.name}</h1>
-      <p className="small">You're using a temporary password. Choose your own to carry on.</p>
+      <p className="small">Your password was reset. Choose a new one to carry on.</p>
       <input type="text" value={m.username} autoComplete="username" readOnly hidden />
-      <label className="stack">
-        <span className="small">Temporary password</span>
-        <input type="password" value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" required />
-      </label>
       <NewPassword value={next} again={again} onValue={setNext} onAgain={setAgain} />
       <div className="btn-row">
         <button className="btn btn-primary" type="submit">
@@ -338,15 +374,16 @@ export function CloudAccount() {
 }
 
 // ---------------------------------------------------------------- managing logins (#/logins)
-function Slip({ name, username, password, onDone }: { name: string; username: string; password: string; onDone: () => void }) {
+/** What to tell someone so they can sign in for the first time (they choose their own password). */
+function Slip({ name, username, reset, onDone }: { name: string; username: string; reset?: boolean; onDone: () => void }) {
   const [copied, setCopied] = useState(false);
-  const text = `Maths Practice login for ${name}\nGo to: ${shareUrl('/account')}\nUsername: ${username}\nTemporary password: ${password}\n(Choose your own password the first time you sign in. It works on any phone, tablet or computer.)`;
+  const text = `${reset ? `Your Maths Practice password has been reset, ${name}.` : `Your Maths Practice login, ${name}:`}\nGo to: ${shareUrl('/account')}\nUsername: ${username}\nThen choose your own password. It works on any phone, tablet or computer.`;
   return (
     <div className="panel" role="status">
-      <div className="panel-title">Login ready for {name}</div>
+      <div className="panel-title">{reset ? `${name} chooses a new password next time they sign in` : `Login ready for ${name}`}</div>
       <div className="panel-body stack">
         <pre className="login-slip">{text}</pre>
-        <p className="small muted">The temporary password is shown only now. If it gets lost, use Reset password.</p>
+        <p className="small muted">They choose their own password the first time they sign in. Until then the login shows “hasn’t set a password yet” here.</p>
         <div className="btn-row">
           <button
             className="btn btn-primary"
@@ -373,7 +410,7 @@ function Slip({ name, username, password, onDone }: { name: string; username: st
   );
 }
 
-type SlipInfo = { name: string; username: string; password: string };
+type SlipInfo = { name: string; username: string; reset?: boolean };
 
 function AddLogin({ onAdded }: { onAdded: () => void }) {
   const [name, setName] = useState('');
@@ -394,9 +431,8 @@ function AddLogin({ onAdded }: { onAdded: () => void }) {
         if (!USERNAME.test(u)) return setProblem('Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
         setBusy(true);
         try {
-          const password = tempPassword();
-          await createLogin({ username: u, name: name.trim(), password, admin });
-          setSlip({ name: name.trim(), username: u, password });
+          await createLogin({ username: u, name: name.trim(), admin });
+          setSlip({ name: name.trim(), username: u });
           setName('');
           setUsername('');
           setTouched(false);
@@ -471,7 +507,7 @@ function Row({ u, me, onChange }: { u: Member; me: Me; onChange: () => void }) {
           <span className="small muted">
             {u.username}
             {u.admin ? ' · admin' : ''}
-            {u.disabled ? ' · switched off' : u.mustChange ? ' · hasn’t chosen a password yet' : ''}
+            {u.disabled ? ' · switched off' : u.mustChange ? ' · hasn’t set a password yet' : ''}
           </span>
         </td>
         <td>{s?.attempts ?? 0}</td>
@@ -484,10 +520,10 @@ function Row({ u, me, onChange }: { u: Member; me: Me; onChange: () => void }) {
               disabled={busy}
               aria-label={`Reset password for ${u.name}`}
               onClick={() =>
+                window.confirm(`Reset ${u.name}'s password? Their old one stops working, and they choose a new one next time they sign in.`) &&
                 act(async () => {
-                  const password = tempPassword();
-                  await resetLogin(u.id, password);
-                  setSlip({ name: u.name, username: u.username, password });
+                  await resetLogin(u.id);
+                  setSlip({ name: u.name, username: u.username, reset: true });
                 })
               }
             >
@@ -548,9 +584,8 @@ function MoveDeviceLogins({ existing, onDone }: { existing: Member[]; onDone: ()
                 const made: SlipInfo[] = [];
                 try {
                   for (const d of todo) {
-                    const password = tempPassword();
-                    await createLogin({ username: d.username, name: d.name, password, admin: d.admin });
-                    made.push({ name: d.name, username: d.username, password });
+                    await createLogin({ username: d.username, name: d.name, admin: d.admin });
+                    made.push({ name: d.name, username: d.username });
                   }
                 } catch (err) {
                   setProblem(message(err));
@@ -601,7 +636,7 @@ export function CloudManage() {
       <h1>Manage logins</h1>
       <section className="card stack">
         <h2>Make a login</h2>
-        <p className="small muted">You get a temporary password to give them; they choose their own the first time they sign in. Logins work on any phone, tablet or computer, and each person's progress, history and settings are saved to theirs.</p>
+        <p className="small muted">Just a name and a username: they choose their own password the first time they sign in. Logins work on any phone, tablet or computer, and each person's progress, history and settings are saved to theirs.</p>
         <AddLogin onAdded={() => void load()} />
       </section>
       {members && <MoveDeviceLogins existing={members} onDone={() => void load()} />}

@@ -79,6 +79,9 @@ function backendFor(s: FakeState): Backend {
     async profile(id) {
       return s.profiles.find((p) => p.id === id) ?? null;
     },
+    async profileByUsername(username) {
+      return s.profiles.find((p) => p.username === username) ?? null;
+    },
     async usernameTaken(username) {
       return s.profiles.some((p) => p.username === username);
     },

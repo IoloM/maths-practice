@@ -18,6 +18,9 @@ const backend: Backend = {
   async profile(id) {
     return profiles.find((p) => p.id === id) ?? null;
   },
+  async profileByUsername(username) {
+    return profiles.find((p) => p.username === username) ?? null;
+  },
   async usernameTaken(username) {
     return profiles.some((p) => p.username === username);
   },
@@ -66,35 +69,52 @@ beforeEach(() => {
 });
 
 describe('admin function', () => {
-  it('only admins may use it', async () => {
+  it('only admins may manage logins', async () => {
     expect((await ok({ action: 'create' }, null)).status).toBe(401);
     expect((await ok({ action: 'create' }, 'token-nobody')).status).toBe(401);
-    expect((await ok({ action: 'create', username: 'x', name: 'X', password: 'secret1' }, 'token-ana')).status).toBe(403);
+    expect((await ok({ action: 'create', username: 'x', name: 'X' }, 'token-ana')).status).toBe(403);
     profiles[0].disabled = true;
-    expect((await ok({ action: 'create', username: 'x', name: 'X', password: 'secret1' })).status).toBe(403);
+    expect((await ok({ action: 'create', username: 'x', name: 'X' })).status).toBe(403);
   });
 
-  it('makes a login with a temporary password to change, and a username that signs in by a made-up address', async () => {
-    const r = await ok({ action: 'create', username: ' Ben ', name: 'Ben Hart', password: 'temp-1234', admin: false });
+  it('makes a login with just a name and username; nobody knows its password until they choose one', async () => {
+    const r = await ok({ action: 'create', username: ' Ben ', name: 'Ben Hart', admin: false });
     expect(r).toMatchObject({ status: 200, body: { ok: true } });
-    expect(users.at(-1)).toMatchObject({ email: 'ben@login.invalid', password: 'temp-1234' });
+    expect(users.at(-1)!.email).toBe('ben@login.invalid');
+    expect(users.at(-1)!.password).toMatch(/^[A-Za-z0-9x]{36}$/); // random, never shown
     expect(profiles.at(-1)).toMatchObject({ username: 'ben', name: 'Ben Hart', admin: false, must_change: true });
-    expect((await ok({ action: 'create', username: 'ben', name: 'B', password: 'temp-1234' })).status).toBe(409);
-    expect((await ok({ action: 'create', username: 'Bad Name', name: 'B', password: 'temp-1234' })).status).toBe(400);
-    expect((await ok({ action: 'create', username: 'cat', name: 'Cat', password: '123' })).status).toBe(400);
-    expect((await ok({ action: 'create', username: 'dee', name: '', password: 'temp-1234' })).status).toBe(400);
+    expect((await ok({ action: 'create', username: 'ben', name: 'B' })).status).toBe(409);
+    expect((await ok({ action: 'create', username: 'Bad Name', name: 'B' })).status).toBe(400);
+    expect((await ok({ action: 'create', username: 'dee', name: '' })).status).toBe(400);
   });
 
-  it('removes the half-made login if its profile can’t be saved', async () => {
-    failProfileInsert = true;
-    expect((await ok({ action: 'create', username: 'eve', name: 'Eve', password: 'temp-1234' })).status).toBe(500);
-    expect(users.map((u) => u.id)).toEqual(['admin', 'ana']);
+  it('the first sign-in chooses the password, once — without being signed in', async () => {
+    await ok({ action: 'create', username: 'ben', name: 'Ben' });
+    expect((await ok({ action: 'status', username: 'BEN' }, null)).body).toEqual({ status: 'new' });
+    expect((await ok({ action: 'status', username: 'ana' }, null)).body).toEqual({ status: 'ready' });
+    expect((await ok({ action: 'status', username: 'nobody' }, null)).body).toEqual({ status: 'none' });
+    expect((await ok({ action: 'claim', username: 'ben', password: '123' }, null)).status).toBe(400);
+    expect((await ok({ action: 'claim', username: 'ben', password: 'bens-own-1' }, null)).status).toBe(200);
+    expect(users.at(-1)!.password).toBe('bens-own-1');
+    expect(profiles.at(-1)!.must_change).toBe(false);
+    // nobody can take it over afterwards
+    expect((await ok({ action: 'claim', username: 'ben', password: 'hijack-123' }, null)).status).toBe(409);
+    expect((await ok({ action: 'claim', username: 'ana', password: 'hijack-123' }, null)).status).toBe(409);
+    expect((await ok({ action: 'claim', username: 'nobody', password: 'whatever1' }, null)).status).toBe(404);
+    expect(users.find((u) => u.id === 'ana')!.password).toBe('ana-pass');
   });
 
-  it('resets passwords, shares admin, switches logins off and removes them — never your own', async () => {
-    expect((await ok({ action: 'reset', id: 'ana', password: 'new-temp-1' })).status).toBe(200);
-    expect(users[1].password).toBe('new-temp-1');
+  it('a reset makes them choose a new password; a switched-off login can’t be claimed', async () => {
+    expect((await ok({ action: 'reset', id: 'ana' })).status).toBe(200);
+    expect(users[1].password).not.toBe('ana-pass');
     expect(profiles[1].must_change).toBe(true);
+    expect((await ok({ action: 'status', username: 'ana' }, null)).body).toEqual({ status: 'new' });
+    await ok({ action: 'disable', id: 'ana', disabled: true });
+    expect((await ok({ action: 'status', username: 'ana' }, null)).body).toEqual({ status: 'off' });
+    expect((await ok({ action: 'claim', username: 'ana', password: 'new-pass-1' }, null)).status).toBe(403);
+  });
+
+  it('shares admin, switches logins off and removes them — never your own', async () => {
     expect((await ok({ action: 'admin', id: 'ana', admin: true })).status).toBe(200);
     expect(profiles[1].admin).toBe(true);
     expect((await ok({ action: 'admin', id: 'admin', admin: false })).status).toBe(400);
@@ -107,8 +127,14 @@ describe('admin function', () => {
     expect((await ok({ action: 'delete', id: 'admin' })).status).toBe(400);
     expect((await ok({ action: 'delete', id: 'ana' })).status).toBe(200);
     expect(profiles.map((p) => p.id)).toEqual(['admin']);
-    expect((await ok({ action: 'reset', id: 'ana', password: 'whatever1' })).status).toBe(404);
+    expect((await ok({ action: 'reset', id: 'ana' })).status).toBe(404);
     expect((await ok({ action: 'launch-rockets' })).status).toBe(400);
+  });
+
+  it('removes the half-made login if its profile can’t be saved', async () => {
+    failProfileInsert = true;
+    expect((await ok({ action: 'create', username: 'eve', name: 'Eve' })).status).toBe(500);
+    expect(users.map((u) => u.id)).toEqual(['admin', 'ana']);
   });
 
   it('answers the browser’s CORS check only for the app’s own address', async () => {

@@ -85,7 +85,7 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
 export default function App() {
   const route = useRoute();
   // logins are set up on this device but nobody is signed in: only the sign-in screen (or a setup link);
-  // signed in with a temporary password: choose your own first
+  // signed in when an admin reset the password: choose a new one first
   const me = currentLogin();
   const mustChoose = cloudMode && !!me?.mustChange;
   const locked = (needsSignIn() && route.parts[0] !== 'join') || mustChoose;
