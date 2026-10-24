@@ -8,6 +8,9 @@
  * their progress straight away, before the Supabase client has loaded.
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { ActivityDetail as ActivitySummary } from './activity';
+
+export type { ActivitySummary };
 
 const URL_ = ((import.meta.env?.VITE_SUPABASE_URL as string | undefined) ?? '').trim().replace(/\/+$/, '');
 const KEY = ((import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? '').trim();
@@ -294,6 +297,23 @@ export async function handIn(assignmentId: string, got: number, of: number): Pro
   if (error) fail(error, 'Couldn’t hand it in');
 }
 
+// ---------------------------------------------------------------- what people are working on (admins)
+/** Share your work summary with admins (see activity.ts). */
+export async function shareActivity(detail: unknown): Promise<void> {
+  const m = cloudMe();
+  if (!m) return;
+  const sb = await supabase();
+  const { error } = await sb.from('activity').upsert({ user_id: m.id, detail, updated_at: new Date().toISOString() });
+  if (error) fail(error, 'Couldn’t share your activity');
+}
+
+/** Everyone's work summaries (admins; others get only their own). */
+export async function activities(): Promise<Map<string, ActivitySummary>> {
+  const sb = await supabase();
+  const { data, error } = await sb.from('activity').select('user_id, detail');
+  if (error) fail(error, 'Couldn’t load activity');
+  return new Map(((data ?? []) as { user_id: string; detail: ActivitySummary }[]).map((r) => [r.user_id, r.detail]));
+}
 // ---------------------------------------------------------------- the admin function (logins)
 async function adminCall(body: Record<string, unknown>): Promise<{ id?: string; status?: string }> {
   const sb = await supabase();

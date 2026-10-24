@@ -4,8 +4,10 @@
  */
 import { useEffect, useState, type FormEvent } from 'react';
 import { href, shareUrl } from '../router';
+import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
 import {
   MIN_PASSWORD,
+  activities,
   USERNAME,
   claimLogin,
   cloudMe,
@@ -20,10 +22,11 @@ import {
   setPassword,
   signIn,
   signOut,
+  type ActivitySummary,
   type Me,
   type Member,
 } from '../lib/cloud';
-import { deviceLogins } from '../lib/logins';
+import { deviceLogins, chooseGuest } from '../lib/logins';
 import { onSyncStatus, startAutoSync, syncNow, syncStatus, type SyncStatus } from '../lib/sync';
 import { ErrorBox, Loading, TableWrap } from '../components/bits';
 import { Icon } from '../components/Icon';
@@ -200,6 +203,20 @@ export function CloudSignIn({ screen = false }: { screen?: boolean }) {
       </div>
       <Problem text={problem} />
       {step !== 'choose' && <p className="muted small">Logins are made by the person who runs this app. Forgotten your password? Ask them to reset it, then sign in and choose a new one.</p>}
+      {screen && step === 'username' && (
+        <div className="btn-row">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              chooseGuest();
+              restart(window.location.hash.replace(/^#/, '') || '/');
+            }}
+          >
+            Use without an account (nothing is saved)
+          </button>
+        </div>
+      )}
     </form>
   );
 }
@@ -315,7 +332,7 @@ export function CloudAccount() {
       <div className="stack">
         <h1>Your login</h1>
         <CloudSignIn />
-        <p className="muted small">No login? You can still practise — your progress stays on this device.</p>
+        <p className="muted small">No login? You can still practise without one, but nothing is saved.</p>
       </div>
     );
   const out = async () => {
@@ -482,8 +499,9 @@ function AddLogin({ onAdded }: { onAdded: () => void }) {
   );
 }
 
-function Row({ u, me, onChange }: { u: Member; me: Me; onChange: () => void }) {
+function Row({ u, me, work, onChange }: { u: Member; me: Me; work?: ActivitySummary; onChange: () => void }) {
   const [slip, setSlip] = useState<SlipInfo | null>(null);
+  const [viewing, setViewing] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const act = async (f: () => Promise<unknown>) => {
@@ -517,6 +535,9 @@ function Row({ u, me, onChange }: { u: Member; me: Me; onChange: () => void }) {
         <td>{when(s?.lastActive || u.lastSeen)}</td>
         <td>
           <div className="btn-row">
+            <button className="btn btn-small btn-primary" onClick={() => setViewing(!viewing)} aria-expanded={viewing} aria-label={`${viewing ? 'Hide' : 'View'} ${u.name}'s work`}>
+              {viewing ? 'Hide work' : 'View work'}
+            </button>
             <button
               className="btn btn-small"
               disabled={busy}
@@ -560,7 +581,146 @@ function Row({ u, me, onChange }: { u: Member; me: Me; onChange: () => void }) {
           </td>
         </tr>
       )}
+      {viewing && (
+        <tr>
+          <td colSpan={5}>
+            <WorkPanel name={u.name} work={work} />
+          </td>
+        </tr>
+      )}
     </>
+  );
+}
+
+const ago = (t: number) => {
+  const m = Math.round((Date.now() - t) / 60_000);
+  if (m < 60) return `${Math.max(1, m)} min ago`;
+  if (m < 60 * 24) return `${Math.round(m / 60)} h ago`;
+  return new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+};
+const pct = (got: number, of: number) => (of ? `${Math.round((100 * got) / of)}%` : '—');
+const paperName = (id: string) => {
+  const p = PAST_PAPER_BY_ID.get(id);
+  return p ? `${p.series} ${PAPER_TITLES[p.paper].split(':')[0]}` : id;
+};
+
+/** One person's work, from what their app shares with admins (activity.ts). */
+function WorkPanel({ name, work }: { name: string; work?: ActivitySummary }) {
+  if (!work) return <p className="small muted">{name} hasn’t saved any work since this was added — it appears after their next practice.</p>;
+  const t = work.totals;
+  const weak = work.chapters.filter((c) => c.questions >= 2).slice(0, 5);
+  return (
+    <div className="work-panel stack">
+      <div className="kpis">
+        <div className="card kpi">
+          <b>{t.questions}</b>
+          <span className="muted small">questions · {pct(t.scored, t.marks)} of marks</span>
+        </div>
+        <div className="card kpi">
+          <b>{t.week.questions}</b>
+          <span className="muted small">this week · {pct(t.week.scored, t.week.marks)}</span>
+        </div>
+        <div className="card kpi">
+          <b>{t.streak}</b>
+          <span className="muted small">day streak</span>
+        </div>
+        <div className="card kpi">
+          <b>{Math.round(t.minutes / 60)}h</b>
+          <span className="muted small">practising in all</span>
+        </div>
+      </div>
+      {weak.length > 0 && (
+        <div>
+          <h3 className="h3">Weakest topics</h3>
+          <ul className="list small">
+            {weak.map((c) => (
+              <li key={c.chapter} className="row-wrap work-line">
+                <span style={{ flex: 1 }}>{c.title}</span>
+                <span className="chip">{c.pct}%</span>
+                <span className="muted">{c.questions} questions</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {work.recent.length > 0 && (
+        <div>
+          <h3 className="h3">Recent questions</h3>
+          <ul className="list small">
+            {work.recent.slice(0, 12).map((r, i) => (
+              <li key={i} className="row-wrap work-line">
+                <span style={{ flex: 1 }}>{r.title}</span>
+                <span className={`chip ${r.scored === r.marks ? 'chip-accent' : ''}`}>
+                  {r.scored}/{r.marks}
+                </span>
+                <span className="muted">{ago(r.at)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {work.papers.length > 0 && (
+        <div>
+          <h3 className="h3">Real past papers</h3>
+          <ul className="list small">
+            {work.papers.map((p) => (
+              <li key={p.id} className="row-wrap work-line">
+                <span style={{ flex: 1 }}>{paperName(p.id)}</span>
+                <span className="chip">{p.complete ? `${p.got}/${p.max}` : `${p.got}/${p.of} so far`}</span>
+                <span className="muted">{p.done ?? ago(p.at)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {work.sets.length > 0 && (
+        <div>
+          <h3 className="h3">Mocks and timed sets</h3>
+          <ul className="list small">
+            {work.sets.map((x, i) => (
+              <li key={i} className="row-wrap work-line">
+                <span style={{ flex: 1 }}>{x.title}</span>
+                <span className="chip">
+                  {x.got}/{x.of} ({pct(x.got, x.of)})
+                </span>
+                <span className="muted">{ago(x.at)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <p className="muted small">Updated {ago(work.updatedAt)}. Only admins (and {name}) can see this.</p>
+    </div>
+  );
+}
+
+/** The latest questions across everyone. */
+function ActivityFeed({ members, work }: { members: Member[]; work: Map<string, ActivitySummary> }) {
+  const items = members
+    .flatMap((m) => (work.get(m.id)?.recent ?? []).map((r) => ({ ...r, name: m.name })))
+    .sort((a, b) => b.at - a.at)
+    .slice(0, 20);
+  return (
+    <section className="card stack" aria-labelledby="everyone-work">
+      <h2 id="everyone-work">What everyone’s doing</h2>
+      {items.length ? (
+        <ul className="list small">
+          {items.map((r, i) => (
+            <li key={i} className="row-wrap work-line">
+              <b style={{ minWidth: '6em' }}>{r.name}</b>
+              <span style={{ flex: 1 }}>{r.title}</span>
+              <span className={`chip ${r.scored === r.marks ? 'chip-accent' : ''}`}>
+                {r.scored}/{r.marks}
+              </span>
+              <span className="muted">{ago(r.at)}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="muted small">Nothing yet — work shows here once people practise while signed in.</p>
+      )}
+      <p className="muted small">Use View work on a login below for one person’s topics, past papers and mocks.</p>
+    </section>
   );
 }
 
@@ -612,11 +772,16 @@ function MoveDeviceLogins({ existing, onDone }: { existing: Member[]; onDone: ()
 export function CloudManage() {
   const m = useCloudMe();
   const [members, setMembers] = useState<Member[] | null>(null);
+  const [work, setWork] = useState<Map<string, ActivitySummary>>(new Map());
   const [problem, setProblem] = useState<string | null>(null);
-  const load = () =>
+  const load = () => {
     group()
       .then(setMembers)
       .catch((e) => setProblem(message(e)));
+    activities()
+      .then(setWork)
+      .catch(() => {});
+  };
   useEffect(() => {
     if (m?.admin) void load();
   }, [m]);
@@ -641,6 +806,7 @@ export function CloudManage() {
         <p className="small muted">Just a name and a username: they choose their own password the first time they sign in. Logins work on any phone, tablet or computer, and each person's progress, history and settings are saved to theirs.</p>
         <AddLogin onAdded={() => void load()} />
       </section>
+      {members && <ActivityFeed members={members} work={work} />}
       {members && <MoveDeviceLogins existing={members} onDone={() => void load()} />}
       <section className="card stack">
         <h2>Logins</h2>
@@ -663,7 +829,7 @@ export function CloudManage() {
               </thead>
               <tbody>
                 {members.map((u) => (
-                  <Row key={u.id} u={u} me={m} onChange={() => void load()} />
+                  <Row key={u.id} u={u} me={m} work={work.get(u.id)} onChange={() => void load()} />
                 ))}
               </tbody>
             </table>

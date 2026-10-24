@@ -1,5 +1,5 @@
 import { openIdbStore } from './idb';
-import { dbName } from '../lib/logins';
+import { GUEST_DB, dbName } from '../lib/logins';
 import { MemoryStore } from './memory';
 import type { BackupFile, Store } from './types';
 
@@ -11,6 +11,8 @@ export function getStore(): Promise<Store> {
     storePromise = (async () => {
       try {
         if (typeof indexedDB === 'undefined') throw new Error('no IndexedDB');
+        // a guest (not signed in, online logins): kept in memory only, so nothing is saved
+        if (dbName() === GUEST_DB) return new MemoryStore();
         return await openIdbStore(dbName());
       } catch {
         return new MemoryStore();

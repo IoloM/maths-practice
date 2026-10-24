@@ -1628,3 +1628,60 @@ table.group-table th:nth-child(2),
 table.group-table td:nth-child(2) {
   text-align: left;
 }
+
+/* ---------- admin: people's work ---------- */
+.work-panel {
+  padding: 8px 0 4px;
+}
+.work-panel .kpis {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+.work-line {
+  gap: 8px;
+  padding: 4px 0;
+}
+.work-line + .work-line {
+  border-top: 1px solid var(--border);
+}
+.guest-note {
+  margin: 0;
+  padding: 6px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-bottom: 1px solid var(--border);
+}
+.guest-note a {
+  color: inherit;
+  font-weight: 600;
+}
+.mark-row-wrap + .mark-row-wrap {
+  border-top: 1px solid var(--border);
+}
+.mark-row-wrap .mark-row + .mark-row {
+  border-top: none;
+}
+.mark-why {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 0 10px 3.2em;
+}
+.why-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.btn.why {
+  min-height: 32px;
+  font-weight: 500;
+}
+.btn.why.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
+}
+.mark-note {
+  width: 100%;
+}

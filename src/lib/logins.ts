@@ -79,8 +79,26 @@ export const currentLogin = (): Login | null => (cloudMode ? cloudLogin() : (reg
  * in. (With online logins, someone without a login can still practise as a guest on a device
  * nobody has made logins on.)
  */
-export const needsSignIn = () => !currentLogin() && registry().users.length > 0;
-export const dbName = () => currentLogin()?.db ?? (registry().users.length ? 'maths-practice-signed-out' : DEFAULT_DB);
+/** With online logins, someone not signed in is a guest: nothing they do is saved (see storage). */
+export const GUEST_DB = 'memory';
+export const isGuest = () => cloudMode && !currentLogin();
+/** On a device with device logins, a guest chose "Use without an account" for this visit. */
+export const guestChosen = () => {
+  try {
+    return sessionStorage.getItem('mp.guest') === '1';
+  } catch {
+    return false;
+  }
+};
+export function chooseGuest() {
+  try {
+    sessionStorage.setItem('mp.guest', '1');
+  } catch {
+    /* private mode */
+  }
+}
+export const needsSignIn = () => !currentLogin() && registry().users.length > 0 && !(cloudMode && guestChosen());
+export const dbName = () => currentLogin()?.db ?? (cloudMode ? GUEST_DB : registry().users.length ? 'maths-practice-signed-out' : DEFAULT_DB);
 export const settingsKey = () => currentLogin()?.settings ?? DEFAULT_SETTINGS;
 export const normaliseUsername = (u: string) => u.trim().toLowerCase();
 

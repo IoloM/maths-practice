@@ -43,3 +43,18 @@ describe('marks on real past papers', () => {
     expect(losses.every((l) => !other.families.includes(l.family))).toBe(true); // full marks: nothing lost
   });
 });
+
+describe('why marks were lost', () => {
+  it('shares each question’s dropped marks between the reasons given, worst first', async () => {
+    const { lossesByReason } = await import('../src/lib/paper-results');
+    const [a, b, c] = qs;
+    const r = lossesByReason({
+      [ID]: { marks: { [a.q]: 0, [b.q]: b.marks - 2, [c.q]: c.marks }, updatedAt: 1, reasons: { [a.q]: ['method', 'time'], [b.q]: ['careless'], [c.q]: ['careless'] } },
+    });
+    const by = Object.fromEntries(r.map((x) => [x.reason, x.lost]));
+    expect(by.method).toBeCloseTo(a.marks / 2);
+    expect(by.time).toBeCloseTo(a.marks / 2);
+    expect(by.careless).toBeCloseTo(2); // full marks on c: nothing lost there
+    expect(r[0].lost).toBeGreaterThanOrEqual(r.at(-1)!.lost);
+  });
+});

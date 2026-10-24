@@ -31,12 +31,13 @@ export interface FakeState {
   profiles: Profile[];
   progress: Map<string, { v: number; data: string }>;
   stats: Map<string, unknown>;
+  activity: Map<string, unknown>;
   assignments: Record<string, unknown>[];
   results: Record<string, unknown>[];
 }
 
 export function fakeState(people: { username: string; name: string; password: string; admin?: boolean; mustChange?: boolean }[]): FakeState {
-  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), assignments: [], results: [] };
+  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [] };
   for (const p of people) addPerson(s, p.username, p.name, p.password, !!p.admin, !!p.mustChange);
   return s;
 }
@@ -194,6 +195,15 @@ async function respond(s: FakeState, route: Route) {
     }
     case 'GET stats':
       return reply(200, [...s.stats].map(([user_id, summary]) => pick({ user_id, summary }, q.get('select'))));
+    case 'GET activity':
+      // your own, or everyone's for admins
+      return reply(200, [...s.activity].filter(([id]) => profile.admin || id === me!.id).map(([user_id, detail]) => pick({ user_id, detail }, q.get('select'))));
+    case 'POST activity': {
+      const row = body();
+      if (row.user_id !== me!.id) return reply(403, { message: 'new row violates row-level security policy' });
+      s.activity.set(row.user_id, row.detail);
+      return reply(201);
+    }
     case 'GET assignments':
       return reply(200, filtered(s.assignments, q));
     case 'POST assignments': {

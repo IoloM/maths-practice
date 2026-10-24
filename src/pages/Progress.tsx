@@ -13,7 +13,7 @@ import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { MINUTES_PER_MARK, setMarks } from '../lib/sets';
 import { PredictedGrade } from '../components/PredictedGrade';
-import { finishedPapers, lossesByFamily, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
+import { finishedPapers, lossesByFamily, lossesByReason, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
 import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
 import { BANK } from '../content/bank-meta';
 
@@ -94,6 +94,7 @@ function RealPapers({ results }: { results: PaperResults }) {
     .filter((x) => x.p && x.s.marked)
     .sort((a, b) => b.r.updatedAt - a.r.updatedAt);
   const losses = lossesByFamily(results).slice(0, 8);
+  const reasons = lossesByReason(results);
   return (
     <section className="card stack" aria-labelledby="real-papers">
       <h2 id="real-papers">Real past papers</h2>
@@ -119,6 +120,11 @@ function RealPapers({ results }: { results: PaperResults }) {
               </li>
             ))}
           </ul>
+          {reasons.length > 0 && (
+            <p className="small">
+              <b>Kinds of mistake:</b> {reasons.map((r) => `${r.label} (${Math.round(r.lost)} marks)`).join(', ')}
+            </p>
+          )}
           {losses.length > 0 && (
             <>
               <h3 className="h3">Where real papers lose you marks</h3>

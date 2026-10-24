@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { PAPER_TITLES, PAST_PAPERS, PAST_QUESTIONS, type PastPaper, type PastQuestion } from '../content/past-papers';
+import { PAPER_TITLES, PAST_PAPERS, PAST_PAPER_BY_ID, PAST_QUESTIONS, type PastPaper, type PastQuestion } from '../content/past-papers';
 import { BANK, type BankEntry } from '../content/bank-meta';
 import { seedsFor } from '../content/bank-seeds';
 import { MINUTES_PER_MARK } from '../lib/sets';
 import { href } from '../router';
 import { Icon } from '../components/Icon';
 import { startSet } from './Exams';
-import { boundariesFor, clearPaper, paperScore, savePaperMark, usePaperResults, type PaperResult } from '../lib/paper-results';
+import { LOSS_REASONS, boundariesFor, clearPaper, lossesByReason, paperScore, savePaperMark, setLossReasons, setPaperDone, setQuestionNote, usePaperResults, type PaperResult, type PaperResults } from '../lib/paper-results';
 
 type Filter = 'all' | 'pure' | 'stats' | 'mech';
 const FILTERS: { id: Filter; label: string; test: (p: PastPaper) => boolean }[] = [
@@ -31,49 +31,98 @@ function paperSet(qs: PastQuestion[]) {
   });
 }
 
-/** Enter your marks question by question, from the official mark scheme. */
+/** One question: marks, and if any were dropped, why (and a note to self). */
+function MarkRow({ paperId, q, result }: { paperId: string; q: PastQuestion; result?: PaperResult }) {
+  const m = result?.marks[q.q];
+  const lost = m !== undefined && m < q.marks;
+  const why = result?.reasons?.[q.q] ?? [];
+  const [note, setNote] = useState(result?.notes?.[q.q] ?? '');
+  return (
+    <li className="mark-row-wrap">
+      <div className="mark-row">
+        <span className="chip">Q{q.q}</span>
+        <span className="mark-topic">
+          {q.topic}
+          {lost && (
+            <>
+              {' '}
+              <a className="small" href={href('/practice', { t: templatesFor(q).map((e) => e.id).join(',') })}>
+                Practise this
+              </a>
+            </>
+          )}
+        </span>
+        <label className="mark-input">
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={q.marks}
+            step={1}
+            value={m ?? ''}
+            aria-label={`Your marks for question ${q.q}, out of ${q.marks}`}
+            onChange={(e) => void savePaperMark(paperId, q.q, e.target.value === '' ? null : Number(e.target.value))}
+          />
+          <span className="muted">/ {q.marks}</span>
+        </label>
+      </div>
+      {lost && (
+        <div className="mark-why">
+          <span className="small muted">Why marks went:</span>
+          <div className="why-chips" role="group" aria-label={`Why marks were lost on question ${q.q}`}>
+            {LOSS_REASONS.map((r) => {
+              const on = why.includes(r.id);
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  className={`btn btn-small why ${on ? 'on' : ''}`}
+                  aria-pressed={on}
+                  onClick={() => void setLossReasons(paperId, q.q, on ? why.filter((w) => w !== r.id) : [...why, r.id])}
+                >
+                  {r.label}
+                </button>
+              );
+            })}
+          </div>
+          <input
+            type="text"
+            className="mark-note"
+            value={note}
+            placeholder="Note to self (optional), e.g. forgot the constant of integration"
+            aria-label={`Note for question ${q.q}`}
+            onChange={(e) => setNote(e.target.value)}
+            onBlur={() => note !== (result?.notes?.[q.q] ?? '') && void setQuestionNote(paperId, q.q, note)}
+          />
+        </div>
+      )}
+    </li>
+  );
+}
+
+/** Enter your marks question by question after doing the paper, from the official mark scheme. */
 function MarkEntry({ paperId, qs, result }: { paperId: string; qs: PastQuestion[]; result?: PaperResult }) {
   const score = paperScore(paperId, result);
   const b = boundariesFor(paperId);
+  const reasons = result ? lossesByReason({ [paperId]: result }) : [];
   return (
     <div className="stack" style={{ gap: 8 }}>
       <p className="small muted" style={{ margin: 0 }}>
-        Do the paper on paper, mark it with the official mark scheme, then type your mark for each question. Leave a box empty if you didn't do that question yet.
+        Do the paper on paper, mark it with the official mark scheme, then type your mark for each question. Where you lost marks, tap why — it shows which kind of mistake costs you most. Leave a box empty if you didn&rsquo;t do that question yet.
       </p>
+      <div className="row-wrap small">
+        <label className="row">
+          Done on <input type="date" value={result?.done ?? ''} onChange={(e) => void setPaperDone(paperId, e.target.value, result?.minutes)} />
+        </label>
+        <label className="row">
+          Time taken{' '}
+          <input type="number" inputMode="numeric" min={1} max={300} value={result?.minutes ?? ''} style={{ width: '5em' }} onChange={(e) => void setPaperDone(paperId, result?.done, Number(e.target.value) || undefined)} /> min
+        </label>
+      </div>
       <ul className="list mark-entry">
-        {qs.map((q) => {
-          const m = result?.marks[q.q];
-          const lost = m !== undefined && m < q.marks;
-          return (
-            <li key={q.q} className="mark-row">
-              <span className="chip">Q{q.q}</span>
-              <span className="mark-topic">
-                {q.topic}
-                {lost && (
-                  <>
-                    {' '}
-                    <a className="small" href={href('/practice', { t: templatesFor(q).map((e) => e.id).join(',') })}>
-                      Practise this
-                    </a>
-                  </>
-                )}
-              </span>
-              <label className="mark-input">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min={0}
-                  max={q.marks}
-                  step={1}
-                  value={m ?? ''}
-                  aria-label={`Your marks for question ${q.q}, out of ${q.marks}`}
-                  onChange={(e) => void savePaperMark(paperId, q.q, e.target.value === '' ? null : Number(e.target.value))}
-                />
-                <span className="muted">/ {q.marks}</span>
-              </label>
-            </li>
-          );
-        })}
+        {qs.map((q) => (
+          <MarkRow key={q.q} paperId={paperId} q={q} result={result} />
+        ))}
       </ul>
       <div className="row-wrap">
         <span role="status" style={{ flex: 1 }}>
@@ -98,7 +147,54 @@ function MarkEntry({ paperId, qs, result }: { paperId: string; qs: PastQuestion[
           </button>
         )}
       </div>
+      {reasons.length > 0 && (
+        <p className="small" style={{ margin: 0 }}>
+          <b>Where the marks went:</b> {reasons.map((r) => `${r.label} ${Math.round(r.lost)}`).join(' · ')}
+        </p>
+      )}
     </div>
+  );
+}
+
+/** The papers you've marked, at the top: score, grade, when — tap to open. */
+function YourPapers({ results, onOpen }: { results: PaperResults; onOpen: (id: string) => void }) {
+  const mine = Object.entries(results)
+    .map(([id, r]) => ({ id, r, s: paperScore(id, r), p: PAST_PAPER_BY_ID.get(id) }))
+    .filter((x) => x.p && x.s.marked)
+    .sort((a, b) => (b.r.done ?? '').localeCompare(a.r.done ?? '') || b.r.updatedAt - a.r.updatedAt);
+  const reasons = lossesByReason(results);
+  return (
+    <section className="card stack" aria-labelledby="your-papers">
+      <h2 id="your-papers" className="h3">
+        Your papers
+      </h2>
+      {mine.length ? (
+        <>
+          <ul className="list">
+            {mine.map(({ id, r, s, p }) => (
+              <li key={id}>
+                <button className="list-link" onClick={() => onOpen(id)}>
+                  <span style={{ flex: 1, textAlign: 'left' }}>
+                    {p!.series} · {PAPER_TITLES[p!.paper]}
+                    {r.done && <span className="muted small"> · done {new Date(`${r.done}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
+                  </span>
+                  <span className={`chip ${s.complete ? 'chip-accent' : ''}`}>{s.complete ? `${s.got}/${s.max} · ${s.grade}` : `${s.got}/${s.of} so far`}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {reasons.length > 0 && (
+            <p className="small" style={{ margin: 0 }}>
+              <b>Across your papers, marks went on:</b> {reasons.map((x) => `${x.label} (${Math.round(x.lost)})`).join(', ')}
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="small" style={{ margin: 0 }}>
+          Done a real paper? Find it below, tap <b>Enter my marks</b>, and type your mark for each question. You&rsquo;ll get your score, a grade, and which topics and kinds of mistake cost you most.
+        </p>
+      )}
+    </section>
   );
 }
 
@@ -137,6 +233,18 @@ export function PastPapers({ open }: { open?: string }) {
           </a>
         </div>
       </div>
+
+      {results && (
+        <YourPapers
+          results={results}
+          onOpen={(id) => {
+            setFilter('all');
+            setSearch('');
+            setMarking(id);
+            setTimeout(() => document.getElementById(`paper-${id}`)?.scrollIntoView({ block: 'start' }), 0);
+          }}
+        />
+      )}
 
       <section className="card">
         <h2 className="h3">Most common topics</h2>

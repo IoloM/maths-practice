@@ -58,12 +58,15 @@ test('an admin makes a login with just a username; the person chooses their pass
 
   // practised without signing in, then signs in: that progress comes along
   await answerOne(page, 21);
-  await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Sign in' })).toBeVisible();
   await page.goto('./#/account');
   await page.getByLabel('Username').fill('nobody');
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.getByText(/no login with that username/)).toBeVisible();
-  await signIn(page, 'iolo', 'wrong-pass');
+  // carry on in the same page (going to the same address again would reload it, losing a guest's work)
+  await page.getByLabel('Username').fill('iolo');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByLabel('Password', { exact: true }).fill('wrong-pass');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByText('Wrong username or password.')).toBeVisible();
   await page.getByLabel('Password', { exact: true }).fill('admin-pass-1');
@@ -183,4 +186,67 @@ test('a switched-off login can’t sign in', async ({ page }) => {
   await page.getByLabel('Username').fill('ben');
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.getByText(/switched off/)).toBeVisible();
+});
+
+test('without an account nothing is saved, and signing in keeps what was done in that visit', async ({ page }) => {
+  const s = fakeState([{ username: 'cara', name: 'Cara', password: 'cara-pass-1' }]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await page.goto('./');
+  await expect(page.getByRole('note')).toContainText('nothing you do is saved');
+  await answerOne(page, 31);
+  await page.goto('./#/progress');
+  await expect(attempted(page)).toHaveText('1');
+  await page.reload(); // a guest's work is gone after a reload
+  await expect(attempted(page)).toHaveText('0');
+  await answerOne(page, 32);
+  await signIn(page, 'cara', 'cara-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await expect(page.getByRole('note')).toHaveCount(0);
+  await page.goto('./#/progress');
+  await expect(attempted(page)).toHaveText('1'); // this visit's work came along
+});
+
+test('a device with logins on it can still be used without an account', async ({ page }) => {
+  const s = fakeState([{ username: 'cara', name: 'Cara', password: 'cara-pass-1' }]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  // a login made on this device before logins went online
+  await page.addInitScript(() => localStorage.setItem('mp.logins.v1', JSON.stringify({ users: [{ id: 'x', username: 'dev', name: 'Dev', admin: true, pass: 'p1$1$a$b', mustChange: false, createdAt: 1, db: 'maths-practice', settings: 'mp.settings.v1' }], current: null })));
+  await page.goto('./');
+  await page.getByRole('button', { name: /Use without an account/ }).click();
+  await expect(page.getByRole('note')).toContainText('nothing you do is saved');
+  await expect(page.getByRole('heading', { name: 'Edexcel A Level Maths practice' })).toBeVisible();
+});
+
+test('an admin sees what everyone is working on', async ({ page, browser, baseURL }) => {
+  const s = fakeState([
+    { username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true },
+    { username: 'ana', name: 'Ana', password: 'ana-pass-1' },
+  ]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+
+  const ana = await device(browser, baseURL, s);
+  await signIn(ana, 'ana', 'ana-pass-1');
+  await reloads(ana, ana.getByRole('button', { name: 'Sign in' }).click());
+  await answerOne(ana, 33);
+  await ana.goto('./#/account');
+  await ana.getByRole('button', { name: 'Save now' }).click();
+  await expect.poll(() => s.activity.size).toBe(1);
+  // members can't see each other's work
+  await ana.goto('./#/logins');
+  await expect(ana.getByText('Only an admin can manage logins.')).toBeVisible();
+
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/logins');
+  const feed = page.getByRole('region', { name: 'What everyone’s doing' });
+  await expect(feed).toContainText('Ana');
+  await expect(feed).toContainText('4/4');
+  await page.getByRole('button', { name: /View Ana.s work/ }).click();
+  await expect(page.getByRole('heading', { name: 'Recent questions' })).toBeVisible();
+  await expect(page.getByText(/questions · 100% of marks/)).toBeVisible();
+  await axe(page);
+  await ana.context().close();
 });

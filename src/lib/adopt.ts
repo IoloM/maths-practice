@@ -5,13 +5,28 @@
  * The next sync then saves it to their account.
  */
 import { openIdbStore } from '../storage/idb';
+import { getStore } from '../storage';
 import type { Me } from './cloud';
 import { DEFAULT_DB, DEFAULT_SETTINGS, deviceLogins, forgetDeviceLogin } from './logins';
 
 const PAPERS_KEY = 'pastPaperResults';
 
+/** What was done in this visit before signing in (as a guest, kept in memory only). */
+async function adoptGuestVisit(target: string): Promise<number> {
+  const here = await getStore();
+  if (here.kind !== 'memory') return 0;
+  const backup = await here.exportAll();
+  const n = backup.stores.attempts.length + backup.stores.cards.length + backup.stores.sets.length;
+  if (!n && !backup.stores.settings.some((s) => s.key === PAPERS_KEY)) return 0;
+  const to = await openIdbStore(target);
+  await to.importAll({ ...backup, stores: { ...backup.stores, settings: backup.stores.settings.filter((s) => s.key === PAPERS_KEY) } }, 'merge');
+  to.close();
+  return backup.stores.attempts.length;
+}
+
 /** Returns how many questions came across. */
 export async function adoptLocalProgress(me: Me): Promise<number> {
+  const visit = typeof indexedDB === 'undefined' ? 0 : await adoptGuestVisit(`${DEFAULT_DB}-c-${me.id}`);
   const local = deviceLogins().find((u) => u.username === me.username);
   const source = local?.db ?? (deviceLogins().length ? null : DEFAULT_DB);
   const target = `${DEFAULT_DB}-c-${me.id}`;
@@ -24,7 +39,7 @@ export async function adoptLocalProgress(me: Me): Promise<number> {
   } catch {
     /* private mode */
   }
-  if (!source || typeof indexedDB === 'undefined') return 0;
+  if (!source || typeof indexedDB === 'undefined') return visit;
 
   const from = await openIdbStore(source);
   const backup = await from.exportAll();
@@ -42,5 +57,5 @@ export async function adoptLocalProgress(me: Me): Promise<number> {
     await from.clearAll();
     from.close();
   }
-  return attempts.length;
+  return visit + attempts.length;
 }

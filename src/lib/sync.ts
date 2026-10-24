@@ -8,7 +8,8 @@ import { getStore } from '../storage';
 import type { Store } from '../storage/types';
 import { notifyProgress, onProgressChange } from '../progress/record';
 import { applySyncedPrefs, onSettingsChange, readSettings, syncedPrefs, type SyncedPrefs } from './settings';
-import { CloudError, cloudMe, onCloudMe, pullProgress, pushProgress, refreshMe, type GroupSummary } from './cloud';
+import { CloudError, cloudMe, onCloudMe, pullProgress, pushProgress, refreshMe, shareActivity, type GroupSummary } from './cloud';
+import { buildActivity } from './activity';
 import { incoming, isEmpty, outgoing, type Snapshot } from './sync-merge';
 import type { PaperResults } from './paper-results';
 import { streak, thisWeek } from './streak';
@@ -175,6 +176,7 @@ async function run(): Promise<void> {
       notifyProgress();
       quiet = false;
     }
+    void shareActivityIfChanged(store);
     const now = Date.now();
     try {
       localStorage.setItem(LAST_KEY, String(now));
@@ -186,6 +188,22 @@ async function run(): Promise<void> {
     const expired = e instanceof CloudError && e.status === 401;
     setStatus({ state: 'error', message: e instanceof Error ? e.message : 'Couldn’t save', expired });
     throw e;
+  }
+}
+
+/** Admins see a summary of each person's work: send it when it has changed (never blocks saving). */
+async function shareActivityIfChanged(store: Store): Promise<void> {
+  try {
+    const me = cloudMe();
+    if (!me) return;
+    const detail = buildActivity(await localSnapshot(store), await store.getSetting<PaperResults>(PAPERS_KEY, {}));
+    const key = `mp.activity.sent:${me.id}`;
+    const fingerprint = JSON.stringify({ ...detail, updatedAt: 0 });
+    if (localStorage.getItem(key) === fingerprint) return;
+    await shareActivity(detail);
+    localStorage.setItem(key, fingerprint);
+  } catch {
+    /* offline, or the table isn't there yet: try again next time */
   }
 }
 

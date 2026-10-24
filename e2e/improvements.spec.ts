@@ -13,7 +13,7 @@ test('enter marks for a real past paper: score, grade, weak topics and the predi
   await page.goto('./#/past-papers?p=2024-06-1');
   const paper = page.locator('#paper-2024-06-1');
   await paper.getByRole('button', { name: 'Enter my marks' }).click();
-  const boxes = paper.getByRole('spinbutton');
+  const boxes = paper.locator('.mark-entry').getByRole('spinbutton');
   const n = await boxes.count();
   expect(n).toBeGreaterThan(5);
   // full marks everywhere except nothing on question 1
@@ -26,12 +26,25 @@ test('enter marks for a real past paper: score, grade, weak topics and the predi
   await expect(paper.getByRole('status')).toContainText(`${100 - q1max} / 100`);
   await expect(paper.getByRole('status')).toContainText('June 2024 overall boundaries');
   await expect(paper.getByRole('link', { name: 'Practise this' })).toHaveCount(1);
+  // why the marks went on question 1, a note, and when it was done
+  await paper.getByRole('group', { name: /Why marks were lost on question/ }).getByRole('button', { name: 'Careless slip' }).click();
+  await expect(paper.getByRole('button', { name: 'Careless slip' })).toHaveAttribute('aria-pressed', 'true');
+  await paper.getByLabel(/^Note for question/).fill('dropped a minus sign');
+  await paper.getByLabel('Time taken').fill('115');
+  await paper.getByLabel(/^Done on/).fill('2026-10-20');
+  await expect(paper.getByText(/Where the marks went: Careless slip/)).toBeVisible();
   await axe(page);
   await paper.getByRole('button', { name: 'Done entering marks' }).click();
   await expect(paper.getByText(new RegExp(`You: ${100 - q1max}/100`))).toBeVisible();
 
+  // listed at the top of the page with its date
+  await page.reload();
+  await expect(page.getByRole('region', { name: 'Your papers' })).toContainText(/June 2024 · Paper 1.*done (20 Oct|Oct 20),? 2026/);
+  await expect(page.getByRole('region', { name: 'Your papers' })).toContainText('Careless slip');
+
   await page.goto('./#/progress');
   await expect(page.getByRole('heading', { name: 'Real past papers' })).toBeVisible();
+  await expect(page.getByText(/Kinds of mistake: Careless slip/)).toBeVisible();
   await expect(page.getByText(/June 2024 · Paper 1/)).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Where real papers lose you marks' })).toBeVisible();
   await expect(page.getByText(/of the marks on your last real past paper/)).toBeVisible();

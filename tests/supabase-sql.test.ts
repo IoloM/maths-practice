@@ -115,6 +115,30 @@ describe('security rules', () => {
     expect(await as(BEN, 'select * from public.assignment_results')).toEqual([]);
   });
 
+  it('keeps the last 20 saves of each person, out of everyone’s reach but the owner’s', async () => {
+    await db.query('delete from public.progress where user_id = $1', [BEN]);
+    await db.query('delete from public.progress_history where user_id = $1', [BEN]);
+    let v = 0;
+    for (let i = 1; i <= 25; i++) v = (await as<{ v: number }>(BEN, `select public.save_progress($1, 'ben-${i}', '{}') as v`, [v]))[0].v;
+    const kept = (await db.query<{ v: number; data: string }>('select v, data from public.progress_history where user_id = $1 order by id', [BEN])).rows;
+    expect(kept).toHaveLength(20);
+    expect(kept[0]).toEqual({ v: 6, data: 'ben-6' });
+    expect(kept.at(-1)).toEqual({ v: 25, data: 'ben-25' });
+    expect(await fails(as(BEN, 'select * from public.progress_history'))).toBe(true);
+    expect(await fails(as(ADMIN, 'select * from public.progress_history'))).toBe(true);
+  });
+
+  it('activity: you see your own, admins see everyone’s, other members see none', async () => {
+    await as(ANA, `insert into public.activity (user_id, detail) values ($1, '{"recent": [1]}')`, [ANA]);
+    await as(BEN, `insert into public.activity (user_id, detail) values ($1, '{"recent": [2]}')`, [BEN]);
+    expect(await fails(as(ANA, `insert into public.activity (user_id, detail) values ($1, '{}')`, [ADMIN]))).toBe(true);
+    expect((await as(ANA, 'select user_id from public.activity')).map((r) => r.user_id)).toEqual([ANA]);
+    expect((await as(ADMIN, 'select user_id from public.activity order by user_id')).map((r) => r.user_id)).toEqual([ANA, BEN]);
+    await as(ANA, `update public.activity set detail = '{"recent": [3]}' where user_id = $1`, [BEN]); // not hers: no rows
+    expect((await as<{ detail: unknown }>(ADMIN, 'select detail from public.activity where user_id = $1', [BEN]))[0].detail).toEqual({ recent: [2] });
+    expect(await fails(as(null, 'select * from public.activity'))).toBe(true);
+  });
+
   it('a switched-off login loses access straight away', async () => {
     await db.query('update public.profiles set disabled = true where id = $1', [BEN]);
     expect(await as(BEN, 'select * from public.profiles')).toEqual([]);

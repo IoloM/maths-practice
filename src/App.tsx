@@ -33,7 +33,7 @@ import { Icon } from './components/Icon';
 import { ErrorBox } from './components/bits';
 import { NAV } from './nav';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { cloudMode, currentLogin, needsSignIn } from './lib/logins';
+import { cloudMode, currentLogin, isGuest, needsSignIn } from './lib/logins';
 
 function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
   switch (parts[0]) {
@@ -128,6 +128,11 @@ export default function App() {
           )}
         </div>
       </header>
+      {isGuest() && !locked && (
+        <p className="guest-note" role="note">
+          You’re not signed in, so nothing you do is saved. <a href={href('/account')}>Sign in</a> to keep your progress — what you do before signing in comes with you.
+        </p>
+      )}
       <UpdateBanner />
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>

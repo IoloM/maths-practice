@@ -8,11 +8,31 @@ import { getStore } from '../storage';
 import { notifyProgress, onProgressChange } from '../progress/record';
 import { PAST_PAPER_BY_ID, PAST_QUESTIONS, type PastQuestion } from '../content/past-papers';
 import { BOUNDARIES, LATEST, gradeFor, type Boundaries, type Grade, type MockResult } from './grades';
+import { todayKey } from './dates';
+
+/** Why marks were dropped on a question (several can apply). */
+export const LOSS_REASONS = [
+  { id: 'careless', label: 'Careless slip' },
+  { id: 'method', label: 'Didn’t know the method' },
+  { id: 'misread', label: 'Misread the question' },
+  { id: 'accuracy', label: 'Accuracy or form' },
+  { id: 'time', label: 'Ran out of time' },
+  { id: 'skipped', label: 'Didn’t attempt' },
+] as const;
+export type LossReason = (typeof LOSS_REASONS)[number]['id'];
 
 export interface PaperResult {
   /** question number → marks scored */
   marks: Record<number, number>;
   updatedAt: number;
+  /** when the paper was done (YYYY-MM-DD) */
+  done?: string;
+  /** minutes taken */
+  minutes?: number;
+  /** question number → why marks were lost */
+  reasons?: Record<number, LossReason[]>;
+  /** question number → a note to self */
+  notes?: Record<number, string>;
 }
 export type PaperResults = Record<string, PaperResult>;
 
@@ -34,11 +54,56 @@ export async function savePaperMark(paperId: string, q: number, marks: number | 
   const next = { ...(all[paperId]?.marks ?? {}) };
   if (marks === null || !Number.isFinite(marks)) delete next[q];
   else next[q] = Math.max(0, Math.min(max, Math.round(marks)));
-  if (Object.keys(next).length) all[paperId] = { marks: next, updatedAt: Date.now() };
+  const old = all[paperId];
+  // the date it was done starts as today; it can be changed
+  if (Object.keys(next).length) all[paperId] = { ...old, marks: next, updatedAt: Date.now(), done: old?.done ?? todayKey() };
   else delete all[paperId];
   await store.putSetting(KEY, all);
   notifyProgress();
   return all;
+}
+
+/** Change the rest of a paper's record: when it was done, time taken, why marks went, notes. */
+export async function updatePaper(paperId: string, f: (r: PaperResult) => PaperResult): Promise<void> {
+  const store = await getStore();
+  const all = { ...(await store.getSetting<PaperResults>(KEY, {})) };
+  all[paperId] = { ...f(all[paperId] ?? { marks: {}, updatedAt: 0 }), updatedAt: Date.now() };
+  await store.putSetting(KEY, all);
+  notifyProgress();
+}
+
+export const setPaperDone = (paperId: string, done: string | undefined, minutes: number | undefined) =>
+  updatePaper(paperId, (r) => ({ ...r, done: done || undefined, minutes: minutes && minutes > 0 ? Math.round(minutes) : undefined }));
+
+export const setLossReasons = (paperId: string, q: number, reasons: LossReason[]) =>
+  updatePaper(paperId, (r) => {
+    const all = { ...(r.reasons ?? {}) };
+    if (reasons.length) all[q] = reasons;
+    else delete all[q];
+    return { ...r, reasons: all };
+  });
+
+export const setQuestionNote = (paperId: string, q: number, note: string) =>
+  updatePaper(paperId, (r) => {
+    const all = { ...(r.notes ?? {}) };
+    if (note.trim()) all[q] = note.slice(0, 500);
+    else delete all[q];
+    return { ...r, notes: all };
+  });
+
+/** Where the dropped marks went, across papers: each question's lost marks shared between its reasons. */
+export function lossesByReason(results: PaperResults): { reason: LossReason; label: string; lost: number }[] {
+  const lost = new Map<LossReason, number>();
+  for (const [paperId, r] of Object.entries(results))
+    for (const q of questionsFor(paperId)) {
+      const m = r.marks[q.q];
+      const why = r.reasons?.[q.q] ?? [];
+      if (m === undefined || m >= q.marks || !why.length) continue;
+      for (const w of why) lost.set(w, (lost.get(w) ?? 0) + (q.marks - m) / why.length);
+    }
+  return LOSS_REASONS.filter((x) => lost.has(x.id))
+    .map((x) => ({ reason: x.id, label: x.label, lost: lost.get(x.id)! }))
+    .sort((a, b) => b.lost - a.lost);
 }
 
 export async function clearPaper(paperId: string): Promise<void> {
