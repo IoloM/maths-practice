@@ -38,7 +38,7 @@ jobs:
         run: npm run coverage -- $COVERAGE_FLAGS
         env:
           COVERAGE_FLAGS: ${{ vars.COVERAGE_FLAGS }}
-      - name: Build (tested as is: logins on each device)
+      - name: Build (the copy the tests use, with logins on each device)
         run: npm run build
       - name: Build a copy with pretend Supabase settings (for the online-login tests)
         run: npm run build:cloud-test
