@@ -1,5 +1,5 @@
 /** Minimal hash router: #/path/segments?query — deep links work on GitHub Pages. */
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export interface Route {
   path: string;
@@ -15,13 +15,14 @@ export function parseHash(hash: string): Route {
 }
 
 export function useRoute(): Route {
-  const [route, setRoute] = useState(() => parseHash(window.location.hash));
+  const [hash, setHash] = useState(() => window.location.hash);
   useEffect(() => {
-    const on = () => setRoute(parseHash(window.location.hash));
+    const on = () => setHash(window.location.hash);
     window.addEventListener('hashchange', on);
+    on(); // a change between the first render and now (e.g. a link tapped as the app starts) isn't missed
     return () => window.removeEventListener('hashchange', on);
   }, []);
-  return route;
+  return useMemo(() => parseHash(hash), [hash]);
 }
 
 export function href(path: string, query?: Record<string, string | number | undefined>): string {
