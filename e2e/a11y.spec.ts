@@ -63,8 +63,21 @@ test('progress page with a predicted grade has no accessibility violations', asy
 
 test('every formulae and tables tab has no accessibility violations', async ({ page }) => {
   await page.goto('./#/reference');
-  for (const name of ['Pure formulae', 'Statistics formulae', 'Mechanics formulae', 'Binomial tables', 'Normal table', 'PMCC table', 'Calculator']) {
+  for (const name of ['Formula booklet', 'Not in the booklet', 'Binomial tables', 'Normal table', 'PMCC table', 'Calculator', 'Mark schemes']) {
     await page.getByRole('tab', { name }).click();
     await audit(page, `reference: ${name}`);
   }
+});
+
+test('the mark scheme panel and the booklet pop-up have no accessibility violations', async ({ page }) => {
+  await plainInput(page);
+  await page.goto('./#/q/p1.13.definite-polynomial/2');
+  await page.getByLabel('Answer for the question').fill('12345');
+  await page.getByRole('button', { name: 'Check' }).click();
+  await page.getByRole('checkbox', { name: 'Award A1' }).first().check();
+  await page.locator('.scheme-guide summary').click();
+  await audit(page, 'self-marking panel');
+  await page.getByRole('button', { name: 'Formula booklet' }).click();
+  await expect(page.getByRole('dialog', { name: 'Formula booklet' })).toBeVisible();
+  await audit(page, 'formula booklet pop-up');
 });

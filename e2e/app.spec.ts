@@ -35,6 +35,37 @@ test('wrong answer shows feedback and the mark scheme for self-marking', async (
   await expect(page.getByText(/tick the marks your working shows/)).toBeVisible();
   await page.getByRole('checkbox', { name: 'Award M1' }).check();
   await expect(page.getByText(/Self-awarded: 1/)).toBeVisible();
+  // an accuracy mark brings the method mark it needs; the final answer mark is the checker's
+  await page.getByRole('checkbox', { name: 'Award dM1' }).check();
+  await expect(page.getByText(/Self-awarded: 2 of 3/)).toBeVisible();
+  await page.getByRole('checkbox', { name: 'Award M1' }).uncheck();
+  await expect(page.getByRole('checkbox', { name: 'Award dM1' })).not.toBeChecked();
+  await page.getByRole('checkbox', { name: 'Award A1' }).first().check();
+  await expect(page.getByRole('checkbox', { name: 'Award M1' })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Award A1' }).last()).toBeDisabled();
+  await expect(page.locator('.scheme-total')).toContainText('Your mark: 2/4');
+  await expect(page.getByText(/Needs M1 \(line 1\)/).first()).toBeVisible();
+});
+
+test('the formula booklet opens over a question and closes again', async ({ page }) => {
+  await page.goto(`./#/q/${Q}/2`);
+  await page.getByRole('button', { name: 'Formula booklet' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Formula booklet' });
+  await expect(sheet.getByRole('heading', { name: 'Integration (+ constant)' })).toBeVisible();
+  await sheet.getByText('Percentage points of the normal distribution').click();
+  await expect(sheet.getByRole('cell', { name: '1.9600' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await expect(page.getByLabel('Answer for the question')).toBeVisible();
+});
+
+test('formulae page: the booklet, what to learn, and how mark schemes work', async ({ page }) => {
+  await page.goto('./#/reference');
+  await expect(page.getByRole('heading', { name: 'Pure mathematics' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Not in the booklet' }).click();
+  await expect(page.getByText('Chain rule: derivative of')).toBeVisible();
+  await page.getByRole('tab', { name: 'Mark schemes' }).click();
+  await expect(page.getByText(/ignore subsequent working/)).toBeVisible();
 });
 
 test('draw in the working canvas', async ({ page }) => {

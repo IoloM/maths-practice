@@ -898,6 +898,123 @@ math-field::part(menu-toggle) {
   height: 22px;
   accent-color: var(--accent);
 }
+.scheme-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.scheme-line.ticked {
+  background: var(--good-soft);
+  border-radius: 6px;
+}
+.scheme-line.locked .scheme-code {
+  color: var(--text-2);
+}
+.scheme-line label {
+  cursor: pointer;
+}
+.scheme-note {
+  font-size: 0.82rem;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+.scheme-answer {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.scheme-total {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-strong);
+}
+.scheme-guide {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.scheme-guide summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 600;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+}
+.scheme-guide dl,
+.guide-list {
+  margin: 4px 0;
+}
+.scheme-guide dl > div,
+.guide-list > div {
+  display: grid;
+  grid-template-columns: 7.5em 1fr;
+  gap: 8px;
+  padding: 4px 0;
+}
+.scheme-guide dt,
+.guide-list dt {
+  font-weight: 700;
+  font-family: var(--serif);
+}
+.scheme-guide dd,
+.guide-list dd {
+  margin: 0;
+}
+
+/* ---------- formula booklet pop-up ---------- */
+dialog.sheet {
+  padding: 0;
+  border: none;
+  margin: 0 0 0 auto;
+  width: min(620px, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.18);
+}
+dialog.sheet::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+.sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.sheet-head h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  flex: 1;
+}
+.sheet-body {
+  padding: 16px;
+}
+.booklet-h {
+  margin: 12px 0 0;
+  font-size: 1.2rem;
+  scroll-margin-top: 64px;
+}
+.booklet-jump a {
+  display: inline-block;
+  padding: 6px 2px;
+}
+.booklet-table summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+}
 .solution-step {
   padding: 4px 0;
   font-family: var(--serif);
@@ -1684,4 +1801,103 @@ table.group-table td:nth-child(2) {
 }
 .mark-note {
   width: 100%;
+}
+
+/* ---------- mistake notebook ---------- */
+.mistake-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mistake {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mistake.fixed {
+  border-color: var(--good);
+}
+.mistake-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.mistake-errors,
+.good-text {
+  margin: 0;
+}
+.good-text {
+  color: var(--good);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mistake-note {
+  width: 100%;
+  font: inherit;
+  padding: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+  resize: vertical;
+}
+
+/* ---------- today's plan ---------- */
+.plan-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.plan-head h2 {
+  margin: 0;
+}
+.plan-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.plan-list li + li {
+  border-top: 1px solid var(--border);
+}
+.plan-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  min-height: var(--tap);
+  color: var(--text);
+  text-decoration: none;
+}
+.plan-list a:hover b {
+  text-decoration: underline;
+}
+.plan-tick {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.plan-list li.done .plan-tick {
+  background: var(--good);
+  border-color: var(--good);
+  color: var(--surface);
+}
+.plan-list li.done b {
+  text-decoration: line-through;
+  color: var(--text-2);
+}
+.plan-text {
+  display: flex;
+  flex-direction: column;
+}
+.plan-tick svg {
+  width: 14px;
+  height: 14px;
 }

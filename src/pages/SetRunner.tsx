@@ -3,7 +3,6 @@ import { diagramHtml } from '../components/diagram';
 import { getInstance, ENTRY_BY_ID, type BankEntry } from '../content/bank';
 import type { Instance } from '../engine/templates/types';
 import type { MarkResult, Response } from '../engine/marking/types';
-import { codeMarks, selfAwardable } from '../engine/marking/mark';
 import { getStore } from '../storage';
 import type { Attempt, SetRecord, Working } from '../storage/types';
 import { encodeSet, setMarks, decodeSet } from '../lib/sets';
@@ -18,6 +17,8 @@ import { AnswerInput } from '../components/answers/AnswerInput';
 import { MathText } from '../components/MathText';
 import { Icon } from '../components/Icon';
 import { ErrorBox, Loading } from '../components/bits';
+import { SchemePanel } from '../components/SchemePanel';
+import { BookletButton } from '../components/BookletButton';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { href, navigate, shareUrl } from '../router';
 import { startSet } from './Exams';
@@ -296,9 +297,7 @@ function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instan
           {answered}/{answerable} answered
         </span>
         <span className="spacer" />
-        <a className="btn btn-small" href={href('/reference')} target="_blank" rel="noreferrer">
-          Formulae & tables
-        </a>
+        <BookletButton className="btn btn-small" />
         <button className="btn btn-small btn-primary" onClick={() => void finish(false)} disabled={busy}>
           Finish &amp; mark
         </button>
@@ -371,7 +370,7 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
   const [showSol, setShowSol] = useState(false);
   const save = (next: boolean[][]) => {
     setTicks(next);
-    const parts = inst.parts.map((p, k) => partAttemptFrom(p.label, results[k], attempt.parts[k]?.response ?? null, next[k], p.scheme, 0));
+    const parts = inst.parts.map((p, k) => partAttemptFrom(p.label, results[k], attempt.parts[k]?.response ?? null, next[k], p.scheme, 0, p.answer.type === 'self'));
     void updateAttempt({ ...attempt, parts });
   };
   return (
@@ -388,8 +387,7 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
       {inst.parts.map((p, k) => {
         const r = results[k];
         const canSelf = (p.answer.type === 'self' || r.selfMarkable) && r.score < r.max;
-        const ok = selfAwardable(p.scheme);
-        const self = selfScore(p.scheme, ticks[k]);
+        const self = selfScore(p.scheme, ticks[k], p.answer.type === 'self');
         return (
           <section className="q-part" key={p.label || k}>
             <div className="q-part-head">
@@ -429,33 +427,14 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
                 </div>
               </div>
             )}
-            <div className="panel">
-              <div className="panel-title">Mark scheme{canSelf ? ' — tick the marks your working shows' : ''}</div>
-              <div className="panel-body">
-                {p.scheme.map((l, j) => (
-                  <div className="scheme-line" key={j}>
-                    {canSelf ? (
-                      <input
-                        type="checkbox"
-                        aria-label={`Award ${l.code} in question ${n}${p.label ? ` part ${p.label}` : ''}`}
-                        disabled={!ok[j]}
-                        checked={ticks[k][j] && ok[j]}
-                        onChange={(e) => save(ticks.map((row, kk) => (kk === k ? row.map((v, jj) => (jj === j ? e.target.checked : v)) : row)))}
-                      />
-                    ) : (
-                      <span />
-                    )}
-                    <span className="scheme-code">{l.code}</span>
-                    <MathText src={l.text} inline />
-                  </div>
-                ))}
-                {canSelf && (
-                  <p className="small muted" style={{ marginTop: 8 }}>
-                    Up to {p.scheme.filter((_, j) => ok[j]).reduce((s, l) => s + codeMarks(l.code), 0)} marks can be self-awarded here.
-                  </p>
-                )}
-              </div>
-            </div>
+            <SchemePanel
+              part={p}
+              ticks={ticks[k]}
+              onTicks={canSelf ? (t) => save(ticks.map((row, kk) => (kk === k ? t : row))) : null}
+              auto={r.score}
+              where={`in question ${n}${p.label ? ` part ${p.label}` : ''}`}
+              noAnswer={r.verdict === 'unanswered'}
+            />
             {showSol && (
               <div className="panel">
                 <div className="panel-title">Worked solution</div>

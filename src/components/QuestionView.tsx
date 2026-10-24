@@ -3,7 +3,7 @@ import { diagramHtml } from './diagram';
 import type { Instance } from '../engine/templates/types';
 import type { TemplateMeta } from '../engine/templates/types';
 import type { FtValue, MarkResult, Response } from '../engine/marking/types';
-import { codeMarks, markPart, selfAwardable } from '../engine/marking/mark';
+import { markPart } from '../engine/marking/mark';
 import { getStore } from '../storage';
 import type { Attempt, Mode, Working } from '../storage/types';
 import { useSettings } from '../lib/settings';
@@ -16,6 +16,8 @@ import { AnswerInput, hasResponse } from './answers/AnswerInput';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { Icon } from './Icon';
 import { Difficulty } from './bits';
+import { SchemePanel } from './SchemePanel';
+import { BookletButton } from './BookletButton';
 
 const DrawingCanvas = lazy(() => import('../working/Canvas'));
 
@@ -180,7 +182,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
       finishedAt: Date.now(),
       durationMs: Math.round(activeTime()),
       marks: total,
-      parts: ps.map((p, i) => partAttemptFrom(inst.parts[i].label, p.result, p.response ?? null, p.ticks, inst.parts[i].scheme, p.hints)),
+      parts: ps.map((p, i) => partAttemptFrom(inst.parts[i].label, p.result, p.response ?? null, p.ticks, inst.parts[i].scheme, p.hints, inst.parts[i].answer.type === 'self')),
       gaveUp: gu,
       working,
     }),
@@ -236,7 +238,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
   };
 
   const autoScore = parts.reduce((s, p) => s + (p.result?.score ?? 0), 0);
-  const selfTotal = parts.reduce((s, p, i) => s + Math.max(p.result?.score ?? 0, selfScore(inst.parts[i].scheme, p.ticks)), 0);
+  const selfTotal = parts.reduce((s, p, i) => s + Math.max(p.result?.score ?? 0, selfScore(inst.parts[i].scheme, p.ticks, inst.parts[i].answer.type === 'self')), 0);
 
   const singleLabel = inst.parts.length === 1 && inst.parts[0].label === '';
 
@@ -260,6 +262,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
         <button className="btn btn-small btn-ghost" onClick={() => setAnnotating((a) => !a)} aria-pressed={annotating} title="Write on the question">
           <Icon name="annotate" /> {annotating ? 'Stop annotating' : 'Annotate'}
         </button>
+        <BookletButton />
         <button className="btn btn-small btn-ghost" onClick={share} title="Share this question">
           <Icon name="share" /> Share
         </button>
@@ -308,7 +311,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
               const r = st.result;
               const marked = !!r && r.verdict !== 'invalid' && r.verdict !== 'unanswered';
               const locked = marked || gaveUp || done;
-              const awardable = selfAwardable(p.scheme);
+              const mine = selfScore(p.scheme, st.ticks, p.answer.type === 'self');
               const showSelf = r && r.score < r.max && (r.selfMarkable || p.answer.type === 'self' || r.verdict === 'unanswered');
               return (
                 <section className="q-part" key={p.label || i} aria-label={p.label ? `Part ${p.label}` : 'Question'}>
@@ -348,7 +351,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                           <span className="score-pill">
                             {' '}
                             · {r.score}/{r.max}
-                            {selfScore(p.scheme, st.ticks) > r.score ? ` (self-marked ${selfScore(p.scheme, st.ticks)}/${r.max})` : ''}
+                            {mine > r.score ? ` (self-marked ${mine}/${r.max})` : ''}
                           </span>
                         ) : null}
                         {r.ft && <span className="chip">ft</span>}
@@ -400,42 +403,14 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                     </div>
                   )}
                   {st.showScheme && (
-                    <div className="panel">
-                      <div className="panel-title">
-                        Mark scheme{showSelf ? ' — tick the marks your working shows' : ''}
-                      </div>
-                      <div className="panel-body">
-                        {p.scheme.map((l, k) => {
-                          const can = showSelf && awardable[k];
-                          return (
-                            <div className="scheme-line" key={k}>
-                              {showSelf ? (
-                                <input
-                                  type="checkbox"
-                                  aria-label={`Award ${l.code}`}
-                                  disabled={!can}
-                                  checked={st.ticks[k] && can}
-                                  onChange={(e) => {
-                                    const t = [...st.ticks];
-                                    t[k] = e.target.checked;
-                                    setPart(i, { ticks: t });
-                                  }}
-                                />
-                              ) : (
-                                <span />
-                              )}
-                              <span className="scheme-code">{l.code}</span>
-                              <MathText src={l.text} inline />
-                            </div>
-                          );
-                        })}
-                        {showSelf && (
-                          <p className="small muted" style={{ marginTop: 8 }}>
-                            Self-awarded: {selfScore(p.scheme, st.ticks)} of {p.scheme.filter((_, k) => awardable[k]).reduce((s, l) => s + codeMarks(l.code), 0)} available method marks. The final accuracy mark needs a correct answer.
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    <SchemePanel
+                      part={p}
+                      ticks={st.ticks}
+                      onTicks={showSelf ? (ticks) => setPart(i, { ticks }) : null}
+                      auto={r?.score ?? 0}
+                      where={singleLabel ? '' : `part ${p.label}`}
+                      noAnswer={gaveUp || r?.verdict === 'unanswered'}
+                    />
                   )}
                   {st.showSolution && (
                     <div className="panel">

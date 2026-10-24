@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { codeMarks, selfAwardable } from '../engine/marking/mark';
 import type { MarkResult, SchemeLine } from '../engine/marking/types';
+import { selfScore } from './self-mark';
 import type { PartAttempt } from '../storage/types';
 
 /** Milliseconds the page has been visible since mount (pauses when hidden). */
@@ -21,16 +21,12 @@ export function useActiveTime(): () => number {
   return () => acc.current + (since.current !== null ? performance.now() - since.current : 0);
 }
 
-/** Marks from ticked scheme lines (only self-awardable lines count). */
-export function selfScore(scheme: SchemeLine[], ticks: boolean[]): number {
-  const ok = selfAwardable(scheme);
-  return scheme.reduce((s, l, i) => s + (ticks[i] && ok[i] ? codeMarks(l.code) : 0), 0);
-}
-
+export { selfScore };
 export { effectiveScore } from './score';
 
-export function partAttemptFrom(label: string, result: MarkResult | undefined, response: PartAttempt['response'], ticks: boolean[] | undefined, scheme: SchemeLine[], hints: number): PartAttempt {
-  const self = ticks && ticks.some(Boolean) ? { score: selfScore(scheme, ticks), ticks: ticks.map((t, i) => (t ? i : -1)).filter((i) => i >= 0) } : null;
+/** wholePart: the app can't check this part's answer (a proof or explanation), so every line can be self-awarded. */
+export function partAttemptFrom(label: string, result: MarkResult | undefined, response: PartAttempt['response'], ticks: boolean[] | undefined, scheme: SchemeLine[], hints: number, wholePart = false): PartAttempt {
+  const self = ticks && ticks.some(Boolean) ? { score: selfScore(scheme, ticks, wholePart), ticks: ticks.map((t, i) => (t ? i : -1)).filter((i) => i >= 0) } : null;
   return {
     label,
     response: response ?? null,
