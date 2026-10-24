@@ -1,0 +1,146 @@
+/** Online logins (the app built with Supabase settings) against a pretend Supabase. */
+import { expect, test, type Browser, type Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import { answerFor, plainInput } from './helpers';
+import { fakeState, serveSupabase, type FakeState } from './fake-supabase';
+
+const Q = 'p1.13.definite-polynomial';
+// Once the offline service worker controls a page, WebKit sends its requests past Playwright's
+// routing (to the real, unreachable supa.test), so these tests run without it.
+test.use({ serviceWorkers: 'block' });
+const axe = async (page: Page) => {
+  const res = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']).exclude('.katex-mathml').analyze();
+  expect(res.violations.filter((v) => v.impact !== 'minor').map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+};
+const attempted = (page: Page) => page.locator('.kpi', { hasText: 'questions attempted' }).locator('b');
+/** Signing in or out reloads the app (everything belongs to the login): wait for that reload. */
+const reloads = (page: Page, click: Promise<void>) => Promise.all([page.waitForEvent('load'), click]);
+
+/** Another phone, tablet or computer: its own storage, the same pretend Supabase. */
+async function device(browser: Browser, baseURL: string | undefined, s: FakeState) {
+  const ctx = await browser.newContext({ baseURL, serviceWorkers: 'block' });
+  await serveSupabase(ctx, s);
+  const page = await ctx.newPage();
+  await plainInput(page);
+  return page;
+}
+
+async function answerOne(page: Page, seed: number) {
+  await page.goto(`./#/q/${Q}/${seed}`);
+  await page.getByLabel('Answer for the question').fill(String(answerFor(Q, seed)));
+  await page.getByRole('button', { name: 'Check' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Correct' })).toBeVisible();
+}
+
+async function signIn(page: Page, username: string, password: string) {
+  await page.goto('./#/account');
+  await page.getByLabel('Username').fill(username);
+  await page.getByLabel('Password', { exact: true }).fill(password);
+}
+
+test('an admin makes a login; the new person signs in on their own devices and their progress follows them', async ({ page, browser, baseURL }) => {
+  const s = fakeState([{ username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true }]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+
+  // practised without signing in, then signs in: that progress comes along
+  await answerOne(page, 21);
+  await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+  await signIn(page, 'iolo', 'wrong-pass');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page.getByText('Wrong username or password.')).toBeVisible();
+  await page.getByLabel('Password', { exact: true }).fill('admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await expect(page.getByRole('link', { name: 'Signed in as Iolo' })).toBeVisible();
+  await page.goto('./#/progress');
+  await expect(attempted(page)).toHaveText('1');
+  await expect.poll(() => s.progress.size).toBe(1); // saved online
+
+  // make a login for Ana
+  await page.goto('./#/logins');
+  await page.getByLabel('Their name').fill('Ana Bell');
+  await page.getByRole('button', { name: 'Make login' }).click();
+  const slip = page.locator('.login-slip');
+  await expect(slip).toContainText('Username: ana.bell');
+  const temp = (await slip.textContent())!.match(/Temporary password: (\S+)/)![1];
+  await axe(page);
+  await page.getByRole('button', { name: 'Done' }).click();
+  await expect(page.getByRole('row', { name: /Ana Bell/ })).toContainText('hasn’t chosen a password yet');
+
+  // Ana on her phone: temporary password, then her own
+  const phone = await device(browser, baseURL, s);
+  await signIn(phone, 'ana.bell', temp);
+  await phone.getByRole('button', { name: 'Sign in' }).click();
+  await expect(phone.getByText(/temporary password/)).toBeVisible();
+  await phone.getByLabel(/^New password \(/).fill('anas-password');
+  await phone.getByLabel('New password again').fill('anas-password');
+  await reloads(phone, phone.getByRole('button', { name: 'Set my password' }).click());
+  await expect(phone.getByRole('link', { name: 'Signed in as Ana Bell' })).toBeVisible();
+  await answerOne(phone, 22);
+  await phone.goto('./#/account');
+  await phone.getByRole('button', { name: 'Save now' }).click();
+  await expect(phone.getByRole('status').filter({ hasText: /Saved/ })).toBeVisible();
+
+  // ...and on her laptop: the same progress
+  const laptop = await device(browser, baseURL, s);
+  await signIn(laptop, 'ana.bell', 'anas-password');
+  await reloads(laptop, laptop.getByRole('button', { name: 'Sign in' }).click());
+  await laptop.goto('./#/progress');
+  await expect(attempted(laptop)).toHaveText('1');
+
+  // the group sees her week (totals only)
+  await page.goto('./#/group');
+  await expect(page.getByRole('row', { name: /Ana Bell/ })).toContainText('1');
+  await axe(page);
+  await phone.context().close();
+  await laptop.context().close();
+});
+
+test('an admin sets work for the group; it is done and handed in', async ({ page, browser, baseURL }) => {
+  const s = fakeState([
+    { username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true },
+    { username: 'ana', name: 'Ana', password: 'ana-pass-1' },
+  ]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto(`./#/set/import?c=${encodeURIComponent(`timed~10~${Q}:23~Integration check`)}`);
+  await page.getByRole('button', { name: 'Set this for the group' }).click();
+  await page.getByLabel('Due (optional)').fill('2030-01-10');
+  await page.getByRole('button', { name: 'Set it' }).click();
+  await expect(page.getByText(/on everyone’s Study group page/)).toBeVisible();
+  expect(s.assignments).toHaveLength(1);
+
+  const ana = await device(browser, baseURL, s);
+  await signIn(ana, 'ana', 'ana-pass-1');
+  await reloads(ana, ana.getByRole('button', { name: 'Sign in' }).click());
+  await ana.goto('./#/group');
+  await expect(ana.getByText('Integration check')).toBeVisible();
+  await expect(ana.getByText(/due Thu,? (10 Jan|Jan 10)/)).toBeVisible();
+  await ana.getByRole('button', { name: 'Start' }).click();
+  await ana.getByRole('button', { name: /Start — the timer begins now/ }).click();
+  await ana.getByLabel(/Answer for question 1/).fill(String(answerFor(Q, 23)));
+  ana.once('dialog', (d) => d.accept());
+  await ana.getByRole('button', { name: /Finish & mark/ }).first().click();
+  await expect.poll(() => s.results.length).toBe(1);
+  expect(s.results[0]).toMatchObject({ got: 4, of: 4 });
+  await ana.goto('./#/group');
+  await expect(ana.getByText('All done — nice work.')).toBeVisible();
+
+  await page.goto('./#/group');
+  await expect(page.getByRole('button', { name: '1 of 2 done' })).toBeVisible();
+  await page.getByRole('button', { name: '1 of 2 done' }).click();
+  await expect(page.getByText('4/4 (100%)')).toBeVisible();
+  await ana.context().close();
+});
+
+test('a switched-off login can’t sign in', async ({ page }) => {
+  const s = fakeState([{ username: 'ben', name: 'Ben', password: 'ben-pass-1' }]);
+  s.users[0].banned = true;
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await signIn(page, 'ben', 'ben-pass-1');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page.getByText('Wrong username or password.')).toBeVisible();
+});

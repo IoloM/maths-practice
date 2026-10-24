@@ -185,3 +185,29 @@ axe on 13 views in light and dark) — all green.
   username only) makes someone's login on their own device, where they choose the password.
   Passwords are salted PBKDF2. There is no server, so logins don't follow people between devices
   (backups do).
+
+## Phase 8 — Logins on every device, study group, daily goal ✅ (24 Oct 2026)
+
+- **Online logins on Supabase** (free plan; the owner signs in with GitHub): `supabase/migrations`
+  (profiles, progress, stats, assignments, results; row-level security: your own progress only,
+  members see names and weekly totals, only admins set work; `save_progress` saves with a version so
+  devices merge rather than overwrite), `supabase/functions/admin` (make, reset, switch off, remove
+  logins; the only code with the secret key), auth with sign-up off and usernames as
+  `<name>@login.invalid`. The app uses the publishable key only (`src/lib/cloud.ts`) and loads the
+  Supabase client only when needed.
+- **Sync** (`src/lib/sync.ts`, `sync-merge.ts`): each person's attempts, review cards, mocks,
+  drafts, past-paper marks and preferences (theme, answer boxes, paper, exam dates, daily goal) are
+  merged across devices on start, after practising, when back online and when leaving the app;
+  handwriting stays on the device it was drawn on. Signing in on a device brings across what was
+  practised there before (as a guest or with a device login of the same username).
+- **Admin**: make logins (temporary password to pass on, changed at first sign-in), reset passwords,
+  share admin, switch off, remove; move device logins online with the same usernames.
+- **Study group** (`#/group`): this week's leaderboard and set work — an admin turns any mock or
+  timed set into work for everyone (with a due date); results are handed in automatically and
+  update when self-marking changes them.
+- **Daily goal and streak** on the home page (goal in Settings, synced).
+- **Setup**: `supabase/setup.sh` / `Set up online logins.command` (tested end to end against
+  stand-ins); a daily keep-alive workflow. Until it is run, logins stay on each device.
+- **Tests**: the migration's security rules run in real Postgres (PGlite); the admin function's
+  handler; sync between two devices; online logins end to end in the browser against a pretend
+  Supabase that runs the real admin handler.

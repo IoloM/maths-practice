@@ -26,10 +26,14 @@ worked solutions and mark schemes.
   a grade, the topics that lose you marks, and a predicted grade that counts them.
 - Exam countdown from your own exam dates; any mock or timed set prints as a paper with answer
   lines and a separate mark scheme.
-- **Logins on the device**: an admin makes logins (Settings → Manage logins), each with its own
-  progress, history and settings, and a "Who's practising?" sign-in screen. A setup link makes
-  someone's login on their own phone or tablet, where they choose the password. With no server,
-  logins stay on the device they were made on.
+- **Logins** that an admin makes (Settings → Manage logins). With the free Supabase project set up
+  (`supabase/setup.sh`), logins work on every phone, tablet and computer: each person's progress,
+  history, mocks, past-paper marks and settings are saved to their login and merged across devices
+  (nothing is lost; the newest settings win). Without it, logins live on the device they were made
+  on, with setup links for people's own devices.
+- **Study group**: this week's leaderboard (marks, questions, streak — totals only, never answers)
+  and work an admin sets for everyone, with due dates and who has done it.
+- **Daily goal and streak** on the home page, with the last fortnight at a glance.
 - Progress stays on your device (IndexedDB); one-tap backup/restore to a JSON file.
 
 ## Run locally
@@ -48,7 +52,7 @@ npm test                 # Vitest: engine, stats, marking pairs, every template 
 npm run bank             # regenerate the template registry + verified bank index
 npm run bank:check       # CI: bank index must be fresh
 npm run coverage         # templates + instances per spec point (fails if any < 3)
-npm run build && npm run e2e   # Playwright on phone / tablet / desktop, including axe accessibility checks
+npm run build && npm run build:cloud-test && npm run e2e   # Playwright on phone / tablet / desktop (+ online logins), with axe accessibility checks
 ```
 
 `TEMPLATE_SEEDS=1000 npm test` runs more seeds per template.
@@ -61,9 +65,27 @@ worker precaches everything for offline use.
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`: type check → tests → bank freshness →
-coverage gate → build → Playwright (in the Playwright container) → GitHub Pages. The
-site is served from `/maths-practice/` with hash routing (`#/q/<template>/<seed>` deep links).
+Every push to `main` runs `.github/workflows/deploy.yml`: type check → tests (including the
+database's security rules in PGlite and the admin function) → bank freshness → coverage gate →
+builds → Playwright (in the Playwright container; online logins against a pretend Supabase) →
+GitHub Pages. The site is served from `/maths-practice/` with hash routing
+(`#/q/<template>/<seed>` deep links).
+
+### Online logins (Supabase)
+
+`supabase/` holds the database (`migrations/`: tables and row-level security), the auth settings
+(`config.toml`: public sign-up off) and the admin Edge Function (`functions/admin`: making,
+resetting, switching off and removing logins — the only code with the secret key). The app has only
+the publishable key. One command sets it all up or updates it — double-click
+`Set up online logins.command`, or:
+
+```bash
+supabase/setup.sh              # sign in (GitHub), create the project, apply everything, make your admin login
+supabase/setup.sh --new-admin  # add another admin, or reset your password
+```
+
+It sets the repository variables `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` and rebuilds the
+site. `.github/workflows/keep-alive.yml` pings the project daily so the free plan never pauses it.
 
 ## Project layout
 

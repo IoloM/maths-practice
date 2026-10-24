@@ -38,16 +38,25 @@ jobs:
         run: npm run coverage -- $COVERAGE_FLAGS
         env:
           COVERAGE_FLAGS: ${{ vars.COVERAGE_FLAGS }}
-      - name: Build
+      - name: Build (tested as is: logins on each device)
         run: npm run build
+      - name: Build a copy with pretend Supabase settings (for the online-login tests)
+        run: npm run build:cloud-test
+      - name: Build the site to publish (online logins once supabase/setup.sh has set the variables)
+        run: npx vite build --outDir dist-site
+        env:
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
       - uses: actions/upload-artifact@v7
         with:
           name: dist
-          path: dist
+          path: |
+            dist
+            dist-cloud
           retention-days: 3
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: dist-site
 
   e2e:
     needs: checks
@@ -67,7 +76,7 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: dist
-          path: dist
+          path: .
       - name: End-to-end tests (phone, tablet, desktop)
         run: npx playwright test
         env:

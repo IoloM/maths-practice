@@ -1,13 +1,16 @@
 /**
- * Logins on this device. Each person gets their own progress, history and settings (their own
- * IndexedDB database and settings key); there is no server, so a login lives on the device it was
- * set up on. An admin makes logins for people here, or sends a setup link that makes the login on
- * the person's own phone or tablet.
+ * Who is using the app on this device, and so which local copy of progress and settings to open.
+ *
+ * With Supabase set up (cloud.ts), logins are made by an admin in the app and work on every device;
+ * each person's progress is kept on Supabase and in their own local database here. Without it,
+ * logins live on the device they were made on (the registry below): an admin makes them here, or
+ * sends a setup link that makes the login on the person's own phone or tablet.
  *
  * Passwords are stored as salted PBKDF2 hashes. Logins keep people's work apart; they are not
  * encryption — the data itself sits unencrypted in the browser like any website's.
  */
 import { openIdbStore } from '../storage/idb';
+import { cloudConfigured, cloudMe } from './cloud';
 
 export interface Login {
   id: string;
@@ -57,12 +60,27 @@ function save(r: Registry) {
   }
 }
 
+/** Logins work on every device (Supabase), rather than on this device only. */
+export const cloudMode = cloudConfigured;
+
+/** The signed-in Supabase login, in the shape the rest of the app uses. */
+function cloudLogin(): Login | null {
+  const m = cloudMe();
+  return m ? { id: `c-${m.id}`, username: m.username, name: m.name, admin: m.admin, pass: '', mustChange: m.mustChange, createdAt: 0, db: `${DEFAULT_DB}-c-${m.id}`, settings: `${DEFAULT_SETTINGS}:c-${m.id}` } : null;
+}
+/** Logins made on this device before logins went online (kept until each person moves across). */
+export const deviceLogins = (): Login[] => registry().users;
+
 export const allLogins = (): Login[] => [...registry().users].sort((a, b) => a.name.localeCompare(b.name));
-export const loginsEnabled = () => registry().users.length > 0;
-export const currentLogin = (): Login | null => registry().users.find((u) => u.id === registry().current) ?? null;
-/** Logins are set up but nobody is signed in: show the sign-in screen, not someone's progress. */
-export const needsSignIn = () => loginsEnabled() && !currentLogin();
-export const dbName = () => currentLogin()?.db ?? (loginsEnabled() ? 'maths-practice-signed-out' : DEFAULT_DB);
+export const loginsEnabled = () => cloudMode || registry().users.length > 0;
+export const currentLogin = (): Login | null => (cloudMode ? cloudLogin() : (registry().users.find((u) => u.id === registry().current) ?? null));
+/**
+ * Show only the sign-in screen, not anyone's progress: device logins are set up and nobody is signed
+ * in. (With online logins, someone without a login can still practise as a guest on a device
+ * nobody has made logins on.)
+ */
+export const needsSignIn = () => !currentLogin() && registry().users.length > 0;
+export const dbName = () => currentLogin()?.db ?? (registry().users.length ? 'maths-practice-signed-out' : DEFAULT_DB);
 export const settingsKey = () => currentLogin()?.settings ?? DEFAULT_SETTINGS;
 export const normaliseUsername = (u: string) => u.trim().toLowerCase();
 
@@ -209,6 +227,24 @@ export async function removeLogin(id: string): Promise<void> {
   if (!u) return;
   const r = registry();
   save({ ...r, users: r.users.filter((x) => x.id !== id) });
+  try {
+    localStorage.removeItem(u.settings);
+  } catch {
+    /* private mode */
+  }
+  if (typeof indexedDB === 'undefined') return;
+  await new Promise<void>((resolve) => {
+    const req = indexedDB.deleteDatabase(u.db);
+    req.onsuccess = req.onerror = req.onblocked = () => resolve();
+  });
+}
+
+/** Drop a device login once its progress has moved to that person's online login (no admin needed). */
+export async function forgetDeviceLogin(id: string): Promise<void> {
+  const u = registry().users.find((x) => x.id === id);
+  if (!u) return;
+  const r = registry();
+  save({ users: r.users.filter((x) => x.id !== id), current: r.current === id ? null : r.current });
   try {
     localStorage.removeItem(u.settings);
   } catch {

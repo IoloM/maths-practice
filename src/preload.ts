@@ -19,6 +19,7 @@ const PAGES: Record<string, () => Promise<unknown>> = {
   print: () => import('./pages/PrintSet'),
   account: () => import('./pages/Logins'),
   logins: () => import('./pages/Logins'),
+  group: () => import('./pages/Group'),
   join: () => import('./pages/Logins'),
 };
 

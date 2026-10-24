@@ -22,6 +22,7 @@ import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { href, navigate, shareUrl } from '../router';
 import { startSet } from './Exams';
 import { LATEST, gradeFor } from '../lib/grades';
+import { cloudMe, handIn, setWork } from '../lib/cloud';
 
 /** `#/set/import?c=<code>` — create a set from a shared link, then open it. */
 export function ImportSet({ code }: { code: string }) {
@@ -140,6 +141,63 @@ function DailyRunner({ set, insts, metas }: { set: SetRecord; insts: Instance[];
   );
 }
 
+/** Admins: give everyone in the study group this set to do, with a due date. */
+function SetForGroup({ set, marks }: { set: SetRecord; marks: number }) {
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState(set.title);
+  const [due, setDue] = useState('');
+  const [state, setState] = useState<{ ok: boolean; text: string } | null>(null);
+  if (!open)
+    return (
+      <div className="btn-row">
+        <button className="btn btn-small" onClick={() => setOpen(true)}>
+          Set this for the group
+        </button>
+      </div>
+    );
+  return (
+    <form
+      className="panel"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        try {
+          await setWork({ title: title.trim() || set.title, items: set.items.map(({ templateId, seed }) => ({ templateId, seed })), durationMin: set.durationMin, due: due || null });
+          setState({ ok: true, text: 'Set for the group — it’s on everyone’s Study group page.' });
+        } catch (err) {
+          setState({ ok: false, text: (err as Error).message });
+        }
+      }}
+    >
+      <div className="panel-title">Set for the group</div>
+      <div className="panel-body stack">
+        <label className="stack">
+          <span className="small">Title</span>
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} required />
+        </label>
+        <label className="row">
+          Due (optional) <input type="date" value={due} onChange={(e) => setDue(e.target.value)} />
+        </label>
+        <p className="small muted">
+          {set.items.length} questions · {marks} marks · {set.durationMin} minutes. Everyone gets the same questions.
+        </p>
+        <div className="btn-row">
+          <button className="btn btn-primary" type="submit" disabled={state?.ok}>
+            Set it
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={() => setOpen(false)}>
+            Cancel
+          </button>
+        </div>
+        {state && (
+          <p className={`small ${state.ok ? '' : 'error-text'}`} role="status">
+            {state.text}
+          </p>
+        )}
+      </div>
+    </form>
+  );
+}
+
 // ---------------------------------------------------------------- exam: intro
 function ExamIntro({ set, metas, onStart }: { set: SetRecord; metas: BankEntry[]; onStart: () => void }) {
   const marks = metas.reduce((s, m) => s + m.marks, 0);
@@ -167,6 +225,7 @@ function ExamIntro({ set, metas, onStart }: { set: SetRecord; metas: BankEntry[]
             <Icon name="download" /> Print it instead
           </a>
         </div>
+        {cloudMe()?.admin && !set.assignmentId && <SetForGroup set={set} marks={marks} />}
       </div>
     </div>
   );
@@ -426,6 +485,20 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
   const { attempts, loading } = useProgress();
   const [open, setOpen] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  // work set for the group: hand in the score, and again whenever self-marking changes it
+  const handedIn = useRef<number | null>(null);
+  useEffect(() => {
+    if (loading || !set.assignmentId || !cloudMe()) return;
+    const of = setMarks(set.items);
+    const got = attempts.filter((a) => a.setId === set.id).reduce((s, a) => s + scoreOf(a), 0);
+    if (!of || handedIn.current === got) return;
+    const t = setTimeout(() => {
+      handIn(set.assignmentId!, Math.min(got, of), of)
+        .then(() => (handedIn.current = got))
+        .catch(() => {});
+    }, 800);
+    return () => clearTimeout(t);
+  }, [loading, attempts, set]);
   const results = useMemo(
     () =>
       insts.map((inst, i) => {

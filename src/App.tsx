@@ -20,6 +20,11 @@ const Account = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Ac
 const ManageLogins = lazy(() => import('./pages/Logins').then((m) => ({ default: m.ManageLogins })));
 const Join = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Join })));
 const SignInScreen = lazy(() => import('./pages/Logins').then((m) => ({ default: m.SignInScreen })));
+const CloudAccount = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudAccount })));
+const CloudManage = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudManage })));
+const CloudSignIn = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudSignIn })));
+const ChoosePasswordScreen = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.ChoosePasswordScreen })));
+const Group = lazy(() => import('./pages/Group').then((m) => ({ default: m.Group })));
 const PrintSet = lazy(() => import('./pages/PrintSet').then((m) => ({ default: m.PrintSet })));
 const PastPapers = lazy(() => import('./pages/PastPapers').then((m) => ({ default: m.PastPapers })));
 import { InstallBanner } from './components/Install';
@@ -28,7 +33,7 @@ import { Icon } from './components/Icon';
 import { ErrorBox } from './components/bits';
 import { NAV } from './nav';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { currentLogin, needsSignIn } from './lib/logins';
+import { cloudMode, currentLogin, needsSignIn } from './lib/logins';
 
 function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
   switch (parts[0]) {
@@ -61,9 +66,11 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
     case 'print':
       return <PrintSet key={parts[1]} id={parts[1]} />;
     case 'account':
-      return <Account />;
+      return cloudMode ? <CloudAccount /> : <Account />;
     case 'logins':
-      return <ManageLogins />;
+      return cloudMode ? <CloudManage /> : <ManageLogins />;
+    case 'group':
+      return <Group />;
     case 'join':
       return <Join code={query.get('c') ?? ''} />;
     default:
@@ -77,10 +84,13 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
 
 export default function App() {
   const route = useRoute();
-  // logins are set up on this device but nobody is signed in: only the sign-in screen (or a setup link)
-  const locked = needsSignIn() && route.parts[0] !== 'join';
+  // logins are set up on this device but nobody is signed in: only the sign-in screen (or a setup link);
+  // signed in with a temporary password: choose your own first
   const me = currentLogin();
-  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join'].includes(route.parts[0])) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
+  const mustChoose = cloudMode && !!me?.mustChange;
+  const locked = (needsSignIn() && route.parts[0] !== 'join') || mustChoose;
+  const lockScreen = mustChoose ? <ChoosePasswordScreen /> : cloudMode ? <CloudSignIn screen /> : <SignInScreen />;
+  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group'].includes(route.parts[0])) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
   return (
     <>
       <a className="skip-link" href="#main" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus())}>
@@ -111,13 +121,18 @@ export default function App() {
               <span className="who-name">{me.name}</span>
             </a>
           )}
+          {!me && cloudMode && !locked && (
+            <a className="who-chip" href={href('/account')}>
+              Sign in
+            </a>
+          )}
         </div>
       </header>
       <UpdateBanner />
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>
         <ErrorBoundary key={route.path}>
-          <Suspense fallback={<Loading />}>{locked ? <SignInScreen /> : <Page {...route} />}</Suspense>
+          <Suspense fallback={<Loading />}>{locked ? lockScreen : <Page {...route} />}</Suspense>
         </ErrorBoundary>
       </main>
       {!locked && (

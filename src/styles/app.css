@@ -1544,3 +1544,87 @@ table.logins-table td .btn-row {
 .error-text {
   color: var(--bad);
 }
+
+/* ---------- daily goal and streak ---------- */
+.goal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.goal-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.goal-text {
+  flex: 1 1 220px;
+}
+.goal-bar {
+  height: 10px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.goal-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+.goal-streak {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-3);
+}
+.goal-streak.on {
+  color: var(--warn);
+}
+.goal-streak svg {
+  width: 30px;
+  height: 30px;
+}
+.goal-days {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.goal-days li {
+  height: 12px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.goal-days li.some {
+  background: color-mix(in srgb, var(--accent) 40%, var(--surface));
+}
+.goal-days li.met {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------- study group ---------- */
+.who-picked {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.work + .work {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.work {
+  padding-bottom: 10px;
+}
+table.group-table {
+  width: 100%;
+}
+table.group-table th:nth-child(2),
+table.group-table td:nth-child(2) {
+  text-align: left;
+}

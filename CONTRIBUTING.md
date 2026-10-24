@@ -155,3 +155,12 @@ from the bank index alone (no engine code), so they are reproducible and shareab
 (`#/set/import?c=kind~minutes~id:seed,…~title`). Paper definitions (`PAPERS`) choose questions by
 stream and paper; `fillToMarks` hits the mark total exactly where it can, one question per family,
 easier first.
+
+## Working on online logins
+
+`supabase/` is the backend; `src/lib/cloud.ts` the only app code that talks to it. `npm test` checks
+the migration's security rules in PGlite (`tests/supabase-sql.test.ts`) and the admin function
+(`tests/admin-function.test.ts`); `npm run build:cloud-test` builds the app against a pretend
+project that `e2e/fake-supabase.ts` serves to `e2e/cloud.spec.ts`. Change the database with a new
+file in `supabase/migrations/` (never edit an applied one), then run `supabase/setup.sh` to apply it.
+

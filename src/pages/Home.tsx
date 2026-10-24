@@ -12,6 +12,9 @@ import { RagBadge } from '../components/bits';
 import { Icon } from '../components/Icon';
 import { useSettings } from '../lib/settings';
 import { formatExamDate, upcomingExams } from '../lib/exams';
+import { doneToday, lastDays, streak } from '../lib/streak';
+import { cloudMe, assignments } from '../lib/cloud';
+import type { Attempt } from '../storage/types';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -24,6 +27,69 @@ const PRIORITY = [
   { label: 'Variance', chapter: 'SM1.2' },
   { label: 'Inclined planes', chapter: 'SM2.5' },
 ];
+
+/** Today's questions against the daily goal, the streak, and the last fortnight at a glance. */
+function GoalCard({ attempts, goal }: { attempts: Attempt[]; goal: number }) {
+  const today = doneToday(attempts);
+  const run = streak(attempts);
+  const days = lastDays(attempts, 14);
+  const pct = Math.min(100, Math.round((100 * today) / goal));
+  return (
+    <section className="card goal" aria-label="Daily goal">
+      <div className="goal-main">
+        <div className="goal-text">
+          <b>
+            {today} of {goal}
+          </b>{' '}
+          questions today{today >= goal ? ' — goal met!' : ''}
+          <div className="goal-bar" role="progressbar" aria-label="Daily goal" aria-valuemin={0} aria-valuemax={goal} aria-valuenow={Math.min(today, goal)}>
+            <span style={{ width: `${pct}%` }} />
+          </div>
+        </div>
+        <div className={`goal-streak ${run ? 'on' : ''}`}>
+          <Icon name="flame" />
+          <span>
+            <b>{run}</b> day{run === 1 ? '' : 's'}
+            <br />
+            <span className="muted small">streak</span>
+          </span>
+        </div>
+      </div>
+      <ol className="goal-days" aria-label="The last two weeks">
+        {days.map((d) => (
+          <li key={d.day} className={d.count >= goal ? 'met' : d.count ? 'some' : ''} title={`${new Date(`${d.day}T12:00:00`).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}: ${d.count} question${d.count === 1 ? '' : 's'}`}>
+            <span className="sr-only">
+              {d.day}: {d.count} questions
+            </span>
+          </li>
+        ))}
+      </ol>
+      <a className="small" href={href('/settings')}>
+        Change goal
+      </a>
+    </section>
+  );
+}
+
+/** Signed in online: the study group, with how much set work is waiting. */
+function GroupTile() {
+  const [todo, setTodo] = useState<number | null>(null);
+  useEffect(() => {
+    const me = cloudMe();
+    if (!me) return;
+    assignments()
+      .then(({ list, results }) => setTodo(list.filter((a) => !results.some((r) => r.assignmentId === a.id && r.userId === me.id)).length))
+      .catch(() => setTodo(null));
+  }, []);
+  return (
+    <a className="card tile" href={href('/group')}>
+      <h2>
+        <Icon name="users" /> Study group
+      </h2>
+      <span className="muted">{todo ? `${todo} piece${todo === 1 ? '' : 's'} of set work to do` : 'This week’s leaderboard and set work'}</span>
+    </a>
+  );
+}
 
 export function Home() {
   const { attempts, cards } = useProgress();
@@ -80,7 +146,9 @@ export function Home() {
           </p>
         )
       )}
+      <GoalCard attempts={attempts} goal={settings.dailyGoal} />
       <div className="grid">
+        {cloudMe() && <GroupTile />}
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>
             <h2>

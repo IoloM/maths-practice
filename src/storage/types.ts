@@ -88,6 +88,8 @@ export interface SetRecord {
   sections?: { name: string; from: number; to: number }[];
   /** working (handwriting/typed) per item index */
   working?: Record<number, Working>;
+  /** work set for the study group (cloud.ts): the result is handed in when it's finished */
+  assignmentId?: string;
 }
 
 export interface Setting {

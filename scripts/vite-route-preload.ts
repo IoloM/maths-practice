@@ -22,6 +22,7 @@ const PAGES: Record<string, string> = {
   print: 'src/pages/PrintSet.tsx',
   account: 'src/pages/Logins.tsx',
   logins: 'src/pages/Logins.tsx',
+  group: 'src/pages/Group.tsx',
   join: 'src/pages/Logins.tsx',
 };
 const QUESTION_VIEW = 'src/components/QuestionView.tsx';

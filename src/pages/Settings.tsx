@@ -6,7 +6,7 @@ import { BANK } from '../content/bank';
 import { Icon } from '../components/Icon';
 import { InstallHelp } from '../components/Install';
 import { EXAM_PAPERS, daysUntil } from '../lib/exams';
-import { currentLogin } from '../lib/logins';
+import { cloudMode, currentLogin } from '../lib/logins';
 import { href } from '../router';
 
 export function Settings() {
@@ -33,12 +33,18 @@ export function Settings() {
         {me ? (
           <>
             <p className="small">
-              Signed in as <b>{me.name}</b> ({me.username}). Everything below is for this login only.
+              Signed in as <b>{me.name}</b> ({me.username}).{' '}
+              {cloudMode ? 'Your progress, history and settings are saved to your login and are the same on every device.' : 'Everything below is for this login only.'}
             </p>
             <div className="btn-row">
               <a className="btn" href={href('/account')}>
                 Your login
               </a>
+              {cloudMode && (
+                <a className="btn" href={href('/group')}>
+                  Study group
+                </a>
+              )}
               {me.admin && (
                 <a className="btn btn-primary" href={href('/logins')}>
                   Manage logins
@@ -48,10 +54,14 @@ export function Settings() {
           </>
         ) : (
           <>
-            <p className="small">Share this device, or set friends up on theirs: give each person their own login with their own progress, history and settings.</p>
+            <p className="small">
+              {cloudMode
+                ? 'Sign in to keep your progress, history and settings on every device, and to join the study group. Logins are made by the person who runs this app.'
+                : 'Share this device, or set friends up on theirs: give each person their own login with their own progress, history and settings.'}
+            </p>
             <div className="btn-row">
               <a className="btn btn-primary" href={href('/account')}>
-                Set up logins
+                {cloudMode ? 'Sign in' : 'Set up logins'}
               </a>
             </div>
           </>
@@ -125,7 +135,11 @@ export function Settings() {
         )}
       </section>
       <section className="card stack" id="exams">
-        <h2>Your exams</h2>
+        <h2>Your exams and goal</h2>
+        <label className="row">
+          <span style={{ flex: 1 }}>Daily goal (questions a day)</span>
+          <input type="number" inputMode="numeric" min={1} max={50} value={settings.dailyGoal} onChange={(e) => update({ dailyGoal: Math.max(1, Math.min(50, Math.round(Number(e.target.value) || 1))) })} style={{ width: '5em' }} />
+        </label>
         <p className="muted small">Add your exam dates (from your school's exam timetable) for a countdown on the home page.</p>
         {EXAM_PAPERS.map((p) => {
           const v = settings.examDates[p.id] ?? '';
