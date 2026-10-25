@@ -7,6 +7,7 @@ import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
 import { Difficulty, RagBadge, ErrorBox } from '../components/bits';
 import { Icon } from '../components/Icon';
+import { TopicFlagButtons } from '../components/TopicFlag';
 
 export function ChapterPage({ chapter: chRef }: { chapter: string }) {
   const ch = CHAPTER_BY_REF.get(chRef as never);
@@ -35,6 +36,12 @@ export function ChapterPage({ chapter: chRef }: { chapter: string }) {
         </div>
         <span className="spacer" />
         <RagBadge mastery={mastery(entries.flatMap((e) => byT.get(e.id) ?? []))} />
+      </div>
+      <div className="row-wrap">
+        <TopicFlagButtons chapter={chRef} />
+        <a className="btn btn-small" href={href(`/learn/${chRef}`)}>
+          <Icon name="book" /> Notes and videos
+        </a>
       </div>
       <div className="card row">
         <label className="row small">

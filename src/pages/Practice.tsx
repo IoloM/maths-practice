@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getInstance, ENTRY_BY_ID } from '../content/bank';
-import { pickNext, type SessionConfig, candidates, adaptiveLevel } from '../lib/session';
-import { useSettings } from '../lib/settings';
+import { pickNext, type SessionConfig, candidates } from '../lib/session';
 import type { Instance } from '../engine/templates/types';
 import { QuestionView } from '../components/QuestionView';
 import { Loading, ErrorBox } from '../components/bits';
@@ -16,7 +15,6 @@ const PPQ_FAMILIES = [...new Set(PAST_QUESTIONS.flatMap((q) => q.families))];
 import type { Mode } from '../storage/types';
 
 export function Practice({ query }: { query: URLSearchParams }) {
-  const { settings } = useSettings();
   const cfg: SessionConfig = useMemo(
     () => ({
       chapters: query.get('c')?.split(',').filter(Boolean),
@@ -27,9 +25,8 @@ export function Practice({ query }: { query: URLSearchParams }) {
       families: query.get('pp') ? PPQ_FAMILIES : undefined,
       dmin: Number(query.get('dmin') ?? 1),
       dmax: Number(query.get('dmax') ?? 5),
-      adaptive: settings.adaptive,
     }),
-    [query, settings.adaptive],
+    [query],
   );
   const mode: Mode = (cfg.chapters?.length ?? 0) > 1 || query.get('mixed') ? 'mixed' : 'practice';
   const { attempts, loading } = useProgress();
@@ -62,10 +59,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
   }, [loading, inst, next]);
 
   const title = query.get('from') === 'mistakes' ? 'Putting mistakes right' : cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.families ? 'Topics that have come up on past papers' : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
-  const poolList = useMemo(() => candidates(cfg), [cfg]);
-  const pool = poolList.length;
-  const spread = pool > 1 && new Set(poolList.map((t) => t.difficulty)).size > 1;
-  const level = cfg.adaptive && spread ? adaptiveLevel(poolList, attempts) : null;
+  const pool = candidates(cfg).length;
 
   return (
     <div className="stack">
@@ -75,12 +69,6 @@ export function Practice({ query }: { query: URLSearchParams }) {
             {cfg.chapters?.length === 1 ? <a href={href(`/chapter/${cfg.chapters[0]}`)}>← Chapter</a> : <a href={href('/topics')}>← Topics</a>} · {pool} question types
           </p>
           <h1>{title}</h1>
-          {level !== null && (
-            <p className="small muted level-line" style={{ margin: 0 }}>
-              Working at level <b>{(Math.round(level * 2) / 2).toString().replace('.5', '½')}</b> of 5 — questions get harder as you get them right.{' '}
-              <a href={href('/settings')}>Change</a>
-            </p>
-          )}
         </div>
       </div>
       {error && <ErrorBox>{error}</ErrorBox>}

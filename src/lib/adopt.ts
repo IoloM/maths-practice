@@ -10,7 +10,7 @@ import type { Me } from './cloud';
 import { DEFAULT_DB, DEFAULT_SETTINGS, deviceLogins, forgetDeviceLogin } from './logins';
 
 /** settings-store records that belong to the person (past-paper marks, mistake notes) */
-const KEPT = new Set(['pastPaperResults', 'mistakeNotes']);
+const KEPT = new Set(['pastPaperResults', 'mistakeNotes', 'topicMarks']);
 
 /** What was done in this visit before signing in (as a guest, kept in memory only). */
 async function adoptGuestVisit(target: string): Promise<number> {

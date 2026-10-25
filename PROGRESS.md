@@ -224,7 +224,7 @@ axe on 13 views in light and dark) — all green.
   accuracy marks tied to their method mark, the final mark left to the checker, a running total.
   Proofs and explanations can now be self-marked in full.
 - **Today's plan**, **mistake notebook** (`#/mistakes`, notes synced), **step by step**,
-  **adaptive practice** (level shown, setting to turn off), **search** (/ or Ctrl K),
+  **search** (/ or Ctrl K),
   **grades over time** and **badges** (Progress), **sitting a real past paper** with a clock and
   time per question (`#/sit/<paper>`).
 - **Study group**: set work by topic, the topics the group finds hardest, a weekly target
@@ -239,8 +239,21 @@ axe on 13 views in light and dark) — all green.
 - **More questions**: long exam-style questions (binomial, cubic curves, friction with connected
   particles, a rough slope there and back) and 17 "show that"/explain questions in Mechanics and
   Statistics.
-- **Phone reminders**: web push (`push_subscriptions`, `supabase/functions/remind`, hourly
-  `reminders.yml`); one a day at most, only if you haven't practised or set work is due, latest 7pm.
 - **Nightly backups**: `Turn on nightly backups.command` (launchd, 2:30am, into
   `~/Maths Practice backups`, latest 30 kept; the secret key lives in the login keychain).
 - **Fix**: a finished question no longer re-saves every half second.
+
+## Phase 10 — Learn: topics you want to learn or need help with ✅ (25 Oct 2026)
+
+- Adaptive difficulty and phone reminders were taken out (the reminders' table, function, secrets
+  and workflow too — no device had them on).
+- **Mark topics** "I need help with this" / "I want to learn this" on a chapter, from a question you
+  got wrong, or from the Learn page (`src/lib/topics.ts`, synced and in backups).
+- **Learn** (`#/learn`, `#/learn/<chapter>`): revision notes for all 45 chapters (key ideas, results to
+  know, a worked example revealed a step at a time, where marks go, exam tips — `src/content/notes`),
+  87 videos from A level channels (each id checked with YouTube's oEmbed; they load from
+  youtube-nocookie.com only when played — `src/content/videos.ts`), a practice path from the
+  easiest question type up, a 15-mark topic test, real past-paper questions on the topic, and your own
+  notes and links (YouTube links play on the page).
+- Today's plan starts with a topic you asked for help with; admins see who asked for help on what in
+  the group's "hardest topics" report.

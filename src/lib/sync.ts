@@ -13,6 +13,7 @@ import { buildActivity } from './activity';
 import { incoming, isEmpty, outgoing, type Snapshot } from './sync-merge';
 import type { PaperResults } from './paper-results';
 import { NOTES_KEY, type MistakeNotes } from './mistakes';
+import { TOPICS_KEY, type TopicMarks } from './topics';
 import { streak, thisWeek } from './streak';
 import { scoreOf } from '../progress/mastery';
 import { earned } from './badges';
@@ -64,6 +65,8 @@ interface Payload {
   papers?: PaperResults;
   /** notes and reasons in the mistake notebook */
   notes?: MistakeNotes;
+  /** topics marked to learn or for help, with your notes and links */
+  topics?: TopicMarks;
 }
 
 /** What the study group sees of you. */
@@ -172,12 +175,13 @@ async function run(): Promise<void> {
       if (remote?.prefs && applySyncedPrefs(remote.prefs.values, remote.prefs.at)) changed = true;
       const [papers, papersChanged] = await mergeSetting(store, PAPERS_KEY, remote?.papers);
       const [notes, notesChanged] = await mergeSetting(store, NOTES_KEY, remote?.notes);
-      if (papersChanged || notesChanged) changed = true;
+      const [topics, topicsChanged] = await mergeSetting(store, TOPICS_KEY, remote?.topics);
+      if (papersChanged || notesChanged || topicsChanged) changed = true;
       const prefs = { values: syncedPrefs(), at: readSettings().prefsAt };
       const snapshot = await localSnapshot(store);
       const out = outgoing(snapshot);
-      if (remote && JSON.stringify([out, prefs, papers, notes]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}])) break;
-      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes };
+      if (remote && JSON.stringify([out, prefs, papers, notes, topics]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}, remote.topics ?? {}])) break;
+      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes, topics };
       const data = await pack(JSON.stringify(payload));
       if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to save online — back it up to a file instead');
       if (await pushProgress(got.v, data, summarise(snapshot, new Date(), papers))) break;
@@ -208,7 +212,7 @@ async function shareActivityIfChanged(store: Store): Promise<void> {
   try {
     const me = cloudMe();
     if (!me) return;
-    const detail = buildActivity(await localSnapshot(store), await store.getSetting<PaperResults>(PAPERS_KEY, {}));
+    const detail = buildActivity(await localSnapshot(store), await store.getSetting<PaperResults>(PAPERS_KEY, {}), new Date(), await store.getSetting<TopicMarks>(TOPICS_KEY, {}));
     const key = `mp.activity.sent:${me.id}`;
     const fingerprint = JSON.stringify({ ...detail, updatedAt: 0 });
     if (localStorage.getItem(key) === fingerprint) return;

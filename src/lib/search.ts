@@ -39,6 +39,7 @@ export const plain = (s: string) =>
 const PAGES: [string, string, string, Record<string, string>?][] = [
   ['Home', 'Today’s plan, goal and streak', '/'],
   ['Topics', 'Every textbook chapter', '/topics'],
+  ['Learn', 'Topics you need help with: notes, videos, worked examples', '/learn'],
   ['Mock papers and timed sets', 'Exams', '/exams'],
   ['Past papers', 'Every 9MA0 paper, marks and exam mode', '/past-papers'],
   ['Review', 'Spaced repetition: what’s due', '/review'],

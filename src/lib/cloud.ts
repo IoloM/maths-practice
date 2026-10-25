@@ -146,18 +146,6 @@ export async function signIn(username: string, password: string): Promise<Me> {
 
 /** Ends the session here (other devices stay signed in). */
 export async function signOut(): Promise<void> {
-  // this device's reminders belong to the person signing out: stop them before the session goes
-  try {
-    const reg = 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : undefined;
-    const sub = await reg?.pushManager?.getSubscription();
-    if (sub) {
-      await removeReminder(sub.endpoint).catch(() => {});
-      await sub.unsubscribe().catch(() => false);
-    }
-    localStorage.removeItem('mp.reminders');
-  } catch {
-    /* no service worker here */
-  }
   try {
     await (await supabase()).auth.signOut({ scope: 'local' });
   } catch {
@@ -301,18 +289,6 @@ export async function removeWork(id: string): Promise<void> {
   const sb = await supabase();
   const { error } = await sb.from('assignments').delete().eq('id', id);
   if (error) fail(error, 'Couldn’t remove it');
-}
-
-/** Save this device's reminder subscription to the signed-in person's account. */
-export async function saveReminder(r: { endpoint: string; p256dh: string; auth: string; hour: number; tz: string }): Promise<void> {
-  const sb = await supabase();
-  const { error } = await sb.from('push_subscriptions').upsert({ ...r, user_id: cloudMe()?.id }, { onConflict: 'user_id,endpoint' });
-  if (error) fail(error, 'Couldn’t turn reminders on');
-}
-
-export async function removeReminder(endpoint: string): Promise<void> {
-  const sb = await supabase();
-  await sb.from('push_subscriptions').delete().eq('endpoint', endpoint);
 }
 
 /** The questions each person aims for this week, if an admin has set a target. */

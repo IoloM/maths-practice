@@ -18,6 +18,8 @@ const Mistakes = lazy(() => import('./pages/Mistakes').then((m) => ({ default: m
 const SitPaper = lazy(() => import('./pages/SitPaper').then((m) => ({ default: m.SitPaper })));
 const DataSet = lazy(() => import('./pages/DataSet').then((m) => ({ default: m.DataSet })));
 const Graphs = lazy(() => import('./pages/Graphs').then((m) => ({ default: m.Graphs })));
+const Learn = lazy(() => import('./pages/Learn').then((m) => ({ default: m.Learn })));
+const LearnTopic = lazy(() => import('./pages/Learn').then((m) => ({ default: m.LearnTopic })));
 const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 const Flashcards = lazy(() => import('./pages/Flashcards').then((m) => ({ default: m.Flashcards })));
 const Account = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Account })));
@@ -74,6 +76,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return <DataSet />;
     case 'graphs':
       return <Graphs />;
+    case 'learn':
+      return parts[1] ? <LearnTopic key={parts[1]} chapter={parts[1]} /> : <Learn />;
     case 'sit':
       return <SitPaper key={parts[1]} paperId={parts[1]} />;
     case 'settings':

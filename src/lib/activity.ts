@@ -11,6 +11,7 @@ import { CHAPTER_BY_REF } from '../content/chapters';
 import { scoreOf } from '../progress/mastery';
 import { setMarks } from './sets';
 import { thisWeek, streak } from './streak';
+import { flagged, type TopicMarks } from './topics';
 
 export interface ActivityDetail {
   updatedAt: number;
@@ -21,9 +22,11 @@ export interface ActivityDetail {
   chapters: { chapter: string; title: string; questions: number; pct: number; last: number }[];
   papers: { id: string; got: number; of: number; max: number; complete: boolean; done?: string; at: number }[];
   sets: { title: string; kind: string; got: number; of: number; at: number }[];
+  /** topics they've asked for help with (chapter refs) */
+  help?: string[];
 }
 
-export function buildActivity(s: Snapshot, papers: PaperResults, now = new Date()): ActivityDetail {
+export function buildActivity(s: Snapshot, papers: PaperResults, now = new Date(), topics: TopicMarks = {}): ActivityDetail {
   const attempts = [...s.attempts].sort((a, b) => b.finishedAt - a.finishedAt);
   const byChapter = new Map<string, { n: number; m: number; g: number; last: number }>();
   for (const a of attempts) {
@@ -75,5 +78,6 @@ export function buildActivity(s: Snapshot, papers: PaperResults, now = new Date(
       }))
       .sort((a, b) => b.at - a.at)
       .slice(0, 15),
+    help: flagged(topics, 'help'),
   };
 }

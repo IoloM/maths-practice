@@ -6,10 +6,13 @@ import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
 import { RagBadge } from '../components/bits';
+import { FlagChip } from '../components/TopicFlag';
+import { useTopicMarks } from '../lib/topics';
 
 export function Topics() {
   const [view, setView] = useState<'chapters' | 'spec'>('chapters');
   const { attempts } = useProgress();
+  const marks = useTopicMarks();
   const byCh = groupBy(attempts, (a) => a.chapter);
   const bySpec = groupBy(attempts, (a) => a.spec);
   const count = (ch: string) => BANK.templates.filter((t) => t.chapter === ch).length;
@@ -18,6 +21,9 @@ export function Topics() {
     <div className="stack">
       <div className="page-head">
         <h1>Topics</h1>
+        <a className="btn btn-small" href={href('/learn')}>
+          Learn: notes and videos
+        </a>
         <span className="spacer" />
         <div className="working-tabs" role="tablist" aria-label="Browse by" style={{ border: 'none' }}>
           <button role="tab" aria-selected={view === 'chapters'} onClick={() => setView('chapters')}>
@@ -43,6 +49,7 @@ export function Topics() {
                     <h3>{c.title}</h3>
                     <span className="row small">
                       <span className="muted">{n} question types</span>
+                      <FlagChip flag={marks?.[c.ref]?.flag} />
                       <span className="spacer" />
                       <RagBadge mastery={mastery(byCh.get(c.ref) ?? [])} />
                     </span>

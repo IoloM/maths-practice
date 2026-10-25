@@ -2267,3 +2267,113 @@ svg.graph {
     gap: 16px;
   }
 }
+
+/* ---------- topic marks ---------- */
+.flag-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.flag-buttons .btn.on.flag-help,
+.flag-chip.flag-help {
+  background: var(--warn-soft);
+  border-color: var(--warn);
+  color: var(--text);
+}
+.flag-buttons .btn.on.flag-learn,
+.flag-chip.flag-learn {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+.flag-buttons .btn.on {
+  font-weight: 700;
+}
+
+/* ---------- learn ---------- */
+.learn-notes h3 {
+  margin: 8px 0 0;
+}
+.learn-intro {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.learn-example {
+  border-left: 4px solid var(--accent);
+  padding: 4px 0 4px 12px;
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+.learn-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.learn-row .list-link {
+  flex: 1;
+  min-width: 0;
+}
+.learn-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.learn-links li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+}
+.learn-links li .video-card {
+  flex: 1;
+  min-width: 240px;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.video-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  background: #111;
+}
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-play {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: linear-gradient(135deg, #1d5c63, #5a3a7a);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.video-play svg {
+  width: 40px;
+  height: 40px;
+}
+.video-play:disabled {
+  cursor: default;
+  opacity: 0.8;
+}

@@ -259,7 +259,7 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await serveSupabase(page.context(), s);
   await plainInput(page);
   // Ana has struggled with integration
-  s.activity.set(s.profiles[1].id, { chapters: [{ chapter: 'P1.13', title: 'Integration', questions: 3, pct: 25, last: 1 }] });
+  s.activity.set(s.profiles[1].id, { chapters: [{ chapter: 'P1.13', title: 'Integration', questions: 3, pct: 25, last: 1 }], help: ['P1.13'] });
 
   await signIn(page, 'iolo', 'admin-pass-1');
   await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
@@ -267,6 +267,7 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   const weak = page.getByRole('region', { name: 'Topics the group finds hardest' });
   await expect(weak.getByRole('rowheader', { name: 'Integration' })).toBeVisible();
   await expect(weak).toContainText('Ana');
+  await expect(weak.getByRole('row', { name: /Integration/ }).getByRole('cell').nth(3)).toHaveText('Ana'); // asked for help
   await weak.getByRole('button', { name: 'Set work on Integration' }).click();
   const form = page.getByRole('region', { name: 'Set work by topic' });
   // Pure Year 1's Integration (Year 2 has one too)
@@ -278,7 +279,10 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await axe(page);
   await form.getByRole('button', { name: 'Set it for everyone' }).click();
   await expect.poll(() => s.assignments.length).toBe(1);
-  expect(s.assignments[0]).toMatchObject({ title: 'Integration', duration_min: 24 });
+  expect(s.assignments[0]).toMatchObject({ title: 'Integration' });
+  // 20 marks at 1.2 minutes a mark (a set can fall a mark or two short)
+  expect(Number(s.assignments[0].duration_min)).toBeGreaterThanOrEqual(20);
+  expect(Number(s.assignments[0].duration_min)).toBeLessThanOrEqual(24);
   await page.getByLabel(/Weekly target/).fill('12');
   await page.getByRole('button', { name: 'Set target' }).click();
   await expect(page.getByText(/Target: 12 questions each/)).toBeVisible();
@@ -294,33 +298,4 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await ana.goto('./#/');
   await expect(ana.getByRole('region', { name: 'Your plan for today' }).getByText('Set work: Integration')).toBeVisible();
   await ana.context().close();
-});
-
-test.describe('phone reminders', () => {
-  // push needs the service worker; Chromium still routes the pretend Supabase with one running
-  test.use({ serviceWorkers: 'allow' });
-  test('offered when signed in, at an hour no later than 7pm', async ({ page, browserName }) => {
-    const s = fakeState([{ username: 'ana', name: 'Ana', password: 'ana-pass-1' }]);
-    await serveSupabase(page.context(), s);
-    await plainInput(page);
-    await page.goto('./#/settings');
-    const box = page.getByRole('region', { name: 'Phone reminders' });
-    await expect(box).toContainText('Sign in');
-    await signIn(page, 'ana', 'ana-pass-1');
-    await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
-    await page.goto('./#/settings');
-    if (browserName === 'webkit') {
-      // an iPhone browser tab: reminders need the Home Screen app
-      await expect(box).toContainText('Add to Home Screen');
-    } else {
-      const pick = box.getByLabel('Remind me at');
-      await expect(pick).toBeVisible();
-      const hours = await pick.locator('option').allTextContents();
-      expect([hours[0], hours.at(-1)]).toEqual(['7am', '7pm']);
-      // notifications aren't allowed in this browser: it says so plainly
-      await box.getByRole('button', { name: 'Turn on reminders' }).click();
-      await expect(box.getByText(/Notifications are blocked|installed for offline use/)).toBeVisible();
-    }
-    await axe(page);
-  });
 });

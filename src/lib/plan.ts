@@ -12,6 +12,7 @@ import { groupBy, mastery } from '../progress/mastery';
 import { todayKey } from './dates';
 import { lossesByFamily, type PaperResults } from './paper-results';
 import { fixedToday, isOpen, mistakesFrom, type MistakeNotes } from './mistakes';
+import { flagged, type TopicMarks } from './topics';
 
 export interface PlanItem {
   id: string;
@@ -33,6 +34,8 @@ export interface PlanInput {
   setWork: { id: string; title: string; due: string | null; minutes: number }[];
   /** exams still to come, soonest first */
   exams: { label: string; days: number }[];
+  /** topics marked to learn or for help */
+  topics?: TopicMarks;
   now?: Date;
 }
 
@@ -89,9 +92,17 @@ export function buildPlan(input: PlanInput): PlanItem[] {
     items.push({ id: 'mistakes', title: `Put right ${aim} mistake${aim === 1 ? '' : 's'}`, detail: fixed ? `${Math.min(fixed, aim)} of ${aim} done` : `${open} in your notebook`, path: '/mistakes', minutes: 10, done: fixed >= aim });
   }
 
+  // a topic you asked for help with: learn it, then practise it
+  const help = flagged(input.topics ?? {}, 'help')[0];
+  if (help) {
+    const n = todays.filter((a) => a.chapter === help).length;
+    const title = CHAPTER_BY_REF.get(help as never)?.title ?? help;
+    items.push({ id: `learn-${help}`, title: `Learn ${title}`, detail: n ? `${Math.min(n, 3)} of 3 questions done` : 'You asked for help: notes, a video, then 3 questions', path: `/learn/${help}`, minutes: 20, done: n >= 3 });
+  }
+
   // the topic that needs it most
   const focus = focusTopic(input.attempts, input.papers);
-  if (focus) {
+  if (focus && focus.chapter !== help) {
     const n = todays.filter((a) => a.chapter === focus.chapter).length;
     const title = CHAPTER_BY_REF.get(focus.chapter as never)?.title ?? focus.chapter;
     items.push({ id: `focus-${focus.chapter}`, title: `Practise ${title}`, detail: n ? `${Math.min(n, 4)} of 4 questions done` : `4 questions: ${focus.why}`, path: '/practice', query: { c: focus.chapter }, minutes: 15, done: n >= 4 });

@@ -9,7 +9,7 @@ import type { Attempt, Mode, Working } from '../storage/types';
 import { useSettings } from '../lib/settings';
 import { partAttemptFrom, selfScore, useActiveTime } from '../lib/attempt';
 import { recordAttempt, updateAttempt } from '../progress/record';
-import { shareUrl } from '../router';
+import { href, shareUrl } from '../router';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { MathText } from './MathText';
 import { AnswerInput, hasResponse } from './answers/AnswerInput';
@@ -20,6 +20,7 @@ import { SchemePanel } from './SchemePanel';
 import { BookletButton } from './BookletButton';
 import { ReadAloud } from './ReadAloud';
 import { questionSpeech } from '../lib/speech';
+import { setFlag } from '../lib/topics';
 
 const DrawingCanvas = lazy(() => import('../working/Canvas'));
 
@@ -477,6 +478,11 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                 Total: {autoScore}/{total}
                 {selfTotal > autoScore ? ` · with self-marking ${selfTotal}/${total}` : ''}
               </span>
+            )}
+            {(gaveUp || (allDone && selfTotal < total)) && chapter && (
+              <a className="btn btn-small btn-ghost" href={href(`/learn/${chapter.ref}`)} onClick={() => void setFlag(chapter.ref, 'help')}>
+                <Icon name="info" /> Need help with {chapter.title}?
+              </a>
             )}
             <span className="spacer" />
             {onNext && (

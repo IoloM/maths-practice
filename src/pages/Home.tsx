@@ -18,6 +18,7 @@ import type { Attempt, CardRecord } from '../storage/types';
 import { buildPlan, type PlanInput } from '../lib/plan';
 import { usePaperResults } from '../lib/paper-results';
 import { isOpen, mistakesFrom, useMistakeNotes } from '../lib/mistakes';
+import { flagged, useTopicMarks } from '../lib/topics';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -93,8 +94,9 @@ function useSetWork(): PlanInput['setWork'] | null {
 function PlanCard({ attempts, cards, setWork, exams }: { attempts: Attempt[]; cards: CardRecord[]; setWork: PlanInput['setWork']; exams: PlanInput['exams'] }) {
   const papers = usePaperResults();
   const notes = useMistakeNotes();
-  if (!papers || !notes) return null;
-  const items = buildPlan({ attempts, cards, papers, notes, setWork, exams });
+  const topics = useTopicMarks();
+  if (!papers || !notes || !topics) return null;
+  const items = buildPlan({ attempts, cards, papers, notes, setWork, exams, topics });
   if (!items.length) return null;
   const left = items.filter((i) => !i.done);
   const minutes = left.reduce((t, i) => t + i.minutes, 0);
@@ -159,6 +161,8 @@ export function Home() {
   const setWork = useSetWork();
   const notes = useMistakeNotes();
   const openMistakes = notes ? mistakesFrom(attempts).filter((m) => isOpen(m, notes)).length : 0;
+  const topicMarks = useTopicMarks();
+  const helpTopics = topicMarks ? flagged(topicMarks, 'help').length : 0;
   return (
     <div className="stack">
       <div>
@@ -220,6 +224,12 @@ export function Home() {
             <Icon name="review" /> Review
           </h2>
           <span className="muted">{due ? `${due} due now` : 'Nothing due'}</span>
+        </a>
+        <a className="card tile" href={href('/learn')}>
+          <h2>
+            <Icon name="bulb" /> Learn a topic
+          </h2>
+          <span className="muted">{helpTopics ? `${helpTopics} topic${helpTopics === 1 ? '' : 's'} you need help with` : 'Notes, worked examples and videos for every topic'}</span>
         </a>
         <a className="card tile" href={href('/mistakes')}>
           <h2>

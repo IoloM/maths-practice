@@ -20,8 +20,6 @@ export interface Settings {
   examDates: ExamDates;
   /** questions a day to aim for */
   dailyGoal: number;
-  /** practice picks harder or easier questions depending on how the last few went */
-  adaptive: boolean;
   /** text size: 100%, 115% or 130% */
   textSize: 'normal' | 'large' | 'larger';
   /** 'readable': Atkinson Hyperlegible for text (maths keeps its own font) */
@@ -31,7 +29,7 @@ export interface Settings {
 }
 
 /** Preferences that follow a person between devices; the rest belong to the device. */
-export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'adaptive', 'textSize', 'font'] as const;
+export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'textSize', 'font'] as const;
 export type SyncedPrefs = Pick<Settings, (typeof SYNCED_PREFS)[number]>;
 
 const DEFAULTS: Settings = {
@@ -45,7 +43,6 @@ const DEFAULTS: Settings = {
   persistAsked: false,
   examDates: {},
   dailyGoal: 5,
-  adaptive: true,
   textSize: 'normal',
   font: 'standard',
   prefsAt: 0,

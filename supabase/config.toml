@@ -423,8 +423,3 @@ enabled = true
 # JWT check is off; see supabase/functions/admin/handler.ts.
 [functions.admin]
 verify_jwt = false
-
-
-# Phone reminders, called hourly by .github/workflows/reminders.yml with a shared secret (REMIND_SECRET).
-[functions.remind]
-verify_jwt = false

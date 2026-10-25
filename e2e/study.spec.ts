@@ -1,4 +1,4 @@
-/** Today's plan, the mistake notebook, step-by-step mode and adaptive practice. */
+/** Today's plan, the mistake notebook, step-by-step mode, challenges, badges and accessibility. */
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { answerFor, plainInput } from './helpers';
@@ -59,16 +59,6 @@ test('step by step shows the worked solution a step at a time, leaving the last 
   await page.getByLabel('Answer for the question').fill(String(answerFor(Q, 3)));
   await page.getByRole('button', { name: 'Check' }).click();
   await expect(steps.getByText(/The last step is yours/)).toHaveCount(0);
-});
-
-test('practice says what level it is working at, and the setting turns it off', async ({ page }) => {
-  await page.goto('./#/practice?c=P1.13');
-  await expect(page.getByText(/Working at level 2 of 5/)).toBeVisible();
-  await page.goto('./#/settings');
-  await page.getByLabel(/Adapt practice to how you’re doing/).uncheck();
-  await page.goto('./#/practice?c=P1.12');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByText(/Working at level/)).toHaveCount(0);
 });
 
 test('the plan on the home page has no accessibility violations', async ({ page }) => {

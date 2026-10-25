@@ -144,8 +144,11 @@ interface TopicRow {
   chapter: string;
   title: string;
   people: number;
-  avg: number;
+  /** average % of marks, or null if nobody has practised it enough yet */
+  avg: number | null;
   struggling: string[];
+  /** asked for help with it */
+  help: string[];
 }
 
 /** Which topics the group finds hardest, from each person's shared work (chapters practised, % of marks). */
@@ -155,20 +158,27 @@ export function WeakTopics({ members, onSet }: { members: Member[]; onSet: (chap
   useEffect(() => {
     activities()
       .then((acts) => {
-        const by = new Map<string, { pcts: number[]; struggling: string[] }>();
+        const by = new Map<string, { pcts: number[]; struggling: string[]; help: string[] }>();
+        const entry = (c: string) => by.get(c) ?? { pcts: [], struggling: [], help: [] };
         for (const m of members.filter((x) => !x.disabled)) {
-          for (const c of acts.get(m.id)?.chapters ?? []) {
+          const act = acts.get(m.id);
+          for (const c of act?.chapters ?? []) {
             if (c.questions < 2) continue;
-            const e = by.get(c.chapter) ?? { pcts: [], struggling: [] };
+            const e = entry(c.chapter);
             e.pcts.push(c.pct);
             if (c.pct < 50) e.struggling.push(m.name);
             by.set(c.chapter, e);
           }
+          for (const c of act?.help ?? []) {
+            const e = entry(c);
+            e.help.push(m.name);
+            by.set(c, e);
+          }
         }
         setRows(
           [...by.entries()]
-            .map(([chapter, e]) => ({ chapter, title: CHAPTER_BY_REF.get(chapter as never)?.title ?? chapter, people: e.pcts.length, avg: Math.round(e.pcts.reduce((t, p) => t + p, 0) / e.pcts.length), struggling: e.struggling }))
-            .sort((a, b) => a.avg - b.avg)
+            .map(([chapter, e]) => ({ chapter, title: CHAPTER_BY_REF.get(chapter as never)?.title ?? chapter, people: e.pcts.length, avg: e.pcts.length ? Math.round(e.pcts.reduce((t, p) => t + p, 0) / e.pcts.length) : null, struggling: e.struggling, help: e.help }))
+            .sort((a, b) => b.help.length - a.help.length || (a.avg ?? 100) - (b.avg ?? 100))
             .slice(0, 12),
         );
       })
@@ -192,6 +202,7 @@ export function WeakTopics({ members, onSet }: { members: Member[]; onSet: (chap
                 <th scope="col">Average</th>
                 <th scope="col">People</th>
                 <th scope="col">Under 50%</th>
+                <th scope="col">Asked for help</th>
                 <th scope="col">
                   <span className="sr-only">Set work</span>
                 </th>
@@ -201,9 +212,10 @@ export function WeakTopics({ members, onSet }: { members: Member[]; onSet: (chap
               {rows.map((r) => (
                 <tr key={r.chapter}>
                   <th scope="row">{r.title}</th>
-                  <td>{r.avg}%</td>
+                  <td>{r.avg === null ? '–' : `${r.avg}%`}</td>
                   <td>{r.people}</td>
                   <td className="small">{r.struggling.join(', ') || '–'}</td>
+                  <td className="small">{r.help.join(', ') || '–'}</td>
                   <td>
                     <button className="btn btn-small" onClick={() => onSet(r.chapter)} aria-label={`Set work on ${r.title}`}>
                       Set work
@@ -215,7 +227,7 @@ export function WeakTopics({ members, onSet }: { members: Member[]; onSet: (chap
           </table>
         </TableWrap>
       )}
-      <p className="muted small">From the chapters each person has practised (their % of marks). Only admins see this.</p>
+      <p className="muted small">From the chapters each person has practised (their % of marks) and the topics they’ve asked for help with. Only admins see this.</p>
     </section>
   );
 }

@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildPlan, focusTopic } from '../src/lib/plan';
 import { fixedToday, isOpen, mistakesFrom } from '../src/lib/mistakes';
-import { adaptiveLevel } from '../src/lib/session';
-import { BANK } from '../src/content/bank-meta';
 import type { Attempt, CardRecord } from '../src/storage/types';
 
 const now = new Date(2026, 9, 24, 12);
@@ -59,22 +57,5 @@ describe('today’s plan', () => {
   it('with nothing practised, real past-paper losses pick the topic', () => {
     const f = focusTopic([], { '2024-06-1': { marks: { 1: 0 }, updatedAt: 1 } });
     expect(f?.why).toMatch(/real papers/);
-  });
-});
-
-describe('adaptive difficulty', () => {
-  const pool = BANK.templates.filter((e) => e.chapter === 'P1.13');
-  const ids = pool.map((e) => e.id);
-  const go = (d: number, score: number, i: number) => ({ ...at(ids[i % ids.length], 'P1.13', t - i * 60_000, score), difficulty: d });
-  it('starts at 2, climbs with full marks and drops with none', () => {
-    expect(adaptiveLevel(pool, [])).toBe(2);
-    const up = adaptiveLevel(pool, [go(3, 4, 0), go(3, 4, 1), go(2, 4, 2)]);
-    expect(up).toBeGreaterThan(3.5);
-    const down = adaptiveLevel(pool, [go(3, 0, 0), go(3, 0, 1), go(3, 1, 2)]);
-    expect(down).toBeLessThan(2);
-  });
-  it('stays within the questions on offer', () => {
-    const lo = Math.min(...pool.map((e) => e.difficulty));
-    expect(adaptiveLevel(pool, [go(1, 0, 0), go(1, 0, 1)])).toBe(Math.max(1, lo));
   });
 });
