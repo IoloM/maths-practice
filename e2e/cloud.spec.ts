@@ -250,3 +250,48 @@ test('an admin sees what everyone is working on', async ({ page, browser, baseUR
   await axe(page);
   await ana.context().close();
 });
+
+test('an admin sets work by topic and a weekly target, sees the hardest topics, and members get a due reminder', async ({ page, browser, baseURL }) => {
+  const s = fakeState([
+    { username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true },
+    { username: 'ana', name: 'Ana', password: 'ana-pass-1' },
+  ]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  // Ana has struggled with integration
+  s.activity.set(s.profiles[1].id, { chapters: [{ chapter: 'P1.13', title: 'Integration', questions: 3, pct: 25, last: 1 }] });
+
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/group');
+  const weak = page.getByRole('region', { name: 'Topics the group finds hardest' });
+  await expect(weak.getByRole('rowheader', { name: 'Integration' })).toBeVisible();
+  await expect(weak).toContainText('Ana');
+  await weak.getByRole('button', { name: 'Set work on Integration' }).click();
+  const form = page.getByRole('region', { name: 'Set work by topic' });
+  // Pure Year 1's Integration (Year 2 has one too)
+  await expect(form.getByLabel('Integration', { exact: true }).first()).toBeChecked();
+  await expect(form.getByLabel('Integration', { exact: true }).last()).not.toBeChecked();
+  const tomorrow = new Date(Date.now() + 86_400_000);
+  await form.getByLabel('Due').fill(`${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`);
+  await expect(form.getByText(/questions · \d+ marks/)).toBeVisible();
+  await axe(page);
+  await form.getByRole('button', { name: 'Set it for everyone' }).click();
+  await expect.poll(() => s.assignments.length).toBe(1);
+  expect(s.assignments[0]).toMatchObject({ title: 'Integration', duration_min: 24 });
+  await page.getByLabel(/Weekly target/).fill('12');
+  await page.getByRole('button', { name: 'Set target' }).click();
+  await expect(page.getByText(/Target: 12 questions each/)).toBeVisible();
+  expect(s.target).toBe(12);
+
+  const ana = await device(browser, baseURL, s);
+  await signIn(ana, 'ana', 'ana-pass-1');
+  await reloads(ana, ana.getByRole('button', { name: 'Sign in' }).click());
+  await expect(ana.getByRole('status').filter({ hasText: /Integration.*due tomorrow/ })).toBeVisible();
+  await ana.getByRole('link', { name: 'Do it' }).click();
+  await expect(ana.getByText(/Target: 12 questions each/)).toBeVisible();
+  await expect(ana.getByRole('region', { name: 'Set work by topic' })).toHaveCount(0);
+  await ana.goto('./#/');
+  await expect(ana.getByRole('region', { name: 'Your plan for today' }).getByText('Set work: Integration')).toBeVisible();
+  await ana.context().close();
+});

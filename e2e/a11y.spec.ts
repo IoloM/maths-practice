@@ -14,6 +14,7 @@ const PAGES: [string, string][] = [
   ['choice options that are all maths', './#/q/fx.proof.ce-square-inequality/0'],
   ['exams', './#/exams'],
   ['review', './#/review'],
+  ['mistake notebook', './#/mistakes'],
   ['progress', './#/progress'],
   ['reference', './#/reference'],
   ['flashcards', './#/flashcards'],

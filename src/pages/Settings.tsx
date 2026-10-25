@@ -140,6 +140,10 @@ export function Settings() {
           <span style={{ flex: 1 }}>Daily goal (questions a day)</span>
           <input type="number" inputMode="numeric" min={1} max={50} value={settings.dailyGoal} onChange={(e) => update({ dailyGoal: Math.max(1, Math.min(50, Math.round(Number(e.target.value) || 1))) })} style={{ width: '5em' }} />
         </label>
+        <label className="row">
+          <input type="checkbox" checked={settings.adaptive} onChange={(e) => update({ adaptive: e.target.checked })} />
+          <span style={{ flex: 1 }}>Adapt practice to how you’re doing (harder questions when you’re getting them right, easier ones when you’re not)</span>
+        </label>
         <p className="muted small">Add your exam dates (from your school's exam timetable) for a countdown on the home page.</p>
         {EXAM_PAPERS.map((p) => {
           const v = settings.examDates[p.id] ?? '';
@@ -154,6 +158,33 @@ export function Settings() {
             </label>
           );
         })}
+      </section>
+      <section className="card stack" aria-labelledby="a11y-h">
+        <h2 id="a11y-h">Accessibility</h2>
+        <fieldset className="row-wrap plain-fieldset">
+          <legend className="small muted">Text size</legend>
+          {(
+            [
+              ['normal', 'Normal'],
+              ['large', 'Large'],
+              ['larger', 'Extra large'],
+            ] as const
+          ).map(([v, label]) => (
+            <label key={v} className="row">
+              <input type="radio" name="text-size" checked={settings.textSize === v} onChange={() => update({ textSize: v })} />
+              {label}
+            </label>
+          ))}
+        </fieldset>
+        <label className="row">
+          <input type="checkbox" checked={settings.font === 'readable'} onChange={(e) => update({ font: e.target.checked ? 'readable' : 'standard' })} />
+          <span>
+            Easier-to-read font (Atkinson Hyperlegible: letters that are hard to mix up). Maths keeps its exam-style font.
+          </span>
+        </label>
+        <p className="muted small" style={{ margin: 0 }}>
+          Every question has a <b>Read aloud</b> button, which reads the maths the way you’d say it, using your device’s own voices. Text size and font follow you to your other devices when you’re signed in.
+        </p>
       </section>
       <section className="card stack">
         <h2>Appearance & input</h2>

@@ -34,10 +34,11 @@ export interface FakeState {
   activity: Map<string, unknown>;
   assignments: Record<string, unknown>[];
   results: Record<string, unknown>[];
+  target: number | null;
 }
 
 export function fakeState(people: { username: string; name: string; password: string; admin?: boolean; mustChange?: boolean }[]): FakeState {
-  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [] };
+  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [], target: null };
   for (const p of people) addPerson(s, p.username, p.name, p.password, !!p.admin, !!p.mustChange);
   return s;
 }
@@ -219,6 +220,15 @@ async function respond(s: FakeState, route: Route) {
       s.results = s.results.filter((r) => !gone.has(r.assignment_id));
       return reply(204);
     }
+    case 'GET group_target':
+      return reply(200, s.target === null ? [] : [{ weekly_questions: s.target }]);
+    case 'POST group_target':
+      if (!profile.admin) return reply(403, { message: 'new row violates row-level security policy' });
+      s.target = Number(body().weekly_questions);
+      return reply(201);
+    case 'DELETE group_target':
+      if (profile.admin) s.target = null;
+      return reply(204);
     case 'GET assignment_results':
       return reply(200, s.results);
     case 'POST assignment_results': {

@@ -18,6 +18,8 @@ import { Icon } from './Icon';
 import { Difficulty } from './bits';
 import { SchemePanel } from './SchemePanel';
 import { BookletButton } from './BookletButton';
+import { ReadAloud } from './ReadAloud';
+import { questionSpeech } from '../lib/speech';
 
 const DrawingCanvas = lazy(() => import('../working/Canvas'));
 
@@ -25,6 +27,8 @@ interface PartState {
   response?: Response;
   result?: MarkResult;
   hints: number;
+  /** worked-solution steps shown in step-by-step mode */
+  steps: number;
   ticks: boolean[];
   showScheme: boolean;
   showSolution: boolean;
@@ -41,6 +45,9 @@ interface Props {
   onNext?: () => void;
   nextLabel?: string;
 }
+
+/** Help counted like hints: one step of the worked solution is a lot of help, two or more the most. */
+const helpUsed = (p: PartState) => Math.max(p.hints, p.steps ? Math.min(3, p.steps + 1) : 0);
 
 const verdictText: Record<string, string> = {
   correct: 'Correct',
@@ -63,7 +70,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
   const { settings } = useSettings();
   const key = `${inst.templateId}:${inst.seed}`;
   const total = inst.parts.reduce((s, p) => s + p.marks, 0);
-  const [parts, setParts] = useState<PartState[]>(() => inst.parts.map((p) => ({ hints: 0, ticks: p.scheme.map(() => false), showScheme: false, showSolution: false, revealed: false })));
+  const [parts, setParts] = useState<PartState[]>(() => inst.parts.map((p) => ({ hints: 0, steps: 0, ticks: p.scheme.map(() => false), showScheme: false, showSolution: false, revealed: false })));
   const [working, setWorking] = useState<Working>(() => emptyWorking(settings.paper, settings.workingMode));
   const [gaveUp, setGaveUp] = useState(false);
   const [annotating, setAnnotating] = useState(false);
@@ -182,7 +189,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
       finishedAt: Date.now(),
       durationMs: Math.round(activeTime()),
       marks: total,
-      parts: ps.map((p, i) => partAttemptFrom(inst.parts[i].label, p.result, p.response ?? null, p.ticks, inst.parts[i].scheme, p.hints, inst.parts[i].answer.type === 'self')),
+      parts: ps.map((p, i) => partAttemptFrom(inst.parts[i].label, p.result, p.response ?? null, p.ticks, inst.parts[i].scheme, helpUsed(p), inst.parts[i].answer.type === 'self')),
       gaveUp: gu,
       working,
     }),
@@ -262,6 +269,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
         <button className="btn btn-small btn-ghost" onClick={() => setAnnotating((a) => !a)} aria-pressed={annotating} title="Write on the question">
           <Icon name="annotate" /> {annotating ? 'Stop annotating' : 'Annotate'}
         </button>
+        <ReadAloud text={() => questionSpeech(inst, number)} />
         <BookletButton />
         <button className="btn btn-small btn-ghost" onClick={share} title="Share this question">
           <Icon name="share" /> Share
@@ -376,9 +384,14 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                     </div>
                   )}
                   <div className="part-actions">
-                    {!locked && st.hints < 3 && (
+                    {!locked && st.hints < 3 && st.steps === 0 && (
                       <button className="btn btn-small" onClick={() => setPart(i, { hints: st.hints + 1 })}>
                         <Icon name="bulb" /> {st.hints === 0 ? 'Hint' : `Next hint (${st.hints + 1}/3)`}
+                      </button>
+                    )}
+                    {!locked && st.steps === 0 && p.solution.length > 1 && (
+                      <button className="btn btn-small" onClick={() => setPart(i, { steps: 1 })}>
+                        <Icon name="list" /> Step by step
                       </button>
                     )}
                     {(r || gaveUp) && (
@@ -400,6 +413,33 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                           <MathText src={h} inline />
                         </div>
                       ))}
+                    </div>
+                  )}
+                  {st.steps > 0 && (
+                    <div className="panel steps-panel" role="region" aria-label={`Step by step${singleLabel ? '' : `, part ${p.label}`}`}>
+                      <div className="panel-title">Step by step</div>
+                      <div className="panel-body">
+                        <ol className="steps">
+                          {p.solution.slice(0, locked ? p.solution.length : st.steps).map((step, k) => (
+                            <li key={k}>
+                              <MathText className="solution-step" src={step} />
+                            </li>
+                          ))}
+                        </ol>
+                        {!locked &&
+                          (st.steps < p.solution.length - 1 ? (
+                            <>
+                              <p className="small muted">Try the next step on paper first, then check it.</p>
+                              <button className="btn btn-small" onClick={() => setPart(i, { steps: st.steps + 1 })}>
+                                Show step {st.steps + 1} of {p.solution.length}
+                              </button>
+                            </>
+                          ) : (
+                            <p className="small">
+                              <b>The last step is yours:</b> finish it and {p.answer.type === 'self' ? 'compare with the model answer' : 'check your answer'}.
+                            </p>
+                          ))}
+                      </div>
                     </div>
                   )}
                   {st.showScheme && (

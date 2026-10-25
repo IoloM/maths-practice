@@ -43,6 +43,12 @@ function MarkRow({ paperId, q, result }: { paperId: string; q: PastQuestion; res
         <span className="chip">Q{q.q}</span>
         <span className="mark-topic">
           {q.topic}
+          {result?.times?.[q.q] !== undefined && (
+            <span className={`small ${result.times[q.q] > q.marks * MINUTES_PER_MARK * 60 * 1.25 ? 'slow' : 'muted'}`}>
+              {' '}
+              · took {Math.round(result.times[q.q] / 60)} min (aim {Math.round(q.marks * MINUTES_PER_MARK)})
+            </span>
+          )}
           {lost && (
             <>
               {' '}
@@ -198,11 +204,11 @@ function YourPapers({ results, onOpen }: { results: PaperResults; onOpen: (id: s
   );
 }
 
-export function PastPapers({ open }: { open?: string }) {
+export function PastPapers({ open, mark = false }: { open?: string; mark?: boolean }) {
   const [filter, setFilter] = useState<Filter>('all');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(open ?? null);
-  const [marking, setMarking] = useState<string | null>(null);
+  const [marking, setMarking] = useState<string | null>(mark && open ? open : null);
   const results = usePaperResults();
   useEffect(() => {
     if (open) document.getElementById(`paper-${open}`)?.scrollIntoView({ block: 'start' });
@@ -314,8 +320,11 @@ export function PastPapers({ open }: { open?: string }) {
                     <a className="btn btn-small" href={p.ms} target="_blank" rel="noopener noreferrer">
                       Mark scheme (PDF)
                     </a>
+                    <a className="btn btn-small btn-primary" href={href(`/sit/${p.id}`)}>
+                      <Icon name="clock" /> Sit as an exam
+                    </a>
                     <button
-                      className="btn btn-small btn-primary"
+                      className="btn btn-small"
                       onClick={() => {
                         const items = paperSet(qs);
                         const total = items.reduce((t, it) => t + it.marks, 0);

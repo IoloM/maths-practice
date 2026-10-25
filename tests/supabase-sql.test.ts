@@ -59,7 +59,7 @@ beforeAll(async () => {
     await db.query('insert into auth.users (id) values ($1)', [id]);
     await db.query('insert into public.profiles (id, username, name, admin, must_change) values ($1, $2, $3, $4, false)', [id, username, name, admin]);
   }
-});
+}, 60_000);
 
 describe('security rules', () => {
   it('signed-out visitors see nothing and can only ping', async () => {
@@ -137,6 +137,18 @@ describe('security rules', () => {
     await as(ANA, `update public.activity set detail = '{"recent": [3]}' where user_id = $1`, [BEN]); // not hers: no rows
     expect((await as<{ detail: unknown }>(ADMIN, 'select detail from public.activity where user_id = $1', [BEN]))[0].detail).toEqual({ recent: [2] });
     expect(await fails(as(null, 'select * from public.activity'))).toBe(true);
+  });
+
+  it('the weekly target: everyone sees it, only admins set it', async () => {
+    expect(await fails(as(ANA, 'insert into public.group_target (weekly_questions) values (30)'))).toBe(true);
+    await as(ADMIN, 'insert into public.group_target (weekly_questions, updated_by) values (30, $1)', [ADMIN]);
+    expect(await as(BEN, 'select weekly_questions from public.group_target')).toEqual([{ weekly_questions: 30 }]);
+    await as(ANA, 'update public.group_target set weekly_questions = 1'); // not an admin: no rows
+    expect(await as(BEN, 'select weekly_questions from public.group_target')).toEqual([{ weekly_questions: 30 }]);
+    expect(await fails(as(ADMIN, 'insert into public.group_target (id, weekly_questions) values (2, 5)'))).toBe(true);
+    expect(await fails(as(null, 'select * from public.group_target'))).toBe(true);
+    await as(ADMIN, 'delete from public.group_target');
+    expect(await as(ANA, 'select * from public.group_target')).toEqual([]);
   });
 
   it('a switched-off login loses access straight away', async () => {

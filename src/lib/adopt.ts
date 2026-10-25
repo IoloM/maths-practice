@@ -9,7 +9,8 @@ import { getStore } from '../storage';
 import type { Me } from './cloud';
 import { DEFAULT_DB, DEFAULT_SETTINGS, deviceLogins, forgetDeviceLogin } from './logins';
 
-const PAPERS_KEY = 'pastPaperResults';
+/** settings-store records that belong to the person (past-paper marks, mistake notes) */
+const KEPT = new Set(['pastPaperResults', 'mistakeNotes']);
 
 /** What was done in this visit before signing in (as a guest, kept in memory only). */
 async function adoptGuestVisit(target: string): Promise<number> {
@@ -17,9 +18,9 @@ async function adoptGuestVisit(target: string): Promise<number> {
   if (here.kind !== 'memory') return 0;
   const backup = await here.exportAll();
   const n = backup.stores.attempts.length + backup.stores.cards.length + backup.stores.sets.length;
-  if (!n && !backup.stores.settings.some((s) => s.key === PAPERS_KEY)) return 0;
+  if (!n && !backup.stores.settings.some((s) => KEPT.has(s.key))) return 0;
   const to = await openIdbStore(target);
-  await to.importAll({ ...backup, stores: { ...backup.stores, settings: backup.stores.settings.filter((s) => s.key === PAPERS_KEY) } }, 'merge');
+  await to.importAll({ ...backup, stores: { ...backup.stores, settings: backup.stores.settings.filter((s) => KEPT.has(s.key)) } }, 'merge');
   to.close();
   return backup.stores.attempts.length;
 }
@@ -44,9 +45,9 @@ export async function adoptLocalProgress(me: Me): Promise<number> {
   const from = await openIdbStore(source);
   const backup = await from.exportAll();
   const { attempts, cards, sets } = backup.stores;
-  if (attempts.length || cards.length || sets.length || backup.stores.settings.some((s) => s.key === PAPERS_KEY)) {
+  if (attempts.length || cards.length || sets.length || backup.stores.settings.some((s) => KEPT.has(s.key))) {
     const to = await openIdbStore(target);
-    await to.importAll({ ...backup, stores: { ...backup.stores, settings: backup.stores.settings.filter((s) => s.key === PAPERS_KEY) } }, 'merge');
+    await to.importAll({ ...backup, stores: { ...backup.stores, settings: backup.stores.settings.filter((s) => KEPT.has(s.key)) } }, 'merge');
     to.close();
   }
   // the old copy is theirs online now: don't leave it for someone else to pick up

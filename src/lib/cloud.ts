@@ -238,6 +238,8 @@ export interface GroupSummary {
   /** Monday of this week (YYYY-MM-DD) and this week's numbers */
   week: { start: string; questions: number; marks: number; scored: number };
   streak: number;
+  /** how many badges (badges.ts) */
+  badges?: number;
 }
 
 export async function group(): Promise<Member[]> {
@@ -287,6 +289,22 @@ export async function removeWork(id: string): Promise<void> {
   const sb = await supabase();
   const { error } = await sb.from('assignments').delete().eq('id', id);
   if (error) fail(error, 'Couldn’t remove it');
+}
+
+/** The questions each person aims for this week, if an admin has set a target. */
+export async function groupTarget(): Promise<number | null> {
+  const sb = await supabase();
+  const { data, error } = await sb.from('group_target').select('weekly_questions');
+  if (error) return null; // not set up yet: no target
+  return ((data ?? []) as { weekly_questions: number }[])[0]?.weekly_questions ?? null;
+}
+
+/** Admins: set (or with null, clear) the weekly target. */
+export async function setGroupTarget(n: number | null): Promise<void> {
+  const sb = await supabase();
+  const { error } =
+    n === null ? await sb.from('group_target').delete().eq('id', 1) : await sb.from('group_target').upsert({ id: 1, weekly_questions: n, updated_at: new Date().toISOString(), updated_by: cloudMe()?.id });
+  if (error) fail(error, 'Couldn’t save the target');
 }
 
 export async function handIn(assignmentId: string, got: number, of: number): Promise<void> {

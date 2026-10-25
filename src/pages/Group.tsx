@@ -5,7 +5,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { href, navigate } from '../router';
 import { getStore } from '../storage';
-import { assignments, group, removeWork, type Assignment, type Member, type Result } from '../lib/cloud';
+import { assignments, group, groupTarget, removeWork, type Assignment, type Member, type Result } from '../lib/cloud';
+import { SetWorkForm, TargetForm, WeakTopics } from './GroupAdmin';
 import { ENTRY_BY_ID } from '../content/bank-meta';
 import { todayKey } from '../lib/dates';
 import { weekStart } from '../lib/streak';
@@ -30,18 +31,30 @@ export async function startWork(a: Assignment) {
   await startSet({ id: `assign-${a.id}`, kind: 'timed', title: a.title, items: a.items, durationMin: a.durationMin, assignmentId: a.id });
 }
 
-function Leaderboard({ members }: { members: Member[] }) {
+function Leaderboard({ members, target, admin, onTarget }: { members: Member[]; target: number | null; admin: boolean; onTarget: () => void }) {
   const week = todayKey(weekStart());
   const rows = members
     .filter((m) => !m.disabled)
     .map((m) => {
       const w = m.summary?.week.start === week ? m.summary.week : { questions: 0, marks: 0, scored: 0 };
-      return { m, w, streak: m.summary?.streak ?? 0 };
+      return { m, w, streak: m.summary?.streak ?? 0, badges: m.summary?.badges ?? 0 };
     })
     .sort((a, b) => b.w.scored - a.w.scored || b.w.questions - a.w.questions || a.m.name.localeCompare(b.m.name));
+  const there = target ? rows.filter((r) => r.w.questions >= target).length : 0;
   return (
     <section className="card stack" aria-labelledby="this-week">
       <h2 id="this-week">This week</h2>
+      {target !== null && (
+        <div className="group-target">
+          <span>
+            Target: <b>{target} questions each</b> this week · {there} of {rows.length} there
+          </span>
+          <div className="goal-bar" role="progressbar" aria-label="People who have reached the target" aria-valuemin={0} aria-valuemax={rows.length} aria-valuenow={there}>
+            <span style={{ width: `${rows.length ? (100 * there) / rows.length : 0}%` }} />
+          </div>
+        </div>
+      )}
+      {admin && <TargetForm target={target} onDone={onTarget} />}
       <TableWrap label="This week's leaderboard">
         <table className="data group-table">
           <thead>
@@ -51,10 +64,11 @@ function Leaderboard({ members }: { members: Member[] }) {
               <th scope="col">Marks</th>
               <th scope="col">Questions</th>
               <th scope="col">Streak</th>
+              <th scope="col">Badges</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ m, w, streak }, i) => (
+            {rows.map(({ m, w, streak, badges }, i) => (
               <tr key={m.id}>
                 <td>{w.scored ? i + 1 : '–'}</td>
                 <td>
@@ -64,8 +78,12 @@ function Leaderboard({ members }: { members: Member[] }) {
                   {w.scored}
                   {w.marks ? <span className="muted small"> / {w.marks}</span> : null}
                 </td>
-                <td>{w.questions}</td>
+                <td>
+                  {w.questions}
+                  {target ? <span className={`small ${w.questions >= target ? 'good-text-inline' : 'muted'}`}> / {target}</span> : null}
+                </td>
                 <td>{streak ? `${streak} day${streak === 1 ? '' : 's'}` : '–'}</td>
+                <td>{badges || '–'}</td>
               </tr>
             ))}
           </tbody>
@@ -139,13 +157,16 @@ export function Group() {
   const me = useCloudMe();
   const [members, setMembers] = useState<Member[] | null>(null);
   const [work, setWork] = useState<{ list: Assignment[]; results: Result[] } | null>(null);
+  const [target, setTarget] = useState<number | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
+  const [picked, setPicked] = useState<string[]>([]);
   const load = () => {
     setProblem(null);
-    Promise.all([group(), assignments()])
-      .then(([g, w]) => {
+    Promise.all([group(), assignments(), groupTarget()])
+      .then(([g, w, t]) => {
         setMembers(g);
         setWork(w);
+        setTarget(t);
       })
       .catch((e) => setProblem(message(e)));
   };
@@ -201,11 +222,23 @@ export function Group() {
         )}
         {me.admin && (
           <p className="small muted">
-            To set work: make a mock or timed set on the <a href={href('/exams')}>Exams</a> page (or from a <a href={href('/past-papers')}>past paper</a>), then choose <b>Set this for the group</b> before starting it.
+            Set work by topic below, or make a mock or timed set on the <a href={href('/exams')}>Exams</a> page (or from a <a href={href('/past-papers')}>past paper</a>) and choose <b>Set this for the group</b> before starting it.
           </p>
         )}
       </section>
-      <Leaderboard members={members} />
+      <Leaderboard members={members} target={target} admin={me.admin} onTarget={load} />
+      {me.admin && (
+        <>
+          <WeakTopics
+            members={members}
+            onSet={(c) => {
+              setPicked([c]);
+              setTimeout(() => document.getElementById('set-by-topic')?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 0);
+            }}
+          />
+          <SetWorkForm picked={picked} onPick={setPicked} onDone={load} />
+        </>
+      )}
     </div>
   );
 }

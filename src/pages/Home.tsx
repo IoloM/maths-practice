@@ -14,7 +14,10 @@ import { useSettings } from '../lib/settings';
 import { formatExamDate, upcomingExams } from '../lib/exams';
 import { doneToday, lastDays, streak } from '../lib/streak';
 import { cloudMe, assignments } from '../lib/cloud';
-import type { Attempt } from '../storage/types';
+import type { Attempt, CardRecord } from '../storage/types';
+import { buildPlan, type PlanInput } from '../lib/plan';
+import { usePaperResults } from '../lib/paper-results';
+import { isOpen, mistakesFrom, useMistakeNotes } from '../lib/mistakes';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -71,16 +74,61 @@ function GoalCard({ attempts, goal }: { attempts: Attempt[]; goal: number }) {
   );
 }
 
-/** Signed in online: the study group, with how much set work is waiting. */
-function GroupTile() {
-  const [todo, setTodo] = useState<number | null>(null);
+/** Signed in online: set work not handed in yet. */
+function useSetWork(): PlanInput['setWork'] | null {
+  const [work, setWork] = useState<PlanInput['setWork'] | null>(null);
   useEffect(() => {
     const me = cloudMe();
     if (!me) return;
     assignments()
-      .then(({ list, results }) => setTodo(list.filter((a) => !results.some((r) => r.assignmentId === a.id && r.userId === me.id)).length))
-      .catch(() => setTodo(null));
+      .then(({ list, results }) =>
+        setWork(list.filter((a) => !results.some((r) => r.assignmentId === a.id && r.userId === me.id)).map((a) => ({ id: a.id, title: a.title, due: a.due, minutes: a.durationMin }))),
+      )
+      .catch(() => setWork(null));
   }, []);
+  return work;
+}
+
+/** What's most worth doing today, ticking itself off as you go. */
+function PlanCard({ attempts, cards, setWork, exams }: { attempts: Attempt[]; cards: CardRecord[]; setWork: PlanInput['setWork']; exams: PlanInput['exams'] }) {
+  const papers = usePaperResults();
+  const notes = useMistakeNotes();
+  if (!papers || !notes) return null;
+  const items = buildPlan({ attempts, cards, papers, notes, setWork, exams });
+  if (!items.length) return null;
+  const left = items.filter((i) => !i.done);
+  const minutes = left.reduce((t, i) => t + i.minutes, 0);
+  return (
+    <section className="card plan" aria-labelledby="plan-h">
+      <div className="plan-head">
+        <h2 id="plan-h">Your plan for today</h2>
+        <span className="small muted">{left.length ? `about ${minutes} min left` : 'all done — nice work'}</span>
+      </div>
+      <ol className="plan-list">
+        {items.map((i) => (
+          <li key={i.id} className={i.done ? 'done' : ''}>
+            <a href={href(i.path, i.query)}>
+              <span className="plan-tick" aria-hidden="true">
+                {i.done ? <Icon name="check" /> : null}
+              </span>
+              <span className="plan-text">
+                <b>{i.title}</b>
+                <span className="small muted">
+                  {i.detail}
+                  {!i.done && ` · ${i.minutes} min`}
+                </span>
+              </span>
+              <span className="sr-only">{i.done ? '(done)' : ''}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+/** Signed in online: the study group, with how much set work is waiting. */
+function GroupTile({ todo }: { todo: number | null }) {
   return (
     <a className="card tile" href={href('/group')}>
       <h2>
@@ -108,6 +156,9 @@ export function Home() {
   const due = cards.filter((c) => isQuestionCard(c) && isDue(c)).length;
   const flashDue = cards.filter((c) => !isQuestionCard(c) && isDue(c)).length;
   const dailyDone = daily ? new Set(attempts.filter((a) => a.setId === dailyId).map((a) => `${a.templateId}:${a.seed}`)).size : 0;
+  const setWork = useSetWork();
+  const notes = useMistakeNotes();
+  const openMistakes = notes ? mistakesFrom(attempts).filter((m) => isOpen(m, notes)).length : 0;
   return (
     <div className="stack">
       <div>
@@ -147,8 +198,9 @@ export function Home() {
         )
       )}
       <GoalCard attempts={attempts} goal={settings.dailyGoal} />
+      <PlanCard attempts={attempts} cards={cards} setWork={setWork ?? []} exams={exams} />
       <div className="grid">
-        {cloudMe() && <GroupTile />}
+        {cloudMe() && <GroupTile todo={setWork ? setWork.length : null} />}
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>
             <h2>
@@ -168,6 +220,12 @@ export function Home() {
             <Icon name="review" /> Review
           </h2>
           <span className="muted">{due ? `${due} due now` : 'Nothing due'}</span>
+        </a>
+        <a className="card tile" href={href('/mistakes')}>
+          <h2>
+            <Icon name="x" /> Mistake notebook
+          </h2>
+          <span className="muted">{openMistakes ? `${openMistakes} to put right` : 'Questions you dropped marks on'}</span>
         </a>
         <a className="card tile" href={href('/topics')}>
           <h2>
@@ -211,11 +269,23 @@ export function Home() {
           </h2>
           <span className="muted">{flashDue ? `${flashDue} due now` : 'Formulae you must learn (not in the booklet)'}</span>
         </a>
+        <a className="card tile" href={href('/graphs')}>
+          <h2>
+            <Icon name="graph" /> Graph plotter
+          </h2>
+          <span className="muted">Plot functions and slide through transformations</span>
+        </a>
+        <a className="card tile" href={href('/data')}>
+          <h2>
+            <Icon name="graph" /> Large data set
+          </h2>
+          <span className="muted">Explore the weather data for Paper 3: summaries, box plots, scatter, sampling</span>
+        </a>
         <a className="card tile" href={href('/reference')}>
           <h2>
-            <Icon name="scheme" /> Formulae & tables
+            <Icon name="scheme" /> Formula booklet
           </h2>
-          <span className="muted">Formula booklet, binomial, normal and PMCC tables</span>
+          <span className="muted">The exam booklet, what to learn, statistical tables and how marking works</span>
         </a>
       </div>
       <section className="card">

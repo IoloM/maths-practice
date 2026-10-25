@@ -33,6 +33,8 @@ export interface PaperResult {
   reasons?: Record<number, LossReason[]>;
   /** question number → a note to self */
   notes?: Record<number, string>;
+  /** question number → seconds spent, when the paper was sat in the app's exam mode */
+  times?: Record<number, number>;
 }
 export type PaperResults = Record<string, PaperResult>;
 

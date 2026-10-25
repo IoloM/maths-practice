@@ -13,6 +13,9 @@ import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
 import { MINUTES_PER_MARK, setMarks } from '../lib/sets';
 import { PredictedGrade } from '../components/PredictedGrade';
+import { GradeChart, type PaperPoint } from '../components/GradeChart';
+import { BADGES, earned } from '../lib/badges';
+import { Icon } from '../components/Icon';
 import { finishedPapers, lossesByFamily, lossesByReason, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
 import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
 import { BANK } from '../content/bank-meta';
@@ -64,6 +67,28 @@ function TrendChart({ pts }: { pts: WeekPoint[] }) {
       </svg>
       <figcaption className="small muted">Dashed lines: amber (50%) and green (80%) thresholds.</figcaption>
     </figure>
+  );
+}
+
+function Badges({ have }: { have: Set<string> }) {
+  return (
+    <section className="card stack" aria-labelledby="badges-h">
+      <h2 id="badges-h">
+        Badges <span className="muted small">{have.size} of {BADGES.length}</span>
+      </h2>
+      <ul className="badges">
+        {BADGES.map((b) => (
+          <li key={b.id} className={have.has(b.id) ? 'got' : ''}>
+            <Icon name="award" />
+            <span>
+              <b>{b.title}</b>
+              <span className="small">{b.how}</span>
+              <span className="sr-only">{have.has(b.id) ? ' (earned)' : ' (not yet)'}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -167,9 +192,18 @@ export function Progress() {
     () =>
       sets
         .filter((s) => s.kind === 'mock' && s.status === 'finished')
-        .map((s) => ({ got: attempts.filter((a) => a.setId === s.id).reduce((t, a) => t + scoreOf(a), 0), of: setMarks(s.items), finishedAt: s.finishedAt ?? s.createdAt })),
+        .map((s) => ({ got: attempts.filter((a) => a.setId === s.id).reduce((t, a) => t + scoreOf(a), 0), of: setMarks(s.items), finishedAt: s.finishedAt ?? s.createdAt, label: s.title })),
     [sets, attempts],
   );
+  const overTime = useMemo((): PaperPoint[] => {
+    const real = Object.entries(results ?? {}).flatMap(([id, r]): PaperPoint[] => {
+      const sc = paperScore(id, r);
+      const p = PAST_PAPER_BY_ID.get(id);
+      if (!sc.complete || !p) return [];
+      return [{ label: `${p.series} ${PAPER_TITLES[p.paper].split(':')[0]}`, got: sc.got, of: sc.max, finishedAt: r.done ? new Date(`${r.done}T12:00:00`).getTime() : r.updatedAt, kind: 'paper' }];
+    });
+    return [...real, ...mocks.map((m) => ({ ...m, kind: 'mock' as const }))];
+  }, [results, mocks]);
   if (loading) return <Loading />;
   const byCh = groupBy(attempts, (a) => a.chapter);
   const marks = attempts.reduce((s, a) => s + a.marks, 0);
@@ -204,7 +238,14 @@ export function Progress() {
       </div>
 
       <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results) : []} />
+      {overTime.length > 0 && (
+        <section className="card" aria-labelledby="grades-over-time">
+          <h2 id="grades-over-time">Grades over time</h2>
+          <GradeChart points={overTime} />
+        </section>
+      )}
       {results && <RealPapers results={results} />}
+      <Badges have={new Set(earned({ attempts, sets, papers: results ?? {} }).map((b) => b.id))} />
 
       <section className="card">
         <h2>Trend</h2>

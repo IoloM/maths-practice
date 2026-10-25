@@ -50,8 +50,9 @@ const TABS = [
   { id: 'marking', label: 'Mark schemes' },
 ];
 
-export function Reference() {
+export function Reference({ tab: asked }: { tab?: string }) {
   const [tab, setTab] = useState(() => {
+    if (TABS.some((x) => x.id === asked)) return asked!;
     try {
       const t = localStorage.getItem('mp.reference.tab');
       return TABS.some((x) => x.id === t) ? t! : 'booklet';

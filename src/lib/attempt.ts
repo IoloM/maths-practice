@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { MarkResult, SchemeLine } from '../engine/marking/types';
 import { selfScore } from './self-mark';
 import type { PartAttempt } from '../storage/types';
 
-/** Milliseconds the page has been visible since mount (pauses when hidden). */
+/** Milliseconds the page has been visible since mount (pauses when hidden). The function is stable across renders. */
 export function useActiveTime(): () => number {
   const acc = useRef(0);
   const since = useRef<number | null>(typeof document !== 'undefined' && document.visibilityState === 'visible' ? performance.now() : null);
@@ -18,7 +18,7 @@ export function useActiveTime(): () => number {
     document.addEventListener('visibilitychange', on);
     return () => document.removeEventListener('visibilitychange', on);
   }, []);
-  return () => acc.current + (since.current !== null ? performance.now() - since.current : 0);
+  return useCallback(() => acc.current + (since.current !== null ? performance.now() - since.current : 0), []);
 }
 
 export { selfScore };

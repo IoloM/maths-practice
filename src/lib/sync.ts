@@ -12,8 +12,10 @@ import { CloudError, cloudMe, onCloudMe, pullProgress, pushProgress, refreshMe, 
 import { buildActivity } from './activity';
 import { incoming, isEmpty, outgoing, type Snapshot } from './sync-merge';
 import type { PaperResults } from './paper-results';
+import { NOTES_KEY, type MistakeNotes } from './mistakes';
 import { streak, thisWeek } from './streak';
 import { scoreOf } from '../progress/mastery';
+import { earned } from './badges';
 
 // ---------------------------------------------------------------- compact storage
 const enc = new TextEncoder();
@@ -60,10 +62,12 @@ interface Payload {
   prefs?: { values: SyncedPrefs; at: number };
   /** marks entered for real past papers */
   papers?: PaperResults;
+  /** notes and reasons in the mistake notebook */
+  notes?: MistakeNotes;
 }
 
 /** What the study group sees of you. */
-export function summarise(s: Snapshot, now = new Date()): GroupSummary {
+export function summarise(s: Snapshot, now = new Date(), papers: PaperResults = {}): GroupSummary {
   return {
     attempts: s.attempts.length,
     marks: s.attempts.reduce((t, a) => t + a.marks, 0),
@@ -71,14 +75,25 @@ export function summarise(s: Snapshot, now = new Date()): GroupSummary {
     lastActive: s.attempts.reduce((t, a) => Math.max(t, a.finishedAt), 0),
     week: thisWeek(s.attempts, now),
     streak: streak(s.attempts, now),
+    badges: earned({ attempts: s.attempts, sets: s.sets, papers }).length,
   };
 }
 
-/** Past-paper marks from two devices: per paper, the most recently changed. */
-export function mergePapers(a: PaperResults, b: PaperResults): PaperResults {
-  const out: PaperResults = { ...a };
+/** Records kept by id from two devices (past-paper marks, mistake notes): per id, the most recently changed. */
+export function mergeNewest<T extends { updatedAt: number }>(a: Record<string, T>, b: Record<string, T>): Record<string, T> {
+  const out: Record<string, T> = { ...a };
   for (const [id, r] of Object.entries(b)) if (!out[id] || r.updatedAt > out[id].updatedAt) out[id] = r;
   return out;
+}
+export const mergePapers = (a: PaperResults, b: PaperResults): PaperResults => mergeNewest(a, b);
+
+/** Merge a by-id setting with the other device's copy; true if this device's copy changed. */
+async function mergeSetting<T extends { updatedAt: number }>(store: Store, key: string, remote: Record<string, T> | undefined): Promise<[Record<string, T>, boolean]> {
+  const local = await store.getSetting<Record<string, T>>(key, {});
+  const merged = mergeNewest(local, remote ?? {});
+  if (JSON.stringify(merged) === JSON.stringify(local)) return [merged, false];
+  await store.putSetting(key, merged);
+  return [merged, true];
 }
 
 const PAPERS_KEY = 'pastPaperResults';
@@ -155,20 +170,17 @@ async function run(): Promise<void> {
       const remote = got.data ? (JSON.parse(await unpack(got.data)) as Payload) : null;
       if (remote && (await apply(store, remote.stores))) changed = true;
       if (remote?.prefs && applySyncedPrefs(remote.prefs.values, remote.prefs.at)) changed = true;
-      const localPapers = await store.getSetting<PaperResults>(PAPERS_KEY, {});
-      const papers = mergePapers(localPapers, remote?.papers ?? {});
-      if (JSON.stringify(papers) !== JSON.stringify(localPapers)) {
-        await store.putSetting(PAPERS_KEY, papers);
-        changed = true;
-      }
+      const [papers, papersChanged] = await mergeSetting(store, PAPERS_KEY, remote?.papers);
+      const [notes, notesChanged] = await mergeSetting(store, NOTES_KEY, remote?.notes);
+      if (papersChanged || notesChanged) changed = true;
       const prefs = { values: syncedPrefs(), at: readSettings().prefsAt };
       const snapshot = await localSnapshot(store);
       const out = outgoing(snapshot);
-      if (remote && JSON.stringify([out, prefs, papers]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}])) break;
-      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers };
+      if (remote && JSON.stringify([out, prefs, papers, notes]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}])) break;
+      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes };
       const data = await pack(JSON.stringify(payload));
       if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to save online — back it up to a file instead');
-      if (await pushProgress(got.v, data, summarise(snapshot))) break;
+      if (await pushProgress(got.v, data, summarise(snapshot, new Date(), papers))) break;
       if (tries >= 3) throw new Error('Another device keeps saving at the same time — try again in a moment');
     }
     if (changed) {

@@ -19,14 +19,24 @@ import { Icon } from '../components/Icon';
 import { ErrorBox, Loading } from '../components/bits';
 import { SchemePanel } from '../components/SchemePanel';
 import { BookletButton } from '../components/BookletButton';
+import { ReadAloud } from '../components/ReadAloud';
+import { questionSpeech } from '../lib/speech';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { href, navigate, shareUrl } from '../router';
 import { startSet } from './Exams';
 import { LATEST, gradeFor } from '../lib/grades';
 import { cloudMe, handIn, setWork } from '../lib/cloud';
+import { currentLogin } from '../lib/logins';
 
 /** `#/set/import?c=<code>` — create a set from a shared link, then open it. */
-export function ImportSet({ code }: { code: string }) {
+/** "got/of" from a challenge link, if it makes sense. */
+function parseBeat(beat: string | undefined, by: string | undefined): SetRecord['challenge'] {
+  const m = /^(\d{1,3})\/(\d{1,3})$/.exec(beat ?? '');
+  if (!m || +m[1] > +m[2] || !+m[2]) return undefined;
+  return { by: (by ?? '').trim().slice(0, 40) || 'Someone', got: +m[1], of: +m[2] };
+}
+
+export function ImportSet({ code, beat, by }: { code: string; beat?: string; by?: string }) {
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
     const s = decodeSet(code);
@@ -34,8 +44,9 @@ export function ImportSet({ code }: { code: string }) {
       setErr('This shared set link is not valid (it may be from a newer version of the app).');
       return;
     }
-    void startSet({ ...s, title: s.title });
-  }, [code]);
+    const challenge = parseBeat(beat, by);
+    void startSet({ ...s, title: s.title, ...(challenge ? { challenge } : {}) });
+  }, [code, beat, by]);
   return err ? <ErrorBox>{err}</ErrorBox> : <Loading label="Opening the shared set…" />;
 }
 
@@ -208,13 +219,18 @@ function ExamIntro({ set, metas, onStart }: { set: SetRecord; metas: BankEntry[]
         <a href={href('/exams')}>← Exams and sets</a>
       </p>
       <h1>{set.title}</h1>
+      {set.challenge && (
+        <p className="card challenge" role="note">
+          <Icon name="award" /> <b>{set.challenge.by}</b> scored {set.challenge.got}/{set.challenge.of} on these questions. Can you beat it?
+        </p>
+      )}
       <div className="card stack">
         <p>
           <b>{metas.length}</b> questions · <b>{marks}</b> marks · <b>{set.durationMin}</b> minutes
         </p>
         <ul>
           <li>Answers are not marked until you finish (or the time runs out).</li>
-          <li>Use a calculator. The formula booklet and statistical tables are on the Reference page.</li>
+          <li>Use a calculator. The formula booklet and statistical tables open from the button at the top while you work.</li>
           <li>Show your working in the working area or on paper; method marks can be self-awarded afterwards.</li>
           <li>Your answers are saved as you go, so you can close the app and come back. The clock keeps running.</li>
         </ul>
@@ -338,6 +354,7 @@ function ExamView({ set, insts, metas, onSave }: { set: SetRecord; insts: Instan
               </section>
             ))}
             <div className="part-actions">
+              <ReadAloud className="btn btn-small" text={() => questionSpeech(inst, i + 1)} label={`Read question ${i + 1} aloud`} />
               <button className="btn btn-small" onClick={() => setOpenWork(openWork === i ? null : i)} aria-expanded={openWork === i}>
                 <Icon name="pen" /> {openWork === i ? 'Hide working' : 'Working'}
               </button>
@@ -495,19 +512,23 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
   const pct = total ? Math.round((100 * got) / total) : 0;
   const grade = set.kind === 'mock' && total ? gradeFor(got / total) : null;
   const sections = set.sections?.length ? set.sections : [{ name: 'Questions', from: 0, to: insts.length }];
-  const share = async () => {
-    const url = shareUrl(`/set/import?c=${encodeURIComponent(encodeSet(set))}`);
+  const share = async (challenge = false) => {
+    const name = currentLogin()?.name;
+    const extra = challenge ? `&beat=${got}/${total}${name ? `&by=${encodeURIComponent(name)}` : ''}` : '';
+    const url = shareUrl(`/set/import?c=${encodeURIComponent(encodeSet(set))}${extra}`);
+    const text = challenge ? `I got ${got}/${total} on “${set.title}”. Can you beat it?` : undefined;
     try {
-      if (navigator.share) await navigator.share({ title: set.title, url });
+      if (navigator.share) await navigator.share({ title: set.title, text, url });
       else {
-        await navigator.clipboard.writeText(url);
-        setToast('Link copied — anyone with it gets the same questions');
+        await navigator.clipboard.writeText(text ? `${text} ${url}` : url);
+        setToast(challenge ? 'Challenge copied — send it to a friend' : 'Link copied — anyone with it gets the same questions');
         setTimeout(() => setToast(null), 2500);
       }
     } catch {
       /* cancelled */
     }
   };
+  const ch = set.challenge;
   return (
     <div className="stack">
       <p className="small muted" style={{ margin: 0 }}>
@@ -536,6 +557,27 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
           </a>
         )}
       </div>
+      {ch && (
+        <p className={`card challenge ${got > ch.got ? 'won' : ''}`} role="status">
+          <Icon name="award" />{' '}
+          {got > ch.got ? (
+            <>
+              <b>You beat {ch.by}!</b> {got}/{total} against their {ch.got}/{ch.of}.
+            </>
+          ) : got === ch.got ? (
+            <>
+              <b>A draw with {ch.by}:</b> you both got {got}/{total}.
+            </>
+          ) : (
+            <>
+              <b>
+                {ch.by} wins this one: {ch.got}/{ch.of}
+              </b>{' '}
+              against your {got}/{total}. Tick any method marks you earned below — they count.
+            </>
+          )}
+        </p>
+      )}
       <p className="small muted">
         Auto-marked answers are scored already. Open each question to compare your working with the mark scheme and tick any method marks you earned. <a href={href(`/print/${set.id}`)}>Print this paper and its mark scheme</a>
       </p>
@@ -569,7 +611,10 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
         </section>
       ))}
       <div className="btn-row">
-        <button className="btn" onClick={share}>
+        <button className="btn btn-primary" onClick={() => void share(true)}>
+          <Icon name="award" /> Challenge a friend to beat {got}/{total}
+        </button>
+        <button className="btn" onClick={() => void share()}>
           <Icon name="share" /> Share these questions
         </button>
         <button className="btn" onClick={() => navigate('/exams')}>

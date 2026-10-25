@@ -90,6 +90,8 @@ export interface SetRecord {
   working?: Record<number, Working>;
   /** work set for the study group (cloud.ts): the result is handed in when it's finished */
   assignmentId?: string;
+  /** opened from a "beat my score" link: whose score to beat */
+  challenge?: { by: string; got: number; of: number };
 }
 
 export interface Setting {

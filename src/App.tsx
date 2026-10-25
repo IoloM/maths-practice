@@ -14,6 +14,10 @@ const Exams = lazy(() => import('./pages/Exams').then((m) => ({ default: m.Exams
 const SetRunner = lazy(() => import('./pages/SetRunner').then((m) => ({ default: m.SetRunner })));
 const ImportSet = lazy(() => import('./pages/SetRunner').then((m) => ({ default: m.ImportSet })));
 const Review = lazy(() => import('./pages/Review').then((m) => ({ default: m.Review })));
+const Mistakes = lazy(() => import('./pages/Mistakes').then((m) => ({ default: m.Mistakes })));
+const SitPaper = lazy(() => import('./pages/SitPaper').then((m) => ({ default: m.SitPaper })));
+const DataSet = lazy(() => import('./pages/DataSet').then((m) => ({ default: m.DataSet })));
+const Graphs = lazy(() => import('./pages/Graphs').then((m) => ({ default: m.Graphs })));
 const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 const Flashcards = lazy(() => import('./pages/Flashcards').then((m) => ({ default: m.Flashcards })));
 const Account = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Account })));
@@ -32,6 +36,9 @@ import { UpdateBanner } from './components/UpdateBanner';
 import { Icon } from './components/Icon';
 import { ErrorBox } from './components/bits';
 import { NAV } from './nav';
+import { SearchButton } from './components/SearchButton';
+import { BadgeToast } from './components/BadgeToast';
+import { DueSoon } from './components/DueSoon';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { cloudMode, currentLogin, isGuest, needsSignIn } from './lib/logins';
 
@@ -52,15 +59,23 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
     case 'exams':
       return <Exams />;
     case 'set':
-      return parts[1] === 'import' ? <ImportSet code={query.get('c') ?? ''} /> : <SetRunner key={parts[1]} id={parts[1]} />;
+      return parts[1] === 'import' ? <ImportSet code={query.get('c') ?? ''} beat={query.get('beat') ?? undefined} by={query.get('by') ?? undefined} /> : <SetRunner key={parts[1]} id={parts[1]} />;
     case 'review':
       return <Review />;
+    case 'mistakes':
+      return <Mistakes />;
     case 'reference':
-      return <Reference />;
+      return <Reference key={query.get('tab') ?? ''} tab={query.get('tab') ?? undefined} />;
     case 'flashcards':
       return <Flashcards />;
     case 'past-papers':
-      return <PastPapers open={query.get('p') ?? undefined} />;
+      return <PastPapers key={query.toString()} open={query.get('p') ?? undefined} mark={query.get('mark') === '1'} />;
+    case 'data':
+      return <DataSet />;
+    case 'graphs':
+      return <Graphs />;
+    case 'sit':
+      return <SitPaper key={parts[1]} paperId={parts[1]} />;
     case 'settings':
       return <Settings />;
     case 'print':
@@ -90,7 +105,7 @@ export default function App() {
   const mustChoose = cloudMode && !!me?.mustChange;
   const locked = (needsSignIn() && route.parts[0] !== 'join') || mustChoose;
   const lockScreen = mustChoose ? <ChoosePasswordScreen /> : cloudMode ? <CloudSignIn screen /> : <SignInScreen />;
-  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group'].includes(route.parts[0])) || (p === '/reference' && route.parts[0] === 'flashcards') || (p === '/exams' && route.parts[0] === 'past-papers'));
+  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group'].includes(route.parts[0])) || (p === '/reference' && (route.parts[0] === 'flashcards' || route.parts[0] === 'data' || route.parts[0] === 'graphs')) || (p === '/review' && route.parts[0] === 'mistakes') || (p === '/exams' && (route.parts[0] === 'past-papers' || route.parts[0] === 'sit')));
   return (
     <>
       <a className="skip-link" href="#main" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus())}>
@@ -113,6 +128,7 @@ export default function App() {
             ))}
           </nav>
           )}
+          {!locked && <SearchButton />}
           {me && (
             <a className="who-chip" href={href('/account')} aria-label={`Signed in as ${me.name}`} title="Your login">
               <span className="who-initial" aria-hidden="true">
@@ -128,12 +144,14 @@ export default function App() {
           )}
         </div>
       </header>
+      {cloudMode && !locked && <DueSoon />}
       {isGuest() && !locked && (
         <p className="guest-note" role="note">
           You’re not signed in, so nothing you do is saved. <a href={href('/account')}>Sign in</a> to keep your progress — what you do before signing in comes with you.
         </p>
       )}
       <UpdateBanner />
+      {!locked && <BadgeToast />}
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>
         <ErrorBoundary key={route.path}>

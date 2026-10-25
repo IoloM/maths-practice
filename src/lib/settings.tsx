@@ -20,12 +20,18 @@ export interface Settings {
   examDates: ExamDates;
   /** questions a day to aim for */
   dailyGoal: number;
+  /** practice picks harder or easier questions depending on how the last few went */
+  adaptive: boolean;
+  /** text size: 100%, 115% or 130% */
+  textSize: 'normal' | 'large' | 'larger';
+  /** 'readable': Atkinson Hyperlegible for text (maths keeps its own font) */
+  font: 'standard' | 'readable';
   /** when a preference that follows the person (SYNCED_PREFS) last changed (ms) */
   prefsAt: number;
 }
 
 /** Preferences that follow a person between devices; the rest belong to the device. */
-export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal'] as const;
+export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'adaptive', 'textSize', 'font'] as const;
 export type SyncedPrefs = Pick<Settings, (typeof SYNCED_PREFS)[number]>;
 
 const DEFAULTS: Settings = {
@@ -39,6 +45,9 @@ const DEFAULTS: Settings = {
   persistAsked: false,
   examDates: {},
   dailyGoal: 5,
+  adaptive: true,
+  textSize: 'normal',
+  font: 'standard',
   prefsAt: 0,
 };
 /** each login on the device has its own settings */
@@ -103,6 +112,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (settings.theme === 'system') root.removeAttribute('data-theme');
     else root.setAttribute('data-theme', settings.theme);
   }, [settings.theme]);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.textSize = settings.textSize;
+    root.dataset.font = settings.font;
+    if (settings.font === 'readable') void import('../styles/readable-font');
+  }, [settings.textSize, settings.font]);
   const value = useMemo(() => ({ settings, update }), [settings, update]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
