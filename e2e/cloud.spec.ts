@@ -295,3 +295,32 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await expect(ana.getByRole('region', { name: 'Your plan for today' }).getByText('Set work: Integration')).toBeVisible();
   await ana.context().close();
 });
+
+test.describe('phone reminders', () => {
+  // push needs the service worker; Chromium still routes the pretend Supabase with one running
+  test.use({ serviceWorkers: 'allow' });
+  test('offered when signed in, at an hour no later than 7pm', async ({ page, browserName }) => {
+    const s = fakeState([{ username: 'ana', name: 'Ana', password: 'ana-pass-1' }]);
+    await serveSupabase(page.context(), s);
+    await plainInput(page);
+    await page.goto('./#/settings');
+    const box = page.getByRole('region', { name: 'Phone reminders' });
+    await expect(box).toContainText('Sign in');
+    await signIn(page, 'ana', 'ana-pass-1');
+    await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+    await page.goto('./#/settings');
+    if (browserName === 'webkit') {
+      // an iPhone browser tab: reminders need the Home Screen app
+      await expect(box).toContainText('Add to Home Screen');
+    } else {
+      const pick = box.getByLabel('Remind me at');
+      await expect(pick).toBeVisible();
+      const hours = await pick.locator('option').allTextContents();
+      expect([hours[0], hours.at(-1)]).toEqual(['7am', '7pm']);
+      // notifications aren't allowed in this browser: it says so plainly
+      await box.getByRole('button', { name: 'Turn on reminders' }).click();
+      await expect(box.getByText(/Notifications are blocked|installed for offline use/)).toBeVisible();
+    }
+    await axe(page);
+  });
+});

@@ -214,3 +214,33 @@ axe on 13 views in light and dark) — all green.
 - **Tests**: the migration's security rules run in real Postgres (PGlite); the admin function's
   handler; sync between two devices; online logins end to end in the browser against a pretend
   Supabase that runs the real admin handler.
+
+## Phase 9 — Top-tier study tools ✅ (24–25 Oct 2026)
+
+- **Formula booklet**: the whole exam booklet in one tab (with the tables), "Not in the booklet"
+  (the specification's Appendix 1), a guide to mark schemes, and a booklet pop-up on every question
+  and mock paper.
+- **Self-marking** (`SchemePanel`, `src/lib/self-mark.ts`): the answer, what each mark is for,
+  accuracy marks tied to their method mark, the final mark left to the checker, a running total.
+  Proofs and explanations can now be self-marked in full.
+- **Today's plan**, **mistake notebook** (`#/mistakes`, notes synced), **step by step**,
+  **adaptive practice** (level shown, setting to turn off), **search** (/ or Ctrl K),
+  **grades over time** and **badges** (Progress), **sitting a real past paper** with a clock and
+  time per question (`#/sit/<paper>`).
+- **Study group**: set work by topic, the topics the group finds hardest, a weekly target
+  (`group_target` table), due-soon reminders in the app, "beat my score" challenge links.
+- **Accessibility**: text size, Atkinson Hyperlegible (bundled, offline), read aloud with the
+  device's voices (maths spoken via `tex-speech`).
+- **Large data set explorer** (`#/data`): reads the user's own copy of Pearson's spreadsheet on the
+  device (SheetJS, loaded lazily) — summaries the Edexcel way, box plots, scatter with PMCC and
+  regression, random and systematic samples. The data itself isn't bundled.
+- **Graph plotter** (`#/graphs`): up to three functions, sliders for other letters, roots,
+  turning points and crossings.
+- **More questions**: long exam-style questions (binomial, cubic curves, friction with connected
+  particles, a rough slope there and back) and 17 "show that"/explain questions in Mechanics and
+  Statistics.
+- **Phone reminders**: web push (`push_subscriptions`, `supabase/functions/remind`, hourly
+  `reminders.yml`); one a day at most, only if you haven't practised or set work is due, latest 7pm.
+- **Nightly backups**: `Turn on nightly backups.command` (launchd, 2:30am, into
+  `~/Maths Practice backups`, latest 30 kept; the secret key lives in the login keychain).
+- **Fix**: a finished question no longer re-saves every half second.

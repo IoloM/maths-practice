@@ -8,6 +8,7 @@ import { InstallHelp } from '../components/Install';
 import { EXAM_PAPERS, daysUntil } from '../lib/exams';
 import { cloudMode, currentLogin } from '../lib/logins';
 import { href } from '../router';
+import { HOURS, needsInstall, reminderHour, remindersSupported, turnOffReminders, turnOnReminders } from '../lib/reminders';
 
 export function Settings() {
   const { settings, update } = useSettings();
@@ -159,6 +160,7 @@ export function Settings() {
           );
         })}
       </section>
+      {cloudMode && <Reminders />}
       <section className="card stack" aria-labelledby="a11y-h">
         <h2 id="a11y-h">Accessibility</h2>
         <fieldset className="row-wrap plain-fieldset">
@@ -243,5 +245,77 @@ export function Settings() {
         <p className="small muted">Build {__APP_VERSION__}</p>
       </section>
     </div>
+  );
+}
+
+/** Phone reminders: one nudge a day at the hour you choose (never after 8pm), only when you haven't practised or set work is due. */
+function Reminders() {
+  const me = currentLogin();
+  const [hour, setHour] = useState<number | null>(() => reminderHour());
+  const [pick, setPick] = useState(hour ?? 17);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState<string | null>(null);
+  const run = async (f: () => Promise<void>, next: number | null) => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      await f();
+      setHour(next);
+    } catch (e) {
+      setProblem(e instanceof Error ? e.message : 'That didn’t work');
+    } finally {
+      setBusy(false);
+    }
+  };
+  const label = (h: number) => (h < 12 ? `${h}am` : h === 12 ? '12 noon' : `${h - 12}pm`);
+  return (
+    <section className="card stack" aria-labelledby="reminders-h">
+      <h2 id="reminders-h">Phone reminders</h2>
+      {!me ? (
+        <p className="small muted" style={{ margin: 0 }}>
+          <a href={href('/account')}>Sign in</a> to get a daily reminder on this phone or computer.
+        </p>
+      ) : !remindersSupported() || needsInstall() ? (
+        <p className="small muted" style={{ margin: 0 }}>
+          {needsInstall() ? 'On iPhone and iPad, reminders work in the app on your Home Screen: tap Share, then “Add to Home Screen”, open it from there, and turn them on here.' : 'This browser can’t show reminders.'}
+        </p>
+      ) : (
+        <>
+          <p className="small" style={{ margin: 0 }}>
+            One reminder a day, only if you haven’t practised yet or set work is due. The latest is 7pm, so nothing arrives after 8pm.
+          </p>
+          <div className="row-wrap">
+            <label className="row">
+              Remind me at
+              <select value={pick} onChange={(e) => setPick(Number(e.target.value))} disabled={busy}>
+                {HOURS.map((h) => (
+                  <option key={h} value={h}>
+                    {label(h)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {hour === null ? (
+              <button className="btn btn-primary" disabled={busy} onClick={() => void run(() => turnOnReminders(pick), pick)}>
+                <Icon name="bell" /> Turn on reminders
+              </button>
+            ) : (
+              <>
+                {pick !== hour && (
+                  <button className="btn" disabled={busy} onClick={() => void run(() => turnOnReminders(pick), pick)}>
+                    Change to {label(pick)}
+                  </button>
+                )}
+                <button className="btn btn-ghost" disabled={busy} onClick={() => void run(turnOffReminders, null)}>
+                  Turn off
+                </button>
+              </>
+            )}
+          </div>
+          {hour !== null && <p className="small good-text" style={{ margin: 0 }}>On for this device, at {label(hour)}.</p>}
+          {problem && <p className="error-text small" style={{ margin: 0 }}>{problem}</p>}
+        </>
+      )}
+    </section>
   );
 }

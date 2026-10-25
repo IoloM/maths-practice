@@ -2404,6 +2404,43 @@
    "n": 136
   },
   {
+   "id": "p1.12.long-cubic-stationary-points-and-tangent",
+   "family": "p1.12.exam-style",
+   "title": "Exam-style: a cubic curve — derivative, stationary points, their nature and a tangent",
+   "spec": [
+    "P7.2",
+    "P7.3",
+    "P7.1"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.4",
+    "12.6",
+    "12.8",
+    "12.9"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 14,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "exam-style",
+    "differentiation",
+    "stationary points",
+    "second derivative",
+    "tangent"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.13.area-under-quadratic",
    "family": "p1.13.area-under",
    "title": "Area between a quadratic curve and the x-axis",
@@ -8174,6 +8211,39 @@
    "n": 108
   },
   {
+   "id": "sm1.6.long-binomial-model-and-repeated-samples",
+   "family": "sm1.6.exam-style",
+   "title": "Exam-style: a binomial model, cumulative probabilities and repeated samples",
+   "spec": [
+    "S4.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.2",
+    "6.3",
+    "6.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 12,
+   "time": 14,
+   "commands": [
+    "State",
+    "Find"
+   ],
+   "tags": [
+    "exam-style",
+    "binomial",
+    "cumulative",
+    "two-stage",
+    "modelling"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm1.7.long-binomial-model-and-two-tailed-test",
    "family": "sm1.7.exam-style",
    "title": "Exam-style: binomial model, probabilities, two-tailed critical region and conclusion",
@@ -10054,6 +10124,76 @@
     "limiting equilibrium",
     "rigid bodies",
     "diagram"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.5.long-rough-table-and-hanging-particle",
+   "family": "sm2.5.exam-style",
+   "title": "Exam-style: a particle on a rough table pulled by a hanging particle",
+   "spec": [
+    "M8.4",
+    "M8.6",
+    "M7.3"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 13,
+   "time": 16,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "exam-style",
+    "pulleys",
+    "friction",
+    "connected particles",
+    "suvat",
+    "multi-stage"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.5.long-projected-up-a-rough-slope",
+   "family": "sm2.5.exam-style",
+   "title": "Exam-style: a particle projected up a rough slope slides back down",
+   "spec": [
+    "M8.6",
+    "M8.2",
+    "M7.3"
+   ],
+   "chapter": "SM2.5",
+   "sections": [
+    "5.2",
+    "5.3"
+   ],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 13,
+   "time": 16,
+   "commands": [
+    "Find",
+    "Show that",
+    "Explain"
+   ],
+   "tags": [
+    "exam-style",
+    "friction",
+    "inclined plane",
+    "resolving",
+    "suvat",
+    "multi-stage"
    ],
    "n": 200
   },
@@ -15068,11 +15208,474 @@
    ],
    "n": 1,
    "fixed": true
+  },
+  {
+   "id": "fx.show.suvat-v2",
+   "family": "fx.mechanics.show-that",
+   "title": "Show that v² = u² + 2as",
+   "spec": [
+    "M7.3"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.suvat-calculus",
+   "family": "fx.mechanics.show-that",
+   "title": "Derive s = ut + ½at² by integration",
+   "spec": [
+    "M7.4"
+   ],
+   "chapter": "SM1.11",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.instantaneous-rest",
+   "family": "fx.mechanics.show-that",
+   "title": "Show when a particle is at instantaneous rest",
+   "spec": [
+    "M7.4"
+   ],
+   "chapter": "SM1.11",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.projectile-time-of-flight",
+   "family": "fx.mechanics.show-that",
+   "title": "Projectiles: show the time of flight",
+   "spec": [
+    "M7.5"
+   ],
+   "chapter": "SM2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.projectile-range",
+   "family": "fx.mechanics.show-that",
+   "title": "Projectiles: show the range",
+   "spec": [
+    "M7.5"
+   ],
+   "chapter": "SM2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.projectile-trajectory",
+   "family": "fx.mechanics.show-that",
+   "title": "Projectiles: the equation of the path",
+   "spec": [
+    "M7.5"
+   ],
+   "chapter": "SM2.6",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.limiting-friction-tan",
+   "family": "fx.mechanics.show-that",
+   "title": "Limiting equilibrium on a slope: μ = tan α",
+   "spec": [
+    "M8.6",
+    "M8.2"
+   ],
+   "chapter": "SM2.5",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.pulley-acceleration",
+   "family": "fx.mechanics.show-that",
+   "title": "Pulley: show the acceleration",
+   "spec": [
+    "M8.4"
+   ],
+   "chapter": "SM1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.max-height",
+   "family": "fx.mechanics.show-that",
+   "title": "Vertical motion: the greatest height",
+   "spec": [
+    "M8.3",
+    "M7.3"
+   ],
+   "chapter": "SM1.9",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.ladder",
+   "family": "fx.mechanics.show-that",
+   "title": "Ladder against a smooth wall",
+   "spec": [
+    "M9.1"
+   ],
+   "chapter": "SM2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.rod-tilting",
+   "family": "fx.mechanics.show-that",
+   "title": "Rod on two supports: about to tilt",
+   "spec": [
+    "M9.1"
+   ],
+   "chapter": "SM2.4",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Explain",
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "proof",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.independent-complements",
+   "family": "fx.statistics.show-that",
+   "title": "Independence carries over to complements",
+   "spec": [
+    "S3.2"
+   ],
+   "chapter": "SM2.2",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that",
+    "Prove"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.check-independence",
+   "family": "fx.statistics.show-that",
+   "title": "Test two events for independence",
+   "spec": [
+    "S3.2"
+   ],
+   "chapter": "SM2.2",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 3,
+   "time": 4,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.normal-not-suitable",
+   "family": "fx.statistics.show-that",
+   "title": "When a normal model is not suitable",
+   "spec": [
+    "S4.2"
+   ],
+   "chapter": "SM2.3",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.why-two-tailed",
+   "family": "fx.statistics.show-that",
+   "title": "One-tailed or two-tailed?",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.significance-meaning",
+   "family": "fx.statistics.show-that",
+   "title": "What a 5% significance level means",
+   "spec": [
+    "S5.1"
+   ],
+   "chapter": "SM1.7",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.show.log-regression",
+   "family": "fx.statistics.show-that",
+   "title": "Linear regression on logs gives an exponential model",
+   "spec": [
+    "S2.2"
+   ],
+   "chapter": "SM2.1",
+   "sections": [],
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 4,
+   "time": 5,
+   "commands": [
+    "Show that"
+   ],
+   "tags": [
+    "show that",
+    "explain",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
   }
  ],
  "totals": {
-  "templates": 349,
-  "questions": 62948,
-  "fixed": 158
+  "templates": 353,
+  "questions": 63748,
+  "fixed": 175
  }
 }

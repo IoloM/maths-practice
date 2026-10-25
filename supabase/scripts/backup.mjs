@@ -23,7 +23,7 @@ async function table(name) {
   }
 }
 
-const dir = `backups/${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`;
+const dir = `${process.env.BACKUP_DIR || 'backups'}/${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`;
 mkdirSync(dir, { recursive: true, mode: 0o700 });
 const users = [];
 for (let page = 1; ; page++) {
@@ -32,7 +32,7 @@ for (let page = 1; ; page++) {
   if (r.users.length < 100) break;
 }
 writeFileSync(`${dir}/users.json`, JSON.stringify(users, null, 1), { mode: 0o600 });
-for (const name of ['profiles', 'progress', 'progress_history', 'stats', 'activity', 'assignments', 'assignment_results']) {
+for (const name of ['profiles', 'progress', 'progress_history', 'stats', 'activity', 'assignments', 'assignment_results', 'group_target']) {
   const rows = await table(name);
   writeFileSync(`${dir}/${name}.json`, JSON.stringify(rows), { mode: 0o600 });
   console.log(`${name}: ${rows.length}`);

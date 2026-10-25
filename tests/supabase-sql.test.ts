@@ -151,6 +151,20 @@ describe('security rules', () => {
     expect(await as(ANA, 'select * from public.group_target')).toEqual([]);
   });
 
+  it('reminder subscriptions: your own only, and never later than 8pm', async () => {
+    const add = (uid: string, endpoint: string, hour = 17) => as(uid, "insert into public.push_subscriptions (endpoint, p256dh, auth, hour, tz) values ($1, 'k', 'a', $2, 'Europe/London')", [endpoint, hour]);
+    await add(ANA, 'https://push.example/ana');
+    await add(BEN, 'https://push.example/ben', 8);
+    expect(await fails(add(ANA, 'https://push.example/late', 20))).toBe(true);
+    expect(await fails(add(ANA, 'http://insecure.example/x'))).toBe(true);
+    expect(await fails(as(ANA, "insert into public.push_subscriptions (user_id, endpoint, p256dh, auth) values ($1, 'https://push.example/x', 'k', 'a')", [BEN]))).toBe(true);
+    expect((await as(ANA, 'select endpoint from public.push_subscriptions')).map((r) => r.endpoint)).toEqual(['https://push.example/ana']);
+    expect(await as(ADMIN, 'select endpoint from public.push_subscriptions')).toEqual([]);
+    await as(ANA, 'delete from public.push_subscriptions where endpoint = $1', ['https://push.example/ben']); // not hers
+    expect((await db.query('select count(*)::int as n from public.push_subscriptions')).rows).toEqual([{ n: 2 }]);
+    expect(await fails(as(null, 'select * from public.push_subscriptions'))).toBe(true);
+  });
+
   it('a switched-off login loses access straight away', async () => {
     await db.query('update public.profiles set disabled = true where id = $1', [BEN]);
     expect(await as(BEN, 'select * from public.profiles')).toEqual([]);

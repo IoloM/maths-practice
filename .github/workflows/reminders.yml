@@ -1,0 +1,25 @@
+name: Phone reminders
+
+# Every hour, ask the reminder function (supabase/functions/remind) to send any that are due. It
+# decides who, from each person's chosen hour and time zone, and never sends after 8pm. Does nothing
+# until supabase/setup.sh has set the repository variables and the REMIND_SECRET secret.
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  remind:
+    if: vars.SUPABASE_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Send the reminders that are due
+        env:
+          SECRET: ${{ secrets.REMIND_SECRET }}
+          URL: ${{ vars.SUPABASE_URL }}
+        run: |
+          if [ -z "$SECRET" ]; then echo "No REMIND_SECRET yet"; exit 0; fi
+          curl -fsS -X POST "$URL/functions/v1/remind" -H "x-remind-secret: $SECRET" -H "content-type: application/json" -d '{}'
