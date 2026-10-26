@@ -53,3 +53,38 @@ describe('marked topics', () => {
     expect(plan[0]).toMatchObject({ id: 'learn-P2.11', title: 'Learn Integration', path: '/learn/P2.11', done: false });
   });
 });
+
+describe('check-ins after learning a topic', () => {
+  const D = 86_400_000;
+  const t0 = Date.UTC(2026, 9, 1);
+  it('come back after 3, 7 and 21 days, then stop', async () => {
+    const { nextCheck, dueChecks } = await import('../src/lib/topics');
+    const m = { flag: null, learnt: t0, checks: [] as { at: number; got: number; of: number; set: string }[], updatedAt: t0 };
+    expect(nextCheck(m)).toBe(t0 + 3 * D);
+    expect(dueChecks({ 'P1.2': m }, t0 + 2 * D)).toEqual([]);
+    expect(dueChecks({ 'P1.2': m }, t0 + 3 * D)).toEqual(['P1.2']);
+    m.checks.push({ at: t0 + 3 * D, got: 8, of: 10, set: 'a' });
+    expect(nextCheck(m)).toBe(t0 + 7 * D);
+    m.checks.push({ at: t0 + 7 * D, got: 9, of: 10, set: 'b' });
+    expect(nextCheck(m)).toBe(t0 + 21 * D);
+    m.checks.push({ at: t0 + 21 * D, got: 10, of: 10, set: 'c' });
+    expect(nextCheck(m)).toBeNull();
+    // marked "need help" again: no check-ins while it's being relearnt
+    expect(nextCheck({ flag: 'help', learnt: t0, updatedAt: t0 })).toBeNull();
+  });
+  it('a due check-in goes in today’s plan', () => {
+    const plan = buildPlan({ attempts: [], cards: [], papers: {}, notes: {}, setWork: [], exams: [], topics: { 'SM1.6': { flag: null, learnt: Date.now() - 4 * D, updatedAt: 1 } } });
+    expect(plan[0]).toMatchObject({ id: 'check-SM1.6', path: '/checkin/SM1.6', title: 'Check-in: Statistical distributions' });
+  });
+});
+
+describe('confidence vs reality', () => {
+  it('compares how sure you feel with your marks', async () => {
+    const { verdict } = await import('../src/lib/confidence');
+    expect(verdict(3, 1)).toBe('over');
+    expect(verdict(1, 3)).toBe('under');
+    expect(verdict(2, 2)).toBe('right');
+    expect(verdict(3, null)).toBe('untested');
+    expect(verdict(undefined, 2)).toBe('unrated');
+  });
+});

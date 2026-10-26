@@ -12,7 +12,7 @@ import { groupBy, mastery } from '../progress/mastery';
 import { todayKey } from './dates';
 import { lossesByFamily, type PaperResults } from './paper-results';
 import { fixedToday, isOpen, mistakesFrom, type MistakeNotes } from './mistakes';
-import { flagged, type TopicMarks } from './topics';
+import { dueChecks, flagged, type TopicMarks } from './topics';
 
 export interface PlanItem {
   id: string;
@@ -90,6 +90,13 @@ export function buildPlan(input: PlanInput): PlanItem[] {
   if (open || fixed) {
     const aim = Math.min(3, open + fixed);
     items.push({ id: 'mistakes', title: `Put right ${aim} mistake${aim === 1 ? '' : 's'}`, detail: fixed ? `${Math.min(fixed, aim)} of ${aim} done` : `${open} in your notebook`, path: '/mistakes', minutes: 10, done: fixed >= aim });
+  }
+
+  // check-ins on topics you've learnt
+  for (const c of dueChecks(input.topics ?? {}, now.getTime()).slice(0, 2)) {
+    const m = input.topics![c];
+    const title = CHAPTER_BY_REF.get(c as never)?.title ?? c;
+    items.push({ id: `check-${c}`, title: `Check-in: ${title}`, detail: `Check-in ${(m.checks?.length ?? 0) + 1} of 3 on a topic you learnt`, path: `/checkin/${c}`, minutes: 12, done: false });
   }
 
   // a topic you asked for help with: learn it, then practise it

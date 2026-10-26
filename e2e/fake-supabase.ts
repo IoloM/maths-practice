@@ -175,7 +175,8 @@ async function respond(s: FakeState, route: Route) {
   const q = url.searchParams;
   switch (`${req.method()} ${table}`) {
     case 'GET profiles':
-      return reply(200, filtered(s.profiles as unknown as Record<string, unknown>[], q).map((r) => pick(r, q.get('select'))));
+      // your own, or everyone's for admins
+      return reply(200, filtered(s.profiles as unknown as Record<string, unknown>[], q).filter((r) => profile.admin || r.id === me!.id).map((r) => pick(r, q.get('select'))));
     case 'PATCH profiles': {
       const patch = body();
       for (const p of filtered(s.profiles as unknown as Record<string, unknown>[], q)) if (p.id === me!.id) Object.assign(p, { must_change: patch.must_change ?? p.must_change, name: patch.name ?? p.name });
@@ -195,7 +196,7 @@ async function respond(s: FakeState, route: Route) {
       return reply(200, base + 1);
     }
     case 'GET stats':
-      return reply(200, [...s.stats].map(([user_id, summary]) => pick({ user_id, summary }, q.get('select'))));
+      return reply(200, [...s.stats].filter(([id]) => profile.admin || id === me!.id).map(([user_id, summary]) => pick({ user_id, summary }, q.get('select'))));
     case 'GET activity':
       // your own, or everyone's for admins
       return reply(200, [...s.activity].filter(([id]) => profile.admin || id === me!.id).map(([user_id, detail]) => pick({ user_id, detail }, q.get('select'))));
@@ -230,7 +231,7 @@ async function respond(s: FakeState, route: Route) {
       if (profile.admin) s.target = null;
       return reply(204);
     case 'GET assignment_results':
-      return reply(200, s.results);
+      return reply(200, s.results.filter((r) => profile.admin || r.user_id === me!.id));
     case 'POST assignment_results': {
       const row = body();
       if (row.user_id !== me!.id) return reply(403, { message: 'new row violates row-level security policy' });

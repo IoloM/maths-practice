@@ -369,7 +369,7 @@ export function CloudAccount() {
             <Icon name="refresh" /> Save now
           </button>
           <a className="btn" href={href('/group')}>
-            Study group
+            {m.admin ? 'Study group' : 'Set work'}
           </a>
           {m.admin && (
             <a className="btn btn-primary" href={href('/logins')}>
@@ -538,6 +538,9 @@ function Row({ u, me, work, onChange }: { u: Member; me: Me; work?: ActivitySumm
             <button className="btn btn-small btn-primary" onClick={() => setViewing(!viewing)} aria-expanded={viewing} aria-label={`${viewing ? 'Hide' : 'View'} ${u.name}'s work`}>
               {viewing ? 'Hide work' : 'View work'}
             </button>
+            <a className="btn btn-small" href={href(`/report/${u.id}`)} aria-label={`Progress report for ${u.name}`}>
+              Report
+            </a>
             <button
               className="btn btn-small"
               disabled={busy}
@@ -719,7 +722,9 @@ function ActivityFeed({ members, work }: { members: Member[]; work: Map<string, 
       ) : (
         <p className="muted small">Nothing yet — work shows here once people practise while signed in.</p>
       )}
-      <p className="muted small">Use View work on a login below for one person’s topics, past papers and mocks.</p>
+      <p className="muted small">
+        Use View work on a login below for one person’s topics, past papers and mocks, or <a href={href('/report/all')}>print progress reports for everyone</a>.
+      </p>
     </section>
   );
 }

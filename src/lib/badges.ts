@@ -1,6 +1,6 @@
 /**
- * Badges for milestones, worked out from your progress (nothing extra is saved). The study group
- * sees how many you have; a new one pops up when you earn it.
+ * Badges for milestones, worked out from your progress (nothing extra is saved). Admins see how
+ * many you have; a new one pops up when you earn it.
  */
 import type { Attempt, SetRecord } from '../storage/types';
 import { CHAPTERS } from '../content/chapters';

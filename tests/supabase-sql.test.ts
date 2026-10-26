@@ -69,8 +69,8 @@ describe('security rules', () => {
     expect(await as(null, 'select public.ping() as p')).toEqual([{ p: 'ok' }]);
   });
 
-  it('members see the group’s names, and change only their own name', async () => {
-    expect((await as(ANA, 'select username from public.profiles order by username')).map((r) => r.username)).toEqual(['ana', 'ben', 'iolo']);
+  it('members see only their own profile (admins see everyone), and change only their own name', async () => {
+    expect((await as(ANA, 'select username from public.profiles order by username')).map((r) => r.username)).toEqual(['ana']);
     await as(ANA, "update public.profiles set name = 'Ana B' where id = $1", [ANA]);
     await as(ANA, "update public.profiles set name = 'Hacked' where id = $1", [BEN]); // no rows: not hers
     expect(await fails(as(ANA, 'update public.profiles set admin = true where id = $1', [ANA]))).toBe(true);
@@ -95,8 +95,10 @@ describe('security rules', () => {
     expect(await as(ADMIN, 'select * from public.progress')).toEqual([]);
     await as(BEN, "update public.progress set data = 'hacked' where user_id = $1", [ANA]);
     expect(await as(ANA, 'select data from public.progress')).toEqual([{ data: 'ana-2' }]);
-    // the group sees her stats, and last_seen moved
-    expect(await as(BEN, 'select summary from public.stats where user_id = $1', [ANA])).toEqual([{ summary: { attempts: 4 } }]);
+    // her stats: hers and the admins' to see, not other members', and last_seen moved
+    expect(await as(BEN, 'select summary from public.stats where user_id = $1', [ANA])).toEqual([]);
+    expect(await as(ANA, 'select summary from public.stats where user_id = $1', [ANA])).toEqual([{ summary: { attempts: 4 } }]);
+    expect(await as(ADMIN, 'select summary from public.stats where user_id = $1', [ANA])).toEqual([{ summary: { attempts: 4 } }]);
     expect(await fails(as(BEN, "update public.stats set summary = '{}' where user_id = $1 returning 1", [ANA]).then((r) => (r.length ? r : Promise.reject(new Error('no rows')))))).toBe(true);
     expect((await as<{ last_seen: unknown }>(ANA, 'select last_seen from public.profiles where id = $1', [ANA]))[0].last_seen).not.toBeNull();
   });
@@ -109,10 +111,13 @@ describe('security rules', () => {
     await as(ANA, 'insert into public.assignment_results (assignment_id, user_id, got, "of") values ($1, $2, 3, 4)', [a.id, ANA]);
     expect(await fails(as(ANA, 'insert into public.assignment_results (assignment_id, user_id, got, "of") values ($1, $2, 4, 4)', [a.id, BEN]))).toBe(true);
     expect(await fails(as(ANA, 'insert into public.assignment_results (assignment_id, user_id, got, "of") values ($1, $2, 9, 4)', [a.id, ANA]))).toBe(true);
-    expect(await as(BEN, 'select user_id, got from public.assignment_results')).toEqual([{ user_id: ANA, got: 3 }]);
+    // results: your own, or everyone's for admins
+    expect(await as(BEN, 'select user_id, got from public.assignment_results')).toEqual([]);
+    expect(await as(ANA, 'select user_id, got from public.assignment_results')).toEqual([{ user_id: ANA, got: 3 }]);
+    expect(await as(ADMIN, 'select user_id, got from public.assignment_results')).toEqual([{ user_id: ANA, got: 3 }]);
     expect(await fails(as(ANA, 'delete from public.assignments where id = $1 returning 1', [a.id]).then((r) => (r.length ? r : Promise.reject(new Error('no rows')))))).toBe(true);
     await as(ADMIN, 'delete from public.assignments where id = $1', [a.id]);
-    expect(await as(BEN, 'select * from public.assignment_results')).toEqual([]);
+    expect(await as(ADMIN, 'select * from public.assignment_results')).toEqual([]);
   });
 
   it('keeps the last 20 saves of each person, out of everyone’s reach but the owner’s', async () => {

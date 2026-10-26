@@ -27,6 +27,8 @@ import { startSet } from './Exams';
 import { LATEST, gradeFor } from '../lib/grades';
 import { cloudMe, handIn, setWork } from '../lib/cloud';
 import { currentLogin } from '../lib/logins';
+import { CHECK_GAPS, recordCheck, setFlag } from '../lib/topics';
+import { CHAPTER_BY_REF } from '../content/chapters';
 
 /** `#/set/import?c=<code>` — create a set from a shared link, then open it. */
 /** "got/of" from a challenge link, if it makes sense. */
@@ -174,7 +176,7 @@ function SetForGroup({ set, marks }: { set: SetRecord; marks: number }) {
         e.preventDefault();
         try {
           await setWork({ title: title.trim() || set.title, items: set.items.map(({ templateId, seed }) => ({ templateId, seed })), durationMin: set.durationMin, due: due || null });
-          setState({ ok: true, text: 'Set for the group — it’s on everyone’s Study group page.' });
+          setState({ ok: true, text: 'Set for the group — it’s on everyone’s Set work page.' });
         } catch (err) {
           setState({ ok: false, text: (err as Error).message });
         }
@@ -477,6 +479,39 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
   );
 }
 
+/** After a topic check-in: record it, and say whether the topic has stuck. */
+function CheckinResult({ chapter, n, setId, got, of }: { chapter: string; n: number; setId: string; got: number; of: number }) {
+  const title = CHAPTER_BY_REF.get(chapter as never)?.title ?? chapter;
+  const ok = of > 0 && got / of >= 0.6;
+  const [again, setAgain] = useState(false);
+  useEffect(() => {
+    if (of > 0) void recordCheck(chapter, { at: Date.now(), got, of, set: setId });
+  }, [chapter, setId, got, of]);
+  const left = CHECK_GAPS.length - (n + 1);
+  return (
+    <div className={`card stack checkin-result ${ok ? 'won' : ''}`} role="status">
+      <b>
+        Check-in {n + 1} of {CHECK_GAPS.length} on {title}: {got}/{of}
+      </b>
+      {ok ? (
+        <span>{left ? `It’s sticking. Next check-in in ${CHECK_GAPS[n + 1]} days.` : 'All three check-ins done — you’ve learnt it.'}</span>
+      ) : (
+        <>
+          <span>It hasn’t quite stuck yet. Go back over the notes and try a few more, then mark it learnt again.</span>
+          <div className="btn-row">
+            <button className="btn btn-small btn-primary" disabled={again} onClick={() => void setFlag(chapter, 'help').then(() => setAgain(true))}>
+              {again ? 'Marked: need help' : 'Mark it “need help” again'}
+            </button>
+            <a className="btn btn-small" href={href(`/learn/${chapter}`)}>
+              Notes and videos
+            </a>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; metas: BankEntry[] }) {
   const { attempts, loading } = useProgress();
   const [open, setOpen] = useState<number | null>(null);
@@ -529,6 +564,7 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
     }
   };
   const ch = set.challenge;
+  const ci = set.checkin;
   return (
     <div className="stack">
       <p className="small muted" style={{ margin: 0 }}>
@@ -557,6 +593,7 @@ function SetResults({ set, insts, metas }: { set: SetRecord; insts: Instance[]; 
           </a>
         )}
       </div>
+      {ci && <CheckinResult chapter={ci.chapter} n={ci.n} setId={set.id} got={got} of={total} />}
       {ch && (
         <p className={`card challenge ${got > ch.got ? 'won' : ''}`} role="status">
           <Icon name="award" />{' '}

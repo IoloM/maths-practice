@@ -25,7 +25,20 @@ export interface TopicMark {
   links?: TopicLink[];
   /** when you marked it */
   since?: number;
+  /** when you said you'd learnt it: check-ins follow */
+  learnt?: number;
+  /** check-ins done since then */
+  checks?: TopicCheck[];
+  /** how confident you feel: 1 not yet, 2 getting there, 3 confident */
+  confidence?: 1 | 2 | 3;
   updatedAt: number;
+}
+export interface TopicCheck {
+  at: number;
+  got: number;
+  of: number;
+  /** the set it came from (so it's only counted once) */
+  set: string;
 }
 /** chapter ref → mark */
 export type TopicMarks = Record<string, TopicMark>;
@@ -42,6 +55,40 @@ async function update(chapter: string, f: (m: TopicMark) => Omit<TopicMark, 'upd
   await store.putSetting(TOPICS_KEY, all);
   notifyProgress();
 }
+
+export const setConfidence = (chapter: string, confidence: 1 | 2 | 3 | undefined) => update(chapter, (m) => ({ ...m, confidence }));
+
+// ---------------------------------------------------------------- check-ins after learning a topic
+/** Days between check-ins: 3, then 4 more (7), then 14 more (21). */
+export const CHECK_GAPS = [3, 4, 14];
+const DAY = 86_400_000;
+
+/** You've learnt it: unmark it and start the check-ins. */
+export const markLearnt = (chapter: string) => update(chapter, (m) => ({ ...m, flag: null, since: undefined, learnt: Date.now(), checks: [] }));
+
+/** When the next check-in is due, or null when there are none left (or it isn't learnt). */
+export function nextCheck(m: TopicMark | undefined): number | null {
+  if (!m?.learnt || m.flag) return null;
+  const done = m.checks ?? [];
+  if (done.length >= CHECK_GAPS.length) return null;
+  return (done.length ? done[done.length - 1].at : m.learnt) + CHECK_GAPS[done.length] * DAY;
+}
+
+/** Topics with a check-in due now, longest-waiting first. */
+export function dueChecks(marks: TopicMarks, now = Date.now()): string[] {
+  return Object.entries(marks)
+    .map(([c, m]) => [c, nextCheck(m)] as const)
+    .filter(([, t]) => t !== null && t <= now)
+    .sort((a, b) => a[1]! - b[1]!)
+    .map(([c]) => c);
+}
+
+/** Record a finished check-in (once per set; self-marking afterwards updates its score). */
+export const recordCheck = (chapter: string, check: TopicCheck) =>
+  update(chapter, (m) => {
+    const had = m.checks?.some((c) => c.set === check.set);
+    return { ...m, checks: had ? m.checks!.map((c) => (c.set === check.set ? { ...c, got: check.got, of: check.of } : c)) : [...(m.checks ?? []), check] };
+  });
 
 export const setFlag = (chapter: string, flag: TopicFlag | null) => update(chapter, (m) => ({ ...m, flag, since: flag ? (m.flag ? m.since : Date.now()) : undefined }));
 export const setTopicNote = (chapter: string, note: string) => update(chapter, (m) => ({ ...m, note: note.slice(0, 5000) || undefined }));

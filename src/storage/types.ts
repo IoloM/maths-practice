@@ -92,6 +92,8 @@ export interface SetRecord {
   assignmentId?: string;
   /** opened from a "beat my score" link: whose score to beat */
   challenge?: { by: string; got: number; of: number };
+  /** a check-in on a topic you said you'd learnt (topics.ts): which topic, and which check-in (0, 1, 2) */
+  checkin?: { chapter: string; n: number };
 }
 
 export interface Setting {

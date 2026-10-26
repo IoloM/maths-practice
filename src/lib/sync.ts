@@ -69,7 +69,7 @@ interface Payload {
   topics?: TopicMarks;
 }
 
-/** What the study group sees of you. */
+/** What admins see of you (the study group leaderboard). */
 export function summarise(s: Snapshot, now = new Date(), papers: PaperResults = {}): GroupSummary {
   return {
     attempts: s.attempts.length,

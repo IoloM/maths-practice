@@ -40,6 +40,7 @@ const PAGES: [string, string, string, Record<string, string>?][] = [
   ['Home', 'Today’s plan, goal and streak', '/'],
   ['Topics', 'Every textbook chapter', '/topics'],
   ['Learn', 'Topics you need help with: notes, videos, worked examples', '/learn'],
+  ['Confidence vs reality', 'How sure you feel about each topic against your marks', '/confidence'],
   ['Mock papers and timed sets', 'Exams', '/exams'],
   ['Past papers', 'Every 9MA0 paper, marks and exam mode', '/past-papers'],
   ['Review', 'Spaced repetition: what’s due', '/review'],
@@ -56,7 +57,7 @@ const PAGES: [string, string, string, Record<string, string>?][] = [
   ['Graph plotter', 'Plot functions, sliders for transformations, roots and turning points', '/graphs'],
   ['Large data set explorer', 'Met Office weather data: stats, box plots, scatter, sampling', '/data'],
   ['Settings', 'Theme, answer boxes, exam dates, daily goal, text size', '/settings'],
-  ['Study group', 'Leaderboard and set work', '/group'],
+  ['Set work', 'Work set for you (admins: the study group and leaderboard)', '/group'],
   ['Your account', 'Sign in, save, password', '/account'],
 ];
 

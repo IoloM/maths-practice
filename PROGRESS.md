@@ -257,3 +257,17 @@ axe on 13 views in light and dark) — all green.
   notes and links (YouTube links play on the page).
 - Today's plan starts with a topic you asked for help with; admins see who asked for help on what in
   the group's "hardest topics" report.
+
+## Phase 11 — Admin-only group, check-ins, confidence, reports ✅ (26 Oct 2026)
+
+- **Study group and leaderboard are admin-only**, enforced by the database
+  (`20261028000000_group_admin_only.sql`): members read only their own profile, stats and set-work
+  results. Members get a "Set work" page with their own work and their own progress towards the
+  weekly target.
+- **Check-ins**: "I’ve learnt it" on a marked topic starts three short checks (about 10 marks of the
+  topic’s easier questions) after 3, 7 and 21 days (`#/checkin/<chapter>`), in today’s plan and on
+  the Learn pages; a weak check-in offers to mark the topic "need help" again.
+- **Confidence vs reality** (`#/confidence`): rate each topic, see it next to your marks, and the
+  topics you feel sure about but drop marks on come first.
+- **Progress reports** (`#/report/<id>`, `#/report/all`, admins): totals, predicted grade, topics,
+  help requests, past papers, mocks and recent questions, one person per printed page.

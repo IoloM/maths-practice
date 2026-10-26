@@ -2377,3 +2377,112 @@ svg.graph {
   cursor: default;
   opacity: 0.8;
 }
+
+.checkin-result.won {
+  border-color: var(--good);
+  background: var(--good-soft);
+}
+
+.learnt-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+/* ---------- confidence vs reality ---------- */
+.confidence-picker {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.confidence-picker .btn.on {
+  font-weight: 700;
+  color: var(--text);
+}
+.confidence-picker .btn.on.conf-1 {
+  background: var(--bad-soft);
+  border-color: var(--bad);
+}
+.confidence-picker .btn.on.conf-2 {
+  background: var(--warn-soft);
+  border-color: var(--warn);
+}
+.confidence-picker .btn.on.conf-3 {
+  background: var(--good-soft);
+  border-color: var(--good);
+}
+.confidence-list li {
+  display: grid;
+  grid-template-columns: minmax(10em, 1.4fr) auto minmax(7em, 0.8fr) minmax(9em, 1fr);
+  gap: 6px 12px;
+  align-items: center;
+  padding: 8px 0;
+}
+.confidence-list li + li {
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 760px) {
+  .confidence-list li {
+    grid-template-columns: 1fr;
+  }
+}
+.verdict-chip {
+  justify-self: start;
+}
+.verdict-chip.verdict-over,
+.verdict-over b {
+  color: var(--bad);
+}
+.verdict-chip.verdict-under,
+.verdict-under b {
+  color: var(--good);
+}
+
+/* ---------- progress reports ---------- */
+.report-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+.report-head h2 {
+  margin: 0;
+}
+.report-grade {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.report-grade b {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.report-table {
+  width: 100%;
+}
+.report-table th[scope='row'] {
+  text-align: left;
+  font-weight: 600;
+}
+.report-list {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.report h3 {
+  margin: 8px 0 0;
+}
+@media print {
+  .report-person {
+    break-after: page;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  .report-person:last-child {
+    break-after: auto;
+  }
+  .report-table {
+    font-size: 0.85rem;
+  }
+}

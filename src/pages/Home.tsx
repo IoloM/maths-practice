@@ -129,14 +129,14 @@ function PlanCard({ attempts, cards, setWork, exams }: { attempts: Attempt[]; ca
   );
 }
 
-/** Signed in online: the study group, with how much set work is waiting. */
-function GroupTile({ todo }: { todo: number | null }) {
+/** Signed in online: set work waiting (admins: the study group). */
+function GroupTile({ todo, admin }: { todo: number | null; admin: boolean }) {
   return (
     <a className="card tile" href={href('/group')}>
       <h2>
-        <Icon name="users" /> Study group
+        <Icon name="users" /> {admin ? 'Study group' : 'Set work'}
       </h2>
-      <span className="muted">{todo ? `${todo} piece${todo === 1 ? '' : 's'} of set work to do` : 'This week’s leaderboard and set work'}</span>
+      <span className="muted">{todo ? `${todo} piece${todo === 1 ? '' : 's'} of set work to do` : admin ? 'Leaderboard, set work and the topics people find hard' : 'Work set for you'}</span>
     </a>
   );
 }
@@ -204,7 +204,7 @@ export function Home() {
       <GoalCard attempts={attempts} goal={settings.dailyGoal} />
       <PlanCard attempts={attempts} cards={cards} setWork={setWork ?? []} exams={exams} />
       <div className="grid">
-        {cloudMe() && <GroupTile todo={setWork ? setWork.length : null} />}
+        {cloudMe() && <GroupTile todo={setWork ? setWork.length : null} admin={!!cloudMe()?.admin} />}
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>
             <h2>

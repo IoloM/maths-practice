@@ -246,6 +246,12 @@ export function Progress() {
       )}
       {results && <RealPapers results={results} />}
       <Badges have={new Set(earned({ attempts, sets, papers: results ?? {} }).map((b) => b.id))} />
+      <a className="card tile" href={href('/confidence')}>
+        <h2>
+          <Icon name="target" /> Confidence vs reality
+        </h2>
+        <span className="muted">Rate how sure you feel about each topic and see where it doesn’t match your marks</span>
+      </a>
 
       <section className="card">
         <h2>Trend</h2>

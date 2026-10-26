@@ -42,7 +42,7 @@ export function Settings() {
               </a>
               {cloudMode && (
                 <a className="btn" href={href('/group')}>
-                  Study group
+                  {me.admin ? 'Study group' : 'Set work'}
                 </a>
               )}
               {me.admin && (
@@ -56,7 +56,7 @@ export function Settings() {
           <>
             <p className="small">
               {cloudMode
-                ? 'Sign in to keep your progress, history and settings on every device, and to join the study group. Logins are made by the person who runs this app.'
+                ? 'Sign in to keep your progress, history and settings on every device, and to get the work set for you. Logins are made by the person who runs this app.'
                 : 'Share this device, or set friends up on theirs: give each person their own login with their own progress, history and settings.'}
             </p>
             <div className="btn-row">

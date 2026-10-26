@@ -1,6 +1,7 @@
 /**
- * `#/group`: the study group — everyone with a login. This week's leaderboard (questions, marks,
- * streak), and work an admin has set for everyone, with who has done it.
+ * `#/group`. Admins: the study group — this week's leaderboard, the work set for everyone with who
+ * has done it, the topics the group finds hardest, and setting work and a weekly target. Members:
+ * only the work set for them and their own results (the database doesn't let them see anyone else's).
  */
 import { useEffect, useMemo, useState } from 'react';
 import { href, navigate } from '../router';
@@ -9,7 +10,8 @@ import { assignments, group, groupTarget, removeWork, type Assignment, type Memb
 import { SetWorkForm, TargetForm, WeakTopics } from './GroupAdmin';
 import { ENTRY_BY_ID } from '../content/bank-meta';
 import { todayKey } from '../lib/dates';
-import { weekStart } from '../lib/streak';
+import { thisWeek, weekStart } from '../lib/streak';
+import { useProgress } from '../lib/useProgress';
 import { startSet } from './Exams';
 import { useCloudMe, CloudSignIn } from './CloudLogins';
 import { ErrorBox, Loading, TableWrap } from '../components/bits';
@@ -94,11 +96,28 @@ function Leaderboard({ members, target, admin, onTarget }: { members: Member[]; 
   );
 }
 
-function Work({ a, results, members, meId, admin, onChange }: { a: Assignment; results: Result[]; members: Member[]; meId: string; admin: boolean; onChange: () => void }) {
+/** A member's own progress against the weekly target (no one else's). */
+function MyTarget({ target }: { target: number }) {
+  const { attempts } = useProgress();
+  const done = thisWeek(attempts).questions;
+  return (
+    <section className="card group-target" aria-label="Your weekly target">
+      <span>
+        This week: <b>{done}</b> of <b>{target}</b> questions{done >= target ? ' — target reached!' : ''}
+      </span>
+      <div className="goal-bar" role="progressbar" aria-label="Weekly target" aria-valuemin={0} aria-valuemax={target} aria-valuenow={Math.min(done, target)}>
+        <span style={{ width: `${Math.min(100, (100 * done) / target)}%` }} />
+      </div>
+    </section>
+  );
+}
+
+function Work({ a, results, members, meId, onChange }: { a: Assignment; results: Result[]; members: Member[] | null; meId: string; onChange: () => void }) {
   const [open, setOpen] = useState(false);
   const mine = results.find((r) => r.userId === meId);
   const due = dueText(a.due);
-  const active = members.filter((m) => !m.disabled);
+  const admin = members !== null;
+  const active = (members ?? []).filter((m) => !m.disabled);
   const done = results.filter((r) => active.some((m) => m.id === r.userId));
   const marks = marksOf(a);
   return (
@@ -122,9 +141,11 @@ function Work({ a, results, members, meId, admin, onChange }: { a: Assignment; r
         )}
       </div>
       <div className="row-wrap">
-        <button className="btn btn-small btn-ghost" aria-expanded={open} onClick={() => setOpen(!open)}>
-          {done.length} of {active.length} done
-        </button>
+        {admin && (
+          <button className="btn btn-small btn-ghost" aria-expanded={open} onClick={() => setOpen(!open)}>
+            {done.length} of {active.length} done
+          </button>
+        )}
         {mine && (
           <a className="btn btn-small btn-ghost" href={href(`/set/assign-${a.id}`)}>
             Review
@@ -136,7 +157,7 @@ function Work({ a, results, members, meId, admin, onChange }: { a: Assignment; r
           </button>
         )}
       </div>
-      {open && (
+      {admin && open && (
         <ul className="list small">
           {active.map((m) => {
             const r = results.find((x) => x.userId === m.id);
@@ -162,7 +183,8 @@ export function Group() {
   const [picked, setPicked] = useState<string[]>([]);
   const load = () => {
     setProblem(null);
-    Promise.all([group(), assignments(), groupTarget()])
+    // only admins load the group: for members the database returns just themselves anyway
+    Promise.all([me?.admin ? group() : Promise.resolve(null), assignments(), groupTarget()])
       .then(([g, w, t]) => {
         setMembers(g);
         setWork(w);
@@ -182,18 +204,19 @@ export function Group() {
   if (!me)
     return (
       <div className="stack">
-        <h1>Study group</h1>
-        <p className="muted">Sign in to see your group: this week's leaderboard and the work set for everyone.</p>
+        <h1>Set work</h1>
+        <p className="muted">Sign in to see the work set for you.</p>
         <CloudSignIn />
       </div>
     );
   if (problem) return <ErrorBox>{problem}</ErrorBox>;
-  if (!members || !work) return <Loading />;
+  if (!work || (me.admin && !members)) return <Loading />;
   const todo = work.list.filter((a) => !byWork.get(a.id)?.some((r) => r.userId === me.id));
   const finished = work.list.filter((a) => byWork.get(a.id)?.some((r) => r.userId === me.id));
   return (
     <div className="stack">
-      <h1>Study group</h1>
+      <h1>{me.admin ? 'Study group' : 'Set work'}</h1>
+      {!me.admin && target !== null && <MyTarget target={target} />}
       <section className="card stack" aria-labelledby="set-work">
         <h2 id="set-work">Set work</h2>
         {work.list.length ? (
@@ -201,7 +224,7 @@ export function Group() {
             {todo.length > 0 && (
               <ul className="list">
                 {todo.map((a) => (
-                  <Work key={a.id} a={a} results={byWork.get(a.id) ?? []} members={members} meId={me.id} admin={me.admin} onChange={load} />
+                  <Work key={a.id} a={a} results={byWork.get(a.id) ?? []} members={members} meId={me.id} onChange={load} />
                 ))}
               </ul>
             )}
@@ -211,7 +234,7 @@ export function Group() {
                 <summary className="small">Done ({finished.length})</summary>
                 <ul className="list">
                   {finished.map((a) => (
-                    <Work key={a.id} a={a} results={byWork.get(a.id) ?? []} members={members} meId={me.id} admin={me.admin} onChange={load} />
+                    <Work key={a.id} a={a} results={byWork.get(a.id) ?? []} members={members} meId={me.id} onChange={load} />
                   ))}
                 </ul>
               </details>
@@ -226,9 +249,9 @@ export function Group() {
           </p>
         )}
       </section>
-      <Leaderboard members={members} target={target} admin={me.admin} onTarget={load} />
-      {me.admin && (
+      {me.admin && members && (
         <>
+          <Leaderboard members={members} target={target} admin onTarget={load} />
           <WeakTopics
             members={members}
             onSet={(c) => {

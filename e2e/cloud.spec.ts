@@ -150,7 +150,7 @@ test('an admin sets work for the group; it is done and handed in', async ({ page
   await page.getByRole('button', { name: 'Set this for the group' }).click();
   await page.getByLabel('Due (optional)').fill('2030-01-10');
   await page.getByRole('button', { name: 'Set it' }).click();
-  await expect(page.getByText(/on everyone’s Study group page/)).toBeVisible();
+  await expect(page.getByText(/on everyone’s Set work page/)).toBeVisible();
   expect(s.assignments).toHaveLength(1);
 
   const ana = await device(browser, baseURL, s);
@@ -168,6 +168,10 @@ test('an admin sets work for the group; it is done and handed in', async ({ page
   expect(s.results[0]).toMatchObject({ got: 4, of: 4 });
   await ana.goto('./#/group');
   await expect(ana.getByText('All done — nice work.')).toBeVisible();
+  // members see only their own work: no leaderboard, no one else's results
+  await expect(ana.getByRole('heading', { level: 1, name: 'Set work' })).toBeVisible();
+  await expect(ana.getByRole('heading', { name: 'This week' })).toHaveCount(0);
+  await expect(ana.getByRole('button', { name: /of \d+ done/ })).toHaveCount(0);
 
   await page.goto('./#/group');
   await expect(page.getByRole('button', { name: '1 of 2 done' })).toBeVisible();
@@ -248,6 +252,20 @@ test('an admin sees what everyone is working on', async ({ page, browser, baseUR
   await expect(page.getByRole('heading', { name: 'Recent questions' })).toBeVisible();
   await expect(page.getByText(/questions · 100% of marks/)).toBeVisible();
   await axe(page);
+  // a printable report, for one person or everyone
+  await page.getByRole('link', { name: 'Progress report for Ana' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Progress report: Ana' })).toBeVisible();
+  const report = page.getByRole('region', { name: 'Report for Ana' });
+  await expect(report.getByRole('row', { name: /Questions answered/ })).toContainText('1');
+  await expect(report.getByRole('rowheader', { name: 'Integration' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Print or save as PDF' })).toBeVisible();
+  await axe(page);
+  await page.goto('./#/report/all');
+  await expect(page.getByRole('region', { name: 'Report for Ana' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Report for Iolo' })).toBeVisible();
+  // members can't
+  await ana.goto('./#/report/all');
+  await expect(ana.getByText('Only an admin can see progress reports.')).toBeVisible();
   await ana.context().close();
 });
 
@@ -293,7 +311,9 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await reloads(ana, ana.getByRole('button', { name: 'Sign in' }).click());
   await expect(ana.getByRole('status').filter({ hasText: /Integration.*due tomorrow/ })).toBeVisible();
   await ana.getByRole('link', { name: 'Do it' }).click();
-  await expect(ana.getByText(/Target: 12 questions each/)).toBeVisible();
+  await expect(ana.getByRole('region', { name: 'Your weekly target' })).toContainText('This week: 0 of 12 questions');
+  await expect(ana.getByText(/Target: 12 questions each/)).toHaveCount(0);
+  await expect(ana.getByText('Iolo')).toHaveCount(0);
   await expect(ana.getByRole('region', { name: 'Set work by topic' })).toHaveCount(0);
   await ana.goto('./#/');
   await expect(ana.getByRole('region', { name: 'Your plan for today' }).getByText('Set work: Integration')).toBeVisible();

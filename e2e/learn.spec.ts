@@ -56,8 +56,47 @@ test('mark a topic, then learn it: notes, worked example, videos, your notes and
   await page.goto('./#/');
   await expect(page.getByRole('region', { name: 'Your plan for today' }).getByRole('link', { name: /Learn Integration/ })).toBeVisible();
   await page.goto('./#/learn');
-  await page.getByRole('button', { name: /Done with Integration/ }).click();
+  await page.getByRole('button', { name: /I’ve learnt Integration/ }).click();
   await expect(page.getByRole('region', { name: 'Need help' })).toContainText('Nothing marked');
+  await expect(page.getByRole('region', { name: 'Check-ins' })).toContainText(/Integration · check-in 1 of 3 on/);
+});
+
+test('check-ins: three days after learning a topic, a short check; doing badly offers help again', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('./#/learn/SM1.6');
+  await page.getByRole('button', { name: 'I want to learn this' }).click();
+  await page.getByRole('button', { name: /I’ve learnt it/ }).click();
+  await expect(page.getByText(/Learnt on .* Check-ins: none yet · next on/)).toBeVisible();
+  await page.clock.fastForward(73 * 3600_000);
+  await page.goto('./#/');
+  await page.getByRole('region', { name: 'Your plan for today' }).getByRole('link', { name: /Check-in: Statistical distributions/ }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Check-in 1: Statistical distributions' })).toBeVisible();
+  await page.getByRole('button', { name: /Start — the timer begins now/ }).click();
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: /Finish & mark/ }).first().click();
+  const result = page.getByRole('status').filter({ hasText: /Check-in 1 of 3 on Statistical distributions: 0\/\d+/ });
+  await expect(result).toBeVisible();
+  await result.getByRole('button', { name: /Mark it “need help” again/ }).click();
+  await expect(result.getByRole('button', { name: 'Marked: need help' })).toBeDisabled();
+  await page.goto('./#/learn');
+  await expect(page.getByRole('region', { name: 'Need help' }).getByRole('link', { name: /Statistical distributions/ })).toBeVisible();
+});
+
+test('confidence vs reality: a topic you feel sure about but drop marks on is flagged', async ({ page }) => {
+  for (const seed of [2, 3]) {
+    await page.goto(`./#/q/${Q}/${seed}`);
+    await page.getByLabel('Answer for the question').fill('12345');
+    await page.getByRole('button', { name: 'Check' }).click();
+    await expect(page.getByText('Incorrect')).toBeVisible();
+  }
+  await page.goto('./#/confidence');
+  await page.getByRole('group', { name: 'How confident are you with Integration?' }).first().getByRole('button', { name: 'Confident' }).click();
+  const over = page.getByRole('region', { name: 'More confident than your marks' });
+  await expect(over).toContainText('Integration');
+  await expect(over).toContainText('0% of the marks');
+  await axe(page);
+  await over.getByRole('button', { name: 'Mark: need help' }).click();
+  await expect(over.getByRole('button', { name: 'Marked: need help' })).toBeVisible();
 });
 
 test('a question you get wrong offers help with its topic', async ({ page }) => {

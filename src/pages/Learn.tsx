@@ -7,7 +7,7 @@ import { loadNotes, type TopicNotes } from '../content/notes';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
-import { addLink, cleanUrl, flagged, removeLink, setFlag, setTopicNote, useTopicMarks, youTubeId, type TopicMark } from '../lib/topics';
+import { CHECK_GAPS, addLink, cleanUrl, dueChecks, flagged, markLearnt, nextCheck, removeLink, setFlag, setTopicNote, useTopicMarks, youTubeId, type TopicMark, type TopicMarks } from '../lib/topics';
 import { buildTimed, MINUTES_PER_MARK } from '../lib/sets';
 import { startSet } from './Exams';
 import { MathText } from '../components/MathText';
@@ -16,6 +16,7 @@ import { Icon } from '../components/Icon';
 import { FlagChip, TopicFlagButtons } from '../components/TopicFlag';
 import { VideoCard } from '../components/VideoCard';
 import { usePastPapers } from '../components/PastPaperRefs';
+import { ConfidencePicker } from '../components/ConfidencePicker';
 
 const when = (t?: number) => (t ? new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
 
@@ -259,6 +260,12 @@ export function LearnTopic({ chapter }: { chapter: string }) {
         <RagBadge mastery={m} />
       </div>
       <TopicFlagButtons chapter={chapter} />
+      {marks && <LearntStatus chapter={chapter} mark={marks[chapter]} />}
+      <div className="row-wrap small">
+        <span className="muted">How confident are you?</span>
+        <ConfidencePicker chapter={chapter} title={ch.title} value={marks?.[chapter]?.confidence} />
+        <a href={href('/confidence')}>Confidence vs reality</a>
+      </div>
       <nav className="booklet-jump small" aria-label="On this page">
         <a href="#notes-h" onClick={(e) => (e.preventDefault(), document.getElementById('notes-h')?.scrollIntoView({ behavior: 'smooth' }))}>
           Notes
@@ -323,13 +330,80 @@ function TopicList({ chapters, empty }: { chapters: string[]; empty: string }) {
               </span>
               <RagBadge mastery={mastery(byCh.get(c) ?? [])} />
             </a>
-            <button className="btn btn-small btn-ghost" onClick={() => void setFlag(c, null)} aria-label={`Done with ${ch?.title ?? c}: unmark it`}>
-              Done
+            <button className="btn btn-small" onClick={() => void markLearnt(c)} aria-label={`I’ve learnt ${ch?.title ?? c}`} title="Unmark it — three quick check-ins follow over the next three weeks">
+              <Icon name="check" /> I’ve learnt it
             </button>
           </li>
         );
       })}
     </ul>
+  );
+}
+
+/** Check-ins on topics you've learnt: due now, and coming up. */
+function Checkins({ marks }: { marks: TopicMarks }) {
+  const due = dueChecks(marks);
+  const later = Object.entries(marks)
+    .map(([c, m]) => [c, nextCheck(m)] as const)
+    .filter(([c, t]) => t !== null && !due.includes(c))
+    .sort((a, b) => a[1]! - b[1]!);
+  if (!due.length && !later.length) return null;
+  const title = (c: string) => CHAPTER_BY_REF.get(c as never)?.title ?? c;
+  return (
+    <section className="card stack" aria-labelledby="checkins-h">
+      <h2 id="checkins-h">Check-ins</h2>
+      <p className="small muted" style={{ margin: 0 }}>
+        Quick checks on topics you’ve learnt, after 3, 7 and 21 days, so they stick.
+      </p>
+      <ul className="list">
+        {due.map((c) => (
+          <li key={c} className="learn-row">
+            <span style={{ flex: 1 }}>
+              <b>{title(c)}</b> <span className="small muted">· check-in {(marks[c].checks?.length ?? 0) + 1} of {CHECK_GAPS.length}, due now</span>
+            </span>
+            <a className="btn btn-small btn-primary" href={href(`/checkin/${c}`)}>
+              Start check-in
+            </a>
+          </li>
+        ))}
+        {later.map(([c, t]) => (
+          <li key={c} className="learn-row">
+            <span style={{ flex: 1 }}>
+              {title(c)} <span className="small muted">· check-in {(marks[c].checks?.length ?? 0) + 1} of {CHECK_GAPS.length} on {when(t!)}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Where a learnt topic is up to with its check-ins. */
+function LearntStatus({ chapter, mark }: { chapter: string; mark: TopicMark | undefined }) {
+  if (mark?.flag) {
+    return (
+      <p className="small" style={{ margin: 0 }}>
+        Got it?{' '}
+        <button className="btn btn-small" onClick={() => void markLearnt(chapter)}>
+          <Icon name="check" /> I’ve learnt it
+        </button>{' '}
+        <span className="muted">Three quick check-ins follow over the next three weeks.</span>
+      </p>
+    );
+  }
+  if (!mark?.learnt) return null;
+  const next = nextCheck(mark);
+  const done = mark.checks ?? [];
+  return (
+    <p className="small card learnt-status" style={{ margin: 0 }}>
+      Learnt on {when(mark.learnt)}. Check-ins: {done.length ? done.map((c) => `${c.got}/${c.of}`).join(', ') : 'none yet'}
+      {next === null ? ' — all done.' : next <= Date.now() ? ' · one is due now ' : ` · next on ${when(next)}`}
+      {next !== null && next <= Date.now() && (
+        <a className="btn btn-small btn-primary" href={href(`/checkin/${chapter}`)}>
+          Start check-in
+        </a>
+      )}
+    </p>
   );
 }
 
@@ -355,6 +429,9 @@ export function Learn() {
         <p className="muted">
           Mark the topics you want to learn or need help with — on any topic, or from a question you got wrong. Each topic has notes, a worked example, videos, practice from easy to exam level, and space for your own notes.
         </p>
+        <p className="small" style={{ margin: 0 }}>
+          Not sure where to start? <a href={href('/confidence')}>Rate your confidence in each topic</a> and see where it doesn’t match your marks.
+        </p>
       </div>
       <section className="card stack" aria-labelledby="help-h">
         <h2 id="help-h">Need help</h2>
@@ -364,6 +441,7 @@ export function Learn() {
         <h2 id="want-h">Want to learn</h2>
         <TopicList chapters={learn} empty="Nothing marked yet. Choose a topic below and press “I want to learn this”." />
       </section>
+      <Checkins marks={marks} />
       {suggest.length > 0 && (
         <section className="card stack" aria-labelledby="suggest-h">
           <h2 id="suggest-h">Worth a look</h2>
