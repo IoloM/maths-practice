@@ -3,7 +3,7 @@
  * data apart, so the old copy hands everything over to the new one: it opens the new address and
  * sends its databases and settings by postMessage, addressed to the new address only. The new
  * address (`#/move`) accepts them only from the old one, and merges them in — nothing already there
- * is overwritten. Then the old copy removes its offline copy, so the old address forwards to the new.
+ * is overwritten. From then on the old address sends that device straight to the new one.
  */
 import { openIdbStore } from '../storage/idb';
 import { validateBackup } from '../storage';
@@ -15,6 +15,15 @@ export const OLD_ORIGIN = 'https://iolom.github.io';
 export const NEW_ORIGIN = 'https://iolomaths.co.uk';
 export const NEW_SITE = `${NEW_ORIGIN}/`;
 export const onOldSite = () => window.location.origin === OLD_ORIGIN;
+/** set at the old address once this device's progress has moved: from then on it forwards */
+const MOVED = 'mp-moved';
+export const movedAlready = () => {
+  try {
+    return !!localStorage.getItem(MOVED);
+  } catch {
+    return false;
+  }
+};
 
 /** Is the app being served at the new address yet? */
 export async function newSiteLive(): Promise<boolean> {
@@ -122,8 +131,13 @@ export function receive(onDone: (n: number) => void, onError: (m: string) => voi
   return () => window.removeEventListener('message', onMessage);
 }
 
-/** Old address, after moving: drop the offline copy so the old address forwards to the new one. */
+/** Old address, after moving: remember it, and drop the offline copy. */
 export async function retireOldSite(): Promise<void> {
+  try {
+    localStorage.setItem(MOVED, String(Date.now()));
+  } catch {
+    /* private mode */
+  }
   try {
     for (const r of (await navigator.serviceWorker?.getRegistrations()) ?? []) await r.unregister();
     for (const k of await caches.keys()) await caches.delete(k);

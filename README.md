@@ -5,7 +5,7 @@ Statistics & Mechanics (Paper 3). Questions are generated from code templates, m
 Edexcel rules (awrt, s.f./d.p., exact forms, + c, follow-through, method marks) and come with hints,
 worked solutions and mark schemes.
 
-**Live:** https://iolom.github.io/maths-practice/
+**Live:** https://iolomaths.co.uk/ (also still at https://iolom.github.io/maths-practice/, which offers to move each device's progress across and then forwards)
 
 - 349 question types (62,948 verified questions) covering every 9MA0 spec point, plus 158
   explain-and-prove questions: proof, interpretation, modelling assumptions and the large data set.

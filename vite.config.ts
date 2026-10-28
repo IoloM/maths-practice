@@ -13,8 +13,11 @@ try {
   /* not a git checkout */
 }
 
+/** Where the site is served: iolom.github.io/maths-practice/ (the default), or the root of iolomaths.co.uk (SITE_BASE=/). */
+const base = process.env.SITE_BASE ?? '/maths-practice/';
+
 export default defineConfig({
-  base: '/maths-practice/',
+  base,
   define: {
     __APP_VERSION__: JSON.stringify(`${pkg.version}+${sha}`),
   },
@@ -34,9 +37,9 @@ export default defineConfig({
         name: 'Maths Practice — Edexcel A Level',
         short_name: 'Maths Practice',
         description: 'Offline Edexcel A Level Maths practice with instant marking.',
-        id: '/maths-practice/',
-        start_url: '/maths-practice/',
-        scope: '/maths-practice/',
+        id: base,
+        start_url: base,
+        scope: base,
         display: 'standalone',
         orientation: 'any',
         background_color: '#f6f7f8',

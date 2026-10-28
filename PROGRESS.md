@@ -143,7 +143,7 @@ statistics) and 36 Playwright runs across desktop Chrome, iPhone and iPad (WebKi
 **Tests**: 1,725 unit tests and 154 Playwright runs across the four devices (13 app flows — offline on Chromium only — plus
 axe on 13 views in light and dark) — all green.
 
-**Deploy**: live at https://iolom.github.io/maths-practice/ (GitHub Pages, deployed by CI on every push).
+**Deploy**: live at https://iolomaths.co.uk/ (and still https://iolom.github.io/maths-practice/), both deployed by CI on every push.
 
 ## Phase 6 — More questions, past papers, flashcards, predicted grade ✅ (23 Oct 2026)
 
@@ -300,3 +300,16 @@ axe on 13 views in light and dark) — all green.
   `#/saved`, with your last score, "try it again" and practising questions like them. Synced a
   question at a time; taking one off syncs too.
 - Fix: the answer box keeps the focus when the maths keyboard finishes loading.
+
+## Phase 14 — iolomaths.co.uk ✅ (28 Oct 2026)
+
+- The app is at **https://iolomaths.co.uk** (domain from Wix: A record → GitHub Pages
+  185.199.108.153, `www` CNAME → iolom.github.io). CI builds it a second time with `SITE_BASE=/` and
+  pushes it to **IoloM/iolomaths-site** (deploy key in the `SITE_DEPLOY_KEY` secret), whose Pages
+  has the custom domain.
+- The old address keeps working, so offline copies there still update. Once the new address is up
+  it shows "Maths Practice has moved": one button opens the new address and hands over everything
+  saved on that device (every database and `mp.*` setting, by postMessage between exactly those two
+  origins, merged without overwriting — `src/lib/move.ts`, `#/move`). After that, that device's old
+  address forwards straight to the new one.
+- Supabase `ALLOWED_ORIGINS` includes the new address (and `www`).

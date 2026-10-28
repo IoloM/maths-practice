@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NEW_SITE, newSiteLive, onOldSite, pack, retireOldSite, sendTo } from '../lib/move';
+import { NEW_SITE, movedAlready, newSiteLive, onOldSite, pack, retireOldSite, sendTo } from '../lib/move';
 import { cloudMe } from '../lib/cloud';
 import { downloadBackup } from '../storage';
 
@@ -14,7 +14,12 @@ export function MovedBanner() {
   useEffect(() => {
     if (!onOldSite()) return;
     let alive = true;
-    void newSiteLive().then((live) => alive && live && setSt({ s: 'offer' }));
+    void newSiteLive().then((live) => {
+      if (!alive || !live) return;
+      // this device has moved already: go straight to the new address (same page)
+      if (movedAlready()) window.location.replace(`${NEW_SITE}${window.location.hash}`);
+      else setSt({ s: 'offer' });
+    });
     return () => {
       alive = false;
     };
