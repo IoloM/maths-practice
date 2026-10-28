@@ -6,6 +6,8 @@ import { lazy, Suspense } from 'react';
 import { Loading } from './components/bits';
 
 // heavier pages (marking engine, maths input, charts) load on demand; the service worker precaches them all
+import { MovedBanner } from './components/MovedBanner';
+import { onOldSite } from './lib/move';
 const Practice = lazy(() => import('./pages/Practice').then((m) => ({ default: m.Practice })));
 const QuestionPage = lazy(() => import('./pages/QuestionPage').then((m) => ({ default: m.QuestionPage })));
 const Progress = lazy(() => import('./pages/Progress').then((m) => ({ default: m.Progress })));
@@ -26,6 +28,7 @@ const Report = lazy(() => import('./pages/Report').then((m) => ({ default: m.Rep
 const Saved = lazy(() => import('./pages/Saved').then((m) => ({ default: m.Saved })));
 const Speed = lazy(() => import('./pages/Speed').then((m) => ({ default: m.Speed })));
 const Stretch = lazy(() => import('./pages/Stretch').then((m) => ({ default: m.Stretch })));
+const Move = lazy(() => import('./pages/Move').then((m) => ({ default: m.Move })));
 const Reference = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Reference })));
 const Flashcards = lazy(() => import('./pages/Flashcards').then((m) => ({ default: m.Flashcards })));
 const Account = lazy(() => import('./pages/Logins').then((m) => ({ default: m.Account })));
@@ -87,6 +90,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return <Saved />;
     case 'stretch':
       return <Stretch />;
+    case 'move':
+      return <Move />;
     case 'speed':
       return <Speed key={query.toString()} query={query} />;
     case 'report':
@@ -128,7 +133,7 @@ export default function App() {
   // signed in when an admin reset the password: choose a new one first
   const me = currentLogin();
   const mustChoose = cloudMode && !!me?.mustChange;
-  const locked = (needsSignIn() && route.parts[0] !== 'join' && route.parts[0] !== 'invite') || mustChoose;
+  const locked = (needsSignIn() && !['join', 'invite', 'move'].includes(route.parts[0])) || mustChoose;
   const lockScreen = mustChoose ? <ChoosePasswordScreen /> : cloudMode ? <CloudSignIn screen /> : <SignInScreen />;
   const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group', 'report'].includes(route.parts[0])) || (p === '/reference' && (route.parts[0] === 'flashcards' || route.parts[0] === 'data' || route.parts[0] === 'graphs')) || (p === '/review' && (route.parts[0] === 'mistakes' || route.parts[0] === 'saved')) || (p === '/progress' && route.parts[0] === 'confidence') || (p === '/learn' && route.parts[0] === 'checkin') || (p === '/exams' && (route.parts[0] === 'past-papers' || route.parts[0] === 'sit' || route.parts[0] === 'speed' || route.parts[0] === 'stretch')));
   return (
@@ -179,6 +184,7 @@ export default function App() {
       {!locked && <BadgeToast />}
       <InstallBanner />
       <main className="app-main" id="main" tabIndex={-1}>
+        {onOldSite() && <MovedBanner />}
         <ErrorBoundary key={route.path}>
           <Suspense fallback={<Loading />}>{locked ? lockScreen : <Page {...route} />}</Suspense>
         </ErrorBoundary>

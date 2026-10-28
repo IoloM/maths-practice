@@ -116,3 +116,12 @@ test('the graph plotter draws functions, makes sliders, and lists key points', a
   await expect(page.locator('#fn-err-0')).toBeVisible();
   await axe(page);
 });
+
+test('the moving page explains itself when opened on its own, and the old-address notice stays away elsewhere', async ({ page }) => {
+  await page.goto('./#/move');
+  await expect(page.getByRole('heading', { name: 'Moving your progress' })).toBeVisible();
+  await expect(page.getByText(/brings your progress across from the old address/)).toBeVisible();
+  await axe(page);
+  await page.goto('./#/');
+  await expect(page.getByText('Maths Practice has moved')).toHaveCount(0);
+});

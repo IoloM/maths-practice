@@ -2578,3 +2578,8 @@ svg.qr {
 .speed-mark.no {
   color: var(--bad);
 }
+
+.moved {
+  border: 2px solid var(--accent);
+  margin-bottom: 16px;
+}
