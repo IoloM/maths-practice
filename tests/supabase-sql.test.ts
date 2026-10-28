@@ -160,6 +160,18 @@ describe('security rules', () => {
     expect((await db.query("select to_regclass('public.push_subscriptions') as t")).rows).toEqual([{ t: null }]);
   });
 
+  it('invites: only the admin function can see or use them; a place is taken once', async () => {
+    await db.query("insert into public.invites (code, created_by, expires_at, max_uses) values ('abcdefghijklmnopqrstuvwx', $1, now() + interval '1 day', 1)", [ADMIN]);
+    expect(await fails(as(ADMIN, 'select * from public.invites'))).toBe(true);
+    expect(await fails(as(null, 'select * from public.invites'))).toBe(true);
+    expect(await fails(as(ANA, "select public.take_invite('abcdefghijklmnopqrstuvwx')"))).toBe(true);
+    expect((await db.query<{ ok: boolean }>("select public.take_invite('abcdefghijklmnopqrstuvwx') as ok")).rows).toEqual([{ ok: true }]);
+    expect((await db.query<{ ok: boolean }>("select public.take_invite('abcdefghijklmnopqrstuvwx') as ok")).rows).toEqual([{ ok: false }]); // full
+    await db.query("insert into public.invites (code, expires_at, max_uses) values ('zyxwvutsrqponmlkjihgfedc', now() - interval '1 minute', 5)");
+    expect((await db.query<{ ok: boolean }>("select public.take_invite('zyxwvutsrqponmlkjihgfedc') as ok")).rows).toEqual([{ ok: false }]); // expired
+    expect(await fails(db.query("insert into public.invites (code, expires_at, max_uses) values ('short', now(), 1)"))).toBe(true);
+  });
+
   it('a switched-off login loses access straight away', async () => {
     await db.query('update public.profiles set disabled = true where id = $1', [BEN]);
     expect(await as(BEN, 'select * from public.profiles')).toEqual([]);

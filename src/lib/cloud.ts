@@ -9,6 +9,7 @@
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ActivityDetail as ActivitySummary } from './activity';
+import { shareUrl } from '../router';
 
 export type { ActivitySummary };
 
@@ -333,7 +334,7 @@ export async function activities(): Promise<Map<string, ActivitySummary>> {
   return new Map(((data ?? []) as { user_id: string; detail: ActivitySummary }[]).map((r) => [r.user_id, r.detail]));
 }
 // ---------------------------------------------------------------- the admin function (logins)
-async function adminCall(body: Record<string, unknown>): Promise<{ id?: string; status?: string }> {
+async function adminCall<T = { id?: string; status?: string }>(body: Record<string, unknown>): Promise<T> {
   const sb = await supabase();
   const { data, error } = await sb.functions.invoke('admin', { body });
   if (error) {
@@ -342,7 +343,7 @@ async function adminCall(body: Record<string, unknown>): Promise<{ id?: string; 
     const detail = res && typeof res.json === 'function' ? ((await res.json().catch(() => null)) as { error?: string } | null) : null;
     fail({ message: detail?.error ?? error.message, status: res?.status }, 'Couldn’t do that');
   }
-  return (data ?? {}) as { id?: string; status?: string };
+  return (data ?? {}) as T;
 }
 
 /** A login with just a name and username: they choose their password the first time they sign in. */
@@ -353,3 +354,38 @@ export const setLoginAdmin = (id: string, admin: boolean) => adminCall({ action:
 export const setLoginDisabled = (id: string, disabled: boolean) => adminCall({ action: 'disable', id, disabled });
 export const renameLogin = (id: string, name: string) => adminCall({ action: 'rename', id, name });
 export const deleteLogin = (id: string) => adminCall({ action: 'delete', id });
+
+// ---------------------------------------------------------------- invite links
+export interface Invite {
+  code: string;
+  created_at: string;
+  expires_at: string;
+  max_uses: number;
+  uses: number;
+  active: boolean;
+}
+/** How long an invite can last, in days. */
+export const INVITE_DAYS = [1, 3, 7, 14, 30];
+export const inviteUrl = (code: string) => shareUrl(`/invite/${code}`);
+export const inviteOpen = (i: Invite, now = Date.now()) => i.active && Date.parse(i.expires_at) > now && i.uses < i.max_uses;
+
+/** Admins: a new invite link for up to `uses` people, lasting `days`. Returns its code. */
+export async function createInvite(days: number, uses: number): Promise<string> {
+  return (await adminCall<{ code: string }>({ action: 'invite-create', days, uses })).code;
+}
+export async function listInvites(): Promise<Invite[]> {
+  return (await adminCall<{ invites?: Invite[] }>({ action: 'invite-list' })).invites ?? [];
+}
+export const stopInvite = (code: string) => adminCall({ action: 'invite-stop', code });
+
+/** Anyone: whether an invite link can still be used. */
+export async function inviteStatus(code: string): Promise<{ status: 'open' | 'closed' | 'none'; expires?: string; left?: number }> {
+  return adminCall({ action: 'invite-status', code });
+}
+/** Anyone with an invite: make your own login (you choose the password), then sign in with it. */
+export async function joinWithInvite(code: string, p: { name: string; username: string; password: string }): Promise<Me> {
+  if (p.password.length < MIN_PASSWORD) throw new CloudError(`Use at least ${MIN_PASSWORD} characters.`);
+  const username = p.username.trim().toLowerCase();
+  await adminCall({ action: 'join', code, name: p.name.trim(), username, password: p.password });
+  return signIn(username, p.password);
+}

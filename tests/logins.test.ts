@@ -79,3 +79,10 @@ describe('logins on this device', () => {
     await expect(L.acceptJoin({ username: 'kai', name: 'Kai' }, 'abc')).rejects.toThrow(/at least 4/);
   });
 });
+
+describe('usernames for several logins at once', () => {
+  it('first names, made unique against existing logins and each other', async () => {
+    const { usernamesFor } = await import('../src/pages/CloudLogins');
+    expect(usernamesFor(['Ana Jones', 'Ben', 'Ben Smith', 'Ben Smith', 'Zoë Brontë'], ['ana', 'iolo'])).toEqual(['ana.jones', 'ben', 'ben.smith', 'ben2', 'zoe']);
+  });
+});

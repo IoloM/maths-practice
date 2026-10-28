@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { emailFor, handle, type Backend, type ProfileRow } from '../supabase/functions/admin/handler.ts';
+import { emailFor, handle, inviteOpen, type Backend, type InviteRow, type ProfileRow } from '../supabase/functions/admin/handler.ts';
 
 interface FakeUser {
   id: string;
@@ -10,6 +10,7 @@ interface FakeUser {
 let users: FakeUser[];
 let profiles: (ProfileRow & { name: string; must_change: boolean })[];
 let failProfileInsert = false;
+let invites: InviteRow[] = [];
 
 const backend: Backend = {
   async userFromToken(token) {
@@ -46,6 +47,25 @@ const backend: Backend = {
   async updateProfile(id, patch) {
     Object.assign(profiles.find((p) => p.id === id)!, patch);
   },
+  async createInvite(inv) {
+    invites.push({ ...inv, created_at: new Date().toISOString(), uses: 0, active: true });
+  },
+  async listInvites() {
+    return [...invites].reverse();
+  },
+  async getInvite(code) {
+    return invites.find((i) => i.code === code) ?? null;
+  },
+  async takeInvite(code) {
+    const i = invites.find((x) => x.code === code);
+    if (!i || !inviteOpen(i)) return false;
+    i.uses++;
+    return true;
+  },
+  async stopInvite(code) {
+    const i = invites.find((x) => x.code === code);
+    if (i) i.active = false;
+  },
 };
 
 const ORIGIN = 'https://iolom.github.io';
@@ -58,6 +78,7 @@ const ok = async (body: unknown, token?: string | null) => {
 
 beforeEach(() => {
   failProfileInsert = false;
+  invites = [];
   users = [
     { id: 'admin', email: emailFor('iolo'), password: 'admin-pass', banned: false },
     { id: 'ana', email: emailFor('ana'), password: 'ana-pass', banned: false },
@@ -144,5 +165,45 @@ describe('admin function', () => {
     expect(pre.headers.get('access-control-allow-headers')).toContain('authorization');
     const other = await handle(new Request('https://x/functions/v1/admin', { method: 'OPTIONS', headers: { origin: 'https://evil.example' } }), { backend, origins: [ORIGIN] });
     expect(other.headers.get('access-control-allow-origin')).toBeNull();
+  });
+
+  it('invite links: admins make them with a limit and expiry; people join with their own password', async () => {
+    expect((await ok({ action: 'invite-create', days: 7, uses: 2 }, 'token-ana')).status).toBe(403);
+    expect((await ok({ action: 'invite-create', days: 5, uses: 2 })).status).toBe(400);
+    expect((await ok({ action: 'invite-create', days: 7, uses: 0 })).status).toBe(400);
+    const made = await call({ action: 'invite-create', days: 7, uses: 2 });
+    const { code } = (await made.json()) as { code: string };
+    expect(code).toMatch(/^[A-Za-z0-9_-]{32}$/);
+    expect(await (await call({ action: 'invite-status', code }, null)).json()).toMatchObject({ status: 'open', left: 2 });
+    expect(await (await call({ action: 'invite-status', code: 'nope' }, null)).json()).toEqual({ status: 'none' });
+
+    // join: no sign-in needed, chooses their own password, never an admin
+    expect((await ok({ action: 'join', code, name: 'Ben', username: 'ana', password: 'ben-pass-1' }, null)).status).toBe(409);
+    expect((await ok({ action: 'join', code, name: 'Ben', username: 'ben', password: '123' }, null)).status).toBe(400);
+    expect((await ok({ action: 'join', code: 'wrong', name: 'Ben', username: 'ben', password: 'ben-pass-1' }, null)).status).toBe(404);
+    expect(await ok({ action: 'join', code, name: 'Ben', username: 'Ben', password: 'ben-pass-1', admin: true }, null)).toEqual({ status: 200, body: { ok: true } });
+    const ben = profiles.find((p) => p.username === 'ben')!;
+    expect(ben).toMatchObject({ name: 'Ben', admin: false, must_change: false });
+    expect(users.find((u) => u.id === ben.id)!.password).toBe('ben-pass-1');
+
+    // one place left, then it's full
+    expect((await ok({ action: 'join', code, name: 'Cal', username: 'cal', password: 'cal-pass-1' }, null)).status).toBe(200);
+    expect((await ok({ action: 'join', code, name: 'Dee', username: 'dee', password: 'dee-pass-1' }, null)).status).toBe(410);
+    expect(await (await call({ action: 'invite-status', code }, null)).json()).toEqual({ status: 'closed' });
+
+    // listed for admins; stopping one closes it
+    const second = ((await (await call({ action: 'invite-create', days: 1, uses: 5 })).json()) as { code: string }).code;
+    const list = (await (await call({ action: 'invite-list' })).json()) as { invites: InviteRow[] };
+    expect(list.invites.map((i) => [i.code, i.uses])).toEqual([
+      [second, 0],
+      [code, 2],
+    ]);
+    expect((await ok({ action: 'invite-list' }, 'token-ana')).status).toBe(403);
+    await ok({ action: 'invite-stop', code: second });
+    expect((await ok({ action: 'join', code: second, name: 'Eve', username: 'eve', password: 'eve-pass-1' }, null)).status).toBe(410);
+    // and one past its expiry can't be used
+    invites.push({ code: 'old-invite-code-0000000000', created_at: '', expires_at: new Date(Date.now() - 1000).toISOString(), max_uses: 5, uses: 0, active: true });
+    expect(inviteOpen(invites.at(-1)!)).toBe(false);
+    expect((await ok({ action: 'join', code: 'old-invite-code-0000000000', name: 'Fay', username: 'fay', password: 'fay-pass-1' }, null)).status).toBe(410);
   });
 });

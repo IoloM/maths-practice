@@ -2486,3 +2486,39 @@ svg.graph {
     font-size: 0.85rem;
   }
 }
+
+/* ---------- invite links ---------- */
+.invite-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.invite {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+}
+.invite.closed {
+  opacity: 0.85;
+}
+.invite-url {
+  font-size: 0.85rem;
+  word-break: break-all;
+  background: var(--surface-2);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.invite-qr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+svg.qr {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}

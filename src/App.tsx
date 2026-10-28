@@ -33,6 +33,7 @@ const CloudAccount = lazy(() => import('./pages/CloudLogins').then((m) => ({ def
 const CloudManage = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudManage })));
 const CloudSignIn = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudSignIn })));
 const ChoosePasswordScreen = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.ChoosePasswordScreen })));
+const InviteJoin = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.InviteJoin })));
 const Group = lazy(() => import('./pages/Group').then((m) => ({ default: m.Group })));
 const PrintSet = lazy(() => import('./pages/PrintSet').then((m) => ({ default: m.PrintSet })));
 const PastPapers = lazy(() => import('./pages/PastPapers').then((m) => ({ default: m.PastPapers })));
@@ -99,6 +100,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return cloudMode ? <CloudManage /> : <ManageLogins />;
     case 'group':
       return <Group />;
+    case 'invite':
+      return cloudMode ? <InviteJoin code={parts[1] ?? ''} /> : <ErrorBox>Invite links work once online logins are set up.</ErrorBox>;
     case 'join':
       return <Join code={query.get('c') ?? ''} />;
     default:
@@ -116,7 +119,7 @@ export default function App() {
   // signed in when an admin reset the password: choose a new one first
   const me = currentLogin();
   const mustChoose = cloudMode && !!me?.mustChange;
-  const locked = (needsSignIn() && route.parts[0] !== 'join') || mustChoose;
+  const locked = (needsSignIn() && route.parts[0] !== 'join' && route.parts[0] !== 'invite') || mustChoose;
   const lockScreen = mustChoose ? <ChoosePasswordScreen /> : cloudMode ? <CloudSignIn screen /> : <SignInScreen />;
   const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group', 'report'].includes(route.parts[0])) || (p === '/reference' && (route.parts[0] === 'flashcards' || route.parts[0] === 'data' || route.parts[0] === 'graphs')) || (p === '/review' && route.parts[0] === 'mistakes') || (p === '/progress' && route.parts[0] === 'confidence') || (p === '/learn' && route.parts[0] === 'checkin') || (p === '/exams' && (route.parts[0] === 'past-papers' || route.parts[0] === 'sit')));
   return (

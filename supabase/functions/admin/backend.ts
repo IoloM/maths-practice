@@ -1,6 +1,6 @@
 /** The admin function's `Backend` on Supabase: Auth's admin API and the profiles table, with the secret key. */
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Backend, ProfileRow } from './handler.ts';
+import type { Backend, InviteRow, ProfileRow } from './handler.ts';
 
 function check<T>(r: { data: T; error: { message: string } | null }): T {
   if (r.error) throw new Error(r.error.message);
@@ -45,6 +45,23 @@ export function supabaseBackend(sb: SupabaseClient): Backend {
     },
     async updateProfile(id, patch) {
       check(await sb.from('profiles').update(patch).eq('id', id));
+    },
+    async createInvite(inv) {
+      check(await sb.from('invites').insert(inv));
+    },
+    async listInvites() {
+      const since = new Date(Date.now() - 60 * 86_400_000).toISOString();
+      return check(await sb.from('invites').select('code, created_at, expires_at, max_uses, uses, active').gte('created_at', since).order('created_at', { ascending: false }).returns<InviteRow[]>()) ?? [];
+    },
+    async getInvite(code) {
+      if (!code) return null;
+      return check(await sb.from('invites').select('code, created_at, expires_at, max_uses, uses, active').eq('code', code).maybeSingle<InviteRow>());
+    },
+    async takeInvite(code) {
+      return check(await sb.rpc('take_invite', { c: code })) === true;
+    },
+    async stopInvite(code) {
+      check(await sb.from('invites').update({ active: false }).eq('code', code));
     },
   };
 }

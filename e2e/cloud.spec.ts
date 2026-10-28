@@ -81,8 +81,9 @@ test('an admin makes a login with just a username; the person chooses their pass
   await page.getByLabel('Their name').fill('Ana Bell');
   await page.getByRole('button', { name: 'Make login' }).click();
   const slip = page.locator('.login-slip');
-  await expect(slip).toContainText('Username: ana.bell');
+  await expect(slip).toContainText('Your username is ana.bell');
   await expect(slip).toContainText('choose your own password');
+  await expect(slip).toContainText('#/account?u=ana.bell');
   await expect(slip).not.toContainText(/password:/i);
   await axe(page);
   await page.getByRole('button', { name: 'Done' }).click();
@@ -318,4 +319,65 @@ test('an admin sets work by topic and a weekly target, sees the hardest topics, 
   await ana.goto('./#/');
   await expect(ana.getByRole('region', { name: 'Your plan for today' }).getByText('Set work: Integration')).toBeVisible();
   await ana.context().close();
+});
+
+test('an invite link: people make their own login with it until it runs out or is stopped', async ({ page, browser, baseURL }) => {
+  const s = fakeState([{ username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true }]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/logins');
+  const invites = page.getByRole('region', { name: 'Invite people' });
+  await invites.getByLabel('For up to').selectOption('1');
+  await invites.getByRole('button', { name: 'Make an invite link' }).click();
+  await expect(invites.getByText(/0 of 1 used · 1 place left, until/)).toBeVisible();
+  await invites.getByRole('button', { name: 'Show QR code' }).click();
+  await expect(invites.getByRole('img', { name: 'QR code for the invite link' })).toBeVisible();
+  await axe(page);
+  const code = s.invites[0].code;
+
+  // a friend opens it on their phone and makes their own login
+  const dan = await device(browser, baseURL, s);
+  await dan.goto(`./#/invite/${code}`);
+  await expect(dan.getByRole('heading', { name: 'Join Maths Practice' })).toBeVisible();
+  await dan.getByLabel('Your name').fill('Dan Evans');
+  await expect(dan.getByLabel(/Choose a username/)).toHaveValue('dan.evans');
+  await dan.getByLabel(/^New password \(/).fill('dan-pass-1');
+  await dan.getByLabel('New password again').fill('dan-pass-1');
+  await reloads(dan, dan.getByRole('button', { name: 'Make my login' }).click());
+  await expect(dan.getByRole('link', { name: 'Signed in as Dan Evans' })).toBeVisible();
+  expect(s.profiles.find((p) => p.username === 'dan.evans')).toMatchObject({ admin: false, must_change: false });
+
+  // it was for one person: the next one is turned away
+  const eve = await device(browser, baseURL, s);
+  await eve.goto(`./#/invite/${code}`);
+  await expect(eve.getByText(/This invite link has run out/)).toBeVisible();
+  await dan.context().close();
+  await eve.context().close();
+});
+
+test('several logins at once, and a personal link that goes straight to choosing a password', async ({ page, browser, baseURL }) => {
+  const s = fakeState([
+    { username: 'iolo', name: 'Iolo', password: 'admin-pass-1', admin: true },
+    { username: 'ana', name: 'Ana', password: 'ana-pass-1' },
+  ]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await signIn(page, 'iolo', 'admin-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/logins');
+  await page.getByRole('button', { name: 'Add several at once' }).click();
+  await page.getByLabel('Names, one per line').fill('Ana Jones\nBen Smith\nBen Smith\n\nCal');
+  await expect(page.getByText('Usernames: Ana Jones → ana.jones · Ben Smith → ben · Cal → cal')).toBeVisible();
+  await page.getByRole('button', { name: 'Make 3 logins' }).click();
+  await expect(page.getByText('3 logins ready')).toBeVisible();
+  expect(s.profiles.map((p) => p.username).sort()).toEqual(['ana', 'ana.jones', 'ben', 'cal', 'iolo']);
+  await expect(page.getByRole('button', { name: 'Send to Ben' })).toBeVisible();
+
+  const ben = await device(browser, baseURL, s);
+  await ben.goto('./#/account?u=ben');
+  await expect(ben.getByRole('heading', { name: 'Choose your password' })).toBeVisible();
+  await expect(ben.getByText('ben', { exact: true })).toBeVisible();
+  await ben.context().close();
 });

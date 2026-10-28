@@ -5,7 +5,7 @@
  * The rules it enforces are the ones tested for real in tests/supabase-sql.test.ts.
  */
 import type { BrowserContext, Page, Route } from '@playwright/test';
-import { emailFor, handle, type Backend } from '../supabase/functions/admin/handler';
+import { emailFor, handle, inviteOpen, type Backend, type InviteRow } from '../supabase/functions/admin/handler';
 
 export const SUPA = 'https://supa.test';
 
@@ -35,10 +35,11 @@ export interface FakeState {
   assignments: Record<string, unknown>[];
   results: Record<string, unknown>[];
   target: number | null;
+  invites: InviteRow[];
 }
 
 export function fakeState(people: { username: string; name: string; password: string; admin?: boolean; mustChange?: boolean }[]): FakeState {
-  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [], target: null };
+  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [], target: null, invites: [] };
   for (const p of people) addPerson(s, p.username, p.name, p.password, !!p.admin, !!p.mustChange);
   return s;
 }
@@ -110,6 +111,25 @@ function backendFor(s: FakeState): Backend {
     },
     async updateProfile(id, patch) {
       Object.assign(s.profiles.find((p) => p.id === id)!, patch);
+    },
+    async createInvite(inv) {
+      s.invites.push({ ...inv, created_at: new Date().toISOString(), uses: 0, active: true });
+    },
+    async listInvites() {
+      return [...s.invites].reverse();
+    },
+    async getInvite(code) {
+      return s.invites.find((i) => i.code === code) ?? null;
+    },
+    async takeInvite(code) {
+      const i = s.invites.find((x) => x.code === code);
+      if (!i || !inviteOpen(i)) return false;
+      i.uses++;
+      return true;
+    },
+    async stopInvite(code) {
+      const i = s.invites.find((x) => x.code === code);
+      if (i) i.active = false;
     },
   };
 }

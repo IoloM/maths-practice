@@ -8,6 +8,10 @@
  * Until someone claims their login, anyone who knew the username could claim it first: admins see
  * which logins haven't been claimed, and a reset puts a login back to unclaimed.
  *
+ * Invite links: an admin makes one with a limit (how many people) and an expiry; anyone with the link
+ * makes their own login with it (`join`) until it's used up, runs out or is stopped. New logins from
+ * invites are never admins.
+ *
  * Everything Supabase-specific is behind `Backend` (see backend.ts), so this file is plain
  * TypeScript that the app's tests run under Node.
  */
@@ -18,6 +22,15 @@ export interface ProfileRow {
   disabled: boolean;
   /** no password chosen yet: the next sign-in chooses one */
   must_change: boolean;
+}
+
+export interface InviteRow {
+  code: string;
+  created_at: string;
+  expires_at: string;
+  max_uses: number;
+  uses: number;
+  active: boolean;
 }
 
 export interface Backend {
@@ -32,7 +45,18 @@ export interface Backend {
   setBanned(id: string, banned: boolean): Promise<void>;
   insertProfile(p: { id: string; username: string; name: string; admin: boolean; must_change: boolean }): Promise<void>;
   updateProfile(id: string, patch: Partial<{ name: string; admin: boolean; disabled: boolean; must_change: boolean }>): Promise<void>;
+  createInvite(inv: { code: string; created_by: string; expires_at: string; max_uses: number }): Promise<void>;
+  /** invites made in the last 60 days, newest first */
+  listInvites(): Promise<InviteRow[]>;
+  getInvite(code: string): Promise<InviteRow | null>;
+  /** take one place on an invite if it still has one (all at once); false if it can't be used */
+  takeInvite(code: string): Promise<boolean>;
+  stopInvite(code: string): Promise<void>;
 }
+
+/** Whether an invite can still be used. */
+export const inviteOpen = (i: InviteRow, now = Date.now()) => i.active && Date.parse(i.expires_at) > now && i.uses < i.max_uses;
+export const INVITE_DAYS = [1, 3, 7, 14, 30];
 
 export const USERNAME = /^[a-z0-9]([a-z0-9._-]{0,30}[a-z0-9])?$/;
 export const MIN_PASSWORD = 6;
@@ -60,12 +84,19 @@ function cors(origin: string | null, allowed: string[]): Record<string, string> 
 }
 const json = (body: unknown, status: number, headers: Record<string, string>) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', ...headers } });
 
-type Body = { action?: unknown; id?: unknown; username?: unknown; name?: unknown; password?: unknown; admin?: unknown; disabled?: unknown };
+type Body = { action?: unknown; id?: unknown; username?: unknown; name?: unknown; password?: unknown; admin?: unknown; disabled?: unknown; code?: unknown; days?: unknown; uses?: unknown };
 
 const str = (x: unknown) => (typeof x === 'string' ? x : '');
 /** A password nobody knows, for a login that hasn't been claimed yet. */
 export function unguessable(): string {
   return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(27)))).replace(/[+/=]/g, 'x');
+}
+/** An invite code: 24 random bytes, safe in a link. */
+const inviteCode = () => btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+function checkUsername(x: unknown): string {
+  const u = usernameOf(x);
+  if (!USERNAME.test(u)) throw new Problem(400, 'Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
+  return u;
 }
 const usernameOf = (x: unknown) => str(x).trim().toLowerCase();
 function checkPassword(p: unknown): string {
@@ -97,6 +128,30 @@ export async function handle(req: Request, deps: { backend: Backend; origins: st
       const p = await b.profileByUsername(usernameOf(body.username));
       return json({ status: !p ? 'none' : p.disabled ? 'off' : p.must_change ? 'new' : 'ready' }, 200, headers);
     }
+    if (body.action === 'invite-status') {
+      const inv = await b.getInvite(str(body.code));
+      if (!inv) return json({ status: 'none' }, 200, headers);
+      return json(inviteOpen(inv) ? { status: 'open', expires: inv.expires_at, left: inv.max_uses - inv.uses } : { status: 'closed' }, 200, headers);
+    }
+    if (body.action === 'join') {
+      const code = str(body.code);
+      const inv = code ? await b.getInvite(code) : null;
+      if (!inv) throw new Problem(404, 'This invite link isn’t right — ask for a new one.');
+      if (!inviteOpen(inv)) throw new Problem(410, 'This invite link has run out — ask for a new one.');
+      const username = checkUsername(body.username);
+      const name = checkName(body.name);
+      const password = checkPassword(body.password);
+      if (await b.usernameTaken(username)) throw new Problem(409, `The username "${username}" is taken — try another.`);
+      if (!(await b.takeInvite(code))) throw new Problem(410, 'This invite link has run out — ask for a new one.');
+      const id = await b.createAuthUser(emailFor(username), password, { username, name });
+      try {
+        await b.insertProfile({ id, username, name, admin: false, must_change: false });
+      } catch (e) {
+        await b.deleteAuthUser(id);
+        throw e;
+      }
+      return json({ ok: true }, 200, headers);
+    }
     if (body.action === 'claim') {
       const p = await b.profileByUsername(usernameOf(body.username));
       if (!p) throw new Problem(404, 'There’s no login with that username — check it with whoever runs the app.');
@@ -126,8 +181,7 @@ export async function handle(req: Request, deps: { backend: Backend; origins: st
 
     switch (body.action) {
       case 'create': {
-        const username = usernameOf(body.username);
-        if (!USERNAME.test(username)) throw new Problem(400, 'Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
+        const username = checkUsername(body.username);
         const name = checkName(body.name);
         if (await b.usernameTaken(username)) throw new Problem(409, `The username "${username}" is taken.`);
         // they choose their own password the first time they sign in
@@ -173,6 +227,20 @@ export async function handle(req: Request, deps: { backend: Backend; origins: st
         await b.deleteAuthUser(p.id); // profile, progress, stats and results go with it (on delete cascade)
         return json({ ok: true }, 200, headers);
       }
+      case 'invite-create': {
+        const days = Number(body.days);
+        const uses = Number(body.uses);
+        if (!INVITE_DAYS.includes(days)) throw new Problem(400, 'Choose how long the link lasts.');
+        if (!Number.isInteger(uses) || uses < 1 || uses > 100) throw new Problem(400, 'An invite can be for 1 to 100 people.');
+        const code = inviteCode();
+        await b.createInvite({ code, created_by: me, expires_at: new Date(Date.now() + days * 86_400_000).toISOString(), max_uses: uses });
+        return json({ ok: true, code }, 200, headers);
+      }
+      case 'invite-list':
+        return json({ ok: true, invites: await b.listInvites() }, 200, headers);
+      case 'invite-stop':
+        await b.stopInvite(str(body.code));
+        return json({ ok: true }, 200, headers);
       default:
         throw new Problem(400, 'Unknown action');
     }

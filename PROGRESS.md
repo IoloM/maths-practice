@@ -271,3 +271,14 @@ axe on 13 views in light and dark) — all green.
   topics you feel sure about but drop marks on come first.
 - **Progress reports** (`#/report/<id>`, `#/report/all`, admins): totals, predicted grade, topics,
   help requests, past papers, mocks and recent questions, one person per printed page.
+
+## Phase 12 — Easier to add people ✅ (28 Oct 2026)
+
+- **Invite links** (Manage logins › Invite people): a link (and QR code) for up to N people, lasting
+  1–30 days, stoppable any time. Whoever opens it (`#/invite/<code>`) makes their own login — name,
+  username, password — never an admin. `invites` table readable only by the admin function; places
+  are taken atomically (`take_invite`).
+- **Several logins at once**: paste names, one per line; usernames are suggested (first name, made
+  unique), and each person gets a message to send.
+- **Personal sign-in links** in every login message (`#/account?u=<username>`): they go straight to
+  choosing their password.
