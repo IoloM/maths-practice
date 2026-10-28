@@ -79,6 +79,30 @@ export function Exams() {
 
       <section className="card stack">
         <h2>
+          <Icon name="bolt" /> Quick and hard
+        </h2>
+        <ul className="list">
+          <li>
+            <a className="list-link" href={href('/speed')}>
+              <span style={{ flex: 1 }}>
+                <b>Speed round</b> <span className="small muted">· 10 quick questions in 5 minutes, marked as you go</span>
+              </span>
+              <Icon name="next" />
+            </a>
+          </li>
+          <li>
+            <a className="list-link" href={href('/stretch')}>
+              <span style={{ flex: 1 }}>
+                <b>A* stretch problems</b> <span className="small muted">· harder questions that mix several topics</span>
+              </span>
+              <Icon name="next" />
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section className="card stack">
+        <h2>
           <Icon name="clock" /> Mock papers
         </h2>
         <p className="muted small">A full paper is 100 marks in 2 hours. Questions are drawn at random from the whole bank for that paper, easier first.</p>

@@ -46,6 +46,9 @@ export function MathField({ value, onChange, onEnter, ariaLabel, placeholder, di
   const [ready, setReady] = useState(loaded);
   const [failed, setFailed] = useState(false);
   const ref = useRef<MF | null>(null);
+  const plainBox = useRef<HTMLInputElement | null>(null);
+  /** the plain box had the focus when MathLive replaced it: give the focus to the new field */
+  const refocus = useRef(false);
   const cb = useRef({ onChange, onEnter });
   cb.current = { onChange, onEnter };
 
@@ -53,7 +56,11 @@ export function MathField({ value, onChange, onEnter, ariaLabel, placeholder, di
     if (plain || ready) return;
     let alive = true;
     loadMathLive()
-      .then(() => alive && setReady(true))
+      .then(() => {
+        if (!alive) return;
+        refocus.current = !!plainBox.current && document.activeElement === plainBox.current;
+        setReady(true);
+      })
       .catch(() => alive && setFailed(true));
     return () => {
       alive = false;
@@ -84,6 +91,10 @@ export function MathField({ value, onChange, onEnter, ariaLabel, placeholder, di
     };
     mf.addEventListener('input', onInput);
     mf.addEventListener('keydown', onKey);
+    if (refocus.current) {
+      refocus.current = false;
+      mf.focus();
+    }
     return () => {
       mf.removeEventListener('input', onInput);
       mf.removeEventListener('keydown', onKey);
@@ -93,6 +104,7 @@ export function MathField({ value, onChange, onEnter, ariaLabel, placeholder, di
   if (plain || !ready || failed) {
     return (
       <input
+        ref={plainBox}
         id={id}
         className="text-answer"
         type="text"

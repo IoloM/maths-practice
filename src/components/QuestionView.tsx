@@ -19,6 +19,7 @@ import { Difficulty } from './bits';
 import { SchemePanel } from './SchemePanel';
 import { BookletButton } from './BookletButton';
 import { ReadAloud } from './ReadAloud';
+import { SaveButton } from './SaveButton';
 import { questionSpeech } from '../lib/speech';
 import { setFlag } from '../lib/topics';
 
@@ -270,6 +271,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
         <button className="btn btn-small btn-ghost" onClick={() => setAnnotating((a) => !a)} aria-pressed={annotating} title="Write on the question">
           <Icon name="annotate" /> {annotating ? 'Stop annotating' : 'Annotate'}
         </button>
+        <SaveButton templateId={inst.templateId} seed={inst.seed} />
         <ReadAloud text={() => questionSpeech(inst, number)} />
         <BookletButton />
         <button className="btn btn-small btn-ghost" onClick={share} title="Share this question">

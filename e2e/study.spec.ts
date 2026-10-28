@@ -44,6 +44,23 @@ test('a wrong answer goes in the mistake notebook, with a note, until it is put 
   await expect(page.getByText(/Put right on/)).toBeVisible();
 });
 
+test('a question saved for later shows on the saved page until it is taken off', async ({ page }) => {
+  await page.goto(`./#/q/${Q}/4`);
+  await page.getByRole('button', { name: 'Save for later' }).click();
+  await expect(page.getByRole('button', { name: 'Saved' })).toHaveAttribute('aria-pressed', 'true');
+  await page.goto('./#/');
+  await expect(page.getByRole('link', { name: /Saved for later\s*1 question saved/ })).toBeVisible();
+  await page.getByRole('link', { name: /Saved for later/ }).click();
+  await expect(page.getByRole('heading', { name: 'Saved for later' })).toBeVisible();
+  await expect(page.getByText('not tried')).toBeVisible();
+  await axe(page);
+  await page.getByRole('link', { name: /Practise questions like these/ }).click();
+  await expect(page.getByRole('heading', { name: 'Questions like the ones you saved' })).toBeVisible();
+  await page.goto('./#/saved');
+  await page.getByRole('button', { name: /off your saved list/ }).click();
+  await expect(page.getByText('Nothing saved yet.')).toBeVisible();
+});
+
 test('step by step shows the worked solution a step at a time, leaving the last step to you', async ({ page }) => {
   await page.goto(`./#/q/${Q}/3`);
   await page.getByRole('button', { name: 'Step by step' }).click();

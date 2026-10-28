@@ -58,7 +58,7 @@ export function Practice({ query }: { query: URLSearchParams }) {
     if (!loading && !inst) void next();
   }, [loading, inst, next]);
 
-  const title = query.get('from') === 'mistakes' ? 'Putting mistakes right' : cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.families ? 'Topics that have come up on past papers' : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
+  const title = query.get('from') === 'mistakes' ? 'Putting mistakes right' : query.get('from') === 'saved' ? 'Questions like the ones you saved' : query.get('from') === 'stretch' && (cfg.templates?.length ?? 0) > 1 ? 'A* stretch problems' : cfg.templates?.length === 1 ? ENTRY_BY_ID.get(cfg.templates[0])?.title : cfg.chapters?.length === 1 ? CHAPTER_BY_REF.get(cfg.chapters[0] as never)?.title : cfg.specs?.length === 1 ? `${cfg.specs[0]} ${SPEC_BY_REF.get(cfg.specs[0] as never)?.title ?? ''}` : cfg.families ? 'Topics that have come up on past papers' : cfg.minMarks ? 'Long exam-style questions' : cfg.streams?.length === 1 ? `Mixed practice — ${cfg.streams[0]}` : 'Mixed practice';
   const pool = candidates(cfg).length;
 
   return (

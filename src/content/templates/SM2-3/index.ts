@@ -3,6 +3,7 @@ import type { Template } from '../../../engine/templates/types';
 import t0 from './choose-distribution';
 import t1 from './exam-style';
 import t2 from './normal';
+import t3 from './stretch';
 
-const templates: Template[] = [...t0, ...t1, ...t2];
+const templates: Template[] = [...t0, ...t1, ...t2, ...t3];
 export default templates;

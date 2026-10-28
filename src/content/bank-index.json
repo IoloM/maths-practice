@@ -2913,6 +2913,37 @@
    "n": 200
   },
   {
+   "id": "p1.13.stretch-tangent-meets-cubic-again",
+   "family": "stretch.tangent-meets-cubic-again",
+   "title": "A* stretch: the tangent to a cubic meets it again — the point and the area between them",
+   "spec": [
+    "P7.3",
+    "P2.6",
+    "P8.3"
+   ],
+   "chapter": "P1.13",
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "tangents",
+    "factor theorem",
+    "area between curves",
+    "integration"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.14.long-exponential-model",
    "family": "p1.14.exam-style",
    "title": "Exam-style: an exponential model — constants, exact k, a time, a rate and a limitation",
@@ -4577,6 +4608,39 @@
    "n": 200
   },
   {
+   "id": "p2.4.stretch-binomial-estimate-of-an-integral",
+   "family": "stretch.binomial-estimate-of-an-integral",
+   "title": "A* stretch: estimate an integral with a binomial expansion, then find the percentage error",
+   "spec": [
+    "P4.1",
+    "P8.2",
+    "P8.3"
+   ],
+   "chapter": "P2.4",
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 10,
+   "time": 13,
+   "commands": [
+    "Find",
+    "Use",
+    "Calculate"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "binomial expansion",
+    "rational powers",
+    "definite integrals",
+    "percentage error"
+   ],
+   "n": 48
+  },
+  {
    "id": "p2.5.arc-length-and-sector-area",
    "family": "p2.5.arcs-sectors",
    "title": "Arc length, sector area and perimeter in radians",
@@ -5249,6 +5313,39 @@
     "limitations"
    ],
    "n": 54
+  },
+  {
+   "id": "p2.7.stretch-r-form-reciprocal-and-equation",
+   "family": "stretch.r-form-reciprocal-and-equation",
+   "title": "A* stretch: R cos(θ − α), the greatest value of a reciprocal, and an equation to solve",
+   "spec": [
+    "P5.6",
+    "P5.7",
+    "P2.7"
+   ],
+   "chapter": "P2.7",
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Express",
+    "Find",
+    "Solve"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "R cos(θ − α)",
+    "harmonic form",
+    "maximum value",
+    "trigonometric equations"
+   ],
+   "n": 200
   },
   {
    "id": "p2.8.long-parametric-tangent-cartesian-area",
@@ -6055,6 +6152,40 @@
     "Newton–Raphson"
    ],
    "n": 200
+  },
+  {
+   "id": "p2.10.stretch-stationary-point-by-newton-raphson",
+   "family": "stretch.stationary-point-by-newton-raphson",
+   "title": "A* stretch: a stationary point you can only find numerically — locate it, then Newton–Raphson",
+   "spec": [
+    "P9.3",
+    "P9.1",
+    "P7.2",
+    "P7.3"
+   ],
+   "chapter": "P2.10",
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 5,
+   "marks": 11,
+   "time": 14,
+   "commands": [
+    "Find",
+    "Show that",
+    "Use"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "stationary points",
+    "change of sign",
+    "Newton–Raphson",
+    "exponentials"
+   ],
+   "n": 75
   },
   {
    "id": "p2.11.de-exponential-growth-decay",
@@ -10027,6 +10158,36 @@
    "n": 200
   },
   {
+   "id": "sm2.3.stretch-normal-then-binomial-then-design",
+   "family": "stretch.normal-then-binomial-then-design",
+   "title": "A* stretch: a normal probability feeds a binomial model, then choose a new mean",
+   "spec": [
+    "S4.2",
+    "S4.1",
+    "S4.3"
+   ],
+   "chapter": "SM2.3",
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 10,
+   "time": 13,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "normal distribution",
+    "binomial distribution",
+    "inverse normal",
+    "modelling"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm2.4.uniform-rod-on-two-supports",
    "family": "sm2.4.moments",
    "title": "A uniform rod resting on two supports with a particle attached: find the reactions",
@@ -10552,6 +10713,36 @@
     "quadratic",
     "modelling",
     "diagram"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm2.6.stretch-speed-to-hit-a-target",
+   "family": "stretch.speed-to-hit-a-target",
+   "title": "A* stretch: the speed of projection needed to hit a target, and the motion when it gets there",
+   "spec": [
+    "M7.5",
+    "M7.3"
+   ],
+   "chapter": "SM2.6",
+   "level": "A2",
+   "paper": [
+    3
+   ],
+   "difficulty": 5,
+   "marks": 12,
+   "time": 15,
+   "commands": [
+    "Find",
+    "Determine"
+   ],
+   "tags": [
+    "stretch",
+    "synoptic",
+    "projectiles",
+    "suvat",
+    "rearranging",
+    "speed"
    ],
    "n": 200
   },
@@ -15674,8 +15865,8 @@
   }
  ],
  "totals": {
-  "templates": 353,
-  "questions": 63748,
+  "templates": 359,
+  "questions": 64671,
   "fixed": 175
  }
 }

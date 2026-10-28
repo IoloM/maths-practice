@@ -20,6 +20,7 @@ import { ErrorBox, Loading } from '../components/bits';
 import { SchemePanel } from '../components/SchemePanel';
 import { BookletButton } from '../components/BookletButton';
 import { ReadAloud } from '../components/ReadAloud';
+import { SaveButton } from '../components/SaveButton';
 import { questionSpeech } from '../lib/speech';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { href, navigate, shareUrl } from '../router';
@@ -474,6 +475,7 @@ function ReviewQuestion({ inst, n, attempt, results }: { inst: Instance; n: numb
         <a className="btn btn-small" href={href('/practice', { t: inst.templateId })}>
           Practise more like this
         </a>
+        <SaveButton templateId={inst.templateId} seed={inst.seed} className="btn btn-small" />
       </div>
     </article>
   );

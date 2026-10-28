@@ -4,6 +4,7 @@ import t0 from './areas';
 import t1 from './definite';
 import t2 from './exam-style';
 import t3 from './indefinite';
+import t4 from './stretch';
 
-const templates: Template[] = [...t0, ...t1, ...t2, ...t3];
+const templates: Template[] = [...t0, ...t1, ...t2, ...t3, ...t4];
 export default templates;

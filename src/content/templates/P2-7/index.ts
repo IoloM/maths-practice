@@ -2,6 +2,7 @@
 import type { Template } from '../../../engine/templates/types';
 import t0 from './compound';
 import t1 from './proofs-modelling';
+import t2 from './stretch';
 
-const templates: Template[] = [...t0, ...t1];
+const templates: Template[] = [...t0, ...t1, ...t2];
 export default templates;

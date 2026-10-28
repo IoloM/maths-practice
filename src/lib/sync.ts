@@ -14,6 +14,8 @@ import { incoming, isEmpty, outgoing, type Snapshot } from './sync-merge';
 import type { PaperResults } from './paper-results';
 import { NOTES_KEY, type MistakeNotes } from './mistakes';
 import { TOPICS_KEY, type TopicMarks } from './topics';
+import { SAVED_KEY, type SavedQuestions } from './saved';
+import { SPEED_KEY, type SpeedRecords } from './speed-records';
 import { streak, thisWeek } from './streak';
 import { scoreOf } from '../progress/mastery';
 import { earned } from './badges';
@@ -67,6 +69,10 @@ interface Payload {
   notes?: MistakeNotes;
   /** topics marked to learn or for help, with your notes and links */
   topics?: TopicMarks;
+  /** questions saved for later */
+  saved?: SavedQuestions;
+  /** speed-round personal bests */
+  speed?: SpeedRecords;
 }
 
 /** What admins see of you (the study group leaderboard). */
@@ -176,12 +182,14 @@ async function run(): Promise<void> {
       const [papers, papersChanged] = await mergeSetting(store, PAPERS_KEY, remote?.papers);
       const [notes, notesChanged] = await mergeSetting(store, NOTES_KEY, remote?.notes);
       const [topics, topicsChanged] = await mergeSetting(store, TOPICS_KEY, remote?.topics);
-      if (papersChanged || notesChanged || topicsChanged) changed = true;
+      const [saved, savedChanged] = await mergeSetting(store, SAVED_KEY, remote?.saved);
+      const [speed, speedChanged] = await mergeSetting(store, SPEED_KEY, remote?.speed);
+      if (papersChanged || notesChanged || topicsChanged || savedChanged || speedChanged) changed = true;
       const prefs = { values: syncedPrefs(), at: readSettings().prefsAt };
       const snapshot = await localSnapshot(store);
       const out = outgoing(snapshot);
-      if (remote && JSON.stringify([out, prefs, papers, notes, topics]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}, remote.topics ?? {}])) break;
-      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes, topics };
+      if (remote && JSON.stringify([out, prefs, papers, notes, topics, saved, speed]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}, remote.topics ?? {}, remote.saved ?? {}, remote.speed ?? {}])) break;
+      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes, topics, saved, speed };
       const data = await pack(JSON.stringify(payload));
       if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to save online — back it up to a file instead');
       if (await pushProgress(got.v, data, summarise(snapshot, new Date(), papers))) break;

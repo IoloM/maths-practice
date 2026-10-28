@@ -15,6 +15,7 @@ const PAGES: [string, string][] = [
   ['exams', './#/exams'],
   ['review', './#/review'],
   ['mistake notebook', './#/mistakes'],
+  ['saved for later', './#/saved'],
   ['progress', './#/progress'],
   ['reference', './#/reference'],
   ['flashcards', './#/flashcards'],

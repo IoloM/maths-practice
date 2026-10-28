@@ -282,3 +282,21 @@ axe on 13 views in light and dark) — all green.
   unique), and each person gets a message to send.
 - **Personal sign-in links** in every login message (`#/account?u=<username>`): they go straight to
   choosing their password.
+
+## Phase 13 — Speed rounds, A* stretch, save for later ✅ (28 Oct 2026)
+
+- **Speed rounds** (`#/speed`): 10 quick one-step questions in 5 minutes — Pure, Statistics,
+  Mechanics or mixed — marked as you answer (Enter checks, Enter again moves on), with the answer and
+  one line of working when you're wrong. 31 kinds of question made fresh from a seed
+  (`src/lib/speed.ts`); personal best per kind of round (score, then time) in
+  `src/lib/speed-records.ts`, synced with your login. `?area=…&seed=…` repeats a round exactly.
+- **A* stretch problems** (`#/stretch`, tag `stretch`): six new difficulty-5 questions that join
+  topics — tangent to a cubic meeting it again and the area between; a binomial estimate of an
+  integral and its percentage error; R cos(θ − α) with the greatest value of a reciprocal and an
+  equation; a stationary point found by Newton–Raphson; a normal probability feeding a binomial
+  model then an inverse-normal design; the speed needed to hit a target. Every seed is verified like
+  the rest of the bank. The page also lists the other top-difficulty exam questions.
+- **Save for later**: a star on every question (and in set reviews) saves that exact question to
+  `#/saved`, with your last score, "try it again" and practising questions like them. Synced a
+  question at a time; taking one off syncs too.
+- Fix: the answer box keeps the focus when the maths keyboard finishes loading.

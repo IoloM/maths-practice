@@ -19,6 +19,8 @@ import { buildPlan, type PlanInput } from '../lib/plan';
 import { usePaperResults } from '../lib/paper-results';
 import { isOpen, mistakesFrom, useMistakeNotes } from '../lib/mistakes';
 import { flagged, useTopicMarks } from '../lib/topics';
+import { savedList, useSaved } from '../lib/saved';
+import { useSpeed } from '../lib/speed-records';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -163,6 +165,11 @@ export function Home() {
   const openMistakes = notes ? mistakesFrom(attempts).filter((m) => isOpen(m, notes)).length : 0;
   const topicMarks = useTopicMarks();
   const helpTopics = topicMarks ? flagged(topicMarks, 'help').length : 0;
+  const saved = useSaved();
+  const savedCount = saved ? savedList(saved).length : 0;
+  const speed = useSpeed();
+  const speedTop = speed ? Object.values(speed).sort((a, b) => b.best - a.best || a.bestSeconds - b.bestSeconds)[0] : undefined;
+  const speedBest = speedTop ? `${speedTop.best}/10` : null;
   return (
     <div className="stack">
       <div>
@@ -230,6 +237,24 @@ export function Home() {
             <Icon name="bulb" /> Learn a topic
           </h2>
           <span className="muted">{helpTopics ? `${helpTopics} topic${helpTopics === 1 ? '' : 's'} you need help with` : 'Notes, worked examples and videos for every topic'}</span>
+        </a>
+        <a className="card tile" href={href('/speed')}>
+          <h2>
+            <Icon name="bolt" /> Speed round
+          </h2>
+          <span className="muted">{speedBest ? `Best ${speedBest} — can you beat it?` : '10 quick questions in 5 minutes'}</span>
+        </a>
+        <a className="card tile" href={href('/stretch')}>
+          <h2>
+            <Icon name="mountain" /> A* stretch
+          </h2>
+          <span className="muted">Harder questions that mix several topics</span>
+        </a>
+        <a className="card tile" href={href('/saved')}>
+          <h2>
+            <Icon name="star" /> Saved for later
+          </h2>
+          <span className="muted">{savedCount ? `${savedCount} question${savedCount === 1 ? '' : 's'} saved` : 'Star any question to come back to it'}</span>
         </a>
         <a className="card tile" href={href('/mistakes')}>
           <h2>
