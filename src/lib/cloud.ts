@@ -18,7 +18,8 @@ const KEY = ((import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefin
 /** Built with a Supabase project: logins work on every device. */
 export const cloudConfigured = !!(URL_ && KEY);
 
-export const USERNAME = /^[a-z0-9]([a-z0-9._-]{0,30}[a-z0-9])?$/;
+/** Capitals are kept for showing (IoloM); signing in ignores case. */
+export const USERNAME = /^[A-Za-z0-9]([A-Za-z0-9._-]{0,30}[A-Za-z0-9])?$/;
 export const MIN_PASSWORD = 6;
 /** Usernames sign in with a made-up address (.invalid is never a real domain; no email is sent). */
 export const emailFor = (username: string) => `${username.trim().toLowerCase()}@login.invalid`;
@@ -347,7 +348,7 @@ async function adminCall<T = { id?: string; status?: string }>(body: Record<stri
 }
 
 /** A login with just a name and username: they choose their password the first time they sign in. */
-export const createLogin = (p: { username: string; name: string; admin: boolean }) => adminCall({ action: 'create', ...p, username: p.username.trim().toLowerCase() });
+export const createLogin = (p: { username: string; name: string; admin: boolean }) => adminCall({ action: 'create', ...p, username: p.username.trim() });
 /** Back to "choose a password": the old one stops working. */
 export const resetLogin = (id: string) => adminCall({ action: 'reset', id });
 export const setLoginAdmin = (id: string, admin: boolean) => adminCall({ action: 'admin', id, admin });
@@ -382,10 +383,29 @@ export const stopInvite = (code: string) => adminCall({ action: 'invite-stop', c
 export async function inviteStatus(code: string): Promise<{ status: 'open' | 'closed' | 'none'; expires?: string; left?: number }> {
   return adminCall({ action: 'invite-status', code });
 }
-/** Anyone with an invite: make your own login (you choose the password), then sign in with it. */
-export async function joinWithInvite(code: string, p: { name: string; username: string; password: string }): Promise<Me> {
+/**
+ * Anyone with an invite: make your own login from your first and last name (the username is made
+ * from them, e.g. IoloM) and the password you choose, then sign in with it.
+ */
+export async function joinWithInvite(code: string, p: { first: string; last: string; password: string }): Promise<{ me: Me; username: string }> {
   if (p.password.length < MIN_PASSWORD) throw new CloudError(`Use at least ${MIN_PASSWORD} characters.`);
-  const username = p.username.trim().toLowerCase();
-  await adminCall({ action: 'join', code, name: p.name.trim(), username, password: p.password });
-  return signIn(username, p.password);
+  const { username } = await adminCall<{ username: string }>({ action: 'join', code, first: p.first.trim(), last: p.last.trim(), password: p.password });
+  return { me: await signIn(username, p.password), username };
+}
+
+/** A username from a name, as the admin function makes them: first name + surname initial (Iolo Mottershead → IoloM). */
+export function usernameFromName(first: string, last: string): string {
+  const clean = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^A-Za-z0-9]/g, '');
+  const f = clean(first).slice(0, 28);
+  const l = clean(last);
+  return `${f.charAt(0).toUpperCase()}${f.slice(1)}${l.charAt(0).toUpperCase()}` || 'User';
+}
+/** The same from a whole name: the first word is the first name, the last word the surname. */
+export function usernameFromFullName(full: string): string {
+  const words = full.trim().split(/\s+/).filter(Boolean);
+  return words.length ? usernameFromName(words[0], words.length > 1 ? words[words.length - 1] : '') : '';
 }

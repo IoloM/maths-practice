@@ -178,4 +178,16 @@ describe('security rules', () => {
     expect(await fails(as(BEN, "select public.save_progress(0, 'x', '{}')"))).toBe(true);
     await db.query('update public.profiles set disabled = false where id = $1', [BEN]);
   });
+
+  it('usernames keep their capitals but are unique ignoring case', async () => {
+    const id = '00000000-0000-4000-8000-0000000000c1';
+    await db.query("insert into auth.users (id) values ($1)", [id]);
+    await db.query("insert into public.profiles (id, username, name) values ($1, 'IoloM', 'Iolo M')", [id]);
+    expect((await db.query<{ username_key: string }>('select username_key from public.profiles where id = $1', [id])).rows).toEqual([{ username_key: 'iolom' }]);
+    const other = '00000000-0000-4000-8000-0000000000c2';
+    await db.query("insert into auth.users (id) values ($1)", [other]);
+    expect(await fails(db.query("insert into public.profiles (id, username, name) values ($1, 'iolom', 'X')", [other]))).toBe(true);
+    expect(await fails(db.query("insert into public.profiles (id, username, name) values ($1, 'Iolo M', 'X')", [other]))).toBe(true);
+    await db.query('delete from public.profiles where id = $1', [id]);
+  });
 });

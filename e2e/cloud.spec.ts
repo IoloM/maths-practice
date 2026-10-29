@@ -81,9 +81,9 @@ test('an admin makes a login with just a username; the person chooses their pass
   await page.getByLabel('Their name').fill('Ana Bell');
   await page.getByRole('button', { name: 'Make login' }).click();
   const slip = page.locator('.login-slip');
-  await expect(slip).toContainText('Your username is ana.bell');
+  await expect(slip).toContainText('Your username is AnaB');
   await expect(slip).toContainText('choose your own password');
-  await expect(slip).toContainText('#/account?u=ana.bell');
+  await expect(slip).toContainText('#/account?u=AnaB');
   await expect(slip).not.toContainText(/password:/i);
   await axe(page);
   await page.getByRole('button', { name: 'Done' }).click();
@@ -91,7 +91,8 @@ test('an admin makes a login with just a username; the person chooses their pass
 
   // Ana on her phone: chooses her own password the first time
   const phone = await device(browser, baseURL, s);
-  await firstSignIn(phone, 'ana.bell', 'anas-password');
+  // capitals don't matter when typing a username
+  await firstSignIn(phone, 'anab', 'anas-password');
   await expect(phone.getByRole('link', { name: 'Signed in as Ana Bell' })).toBeVisible();
   await answerOne(phone, 22);
   await phone.goto('./#/account');
@@ -100,7 +101,7 @@ test('an admin makes a login with just a username; the person chooses their pass
 
   // ...and on her laptop: her password, and the same progress
   const laptop = await device(browser, baseURL, s);
-  await signIn(laptop, 'ana.bell', 'anas-password');
+  await signIn(laptop, 'ANAB', 'anas-password');
   await reloads(laptop, laptop.getByRole('button', { name: 'Sign in' }).click());
   await laptop.goto('./#/progress');
   await expect(attempted(laptop)).toHaveText('1');
@@ -341,13 +342,18 @@ test('an invite link: people make their own login with it until it runs out or i
   const dan = await device(browser, baseURL, s);
   await dan.goto(`./#/invite/${code}`);
   await expect(dan.getByRole('heading', { name: 'Join Maths Practice' })).toBeVisible();
-  await dan.getByLabel('Your name').fill('Dan Evans');
-  await expect(dan.getByLabel(/Choose a username/)).toHaveValue('dan.evans');
+  await dan.getByLabel('First name').fill('Dan');
+  await dan.getByLabel('Last name').fill('evans');
+  await expect(dan.getByText('Your username will be DanE')).toBeVisible();
   await dan.getByLabel(/^New password \(/).fill('dan-pass-1');
   await dan.getByLabel('New password again').fill('dan-pass-1');
   await reloads(dan, dan.getByRole('button', { name: 'Make my login' }).click());
-  await expect(dan.getByRole('link', { name: 'Signed in as Dan Evans' })).toBeVisible();
-  expect(s.profiles.find((p) => p.username === 'dan.evans')).toMatchObject({ admin: false, must_change: false });
+  await expect(dan.getByRole('link', { name: 'Signed in as Dan evans' })).toBeVisible();
+  await expect(dan.getByText('DanE', { exact: true })).toBeVisible();
+  await axe(dan);
+  await dan.getByRole('link', { name: 'Start practising' }).click();
+  await expect(dan.getByRole('region', { name: 'Your plan for today' })).toBeVisible();
+  expect(s.profiles.find((p) => p.username === 'DanE')).toMatchObject({ name: 'Dan evans', admin: false, must_change: false });
 
   // it was for one person: the next one is turned away
   const eve = await device(browser, baseURL, s);
@@ -369,15 +375,15 @@ test('several logins at once, and a personal link that goes straight to choosing
   await page.goto('./#/logins');
   await page.getByRole('button', { name: 'Add several at once' }).click();
   await page.getByLabel('Names, one per line').fill('Ana Jones\nBen Smith\nBen Smith\n\nCal');
-  await expect(page.getByText('Usernames: Ana Jones → ana.jones · Ben Smith → ben · Cal → cal')).toBeVisible();
+  await expect(page.getByText('Usernames: Ana Jones → AnaJ · Ben Smith → BenS · Cal → Cal')).toBeVisible();
   await page.getByRole('button', { name: 'Make 3 logins' }).click();
   await expect(page.getByText('3 logins ready')).toBeVisible();
-  expect(s.profiles.map((p) => p.username).sort()).toEqual(['ana', 'ana.jones', 'ben', 'cal', 'iolo']);
+  expect(s.profiles.map((p) => p.username).sort()).toEqual(['AnaJ', 'BenS', 'Cal', 'ana', 'iolo']);
   await expect(page.getByRole('button', { name: 'Send to Ben' })).toBeVisible();
 
   const ben = await device(browser, baseURL, s);
-  await ben.goto('./#/account?u=ben');
+  await ben.goto('./#/account?u=BenS');
   await expect(ben.getByRole('heading', { name: 'Choose your password' })).toBeVisible();
-  await expect(ben.getByText('ben', { exact: true })).toBeVisible();
+  await expect(ben.getByText('BenS', { exact: true })).toBeVisible();
   await ben.context().close();
 });

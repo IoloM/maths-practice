@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { BANK } from '../content/bank-meta';
 import { BOOK_NAMES, CHAPTERS, CHAPTER_BY_REF } from '../content/chapters';
 import { SPEC_BY_REF } from '../content/spec';
-import { VIDEOS } from '../content/videos';
+import { CHANNEL, VIDEOS, videoCount, videoIds, type Video } from '../content/videos';
 import { loadNotes, type TopicNotes } from '../content/notes';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
-import { CHECK_GAPS, addLink, cleanUrl, dueChecks, flagged, markLearnt, nextCheck, removeLink, setFlag, setTopicNote, useTopicMarks, youTubeId, type TopicMark, type TopicMarks } from '../lib/topics';
+import { CHECK_GAPS, addLink, cleanUrl, dueChecks, flagged, markLearnt, nextCheck, removeLink, setFlag, setTopicNote, setWatched, useTopicMarks, youTubeId, type TopicMark, type TopicMarks } from '../lib/topics';
 import { buildTimed, MINUTES_PER_MARK } from '../lib/sets';
 import { startSet } from './Exams';
 import { MathText } from '../components/MathText';
@@ -235,6 +235,159 @@ function Path({ chapter }: { chapter: string }) {
   );
 }
 
+/** How many of a topic's videos you've watched. */
+const watchedCount = (chapter: string, mark: TopicMark | undefined) => {
+  const w = new Set(mark?.watched ?? []);
+  return videoIds(chapter).filter((id) => w.has(id)).length;
+};
+
+/** One video: press it to play it here, with a tick for when you've watched it. */
+function Lesson({ v, open, watched, onPlay, onToggle }: { v: Video; open: boolean; watched: boolean; onPlay: () => void; onToggle: () => void }) {
+  const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+  return (
+    <li className={`lesson${watched ? ' watched' : ''}`}>
+      <div className="lesson-row">
+        <button className="lesson-play" onClick={onPlay} aria-expanded={open} disabled={offline} title={offline ? 'Videos need an internet connection' : undefined}>
+          <Icon name={watched ? 'check' : 'play'} />
+          <span>{v.title}</span>
+        </button>
+        <label className="lesson-tick small">
+          <input type="checkbox" checked={watched} onChange={onToggle} aria-label={`Watched: ${v.title}`} />
+          <span aria-hidden="true">Watched</span>
+        </label>
+      </div>
+      {open && (
+        <div className="video-frame">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`}
+            title={v.title}
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </li>
+  );
+}
+
+/** A list of videos for a topic; playing one ticks it watched. Only one plays at a time. */
+function useLessons(chapter: string, mark: TopicMark | undefined) {
+  const [playing, setPlaying] = useState<string | null>(null);
+  // ticks show straight away; the saved list catches up a moment later
+  const [ticked, setTicked] = useState<Record<string, boolean>>({});
+  const saved = new Set(mark?.watched ?? []);
+  const isWatched = (id: string) => ticked[id] ?? saved.has(id);
+  const tick = (id: string, on: boolean) => {
+    setTicked((t) => ({ ...t, [id]: on }));
+    void setWatched(chapter, id, on);
+  };
+  return (where: string, list: Video[]) => (
+    <ul className="lessons">
+      {list.map((v) => {
+        const key = `${where}:${v.id}`;
+        return (
+          <Lesson
+            key={key}
+            v={v}
+            open={playing === key}
+            watched={isWatched(v.id)}
+            onPlay={() => {
+              setPlaying(playing === key ? null : key);
+              if (!isWatched(v.id)) tick(v.id, true);
+            }}
+            onToggle={() => tick(v.id, !isWatched(v.id))}
+          />
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Start here: the whole chapter in one video. */
+function ChapterVideo({ chapter, mark }: { chapter: string; mark: TopicMark | undefined }) {
+  const lessons = useLessons(chapter, mark);
+  const t = VIDEOS[chapter];
+  if (!t?.summary.length) return null;
+  return (
+    <section className="card stack" aria-labelledby="start-h">
+      <h2 id="start-h">Start here: the whole chapter</h2>
+      <p className="small muted" style={{ margin: 0 }}>
+        Mr Bicen goes through everything in the chapter. Watch it first, or again before a test.
+      </p>
+      {lessons('summary', t.summary)}
+    </section>
+  );
+}
+
+/** Videos for each textbook section, with practice for that section. */
+function SectionVideos({ chapter, mark }: { chapter: string; mark: TopicMark | undefined }) {
+  const lessons = useLessons(chapter, mark);
+  const ch = CHAPTER_BY_REF.get(chapter as never)!;
+  const t = VIDEOS[chapter];
+  const practice = useMemo(() => {
+    const m = new Map<string, string[]>();
+    for (const e of BANK.templates) if (e.chapter === chapter) for (const sec of e.sections ?? []) m.set(sec, [...(m.get(sec) ?? []), e.id]);
+    return m;
+  }, [chapter]);
+  if (!t) return null;
+  const total = videoCount(chapter);
+  const seen = watchedCount(chapter, mark);
+  const extras = t.videos.filter((v) => !v.sections?.length);
+  return (
+    <section className="card stack" aria-labelledby="videos-h">
+      <div className="row-wrap">
+        <h2 id="videos-h" style={{ flex: 1, margin: 0 }}>
+          Section by section
+        </h2>
+        <span className="small muted">
+          {seen} of {total} videos watched
+        </span>
+      </div>
+      <progress className="lesson-progress" max={total} value={seen} aria-label={`${seen} of ${total} videos watched`} />
+      {ch.sections.map((title, i) => {
+        const sec = `${ch.n}.${i + 1}`;
+        const vs = t.videos.filter((v) => v.sections?.includes(i + 1));
+        const ids = practice.get(sec) ?? [];
+        return (
+          <div key={sec} className="lesson-section">
+            <h3>
+              {sec} {title}
+            </h3>
+            {vs.length ? lessons(sec, vs) : <p className="small muted">In the chapter video above.</p>}
+            {ids.length > 0 && (
+              <a className="small" href={href('/practice', { t: ids.join(',') })}>
+                Practise {sec}: {ids.length} kind{ids.length === 1 ? '' : 's'} of question
+              </a>
+            )}
+          </div>
+        );
+      })}
+      {extras.length > 0 && (
+        <div className="lesson-section">
+          <h3>Exam questions and extras</h3>
+          {lessons('extras', extras)}
+        </div>
+      )}
+      <p className="small muted" style={{ margin: 0 }}>
+        Videos by{' '}
+        <a href="https://www.youtube.com/@BicenMaths" target="_blank" rel="noopener noreferrer">
+          {CHANNEL}
+        </a>{' '}
+        on YouTube ·{' '}
+        {t.playlists.map((p, i) => (
+          <span key={p}>
+            {i > 0 && ' · '}
+            <a href={`https://www.youtube.com/playlist?list=${p}`} target="_blank" rel="noopener noreferrer">
+              {t.playlists.length > 1 ? `Playlist ${i + 1}` : 'The whole playlist'}
+            </a>
+          </span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
 /** `#/learn/<chapter>`: notes, videos, practice and your own notes for one topic. */
 export function LearnTopic({ chapter }: { chapter: string }) {
   const ch = CHAPTER_BY_REF.get(chapter as never);
@@ -245,7 +398,6 @@ export function LearnTopic({ chapter }: { chapter: string }) {
     void loadNotes(chapter).then((n) => setNotes(n ?? null));
   }, [chapter]);
   if (!ch) return <ErrorBox>Unknown topic {chapter}</ErrorBox>;
-  const videos = VIDEOS[chapter] ?? [];
   const m = mastery(attempts.filter((a) => a.chapter === chapter));
   return (
     <div className={`stack year-${ch.year}`}>
@@ -267,12 +419,16 @@ export function LearnTopic({ chapter }: { chapter: string }) {
         <a href={href('/confidence')}>Confidence vs reality</a>
       </div>
       <nav className="booklet-jump small" aria-label="On this page">
+        <a href="#start-h" onClick={(e) => (e.preventDefault(), document.getElementById('start-h')?.scrollIntoView({ behavior: 'smooth' }))}>
+          Start here
+        </a>{' '}
+        ·{' '}
         <a href="#notes-h" onClick={(e) => (e.preventDefault(), document.getElementById('notes-h')?.scrollIntoView({ behavior: 'smooth' }))}>
           Notes
         </a>{' '}
         ·{' '}
         <a href="#videos-h" onClick={(e) => (e.preventDefault(), document.getElementById('videos-h')?.scrollIntoView({ behavior: 'smooth' }))}>
-          Videos
+          Section by section
         </a>{' '}
         ·{' '}
         <a href="#path-h" onClick={(e) => (e.preventDefault(), document.getElementById('path-h')?.scrollIntoView({ behavior: 'smooth' }))}>
@@ -283,25 +439,9 @@ export function LearnTopic({ chapter }: { chapter: string }) {
           Your notes
         </a>
       </nav>
+      <ChapterVideo chapter={chapter} mark={marks?.[chapter]} />
       {notes === undefined ? <Loading /> : notes ? <Notes notes={notes} /> : <p className="card muted">Notes for this topic are on the way.</p>}
-      <section className="card stack" aria-labelledby="videos-h">
-        <h2 id="videos-h">Videos</h2>
-        {videos.length ? (
-          <div className="video-grid">
-            {videos.map((v) => (
-              <VideoCard key={v.id} id={v.id} title={v.title} channel={v.channel} />
-            ))}
-          </div>
-        ) : (
-          <p className="small muted">No videos picked for this topic yet.</p>
-        )}
-        <p className="small muted" style={{ margin: 0 }}>
-          From A level maths channels on YouTube.{' '}
-          <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`A level maths ${ch.title}`)}`} target="_blank" rel="noopener noreferrer">
-            Find more on YouTube
-          </a>
-        </p>
-      </section>
+      <SectionVideos chapter={chapter} mark={marks?.[chapter]} />
       <Path chapter={chapter} />
       {marks && <Mine key={chapter} chapter={chapter} mark={marks[chapter]} />}
     </div>
@@ -325,7 +465,7 @@ function TopicList({ chapters, empty }: { chapters: string[]; empty: string }) {
                 <span className="small muted">
                   {' '}
                   · {ch ? `${ch.stream} Y${ch.year}` : ''}
-                  {marks?.[c]?.since ? ` · since ${when(marks[c].since)}` : ''}
+                  {marks?.[c]?.since ? ` · since ${when(marks[c].since)}` : ''} · {watchedCount(c, marks?.[c])}/{videoCount(c)} videos watched
                 </span>
               </span>
               <RagBadge mastery={mastery(byCh.get(c) ?? [])} />
@@ -474,7 +614,7 @@ export function Learn() {
                   <span className="chip">{c.n}</span>
                   <span style={{ flex: 1 }}>{c.title}</span>
                   <FlagChip flag={marks[c.ref]?.flag} />
-                  <span className="small muted">{(VIDEOS[c.ref] ?? []).length} videos</span>
+                  <span className="small muted">{watchedCount(c.ref, marks[c.ref]) ? `${watchedCount(c.ref, marks[c.ref])}/${videoCount(c.ref)} watched` : `${videoCount(c.ref)} videos`}</span>
                 </a>
               </li>
             ))}

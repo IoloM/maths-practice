@@ -2583,3 +2583,72 @@ svg.qr {
   border: 2px solid var(--accent);
   margin-bottom: 16px;
 }
+
+.made-username {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.lessons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.lesson-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lesson-play {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  padding: 8px 10px;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  min-height: 44px;
+}
+.lesson-play:hover {
+  border-color: var(--accent);
+}
+.lesson-play[aria-expanded='true'] {
+  border-color: var(--accent);
+  background: var(--surface-2, transparent);
+}
+.lesson.watched .lesson-play svg {
+  color: var(--good);
+}
+.lesson-tick {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.lesson .video-frame {
+  margin-top: 6px;
+}
+.lesson-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lesson-section h3 {
+  margin: 6px 0 0;
+  font-size: 1rem;
+}
+.lesson-progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--good);
+}

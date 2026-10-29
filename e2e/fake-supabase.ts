@@ -83,10 +83,10 @@ function backendFor(s: FakeState): Backend {
       return s.profiles.find((p) => p.id === id) ?? null;
     },
     async profileByUsername(username) {
-      return s.profiles.find((p) => p.username === username) ?? null;
+      return s.profiles.find((p) => p.username.toLowerCase() === username.toLowerCase()) ?? null;
     },
     async usernameTaken(username) {
-      return s.profiles.some((p) => p.username === username);
+      return s.profiles.some((p) => p.username.toLowerCase() === username.toLowerCase());
     },
     async createAuthUser(email, password) {
       const id = `00000000-0000-4000-8000-${String(next++).padStart(12, '0')}`;

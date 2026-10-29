@@ -40,6 +40,7 @@ const CloudManage = lazy(() => import('./pages/CloudLogins').then((m) => ({ defa
 const CloudSignIn = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.CloudSignIn })));
 const ChoosePasswordScreen = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.ChoosePasswordScreen })));
 const InviteJoin = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.InviteJoin })));
+const Welcome = lazy(() => import('./pages/CloudLogins').then((m) => ({ default: m.Welcome })));
 const Group = lazy(() => import('./pages/Group').then((m) => ({ default: m.Group })));
 const PrintSet = lazy(() => import('./pages/PrintSet').then((m) => ({ default: m.PrintSet })));
 const PastPapers = lazy(() => import('./pages/PastPapers').then((m) => ({ default: m.PastPapers })));
@@ -114,6 +115,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return cloudMode ? <CloudManage /> : <ManageLogins />;
     case 'group':
       return <Group />;
+    case 'welcome':
+      return <Welcome />;
     case 'invite':
       return cloudMode ? <InviteJoin code={parts[1] ?? ''} /> : <ErrorBox>Invite links work once online logins are set up.</ErrorBox>;
     case 'join':

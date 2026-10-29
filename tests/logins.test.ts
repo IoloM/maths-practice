@@ -81,8 +81,13 @@ describe('logins on this device', () => {
 });
 
 describe('usernames for several logins at once', () => {
-  it('first names, made unique against existing logins and each other', async () => {
+  it('first name + surname initial, made unique (ignoring case) against existing logins and each other', async () => {
     const { usernamesFor } = await import('../src/pages/CloudLogins');
-    expect(usernamesFor(['Ana Jones', 'Ben', 'Ben Smith', 'Ben Smith', 'Zoë Brontë'], ['ana', 'iolo'])).toEqual(['ana.jones', 'ben', 'ben.smith', 'ben2', 'zoe']);
+    expect(usernamesFor(['Ana Jones', 'Ben', 'Ben Smith', 'Ben Smith', 'Zoë Brontë', 'iolo mottershead'], ['ana', 'IOLOM', 'bens'])).toEqual(['AnaJ', 'Ben', 'BenS2', 'BenS3', 'ZoeB', 'IoloM2']);
+  });
+  it('the app makes usernames from names exactly as the admin function does', async () => {
+    const { usernameFromName } = await import('../src/lib/cloud');
+    const server = await import('../supabase/functions/admin/handler.ts');
+    for (const [f, l] of [['Iolo', 'Mottershead'], ['élodie', "o'brien"], ['Mary Ann', 'de Souza'], ['李', 'Wang'], ['a', ''], ['Jean-Luc', 'Picard']]) expect(usernameFromName(f, l), `${f} ${l}`).toBe(server.usernameFromName(f, l));
   });
 });

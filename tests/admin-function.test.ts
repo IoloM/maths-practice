@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { emailFor, handle, inviteOpen, type Backend, type InviteRow, type ProfileRow } from '../supabase/functions/admin/handler.ts';
+import { emailFor, handle, inviteOpen, usernameFromName, type Backend, type InviteRow, type ProfileRow } from '../supabase/functions/admin/handler.ts';
 
 interface FakeUser {
   id: string;
@@ -20,10 +20,10 @@ const backend: Backend = {
     return profiles.find((p) => p.id === id) ?? null;
   },
   async profileByUsername(username) {
-    return profiles.find((p) => p.username === username) ?? null;
+    return profiles.find((p) => p.username.toLowerCase() === username.toLowerCase()) ?? null;
   },
   async usernameTaken(username) {
-    return profiles.some((p) => p.username === username);
+    return profiles.some((p) => p.username.toLowerCase() === username.toLowerCase());
   },
   async createAuthUser(email, password) {
     const id = `u${users.length + 1}`;
@@ -103,7 +103,8 @@ describe('admin function', () => {
     expect(r).toMatchObject({ status: 200, body: { ok: true } });
     expect(users.at(-1)!.email).toBe('ben@login.invalid');
     expect(users.at(-1)!.password).toMatch(/^[A-Za-z0-9x]{36}$/); // random, never shown
-    expect(profiles.at(-1)).toMatchObject({ username: 'ben', name: 'Ben Hart', admin: false, must_change: true });
+    // capitals are kept for showing; the sign-in address and uniqueness ignore case
+    expect(profiles.at(-1)).toMatchObject({ username: 'Ben', name: 'Ben Hart', admin: false, must_change: true });
     expect((await ok({ action: 'create', username: 'ben', name: 'B' })).status).toBe(409);
     expect((await ok({ action: 'create', username: 'Bad Name', name: 'B' })).status).toBe(400);
     expect((await ok({ action: 'create', username: 'dee', name: '' })).status).toBe(400);
@@ -181,13 +182,17 @@ describe('admin function', () => {
     expect((await ok({ action: 'join', code, name: 'Ben', username: 'ana', password: 'ben-pass-1' }, null)).status).toBe(409);
     expect((await ok({ action: 'join', code, name: 'Ben', username: 'ben', password: '123' }, null)).status).toBe(400);
     expect((await ok({ action: 'join', code: 'wrong', name: 'Ben', username: 'ben', password: 'ben-pass-1' }, null)).status).toBe(404);
-    expect(await ok({ action: 'join', code, name: 'Ben', username: 'Ben', password: 'ben-pass-1', admin: true }, null)).toEqual({ status: 200, body: { ok: true } });
-    const ben = profiles.find((p) => p.username === 'ben')!;
+    // (older copies of the app send a name and a username)
+    expect(await ok({ action: 'join', code, name: 'Ben', username: 'Ben', password: 'ben-pass-1', admin: true }, null)).toEqual({ status: 200, body: { ok: true, username: 'Ben' } });
+    const ben = profiles.find((p) => p.username === 'Ben')!;
+    expect(users.find((u) => u.id === ben.id)!.email).toBe('ben@login.invalid');
     expect(ben).toMatchObject({ name: 'Ben', admin: false, must_change: false });
     expect(users.find((u) => u.id === ben.id)!.password).toBe('ben-pass-1');
 
-    // one place left, then it's full
-    expect((await ok({ action: 'join', code, name: 'Cal', username: 'cal', password: 'cal-pass-1' }, null)).status).toBe(200);
+    // now: first and last name, and the username is made from them; one place left, then it's full
+    expect((await ok({ action: 'join', code, first: 'Cal', last: '', password: 'cal-pass-1' }, null)).status).toBe(400);
+    expect(await ok({ action: 'join', code, first: ' cal ', last: 'smith-jones', password: 'cal-pass-1' }, null)).toEqual({ status: 200, body: { ok: true, username: 'CalS' } });
+    expect(profiles.find((p) => p.username === 'CalS')).toMatchObject({ name: 'cal smith-jones', admin: false });
     expect((await ok({ action: 'join', code, name: 'Dee', username: 'dee', password: 'dee-pass-1' }, null)).status).toBe(410);
     expect(await (await call({ action: 'invite-status', code }, null)).json()).toEqual({ status: 'closed' });
 
@@ -205,5 +210,19 @@ describe('admin function', () => {
     invites.push({ code: 'old-invite-code-0000000000', created_at: '', expires_at: new Date(Date.now() - 1000).toISOString(), max_uses: 5, uses: 0, active: true });
     expect(inviteOpen(invites.at(-1)!)).toBe(false);
     expect((await ok({ action: 'join', code: 'old-invite-code-0000000000', name: 'Fay', username: 'fay', password: 'fay-pass-1' }, null)).status).toBe(410);
+  });
+
+  it('usernames from names: first name and surname initial, made unique ignoring case', async () => {
+    expect(usernameFromName('Iolo', 'Mottershead')).toBe('IoloM');
+    expect(usernameFromName('élodie', "o'brien")).toBe('ElodieO');
+    expect(usernameFromName('Mary Ann', 'de Souza')).toBe('MaryAnnD');
+    expect(usernameFromName('李', 'Wang')).toBe('W');
+    const made = await call({ action: 'invite-create', days: 7, uses: 3 });
+    const { code } = (await made.json()) as { code: string };
+    profiles.push({ id: 'x1', username: 'iolom', name: 'Someone', admin: false, disabled: false, must_change: false });
+    expect(await ok({ action: 'join', code, first: 'Iolo', last: 'Mottershead', password: 'pass-iolo' }, null)).toEqual({ status: 200, body: { ok: true, username: 'IoloM2' } });
+    expect(await ok({ action: 'join', code, first: 'Iolo', last: 'Morgan', password: 'pass-iolo' }, null)).toEqual({ status: 200, body: { ok: true, username: 'IoloM3' } });
+    // anyone can sign in typing it in any case: the sign-in address is lower case
+    expect(emailFor('IoloM2')).toBe('iolom2@login.invalid');
   });
 });

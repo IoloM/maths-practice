@@ -58,10 +58,11 @@ export interface Backend {
 export const inviteOpen = (i: InviteRow, now = Date.now()) => i.active && Date.parse(i.expires_at) > now && i.uses < i.max_uses;
 export const INVITE_DAYS = [1, 3, 7, 14, 30];
 
-export const USERNAME = /^[a-z0-9]([a-z0-9._-]{0,30}[a-z0-9])?$/;
+/** Capitals are kept for showing (IoloM); signing in and uniqueness ignore case. */
+export const USERNAME = /^[A-Za-z0-9]([A-Za-z0-9._-]{0,30}[A-Za-z0-9])?$/;
 export const MIN_PASSWORD = 6;
 /** Usernames sign in with a made-up address: .invalid can never be a real domain, so no email is sent. */
-export const emailFor = (username: string) => `${username}@login.invalid`;
+export const emailFor = (username: string) => `${username.toLowerCase()}@login.invalid`;
 
 class Problem extends Error {
   constructor(
@@ -84,7 +85,7 @@ function cors(origin: string | null, allowed: string[]): Record<string, string> 
 }
 const json = (body: unknown, status: number, headers: Record<string, string>) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', ...headers } });
 
-type Body = { action?: unknown; id?: unknown; username?: unknown; name?: unknown; password?: unknown; admin?: unknown; disabled?: unknown; code?: unknown; days?: unknown; uses?: unknown };
+type Body = { action?: unknown; id?: unknown; username?: unknown; name?: unknown; first?: unknown; last?: unknown; password?: unknown; admin?: unknown; disabled?: unknown; code?: unknown; days?: unknown; uses?: unknown };
 
 const str = (x: unknown) => (typeof x === 'string' ? x : '');
 /** A password nobody knows, for a login that hasn't been claimed yet. */
@@ -94,11 +95,37 @@ export function unguessable(): string {
 /** An invite code: 24 random bytes, safe in a link. */
 const inviteCode = () => btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 function checkUsername(x: unknown): string {
-  const u = usernameOf(x);
-  if (!USERNAME.test(u)) throw new Problem(400, 'Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
+  const u = str(x).trim();
+  if (!USERNAME.test(u)) throw new Problem(400, 'Usernames are letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
   return u;
 }
+/** for looking a username up: case doesn't matter */
 const usernameOf = (x: unknown) => str(x).trim().toLowerCase();
+
+/** A username from a name: the first name and the surname's initial — Iolo Mottershead → IoloM. */
+export function usernameFromName(first: string, last: string): string {
+  const clean = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^A-Za-z0-9]/g, '');
+  const f = clean(first).slice(0, 28);
+  const l = clean(last);
+  return `${f.charAt(0).toUpperCase()}${f.slice(1)}${l.charAt(0).toUpperCase()}` || 'User';
+}
+/** The username, or with 2, 3… added if it's taken (ignoring case). */
+async function freeUsername(b: Backend, base: string): Promise<string> {
+  for (let k = 1; k < 100; k++) {
+    const u = k === 1 ? base : `${base}${k}`;
+    if (!(await b.usernameTaken(u))) return u;
+  }
+  throw new Problem(409, 'Couldn’t find a free username — ask your admin to make your login.');
+}
+function checkNamePart(x: unknown, what: string): string {
+  const s = str(x).trim().replace(/\s+/g, ' ');
+  if (!s || s.length > 30) throw new Problem(400, `Enter your ${what} (up to 30 characters).`);
+  return s;
+}
 function checkPassword(p: unknown): string {
   const s = str(p);
   if (s.length < MIN_PASSWORD || s.length > 72) throw new Problem(400, `Passwords need ${MIN_PASSWORD} to 72 characters.`);
@@ -138,10 +165,18 @@ export async function handle(req: Request, deps: { backend: Backend; origins: st
       const inv = code ? await b.getInvite(code) : null;
       if (!inv) throw new Problem(404, 'This invite link isn’t right — ask for a new one.');
       if (!inviteOpen(inv)) throw new Problem(410, 'This invite link has run out — ask for a new one.');
-      const username = checkUsername(body.username);
-      const name = checkName(body.name);
+      // first and last name: the username is made from them (older copies of the app send name and username)
+      const byName = body.first !== undefined || body.last !== undefined;
+      const first = byName ? checkNamePart(body.first, 'first name') : '';
+      const last = byName ? checkNamePart(body.last, 'last name') : '';
+      const name = byName ? checkName(`${first} ${last}`) : checkName(body.name);
       const password = checkPassword(body.password);
-      if (await b.usernameTaken(username)) throw new Problem(409, `The username "${username}" is taken — try another.`);
+      let username: string;
+      if (byName) username = await freeUsername(b, usernameFromName(first, last));
+      else {
+        username = checkUsername(body.username);
+        if (await b.usernameTaken(username)) throw new Problem(409, `The username "${username}" is taken — try another.`);
+      }
       if (!(await b.takeInvite(code))) throw new Problem(410, 'This invite link has run out — ask for a new one.');
       const id = await b.createAuthUser(emailFor(username), password, { username, name });
       try {
@@ -150,7 +185,7 @@ export async function handle(req: Request, deps: { backend: Backend; origins: st
         await b.deleteAuthUser(id);
         throw e;
       }
-      return json({ ok: true }, 200, headers);
+      return json({ ok: true, username }, 200, headers);
     }
     if (body.action === 'claim') {
       const p = await b.profileByUsername(usernameOf(body.username));

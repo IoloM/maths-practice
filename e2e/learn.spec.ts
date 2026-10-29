@@ -29,8 +29,14 @@ test('mark a topic, then learn it: notes, worked example, videos, your notes and
   await expect(ex.locator('.steps li')).toHaveCount(1);
   await ex.getByRole('button', { name: /Next step/ }).click();
   await expect(ex.locator('.steps li')).toHaveCount(2);
-  const videos = page.getByRole('region', { name: 'Videos' });
-  await expect(videos.getByRole('button', { name: /^Play video:/ })).toHaveCount(2);
+  // Bicen Maths: the whole chapter first, then section by section with practice for each
+  await expect(page.getByRole('region', { name: 'Start here: the whole chapter' }).getByRole('button', { name: /Integration \(Year 2\) in 1 hour/ })).toBeVisible();
+  const videos = page.getByRole('region', { name: 'Section by section' });
+  await expect(videos.getByRole('heading', { name: '11.6 Integration by parts' })).toBeVisible();
+  await expect(videos.getByRole('button', { name: /By Parts pt\. 1$/ })).toBeVisible();
+  await expect(videos.getByRole('link', { name: /^Practise 11\.6:/ })).toBeVisible();
+  await videos.getByRole('checkbox', { name: 'Watched: 13. By Parts pt. 1' }).check();
+  await expect(videos).toContainText('1 of 30 videos watched');
   await expect(page.getByRole('region', { name: /Practise it/ }).getByRole('link', { name: 'Practise the whole topic' })).toBeVisible();
   await axe(page);
 
@@ -47,11 +53,13 @@ test('mark a topic, then learn it: notes, worked example, videos, your notes and
   await page.reload();
   await expect(page.getByLabel('Your notes for this topic')).toHaveValue('By parts: LIATE to choose u');
   await expect(page.getByRole('button', { name: 'Play video: Parts again' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Section by section' })).toContainText('1 of 30 videos watched');
   expect(youtube).toEqual([]);
 
   // it's on the Learn page and in today's plan
   await page.goto('./#/learn');
-  await expect(page.getByRole('region', { name: 'Need help' }).getByRole('link', { name: /Integration/ })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Need help' }).getByRole('link', { name: /Integration/ })).toContainText('1/30 videos watched');
+  await expect(page.getByRole('region', { name: 'Pure Year 2' }).getByRole('link', { name: /Integration/ })).toContainText('1/30 watched');
   await axe(page);
   await page.goto('./#/');
   await expect(page.getByRole('region', { name: 'Your plan for today' }).getByRole('link', { name: /Learn Integration/ })).toBeVisible();
@@ -106,4 +114,19 @@ test('a question you get wrong offers help with its topic', async ({ page }) => 
   await page.getByRole('link', { name: /Need help with Integration\?/ }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Integration' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'I need help with this' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('playing a video plays it on the page and ticks it watched', async ({ page }) => {
+  await page.route(/youtube-nocookie\.com/, (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<p>video</p>' }));
+  await page.goto('./#/learn/P1.2');
+  const videos = page.getByRole('region', { name: 'Section by section' });
+  await expect(videos.getByRole('heading', { name: '2.2 Completing the square' })).toBeVisible();
+  await videos.getByRole('button', { name: /3\. Completing the Square$/ }).click();
+  await expect(videos.locator('iframe[src*="/embed/5GSoMAVQ7cM"]')).toHaveCount(1);
+  await expect(videos.getByRole('checkbox', { name: 'Watched: 3. Completing the Square' })).toBeChecked();
+  await expect(videos).toContainText('1 of 13 videos watched');
+  await axe(page);
+  // one at a time
+  await videos.getByRole('button', { name: /9\. The Discriminant$/ }).click();
+  await expect(videos.locator('iframe')).toHaveCount(1);
 });

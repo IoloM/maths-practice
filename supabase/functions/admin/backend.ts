@@ -17,10 +17,10 @@ export function supabaseBackend(sb: SupabaseClient): Backend {
       return check(await sb.from('profiles').select('id, username, admin, disabled, must_change').eq('id', id).maybeSingle<ProfileRow>());
     },
     async profileByUsername(username) {
-      return check(await sb.from('profiles').select('id, username, admin, disabled, must_change').eq('username', username).maybeSingle<ProfileRow>());
+      return check(await sb.from('profiles').select('id, username, admin, disabled, must_change').eq('username_key', username.toLowerCase()).maybeSingle<ProfileRow>());
     },
     async usernameTaken(username) {
-      return !!check(await sb.from('profiles').select('id').eq('username', username).maybeSingle());
+      return !!check(await sb.from('profiles').select('id').eq('username_key', username.toLowerCase()).maybeSingle());
     },
     async createAuthUser(email, password, meta) {
       const { data, error } = await sb.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: meta });

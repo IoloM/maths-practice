@@ -28,6 +28,8 @@ import {
   inviteStatus,
   inviteUrl,
   joinWithInvite,
+  usernameFromName,
+  usernameFromFullName,
   listInvites,
   stopInvite,
   type ActivitySummary,
@@ -45,7 +47,7 @@ const QrCode = lazy(() => import('../components/QrCode'));
 export const signInLink = (username: string) => shareUrl(`/account?u=${encodeURIComponent(username)}`);
 /** The username in a personal sign-in link, if this page was opened from one. */
 const linkedUsername = () => {
-  const u = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('u')?.trim().toLowerCase() ?? '';
+  const u = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('u')?.trim() ?? '';
   return USERNAME.test(u) ? u : '';
 };
 
@@ -57,15 +59,8 @@ const restart = (path = '/') => {
   history.replaceState(null, '', `#${path}`);
   window.location.reload();
 };
-const suggestUsername = (name: string) =>
-  name
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '.')
-    .replace(/^\.+|\.+$/g, '')
-    .slice(0, 32);
+const suggestUsername = (name: string) => usernameFromFullName(name);
+const USERNAME_RULE = 'Usernames are letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.';
 const when = (t: number | string | null | undefined) => (t ? new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '—');
 
 /**
@@ -200,7 +195,7 @@ export function CloudSignIn({ screen = false }: { screen?: boolean }) {
       ) : (
         <>
           <p className="small">
-            <b>{username.trim().toLowerCase()}</b>{' '}
+            <b>{username.trim()}</b>{' '}
             <button type="button" className="btn btn-small btn-ghost" onClick={back}>
               Not you?
             </button>
@@ -462,14 +457,14 @@ async function sendText(text: string, title: string): Promise<boolean> {
 }
 
 /** Usernames for a list of names: first names, made unique against existing logins and each other. */
+/** First name + surname initial for each (IoloM), made unique (ignoring case) with 2, 3…. */
 export function usernamesFor(names: string[], taken: string[]): string[] {
-  const used = new Set(taken);
+  const used = new Set(taken.map((t) => t.toLowerCase()));
   return names.map((n) => {
-    const first = suggestUsername(n.split(/\s+/)[0] ?? n) || suggestUsername(n) || 'user';
-    const full = suggestUsername(n);
-    let u = !used.has(first) ? first : !used.has(full) && full ? full : '';
-    for (let k = 2; !u; k++) if (!used.has(`${first}${k}`)) u = `${first}${k}`;
-    used.add(u);
+    const base = suggestUsername(n) || 'User';
+    let u = base;
+    for (let k = 2; used.has(u.toLowerCase()); k++) u = `${base}${k}`;
+    used.add(u.toLowerCase());
     return u.slice(0, 32);
   });
 }
@@ -684,13 +679,12 @@ function InvitePanel() {
   );
 }
 
-/** `#/invite/<code>`: make your own login with an invite link. */
+/** `#/invite/<code>`: make your own login with an invite link — your name, then a username is made from it. */
 export function InviteJoin({ code }: { code: string }) {
   const me = cloudMe();
   const [state, setState] = useState<'checking' | 'open' | 'closed' | 'none' | 'offline'>('checking');
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [touched, setTouched] = useState(false);
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
   const [password, setPw] = useState('');
   const [again, setAgain] = useState('');
   const [busy, setBusy] = useState(false);
@@ -700,7 +694,6 @@ export function InviteJoin({ code }: { code: string }) {
       .then((r) => setState(r.status))
       .catch(() => setState('offline'));
   }, [code]);
-  const u = touched ? username : suggestUsername(name);
   if (me)
     return (
       <div className="stack">
@@ -724,22 +717,23 @@ export function InviteJoin({ code }: { code: string }) {
         </ErrorBox>
       </div>
     );
+  const preview = first.trim() && last.trim() ? usernameFromName(first, last) : '';
   return (
     <form
       className="stack card signin"
       onSubmit={async (e) => {
         e.preventDefault();
         setProblem(null);
-        if (!name.trim()) return setProblem('Type your name.');
-        if (!USERNAME.test(u)) return setProblem('Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
+        if (!first.trim()) return setProblem('Type your first name.');
+        if (!last.trim()) return setProblem('Type your last name.');
         const p = pairProblem(password, again);
         if (p) return setProblem(p);
         setBusy(true);
         try {
-          const m = await joinWithInvite(code, { name, username: u, password });
+          const { me: m } = await joinWithInvite(code, { first, last, password });
           const { adoptLocalProgress } = await import('../lib/adopt');
           await adoptLocalProgress(m).catch(() => 0);
-          restart('/');
+          restart('/welcome');
         } catch (err) {
           setProblem(message(err));
           setBusy(false);
@@ -750,25 +744,25 @@ export function InviteJoin({ code }: { code: string }) {
       <p className="small" style={{ margin: 0 }}>
         Make your own login: your progress, history and settings are saved to it and follow you to any phone, tablet or computer.
       </p>
-      <label className="stack">
-        <span className="small">Your name</span>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={60} required />
-      </label>
-      <label className="stack">
-        <span className="small">Choose a username (you’ll sign in with it)</span>
-        <input
-          type="text"
-          value={u}
-          onChange={(e) => {
-            setTouched(true);
-            setUsername(e.target.value.toLowerCase());
-          }}
-          autoComplete="username"
-          autoCapitalize="none"
-          spellCheck={false}
-          required
-        />
-      </label>
+      <div className="row-wrap">
+        <label className="stack grow">
+          <span className="small">First name</span>
+          <input type="text" value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" maxLength={30} required />
+        </label>
+        <label className="stack grow">
+          <span className="small">Last name</span>
+          <input type="text" value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" maxLength={30} required />
+        </label>
+      </div>
+      <p className="small muted" style={{ margin: 0 }} aria-live="polite">
+        {preview ? (
+          <>
+            Your username will be <b>{preview}</b> (with a number on the end if someone already has it).
+          </>
+        ) : (
+          'Your username is your first name and the first letter of your last name, e.g. IoloM.'
+        )}
+      </p>
       <NewPassword value={password} again={again} onValue={setPw} onAgain={setAgain} />
       <div className="btn-row">
         <button className="btn btn-primary" type="submit" disabled={busy}>
@@ -777,6 +771,27 @@ export function InviteJoin({ code }: { code: string }) {
       </div>
       <Problem text={problem} />
     </form>
+  );
+}
+
+/** `#/welcome`: straight after making a login with an invite link — here's your username. */
+export function Welcome() {
+  const me = cloudMe();
+  if (!me) return <CloudSignIn />;
+  return (
+    <div className="stack card signin">
+      <h1 className="h1">You’re in, {me.name.split(' ')[0]}</h1>
+      <p style={{ margin: 0 }}>Your username is</p>
+      <p className="made-username">{me.username}</p>
+      <p className="small" style={{ margin: 0 }}>
+        Remember it (and your password) to sign in on another phone, tablet or computer. Capitals don’t matter when you type it.
+      </p>
+      <div className="btn-row">
+        <a className="btn btn-primary" href={href('/')}>
+          Start practising
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -802,7 +817,7 @@ function AddOne({ onAdded, onMany }: { onAdded: () => void; onMany: () => void }
       onSubmit={async (e) => {
         e.preventDefault();
         setProblem(null);
-        if (!USERNAME.test(u)) return setProblem('Usernames are lower-case letters and numbers (dots, dashes and underscores in the middle are fine), up to 32 characters.');
+        if (!USERNAME.test(u)) return setProblem(USERNAME_RULE);
         setBusy(true);
         try {
           await createLogin({ username: u, name: name.trim(), admin });
@@ -831,7 +846,7 @@ function AddOne({ onAdded, onMany }: { onAdded: () => void; onMany: () => void }
             value={u}
             onChange={(e) => {
               setTouched(true);
-              setUsername(e.target.value.toLowerCase());
+              setUsername(e.target.value.trim());
             }}
             autoComplete="off"
             autoCapitalize="none"

@@ -313,3 +313,20 @@ axe on 13 views in light and dark) — all green.
   origins, merged without overwriting — `src/lib/move.ts`, `#/move`). After that, that device's old
   address forwards straight to the new one.
 - Supabase `ALLOWED_ORIGINS` includes the new address (and `www`).
+
+## Phase 15 — Bicen Maths videos, invite links by name ✅ (29 Oct 2026)
+
+- **Learn uses Bicen Maths** (youtube.com/@BicenMaths): every topic starts with Mr Bicen's chapter
+  summary ("Start here"), then **section by section**: his lessons (467 in all, from the per-chapter
+  playlists) under the textbook section they teach, worked out from the exercise in each title
+  ("P1 Ex2C") and checked chapter by chapter; mixed-exercise and exam-question videos go under
+  "Exam questions and extras". Each section links to practice on just that section. All 510 ids
+  were checked with YouTube's oEmbed (exist, embeddable, Bicen Maths). `src/content/videos.ts`.
+- **Watched ticks**: playing a video ticks it (or tick it yourself); progress shows on the topic,
+  the Learn list and your help/learn topics. Saved in your topic marks, so it syncs.
+- **Invite links ask for first and last name**; the username is made for you: first name + surname
+  initial (Iolo Mottershead → IoloM), with 2, 3… if it's taken. Shown on a welcome page
+  (`#/welcome`) after joining. Adding people yourself suggests usernames the same way.
+- **Usernames keep their capitals** for showing, but signing in ignores case (the sign-in address is
+  always lower case) and they're unique ignoring case (`profiles.username_key`, migration
+  `20261030000000_username_case.sql`).

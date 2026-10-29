@@ -17,14 +17,24 @@ describe('learn: notes and videos for every topic', () => {
       for (const t of text) for (const m of mathSegments(t)) expect(katexError(m), `${c.ref}: ${m}`).toBeNull();
     }
   });
-  it('every chapter has at least one video, each a proper YouTube id', () => {
+  it('every chapter has a Bicen Maths chapter video and lessons filed under its own sections', () => {
+    let lessons = 0;
     for (const c of CHAPTERS) {
-      const v = VIDEOS[c.ref] ?? [];
-      expect(v.length, c.ref).toBeGreaterThan(0);
-      for (const x of v) expect(x.id, c.ref).toMatch(/^[\w-]{11}$/);
+      const t = VIDEOS[c.ref];
+      expect(t, c.ref).toBeTruthy();
+      expect(t.summary.length, c.ref).toBeGreaterThan(0);
+      expect(t.videos.length, c.ref).toBeGreaterThanOrEqual(3);
+      expect(t.playlists.length, c.ref).toBeGreaterThan(0);
+      for (const x of [...t.summary, ...t.videos]) expect(x.id, c.ref).toMatch(/^[\w-]{11}$/);
+      for (const x of t.videos) for (const s of x.sections ?? []) expect(s, `${c.ref} ${x.title}`).toBeLessThanOrEqual(c.sections.length);
+      // most sections have their own videos
+      const covered = new Set(t.videos.flatMap((x) => x.sections ?? []));
+      expect(covered.size, c.ref).toBeGreaterThanOrEqual(Math.ceil(c.sections.length / 2));
+      const ids = t.videos.map((x) => x.id);
+      expect(new Set(ids).size, c.ref).toBe(ids.length);
+      lessons += t.videos.length;
     }
-    const ids = Object.values(VIDEOS).flat().map((v) => v.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(lessons).toBeGreaterThan(400);
   });
 });
 

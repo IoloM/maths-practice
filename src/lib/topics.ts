@@ -31,6 +31,8 @@ export interface TopicMark {
   checks?: TopicCheck[];
   /** how confident you feel: 1 not yet, 2 getting there, 3 confident */
   confidence?: 1 | 2 | 3;
+  /** videos you've watched (YouTube ids) */
+  watched?: string[];
   updatedAt: number;
 }
 export interface TopicCheck {
@@ -57,6 +59,12 @@ async function update(chapter: string, f: (m: TopicMark) => Omit<TopicMark, 'upd
 }
 
 export const setConfidence = (chapter: string, confidence: 1 | 2 | 3 | undefined) => update(chapter, (m) => ({ ...m, confidence }));
+/** Tick a video watched (or not). */
+export const setWatched = (chapter: string, id: string, on: boolean) =>
+  update(chapter, (m) => {
+    const rest = (m.watched ?? []).filter((x) => x !== id);
+    return { ...m, watched: on ? [...rest, id].slice(-300) : rest };
+  });
 
 // ---------------------------------------------------------------- check-ins after learning a topic
 /** Days between check-ins: 3, then 4 more (7), then 14 more (21). */
