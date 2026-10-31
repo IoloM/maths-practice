@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
-import { MINUTES_PER_MARK } from '../lib/sets';
+import { PAPER_TITLES, PAST_PAPER_BY_ID, minutesPerMark } from '../content/past-papers';
 import { questionsFor } from '../lib/paper-results';
 import { elapsed, finish, loadSitting, mmss, moveTo, pace, paperMinutes, pause, resume, saveSitting, spentNow, start, type Sitting } from '../lib/sitting';
 import { href, navigate } from '../router';
@@ -58,6 +57,7 @@ export function SitPaper({ paperId }: { paperId: string }) {
   if (sitting === undefined) return <Loading />;
   const title = `${paper.series} ${PAPER_TITLES[paper.paper]}`;
   const minutes = paperMinutes(paperId);
+  const perMark = minutesPerMark(paper.paper);
   const marks = qs.reduce((t, q) => t + q.marks, 0);
 
   if (!sitting) {
@@ -75,7 +75,8 @@ export function SitPaper({ paperId }: { paperId: string }) {
         )}
         <section className="card stack">
           <p style={{ margin: 0 }}>
-            <b>{minutes} minutes</b> · {marks} marks · {qs.length} questions — the same time you’d get in the exam.
+            <b>{minutes} minutes</b> · {marks} marks · {qs.length} questions — the same time you’d get in the exam
+            {paper.paper === 'as21' || paper.paper === 'as22' ? ' (the two sections of AS Paper 2 are sat together in 1 hour 15 minutes; this is half of that).' : '.'}
           </p>
           <ol className="tips">
             <li>
@@ -132,7 +133,7 @@ export function SitPaper({ paperId }: { paperId: string }) {
       <section className="card stack">
         <div className="row-wrap">
           <span style={{ flex: 1 }}>
-            Working on <b>question {sitting.current}</b> ({qs[idx]?.marks} marks, aim for {Math.round((qs[idx]?.marks ?? 0) * MINUTES_PER_MARK)} min)
+            Working on <b>question {sitting.current}</b> ({qs[idx]?.marks} marks, aim for {Math.round((qs[idx]?.marks ?? 0) * perMark)} min)
           </span>
           {next && (
             <button className="btn btn-primary" onClick={() => change(moveTo(sitting, next.q))} disabled={!!sitting.pausedAt}>
@@ -147,7 +148,7 @@ export function SitPaper({ paperId }: { paperId: string }) {
       <ul className="list sit-list" aria-label="Questions">
         {qs.map((q) => {
           const ms = spent[q.q] ?? 0;
-          const aim = q.marks * MINUTES_PER_MARK * 60_000;
+          const aim = q.marks * perMark * 60_000;
           const on = q.q === sitting.current;
           return (
             <li key={q.q}>

@@ -45,7 +45,7 @@ export function PredictedGrade({ mocks, papers = [] }: { mocks: MockResult[]; pa
         </>
       ) : (
         <p className="muted">
-          Finish a <a href={href('/exams')}>mock paper</a>, or <a href={href('/past-papers')}>enter your marks for a real past paper</a>, to get a predicted grade. It uses your most recent papers (up to three full papers) and real 9MA0 grade boundaries.
+          Finish a <a href={href('/exams')}>mock paper</a>, or <a href={href('/past-papers')}>enter your marks for a real A level past paper</a>, to get a predicted grade. It uses your most recent papers (up to three full papers) and real 9MA0 grade boundaries.
         </p>
       )}
       <details>

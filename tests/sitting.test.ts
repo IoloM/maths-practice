@@ -11,6 +11,12 @@ describe('sitting a past paper', () => {
     expect(paperMinutes(ID)).toBe(Math.round(qs.reduce((t, q) => t + q.marks, 0) * 1.2));
   });
 
+  it('gives AS papers their own time: 2 hours for Paper 1, 1 hour 15 for both sections of Paper 2', () => {
+    expect(paperMinutes('2024-06-as1')).toBe(120);
+    expect(paperMinutes('2024-06-as21') + paperMinutes('2024-06-as22')).toBe(76); // 37.5 each, rounded
+    expect(paperMinutes('2018-06-as2')).toBe(75);
+  });
+
   it('times each question as you move between them, and pausing stops the clock', () => {
     let s = start(ID, 0);
     expect(s.current).toBe(qs[0].q);

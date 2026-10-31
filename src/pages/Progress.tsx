@@ -17,7 +17,7 @@ import { GradeChart, type PaperPoint } from '../components/GradeChart';
 import { BADGES, earned } from '../lib/badges';
 import { Icon } from '../components/Icon';
 import { finishedPapers, lossesByFamily, lossesByReason, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
-import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
+import { PAPER_TITLES, PAST_PAPER_BY_ID, isAS } from '../content/past-papers';
 import { BANK } from '../content/bank-meta';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
@@ -199,7 +199,8 @@ export function Progress() {
     const real = Object.entries(results ?? {}).flatMap(([id, r]): PaperPoint[] => {
       const sc = paperScore(id, r);
       const p = PAST_PAPER_BY_ID.get(id);
-      if (!sc.complete || !p) return [];
+      // the chart is against A level boundaries, so AS papers stay out of it
+      if (!sc.complete || !p || isAS(p.paper)) return [];
       return [{ label: `${p.series} ${PAPER_TITLES[p.paper].split(':')[0]}`, got: sc.got, of: sc.max, finishedAt: r.done ? new Date(`${r.done}T12:00:00`).getTime() : r.updatedAt, kind: 'paper' }];
     });
     return [...real, ...mocks.map((m) => ({ ...m, kind: 'mock' as const }))];
@@ -237,7 +238,7 @@ export function Progress() {
         </a>
       </div>
 
-      <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results) : []} />
+      <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results, true) : []} />
       {overTime.length > 0 && (
         <section className="card" aria-labelledby="grades-over-time">
           <h2 id="grades-over-time">Grades over time</h2>

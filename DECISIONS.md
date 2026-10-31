@@ -64,3 +64,11 @@ the bottom of each section.
 | Mock papers: Papers 1 and 2 draw from all Pure templates (100 marks); Paper 3 = Statistics 50 + Mechanics 50; 1.2 min per mark | 9MA0 Papers 1 and 2 can both assess any Pure content. |
 | Daily set ≈ 10 minutes (~8 marks), seeded by the date: due reviews first, then weakest families | Quick, and the same set all day on any device. |
 | Storage: IndexedDB via `idb` behind a `Store` interface; `navigator.storage.persist()` requested on first save | So sync can be added later (Phase 6) without touching UI code. |
+
+## AS past papers
+
+| Decision | Why |
+|---|---|
+| AS (8MA0) papers sit with the A level ones, with a Level filter (both shown by default) | Year 12s want AS; Year 13s can use AS papers for year-1 topics. One page, one way of marking. |
+| AS papers get AS grades (out of 160, no A*) and stay out of the A level prediction and chart | An AS score on A level boundaries would mislead, and AS papers only test year-1 content. |
+| AS Paper 2 at 1.25 minutes a mark (1 hour 15 for 60 marks); everything else 1.2 | The real time allowed. |

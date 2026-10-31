@@ -10,9 +10,9 @@ worked solutions and mark schemes.
 - 349 question types (62,948 verified questions) covering every 9MA0 spec point, plus 158
   explain-and-prove questions: proof, interpretation, modelling assumptions and the large data set.
   Long exam-style questions (10–14 marks) in Pure, Statistics and Mechanics.
-- Past papers: all 31 9MA0 papers June 2018 – June 2025 indexed question by question (topic,
-  marks, links to Pearson's own question paper and mark scheme), and every question type shows the
-  real past-paper questions on the same topic ("PPQ").
+- Past papers: all 31 A level (9MA0) and all 23 AS (8MA0) papers June 2018 – June 2025 indexed
+  question by question (topic, marks, links to Pearson's own question paper and mark scheme), and
+  every question type shows the real past-paper questions on the same topic ("PPQ").
 - Topic, mixed and spaced-repetition review practice; today's set; mock Papers 1–3 and timed sets
   under exam conditions (1.2 minutes per mark, marked at the end); shareable links for questions and sets.
 - Progress dashboard (red/amber/green by chapter and spec point, trend, time per mark, frequent
@@ -23,7 +23,8 @@ worked solutions and mark schemes.
 - Works on iPhone, iPad, Android, Windows, Mac and Chromebook — installable PWA.
 - Fully offline after the first visit (no CDNs, no third-party calls, no tracking, no login).
 - Real past papers: enter your marks question by question from Pearson's mark scheme for a score,
-  a grade, the topics that lose you marks, and a predicted grade that counts them.
+  a grade (AS papers on AS boundaries), the topics that lose you marks, and a predicted grade that
+  counts the A level ones.
 - Exam countdown from your own exam dates; any mock or timed set prints as a paper with answer
   lines and a separate mark scheme.
 - **Logins** that an admin makes (Settings → Manage logins). With the free Supabase project set up

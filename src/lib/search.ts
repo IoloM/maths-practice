@@ -44,7 +44,7 @@ const PAGES: [string, string, string, Record<string, string>?][] = [
   ['Mock papers and timed sets', 'Exams', '/exams'],
   ['Speed rounds', '10 quick questions in 5 minutes: Pure, Statistics, Mechanics', '/speed'],
   ['A* stretch problems', 'Harder questions that mix several topics', '/stretch'],
-  ['Past papers', 'Every 9MA0 paper, marks and exam mode', '/past-papers'],
+  ['Past papers', 'Every A level and AS paper, marks and exam mode', '/past-papers'],
   ['Review', 'Spaced repetition: what’s due', '/review'],
   ['Mistake notebook', 'Questions you dropped marks on', '/mistakes'],
   ['Saved for later', 'Questions you starred to come back to', '/saved'],

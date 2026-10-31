@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PAST_PAPERS, PAST_PAPER_BY_ID, PAST_QUESTIONS } from '../src/content/past-papers';
+import { PAST_PAPERS, PAST_PAPER_BY_ID, PAST_QUESTIONS, isAS, type PaperCode } from '../src/content/past-papers';
 import { BANK } from '../src/content/bank-meta';
 
 const families = new Set(BANK.templates.map((t) => t.family));
@@ -15,7 +15,7 @@ describe('past paper index', () => {
   it.each(PAST_PAPERS.map((p) => [p.id, p] as const))('%s: questions numbered 1…n and marks add up to the paper total', (id, p) => {
     const qs = PAST_QUESTIONS.filter((q) => q.paper === id);
     expect(qs.map((q) => q.q)).toEqual(qs.map((_, i) => i + 1));
-    const total = p.paper === '31' || p.paper === '32' ? 50 : 100;
+    const total = ({ '31': 50, '32': 50, as2: 60, as21: 30, as22: 30 } as Partial<Record<PaperCode, number>>)[p.paper] ?? 100;
     expect(qs.reduce((s, q) => s + q.marks, 0)).toBe(total);
   });
   it('every question belongs to a listed paper and maps to existing practice families', () => {
@@ -25,5 +25,14 @@ describe('past paper index', () => {
       for (const f of q.families) expect(families.has(f), `${q.paper} Q${q.q}: ${f}`).toBe(true);
       expect(q.topic.length).toBeLessThan(110);
     }
+  });
+  it('lists every AS series alongside the A level ones', () => {
+    const series = (as: boolean) => [...new Set(PAST_PAPERS.filter((p) => isAS(p.paper) === as).map((p) => p.series))];
+    expect(series(true)).toEqual(series(false));
+    expect(PAST_PAPERS.filter((p) => isAS(p.paper))).toHaveLength(23);
+  });
+  it('AS questions only use AS content (Pure year 1, Statistics and Mechanics year 1)', () => {
+    for (const q of PAST_QUESTIONS.filter((x) => isAS(PAST_PAPER_BY_ID.get(x.paper)!.paper)))
+      for (const f of q.families) expect(f, `${q.paper} Q${q.q}`).toMatch(/^(p1|sm1|fx)\./);
   });
 });

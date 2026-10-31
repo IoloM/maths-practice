@@ -107,7 +107,7 @@ export function Exams() {
         </h2>
         <p className="muted small">A full paper is 100 marks in 2 hours. Questions are drawn at random from the whole bank for that paper, easier first.</p>
         <p className="small">
-          Want the real thing? <a href={href('/past-papers')}>Past papers 2018–2025</a> links every official Edexcel paper and mark scheme, question by question.
+          Want the real thing? <a href={href('/past-papers')}>Past papers 2018–2025</a> links every official Edexcel A level and AS paper and mark scheme, question by question.
         </p>
         <ul className="list">
           {PAPERS.map((p) => {

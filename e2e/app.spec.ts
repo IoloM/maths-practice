@@ -240,3 +240,24 @@ test('past papers: official links, question topics and practice for each questio
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Past paper questions like this/ })).toBeVisible();
 });
+
+test('past papers: AS papers get AS grades, which stay out of the A level prediction', async ({ page }) => {
+  await page.goto('./#/past-papers');
+  await page.getByLabel('Level').selectOption('as');
+  await expect(page.locator('#paper-2025-06-as1').getByRole('heading', { name: 'AS Paper 1: Pure Mathematics' })).toBeVisible();
+  await expect(page.locator('#paper-2025-06-1')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Most common topics at AS' })).toBeVisible();
+  const paper = page.locator('#paper-2024-06-as21');
+  await expect(paper.getByRole('link', { name: 'Mark scheme (PDF)' })).toHaveAttribute('href', /qualifications\.pearson\.com\/.+8ma0-21-rms-20240815\.pdf$/);
+  await paper.getByRole('button', { name: 'Enter my marks' }).click();
+  const boxes = paper.locator('.mark-entry').getByRole('spinbutton');
+  await expect(boxes).toHaveCount(5);
+  for (let i = 0; i < 5; i++) await boxes.nth(i).fill((await boxes.nth(i).getAttribute('max'))!);
+  await expect(paper.getByRole('status')).toContainText('30 / 30');
+  await expect(paper.getByRole('status')).toContainText(/about grade A\s+on June 2024 AS boundaries/);
+  await page.goto('./#/sit/2024-06-as21');
+  await expect(page.getByText(/38 minutes/)).toBeVisible();
+  await page.goto('./#/progress');
+  await expect(page.getByRole('heading', { name: 'Predicted grade' })).toBeVisible();
+  await expect(page.getByText(/enter your marks for a real A level past paper/)).toBeVisible();
+});

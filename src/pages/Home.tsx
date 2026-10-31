@@ -296,7 +296,7 @@ export function Home() {
           <h2>
             <Icon name="scheme" /> Past papers
           </h2>
-          <span className="muted">Every 9MA0 paper 2018–2025 by question, with practice on each topic</span>
+          <span className="muted">Every A level and AS paper 2018–2025 by question, with practice on each topic</span>
         </a>
         <a className="card tile" href={href('/flashcards')}>
           <h2>

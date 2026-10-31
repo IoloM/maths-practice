@@ -171,7 +171,7 @@ function Path({ chapter }: { chapter: string }) {
   const entries = useMemo(() => BANK.templates.filter((t) => t.chapter === chapter).sort((a, b) => a.difficulty - b.difficulty || a.marks - b.marks), [chapter]);
   const byT = groupBy(attempts, (a) => a.templateId);
   const families = new Set(entries.map((e) => e.family));
-  const ppq = (pp?.PAST_QUESTIONS ?? []).filter((q) => q.families.some((f) => families.has(f))).slice(-6).reverse();
+  const ppq = (pp?.PAST_QUESTIONS ?? []).filter((q) => q.families.some((f) => families.has(f))).sort((a, b) => b.paper.localeCompare(a.paper)).slice(0, 6);
   const specs = [...new Set(entries.flatMap((e) => e.spec))].sort();
   const test = () => {
     const items = buildTimed(entries, 15, Math.floor(Math.random() * 1e9));

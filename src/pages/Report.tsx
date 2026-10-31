@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react';
 import { activities, group, type ActivitySummary, type Member } from '../lib/cloud';
 import { CHAPTER_BY_REF } from '../content/chapters';
-import { PAPER_TITLES, PAST_PAPER_BY_ID } from '../content/past-papers';
+import { PAPER_TITLES, PAST_PAPER_BY_ID, isASPaper } from '../content/past-papers';
 import { predict, type MockResult } from '../lib/grades';
 import { href } from '../router';
 import { useCloudMe, CloudSignIn } from './CloudLogins';
@@ -26,7 +26,7 @@ function PersonReport({ m, w }: { m: Member; w: ActivitySummary | undefined }) {
     );
   const t = w.totals;
   const results: MockResult[] = [
-    ...w.papers.filter((p) => p.complete).map((p) => ({ got: p.got, of: p.max, finishedAt: p.at, kind: 'paper' as const })),
+    ...w.papers.filter((p) => p.complete && !isASPaper(p.id)).map((p) => ({ got: p.got, of: p.max, finishedAt: p.at, kind: 'paper' as const })),
     ...w.sets.filter((s) => s.kind === 'mock' && s.of > 0).map((s) => ({ got: s.got, of: s.of, finishedAt: s.at, kind: 'mock' as const })),
   ];
   const grade = predict(results);

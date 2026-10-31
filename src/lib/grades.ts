@@ -13,6 +13,13 @@ export interface Boundaries {
   marks: Record<(typeof GRADES)[number], number>;
 }
 
+/** AS has no A*. */
+export interface ASBoundaries {
+  series: string;
+  max: number;
+  marks: Record<Exclude<(typeof GRADES)[number], 'A*'>, number>;
+}
+
 export const BOUNDARIES: Boundaries[] = [
   { series: 'June 2026', max: 300, marks: { 'A*': 254, A: 210, B: 173, C: 136, D: 100, E: 64 } },
   { series: 'June 2025', max: 300, marks: { 'A*': 258, A: 214, B: 178, C: 142, D: 106, E: 71 } },
@@ -21,9 +28,17 @@ export const BOUNDARIES: Boundaries[] = [
 ];
 export const LATEST = BOUNDARIES[0];
 
+/** AS Mathematics (8MA0) overall, out of 160: Pearson's published GCE grade boundaries. */
+export const AS_BOUNDARIES: ASBoundaries[] = [
+  { series: 'June 2026', max: 160, marks: { A: 113, B: 99, C: 85, D: 71, E: 58 } },
+  { series: 'June 2025', max: 160, marks: { A: 108, B: 95, C: 82, D: 69, E: 57 } },
+  { series: 'June 2024', max: 160, marks: { A: 105, B: 90, C: 75, D: 61, E: 47 } },
+];
+export const AS_LATEST = AS_BOUNDARIES[0];
+
 /** Grade for a fraction of the marks (0–1) on a series' boundaries. */
-export function gradeFor(frac: number, b: Boundaries = LATEST): Grade {
-  for (const g of GRADES) if (frac * b.max >= b.marks[g] - 1e-9) return g;
+export function gradeFor(frac: number, b: Boundaries | ASBoundaries = LATEST): Grade {
+  for (const g of GRADES) if (g in b.marks && frac * b.max >= (b.marks as Boundaries['marks'])[g] - 1e-9) return g;
   return 'U';
 }
 

@@ -23,7 +23,11 @@ test('search finds things across the app and goes there', async ({ page }) => {
   await box.press('Enter');
   await expect(page.getByRole('heading', { name: 'Mistake notebook' })).toBeVisible();
   // the keyboard shortcut, and a formula
-  await page.keyboard.press('/');
+  // (a slow device may still be settling on the new page, so press again until the search opens)
+  await expect(async () => {
+    await page.keyboard.press('/');
+    await expect(page.getByRole('combobox', { name: /Search topics/ })).toBeVisible({ timeout: 1000 });
+  }).toPass();
   await page.getByRole('combobox', { name: /Search topics/ }).fill('trapezium rule');
   await page.getByRole('option').filter({ hasText: 'in the booklet' }).first().click();
   await expect(page.getByRole('tab', { name: 'Formula booklet' })).toHaveAttribute('aria-selected', 'true');

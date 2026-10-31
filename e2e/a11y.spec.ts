@@ -20,6 +20,7 @@ const PAGES: [string, string][] = [
   ['reference', './#/reference'],
   ['flashcards', './#/flashcards'],
   ['past papers', './#/past-papers?p=2022-06-2'],
+  ['AS past paper marking', './#/past-papers?p=2024-06-as1&mark=1'],
   ['settings', './#/settings'],
 ];
 

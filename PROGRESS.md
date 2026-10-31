@@ -330,3 +330,16 @@ axe on 13 views in light and dark) — all green.
 - **Usernames keep their capitals** for showing, but signing in ignores case (the sign-in address is
   always lower case) and they're unique ignoring case (`profiles.username_key`, migration
   `20261030000000_username_case.sql`).
+
+## Phase 16 — AS past papers ✅ (31 Oct 2026)
+
+- **Every AS (8MA0) paper** is on the Past papers page next to the A level ones: June 2018 – June
+  2025, including October 2020 and 2021 — 23 papers (Paper 1 Pure; Paper 2 Statistics and
+  Mechanics, a single paper in 2018 and two sections from 2019). Each is indexed question by question
+  like the A level papers (marks, our own one-line topic, matching practice), with links to
+  Pearson's question paper and mark scheme. A **Level** filter shows A level, AS or both.
+- **AS grades** use Pearson's AS boundaries (out of 160, A–E): June 2024–2026 from Pearson's GCE
+  grade-boundary documents, latest for older papers. AS papers don't count towards the predicted A
+  level grade or the grades-over-time chart (they'd be measured against A level boundaries).
+- **Exam mode** gives AS papers their own time: 2 hours for Paper 1, 1 hour 15 for Paper 2 (so 38
+  minutes for each section on its own).

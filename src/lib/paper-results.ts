@@ -6,8 +6,8 @@
 import { useEffect, useState } from 'react';
 import { getStore } from '../storage';
 import { notifyProgress, onProgressChange } from '../progress/record';
-import { PAST_PAPER_BY_ID, PAST_QUESTIONS, type PastQuestion } from '../content/past-papers';
-import { BOUNDARIES, LATEST, gradeFor, type Boundaries, type Grade, type MockResult } from './grades';
+import { PAST_PAPER_BY_ID, PAST_QUESTIONS, isASPaper, type PastQuestion } from '../content/past-papers';
+import { AS_BOUNDARIES, AS_LATEST, BOUNDARIES, LATEST, gradeFor, type ASBoundaries, type Boundaries, type Grade, type MockResult } from './grades';
 import { todayKey } from './dates';
 
 /** Why marks were dropped on a question (several can apply). */
@@ -116,8 +116,11 @@ export async function clearPaper(paperId: string): Promise<void> {
   notifyProgress();
 }
 
-/** The boundaries for the paper's own year when known, otherwise the latest. */
-export const boundariesFor = (paperId: string): Boundaries => BOUNDARIES.find((b) => b.series === PAST_PAPER_BY_ID.get(paperId)?.series) ?? LATEST;
+/** The boundaries for the paper's own year when known, otherwise the latest; AS papers get AS boundaries. */
+export const boundariesFor = (paperId: string): Boundaries | ASBoundaries => {
+  const series = PAST_PAPER_BY_ID.get(paperId)?.series;
+  return isASPaper(paperId) ? (AS_BOUNDARIES.find((b) => b.series === series) ?? AS_LATEST) : (BOUNDARIES.find((b) => b.series === series) ?? LATEST);
+};
 
 export interface PaperScore {
   got: number;
@@ -128,7 +131,7 @@ export interface PaperScore {
   marked: number;
   questions: number;
   complete: boolean;
-  /** a single paper on the overall A level boundaries — a rough guide */
+  /** a single paper on the overall A level (or AS) boundaries — a rough guide */
   grade: Grade | null;
 }
 
@@ -149,9 +152,10 @@ export function paperScore(paperId: string, r: PaperResult | undefined): PaperSc
   return { got, of, max, marked, questions: qs.length, complete, grade: complete ? gradeFor(got / max, boundariesFor(paperId)) : null };
 }
 
-/** Finished papers, newest first, in the form the grade prediction uses. */
-export function finishedPapers(results: PaperResults): (MockResult & { id: string })[] {
+/** Finished papers, newest first, in the form the grade prediction uses. With `aLevel`, A level papers only. */
+export function finishedPapers(results: PaperResults, aLevel = false): (MockResult & { id: string })[] {
   return Object.entries(results)
+    .filter(([id]) => !aLevel || !isASPaper(id))
     .map(([id, r]) => ({ id, s: paperScore(id, r), at: r.updatedAt }))
     .filter((x) => x.s.complete)
     .map((x) => ({ id: x.id, got: x.s.got, of: x.s.max, finishedAt: x.at }))

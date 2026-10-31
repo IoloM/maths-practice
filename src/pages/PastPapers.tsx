@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { PAPER_TITLES, PAST_PAPERS, PAST_PAPER_BY_ID, PAST_QUESTIONS, type PastPaper, type PastQuestion } from '../content/past-papers';
+import { PAPER_TITLES, PAST_PAPERS, PAST_PAPER_BY_ID, PAST_QUESTIONS, isAS, isASPaper, minutesPerMark, type PastPaper, type PastQuestion } from '../content/past-papers';
 import { BANK, type BankEntry } from '../content/bank-meta';
 import { seedsFor } from '../content/bank-seeds';
-import { MINUTES_PER_MARK } from '../lib/sets';
 import { href } from '../router';
 import { Icon } from '../components/Icon';
 import { startSet } from './Exams';
@@ -11,10 +10,19 @@ import { LOSS_REASONS, boundariesFor, clearPaper, lossesByReason, paperScore, sa
 type Filter = 'all' | 'pure' | 'stats' | 'mech';
 const FILTERS: { id: Filter; label: string; test: (p: PastPaper) => boolean }[] = [
   { id: 'all', label: 'All papers', test: () => true },
-  { id: 'pure', label: 'Pure (Papers 1 and 2)', test: (p) => p.paper === '1' || p.paper === '2' },
-  { id: 'stats', label: 'Statistics', test: (p) => p.paper === '31' || p.paper === '3' },
-  { id: 'mech', label: 'Mechanics', test: (p) => p.paper === '32' || p.paper === '3' },
+  { id: 'pure', label: 'Pure', test: (p) => ['1', '2', 'as1'].includes(p.paper) },
+  { id: 'stats', label: 'Statistics', test: (p) => ['3', '31', 'as2', 'as21'].includes(p.paper) },
+  { id: 'mech', label: 'Mechanics', test: (p) => ['3', '32', 'as2', 'as22'].includes(p.paper) },
 ];
+
+type Level = 'both' | 'alevel' | 'as';
+const LEVELS: { id: Level; label: string; test: (p: PastPaper) => boolean }[] = [
+  { id: 'both', label: 'A level and AS', test: () => true },
+  { id: 'alevel', label: 'A level (9MA0)', test: (p) => !isAS(p.paper) },
+  { id: 'as', label: 'AS (8MA0)', test: (p) => isAS(p.paper) },
+];
+/** newest series first, e.g. 2025-06 before 2024-06 */
+const seriesKey = (p: PastPaper) => p.id.slice(0, 7);
 
 const byFamily = new Map<string, BankEntry[]>();
 for (const e of BANK.templates) byFamily.set(e.family, [...(byFamily.get(e.family) ?? []), e]);
@@ -35,6 +43,7 @@ function paperSet(qs: PastQuestion[]) {
 function MarkRow({ paperId, q, result }: { paperId: string; q: PastQuestion; result?: PaperResult }) {
   const m = result?.marks[q.q];
   const lost = m !== undefined && m < q.marks;
+  const aim = q.marks * minutesPerMark(PAST_PAPER_BY_ID.get(paperId)?.paper ?? '1');
   const why = result?.reasons?.[q.q] ?? [];
   const [note, setNote] = useState(result?.notes?.[q.q] ?? '');
   return (
@@ -44,9 +53,9 @@ function MarkRow({ paperId, q, result }: { paperId: string; q: PastQuestion; res
         <span className="mark-topic">
           {q.topic}
           {result?.times?.[q.q] !== undefined && (
-            <span className={`small ${result.times[q.q] > q.marks * MINUTES_PER_MARK * 60 * 1.25 ? 'slow' : 'muted'}`}>
+            <span className={`small ${result.times[q.q] > aim * 60 * 1.25 ? 'slow' : 'muted'}`}>
               {' '}
-              · took {Math.round(result.times[q.q] / 60)} min (aim {Math.round(q.marks * MINUTES_PER_MARK)})
+              · took {Math.round(result.times[q.q] / 60)} min (aim {Math.round(aim)})
             </span>
           )}
           {lost && (
@@ -137,7 +146,10 @@ function MarkEntry({ paperId, qs, result }: { paperId: string; qs: PastQuestion[
               <b>
                 {score.got} / {score.max}
               </b>{' '}
-              ({Math.round((100 * score.got) / score.max)}%) — about grade <b>{score.grade}</b> <span className="muted small">on {b.series} overall boundaries (a rough guide from one paper)</span>
+              ({Math.round((100 * score.got) / score.max)}%) — about grade <b>{score.grade}</b>{' '}
+              <span className="muted small">
+                on {b.series} {isASPaper(paperId) ? 'AS' : 'overall'} boundaries (a rough guide from one paper){isASPaper(paperId) && '. AS papers don’t count towards your predicted A level grade.'}
+              </span>
             </>
           ) : score.marked ? (
             <>
@@ -206,6 +218,7 @@ function YourPapers({ results, onOpen }: { results: PaperResults; onOpen: (id: s
 
 export function PastPapers({ open, mark = false }: { open?: string; mark?: boolean }) {
   const [filter, setFilter] = useState<Filter>('all');
+  const [level, setLevel] = useState<Level>('both');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(open ?? null);
   const [marking, setMarking] = useState<string | null>(mark && open ? open : null);
@@ -215,23 +228,24 @@ export function PastPapers({ open, mark = false }: { open?: string; mark?: boole
   }, [open]);
 
   const needle = search.trim().toLowerCase();
-  const papers = PAST_PAPERS.filter(FILTERS.find((f) => f.id === filter)!.test).slice().reverse();
+  const atLevel = LEVELS.find((l) => l.id === level)!.test;
+  const papers = PAST_PAPERS.filter((p) => atLevel(p) && FILTERS.find((f) => f.id === filter)!.test(p));
   const matches = (q: PastQuestion) => !needle || q.topic.toLowerCase().includes(needle) || q.families.some((f) => familyTitle(f).toLowerCase().includes(needle));
-  const series = [...new Set(papers.map((p) => p.series))];
+  const series = [...new Set([...papers].sort((a, b) => seriesKey(b).localeCompare(seriesKey(a))).map((p) => p.series))];
 
   const common = useMemo(() => {
     const count = new Map<string, number>();
-    for (const q of PAST_QUESTIONS) for (const f of q.families) count.set(f, (count.get(f) ?? 0) + 1);
+    for (const q of PAST_QUESTIONS) if (atLevel(PAST_PAPER_BY_ID.get(q.paper)!)) for (const f of q.families) count.set(f, (count.get(f) ?? 0) + 1);
     return [...count.entries()].filter(([f]) => !f.endsWith('.exam-style')).sort((a, b) => b[1] - a[1]).slice(0, 12);
-  }, []);
+  }, [atLevel]);
 
   return (
     <div className="stack">
       <div>
         <h1>Past papers</h1>
         <p className="muted">
-          Every Pearson Edexcel 9MA0 paper from June 2018 to June 2025, question by question. Open the official paper and mark scheme, see what each question tests, and practise the same kind of question here with
-          new numbers. (Pearson keeps the latest year&rsquo;s papers for teachers only.)
+          Every Pearson Edexcel A level (9MA0) and AS (8MA0) paper from June 2018 to June 2025, question by question. Open the official paper and mark scheme, see what each question tests, and practise the same
+          kind of question here with new numbers. (Pearson keeps the latest year&rsquo;s papers for teachers only.)
         </p>
         <div className="btn-row">
           <a className="btn btn-primary" href={href('/practice', { mixed: 1, pp: 1 })}>
@@ -245,6 +259,7 @@ export function PastPapers({ open, mark = false }: { open?: string; mark?: boole
           results={results}
           onOpen={(id) => {
             setFilter('all');
+            setLevel('both');
             setSearch('');
             setMarking(id);
             setTimeout(() => document.getElementById(`paper-${id}`)?.scrollIntoView({ block: 'start' }), 0);
@@ -253,7 +268,7 @@ export function PastPapers({ open, mark = false }: { open?: string; mark?: boole
       )}
 
       <section className="card">
-        <h2 className="h3">Most common topics</h2>
+        <h2 className="h3">Most common topics{level === 'as' ? ' at AS' : level === 'alevel' ? ' at A level' : ''}</h2>
         <ul className="list">
           {common.map(([f, n]) => (
             <li key={f}>
@@ -267,6 +282,16 @@ export function PastPapers({ open, mark = false }: { open?: string; mark?: boole
       </section>
 
       <div className="row-wrap">
+        <label className="row">
+          Level{' '}
+          <select value={level} onChange={(e) => setLevel(e.target.value as Level)}>
+            {LEVELS.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="row">
           Show{' '}
           <select value={filter} onChange={(e) => setFilter(e.target.value as Filter)}>
@@ -328,7 +353,7 @@ export function PastPapers({ open, mark = false }: { open?: string; mark?: boole
                       onClick={() => {
                         const items = paperSet(qs);
                         const total = items.reduce((t, it) => t + it.marks, 0);
-                        void startSet({ kind: 'timed', title: `${s} ${PAPER_TITLES[p.paper].split(':')[0]}: same topics, new questions`, items: items.map(({ templateId, seed }) => ({ templateId, seed })), durationMin: Math.round(total * MINUTES_PER_MARK) });
+                        void startSet({ kind: 'timed', title: `${s} ${PAPER_TITLES[p.paper].split(':')[0]}: same topics, new questions`, items: items.map(({ templateId, seed }) => ({ templateId, seed })), durationMin: Math.round(total * minutesPerMark(p.paper)) });
                       }}
                     >
                       Timed set on these topics

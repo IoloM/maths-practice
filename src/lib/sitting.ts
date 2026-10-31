@@ -1,10 +1,11 @@
 /**
- * Sitting a real past paper as an exam: the paper's own time (1.2 minutes a mark), a clock, and
- * how long each question took — you tap the question you're on as you go. Kept in the settings
- * store while it runs (so a reload carries on), then saved with your marks for that paper.
+ * Sitting a real past paper as an exam: the paper's own time (1.2 minutes a mark; 1.25 for AS
+ * Paper 2), a clock, and how long each question took — you tap the question you're on as you go.
+ * Kept in the settings store while it runs (so a reload carries on), then saved with your marks
+ * for that paper.
  */
 import { getStore } from '../storage';
-import { MINUTES_PER_MARK } from './sets';
+import { PAST_PAPER_BY_ID, minutesPerMark } from '../content/past-papers';
 import { questionsFor, updatePaper } from './paper-results';
 import { todayKey } from './dates';
 
@@ -23,7 +24,8 @@ export interface Sitting {
 
 const KEY = 'sitting';
 
-export const paperMinutes = (paperId: string) => Math.round(questionsFor(paperId).reduce((t, q) => t + q.marks, 0) * MINUTES_PER_MARK);
+const rate = (paperId: string) => minutesPerMark(PAST_PAPER_BY_ID.get(paperId)?.paper ?? '1');
+export const paperMinutes = (paperId: string) => Math.round(questionsFor(paperId).reduce((t, q) => t + q.marks, 0) * rate(paperId));
 
 /** Time spent on each question, including the one under way. */
 export function spentNow(s: Sitting, now = Date.now()): Record<number, number> {
@@ -34,12 +36,12 @@ export function spentNow(s: Sitting, now = Date.now()): Record<number, number> {
 
 export const elapsed = (s: Sitting, now = Date.now()) => Object.values(spentNow(s, now)).reduce((t, ms) => t + ms, 0);
 
-/** Minutes ahead (+) or behind (−) the exam's pace of 1.2 minutes a mark, given the question you're on. */
+/** Minutes ahead (+) or behind (−) the exam's pace (1.2 minutes a mark), given the question you're on. */
 export function pace(s: Sitting, now = Date.now()): number {
   const qs = questionsFor(s.paperId);
   const i = qs.findIndex((q) => q.q === s.current);
   // by the end of this question you should have used the time for it and every one before it
-  const budget = qs.slice(0, i + 1).reduce((t, q) => t + q.marks * MINUTES_PER_MARK, 0);
+  const budget = qs.slice(0, i + 1).reduce((t, q) => t + q.marks * rate(s.paperId), 0);
   return budget - elapsed(s, now) / 60_000;
 }
 

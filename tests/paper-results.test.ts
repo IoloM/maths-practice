@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { boundariesFor, finishedPapers, lossesByFamily, paperScore, questionsFor, type PaperResults } from '../src/lib/paper-results';
-import { LATEST, predict } from '../src/lib/grades';
+import { AS_LATEST, LATEST, predict } from '../src/lib/grades';
 
 const ID = '2024-06-1';
 const qs = questionsFor(ID);
@@ -32,6 +32,17 @@ describe('marks on real past papers', () => {
     expect(done[0].of).toBe(100);
     const p = predict([...done.map((d) => ({ ...d, kind: 'paper' as const })), { got: 50, of: 100, finishedAt: 100, kind: 'mock' }]);
     expect(p).toMatchObject({ papers: 2, real: 1 });
+  });
+
+  it('grades AS papers on AS boundaries, and keeps them out of the A level prediction', () => {
+    const as = '2024-06-as1';
+    expect(boundariesFor(as)).toMatchObject({ series: 'June 2024', max: 160 });
+    expect(boundariesFor('2019-06-as21')).toBe(AS_LATEST);
+    const marks = Object.fromEntries(questionsFor(as).map((q) => [q.q, q.marks]));
+    expect(paperScore(as, { marks, updatedAt: 1 })).toMatchObject({ got: 100, max: 100, complete: true, grade: 'A' });
+    const results: PaperResults = { [as]: { marks, updatedAt: 300 }, [ID]: { marks: full((m) => m), updatedAt: 200 } };
+    expect(finishedPapers(results).map((d) => d.id)).toEqual([as, ID]);
+    expect(finishedPapers(results, true).map((d) => d.id)).toEqual([ID]);
   });
 
   it('shares dropped marks between the topics a question tests, worst first', () => {

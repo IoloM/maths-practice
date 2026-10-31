@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BOUNDARIES, LATEST, gradeFor, predict } from '../src/lib/grades';
+import { AS_BOUNDARIES, AS_LATEST, BOUNDARIES, LATEST, gradeFor, predict } from '../src/lib/grades';
 
 describe('grade boundaries', () => {
   it('are ordered A* > A > … > E in every series', () => {
@@ -15,6 +15,18 @@ describe('grade boundaries', () => {
     expect(gradeFor(253 / 300)).toBe('A');
     expect(gradeFor(136 / 300)).toBe('C');
     expect(gradeFor(0.1)).toBe('U');
+  });
+  it('AS boundaries are out of 160, ordered A > … > E, with no A*', () => {
+    for (const b of AS_BOUNDARIES) {
+      const m = Object.values(b.marks);
+      expect(m).toEqual([...m].sort((x, y) => y - x));
+      expect(b.max).toBe(160);
+      expect('A*' in b.marks).toBe(false);
+    }
+    expect(AS_LATEST.marks).toEqual({ A: 113, B: 99, C: 85, D: 71, E: 58 }); // Pearson, June 2026
+    expect(gradeFor(1, AS_LATEST)).toBe('A');
+    expect(gradeFor(85 / 160, AS_LATEST)).toBe('C');
+    expect(gradeFor(57 / 160, AS_LATEST)).toBe('U');
   });
 });
 

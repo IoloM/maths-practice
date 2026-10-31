@@ -1,10 +1,11 @@
 /**
- * Real Pearson Edexcel 9MA0 past papers (June 2018 – June 2025), indexed question by question:
- * marks, a one-line summary of what is tested (our own words — no question text is reproduced) and
- * the families of practice questions in this app that match it. Links go to Pearson's own PDFs.
- * Papers from the most recent 12 months are restricted to teachers by Pearson, so they aren't listed.
+ * Real Pearson Edexcel past papers, June 2018 – June 2025: A level (9MA0) and AS (8MA0), indexed
+ * question by question: marks, a one-line summary of what is tested (our own words — no question
+ * text is reproduced) and the families of practice questions in this app that match it. Links go to
+ * Pearson's own PDFs. Papers from the most recent 12 months are restricted to teachers by Pearson,
+ * so they aren't listed.
  */
-export type PaperCode = '1' | '2' | '3' | '31' | '32';
+export type PaperCode = '1' | '2' | '3' | '31' | '32' | 'as1' | 'as2' | 'as21' | 'as22';
 
 export interface PastPaper {
   id: string;
@@ -31,7 +32,16 @@ export const PAPER_TITLES: Record<PaperCode, string> = {
   '3': 'Paper 3: Statistics and Mechanics',
   '31': 'Paper 3, Section A: Statistics',
   '32': 'Paper 3, Section B: Mechanics',
+  as1: 'AS Paper 1: Pure Mathematics',
+  as2: 'AS Paper 2: Statistics and Mechanics',
+  as21: 'AS Paper 2, Section A: Statistics',
+  as22: 'AS Paper 2, Section B: Mechanics',
 };
+
+export const isAS = (code: PaperCode) => code.startsWith('as');
+
+/** The time allowed: 2 hours for 100 marks, except AS Paper 2 (1 hour 15 minutes for 60). */
+export const minutesPerMark = (code: PaperCode) => (code === 'as2' || code === 'as21' || code === 'as22' ? 1.25 : 1.2);
 
 const P = (series: string, paper: PaperCode, qp: string, ms: string): PastPaper => ({
   id: `${series.split(' ')[1]}-${series.startsWith('June') ? '06' : '10'}-${paper}`,
@@ -73,6 +83,30 @@ export const PAST_PAPERS: PastPaper[] = [
   P('June 2025', '2', '9ma0-02-que-20250613.pdf', '9ma0-02-rms-20250814.pdf'),
   P('June 2025', '31', '9ma0-31-que-20250620.pdf', '9ma0-31-rms-20250814.pdf'),
   P('June 2025', '32', '9ma0-32-que-20250620.pdf', '9ma0-32-rms-20250814.pdf'),
+  // AS (8MA0): Paper 1 is pure; Paper 2 is statistics and mechanics, set as two sections from 2019
+  P('June 2018', 'as1', '8ma0-01-que-2018.pdf', '8ma0-01-ms.pdf'),
+  P('June 2018', 'as2', '8ma0-02-que-2018.pdf', '8ma0-02-ms.pdf'),
+  P('June 2019', 'as1', '8MA0_01_que_20190516.pdf', '8MA0_01_rms_20190815.pdf'),
+  P('June 2019', 'as21', '8MA0_21_que_20190523.pdf', '8MA0_21_rms_20190815.pdf'),
+  P('June 2019', 'as22', '8MA0_22_que_20190523.pdf', '8MA0_22_mcs_20180815.pdf'),
+  P('October 2020', 'as1', '8MA0_01_que_20201008.pdf', '8MA0_01_msc_20201217.pdf'),
+  P('October 2020', 'as21', '8MA0_21_que_20201015.pdf', '8MA0_21_msc_20201217.pdf'),
+  P('October 2020', 'as22', '8MA0_22_que_20201015.pdf', '8MA0_22_msc_20201217.pdf'),
+  P('October 2021', 'as1', '8MA0_01_que_20211007.pdf', '8MA0_01_rms_20211216.pdf'),
+  P('October 2021', 'as21', '8MA0_21_que_20211014.pdf', '8MA0_21_rms_20211216.pdf'),
+  P('October 2021', 'as22', '8MA0_22_que_20211014.pdf', '8MA0_22_rms_20211216.pdf'),
+  P('June 2022', 'as1', '8ma0-01-que-20220520.pdf', '8ma0-01-rms-20220818.pdf'),
+  P('June 2022', 'as21', '8ma0-21-que-20220609.pdf', '8ma0-21-rms-20220818.pdf'),
+  P('June 2022', 'as22', '8ma0-22-que-20220609.pdf', '8ma0-22-rms-20220818.pdf'),
+  P('June 2023', 'as1', '8ma0-01-que-20230519.pdf', '8ma0-01-rms-20230817.pdf'),
+  P('June 2023', 'as21', '8ma0-21-que-20230526.pdf', '8ma0-21-rms-20230817.pdf'),
+  P('June 2023', 'as22', '8ma0-22-que-20230526.pdf', '8ma0-22-rms-20230817.pdf'),
+  P('June 2024', 'as1', '8ma0-01-que-20240517.pdf', '8ma0-01-rms-20240815.pdf'),
+  P('June 2024', 'as21', '8ma0-21-que-20240524.pdf', '8ma0-21-rms-20240815.pdf'),
+  P('June 2024', 'as22', '8ma0-22-que-20240524.pdf', '8ma0-22-rms-20240815.pdf'),
+  P('June 2025', 'as1', '8ma0-01-que-20250516.pdf', '8ma0-01-rms-20250814.pdf'),
+  P('June 2025', 'as21', '8ma0-21-que-20250524.pdf', '8ma0-21-rms-20250814.pdf'),
+  P('June 2025', 'as22', '8ma0-22-que-20250524.pdf', '8ma0-22-rms-20250814.pdf'),
 ];
 
 type Row = [q: number, marks: number, topic: string, families: string[]];
@@ -470,9 +504,252 @@ export const PAST_QUESTIONS: PastQuestion[] = [
     [5, 8, 'Projectile from a cliff', ['sm2.6.projectiles', 'sm2.6.exam-style']],
     [6, 11, 'Rod with a particle against a wall: limiting equilibrium', ['sm2.4.ladders']],
   ]),
+  // AS (8MA0)
+  ...Qs('2018-06-as1', [
+    [1, 4, 'Integrate a sum of powers of x, including negative and fractional powers', ['p1.13.indefinite']],
+    [2, 5, 'Complete the square to show a quadratic is always positive; always, sometimes or never', ['p1.7.proof', 'p1.2.completing-square']],
+    [3, 4, 'Vector between two position vectors and its magnitude as a surd', ['p1.11.position-vectors', 'p1.11.magnitude-direction']],
+    [4, 4, 'Are two lines parallel, perpendicular or neither?', ['p1.5.parallel-perpendicular']],
+    [5, 5, 'Spot the errors in a student’s log equation, then solve it properly', ['p1.14.log-laws', 'fx.pure.explain']],
+    [6, 7, 'Quadratic profit model for a toy: best selling price and maximum profit', ['p1.2.modelling', 'p1.2.completing-square']],
+    [7, 6, 'Triangle area gives two values of cos θ; exact length of the longest side', ['p1.9.area', 'p1.10.identities', 'p1.9.cosine-rule']],
+    [8, 9, 'Cost model for a lorry journey: minimise with calculus, check with the second derivative', ['p1.12.modelling', 'p1.12.second-derivative']],
+    [9, 9, 'Factor theorem; write a cubic as (x + 2)(ax + b)²; use its sketch', ['p1.7.factor-theorem', 'p1.4.curve-sketching']],
+    [10, 4, 'Differentiate x³ from first principles', ['p1.12.first-principles']],
+    [11, 8, 'Binomial expansion; find constants in a product from its first terms', ['p1.8.binomial', 'p1.8.binomial-problems']],
+    [12, 8, 'Trig equation as a quadratic in cos; then solve it for 3x', ['p1.10.harder-equations', 'p1.10.equations']],
+    [13, 8, 'Value of a painting V = pqᵗ from a graph of log V against t', ['p1.14.log-graphs', 'p1.14.exponential-modelling']],
+    [14, 9, 'Circle centre and radius; range of k for which y = kx cuts it twice', ['p1.6.equation-of-circle', 'p1.6.intersections', 'p1.2.discriminant']],
+    [15, 10, 'Normal to a curve, then the area between the normal and the curve', ['p1.12.tangents-normals', 'p1.13.area-between']],
+  ]),
+  ...Qs('2018-06-as2', [
+    [1, 3, 'Regression line for pay against job points: interpret and use', ['sm1.4.regression']],
+    [2, 4, 'Faulty components from three suppliers: probabilities from a tree', ['sm1.5.tree-diagrams']],
+    [3, 7, 'Binomial number of games won; test a claim of a winning method', ['sm1.6.binomial-cumulative', 'sm1.7.binomial-test']],
+    [4, 8, 'Large data set (Camborne wind speed): mean, standard deviation and missing data', ['fx.statistics.large-data-set', 'sm1.2.variance']],
+    [5, 8, 'Biased spinner: complete the distribution, then a binomial over many spins', ['sm1.6.discrete', 'sm1.6.binomial-model']],
+    [6, 4, 'Ball thrown upwards from 2 m: motion under gravity', ['sm1.9.suvat']],
+    [7, 7, 'Train between stations: accelerate, steady speed, decelerate', ['sm1.9.graphs', 'sm1.9.suvat']],
+    [8, 10, 'Displacement as a polynomial in t: when at rest, and total distance', ['sm1.11.differentiation']],
+    [9, 9, 'Two balls over a pulley: acceleration, tension and an unknown mass', ['sm1.10.pulleys']],
+  ]),
+  ...Qs('2019-06-as1', [
+    [1, 4, 'Perpendicular lines: find a gradient, then where they meet', ['p1.5.parallel-perpendicular', 'p1.3.simultaneous']],
+    [2, 8, 'An equation with powers of 2; a quartic that is a hidden quadratic', ['p1.1.indices', 'p1.2.hidden-quadratic']],
+    [3, 6, 'Integrate with an unknown constant; find it from a definite integral', ['p1.13.indefinite', 'p1.13.definite']],
+    [4, 5, 'Linear model for the height of a tree', ['p1.5.modelling']],
+    [5, 5, 'Differentiate; where the curve is increasing', ['p1.12.stationary-points', 'p1.12.differentiate-xn']],
+    [6, 6, 'Triangle area with a 60° angle gives x; third side by the cosine rule', ['p1.9.area', 'p1.9.cosine-rule']],
+    [7, 8, 'Sketch a reciprocal curve with its asymptote; when a line is a tangent', ['p1.4.reciprocal', 'p1.3.simultaneous', 'p1.2.discriminant']],
+    [8, 5, 'Binomial expansion to the x² term; how it estimates a power', ['p1.8.binomial', 'p1.8.binomial-estimation']],
+    [9, 6, 'Quadratic model for the total mass of tin mined', ['p1.2.modelling']],
+    [10, 5, 'Circle centre and radius; vertical tangents x = k', ['p1.6.equation-of-circle', 'p1.6.tangents']],
+    [11, 10, 'Factor theorem; show a cubic has two distinct roots; deduce from its sketch', ['p1.7.factor-theorem', 'p1.4.curve-sketching']],
+    [12, 7, 'Prove a trig identity, hence solve an equation', ['p1.10.identities', 'p1.10.harder-equations']],
+    [13, 7, 'Area under a cubic up to its minimum point', ['p1.13.exam-style', 'p1.13.area-under']],
+    [14, 9, 'Car value V = 15 700e^(−0.25t) + 2300: initial value, rate and limit', ['p1.14.exponential-modelling', 'p1.14.gradient-ekx']],
+    [15, 4, 'Prove that n³ + 2 is never divisible by 8', ['p1.7.proof', 'fx.proof.deduction']],
+    [16, 5, 'Vector magnitudes: what |a + b| = |a| + |b| means; a vector triangle', ['p1.11.geometry', 'p1.9.sine-rule']],
+  ]),
+  ...Qs('2019-06-as21', [
+    [1, 5, 'Stratified sample by year group; interpret a regression line', ['sm1.1.sampling', 'sm1.4.regression']],
+    [2, 5, 'Venn diagram with mutually exclusive and independent events', ['sm1.5.venn']],
+    [3, 6, 'Uniform spinner; binomial number of 2s in 28 spins', ['sm1.6.discrete', 'sm1.6.binomial-model', 'sm1.6.binomial-cumulative']],
+    [4, 8, 'Large data set (Hurn rainfall): cleaning data, mean and standard deviation', ['fx.statistics.large-data-set', 'sm1.2.variance']],
+    [5, 6, 'Binomial test: has the proportion buying chocolate gone up?', ['sm1.7.binomial-test', 'sm1.7.critical-region']],
+  ]),
+  ...Qs('2019-06-as22', [
+    [1, 10, 'Parachutist: free fall, then slowing down to the ground', ['sm1.9.suvat', 'sm1.9.graphs']],
+    [2, 12, 'Ball on a smooth table pulled by a hanging ball over a pulley', ['sm1.10.pulleys']],
+    [3, 8, 'Velocity v = 12 + 4t − t²: acceleration at rest, and distance', ['sm1.11.differentiation', 'sm1.11.integration']],
+  ]),
+  ...Qs('2020-10-as1', [
+    [1, 5, 'Tangent to a cubic at a point', ['p1.12.tangents-normals']],
+    [2, 6, 'Boat at constant velocity: position vectors, speed and bearing', ['p1.11.context', 'p1.11.magnitude-direction']],
+    [3, 6, 'Solve a surd equation and an index equation without a calculator', ['p1.1.surds', 'p1.1.indices']],
+    [4, 6, 'Linear model for CO₂ emissions of new cars', ['p1.5.modelling']],
+    [5, 6, 'Roof beams: an angle by the sine rule, then a length', ['p1.9.sine-rule', 'p1.9.cosine-rule']],
+    [6, 6, 'Binomial expansion of (1 + kx)¹⁰; find k from two coefficients', ['p1.8.binomial', 'p1.8.binomial-problems']],
+    [7, 8, 'Definite integral with an unknown limit; an equation in √k', ['p1.13.definite-unknown', 'p1.2.hidden-quadratic']],
+    [8, 9, 'Cooling cup of tea θ = 18 + 65e^(−t/8)', ['p1.14.exponential-modelling', 'p1.14.gradient-ekx']],
+    [9, 8, 'Graph of y = 3 cos x°: a minimum, transformations and solutions', ['p1.9.trig-graphs', 'p1.4.transformations', 'p1.10.equations']],
+    [10, 10, 'Factor theorem; three linear factors; area between the cubic and the x-axis', ['p1.7.factor-theorem', 'p1.13.area-under']],
+    [11, 9, 'Tangent to a circle; range of k for a circle in one quadrant', ['p1.6.tangents', 'p1.6.equation-of-circle']],
+    [12, 7, 'Advert views: log V linear in t, so V = abᵗ', ['p1.14.log-graphs', 'p1.14.exponential-modelling']],
+    [13, 5, 'Prove an inequality for positive a and b; counter-example otherwise', ['fx.proof.deduction', 'fx.proof.counterexample']],
+    [14, 9, 'Find a cubic from a stationary point and other conditions', ['p1.12.stationary-points', 'p1.12.differentiate-xn']],
+  ]),
+  ...Qs('2020-10-as21', [
+    [1, 4, 'Histogram: estimate the percentage below a value', ['sm1.3.histograms']],
+    [2, 5, 'Large data set (Camborne visibility and humidity)', ['fx.statistics.large-data-set', 'sm1.1.data']],
+    [3, 6, 'Discrete distribution with unknowns; two independent games', ['sm1.6.discrete']],
+    [4, 7, 'Sampling fish in a lake: why not stratified, and what instead', ['sm1.1.sampling']],
+    [5, 8, 'Binomial number of successful sales calls; test for an improvement', ['sm1.6.binomial-cumulative', 'sm1.7.binomial-test']],
+  ]),
+  ...Qs('2020-10-as22', [
+    [1, 12, 'Ball projected upwards from a height: speed, time and the bounce', ['sm1.9.suvat']],
+    [2, 9, 'Two balls over a pulley: acceleration and tension', ['sm1.10.pulleys']],
+    [3, 9, 'Velocity v = (7 − 2t)(t + 2): when acceleration is zero; distance', ['sm1.11.differentiation', 'sm1.11.integration']],
+  ]),
+  ...Qs('2021-10-as1', [
+    [1, 3, 'Quadratic inequality in set notation', ['p1.3.inequalities']],
+    [2, 3, 'Index equation: y in terms of x', ['p1.1.indices']],
+    [3, 4, 'Split a fraction into powers of x, then integrate', ['p1.13.indefinite-algebra']],
+    [4, 5, 'Stone sliding across ice: vectors, speed and position', ['p1.11.context', 'p1.11.magnitude-direction']],
+    [5, 6, 'Gradient of a chord PQ and its limit', ['p1.12.first-principles']],
+    [6, 6, 'Solve a cubic by factorising, then a related equation by substitution', ['p1.2.hidden-quadratic', 'p1.2.solving']],
+    [7, 5, 'Parallelogram from its area: an obtuse angle and a diagonal', ['p1.9.area', 'p1.9.cosine-rule']],
+    [8, 7, 'Binomial (2 + ax)⁸: find a from a term; constant term of a product', ['p1.8.binomial-problems', 'p1.8.binomial']],
+    [9, 4, 'Find an unknown limit of a definite integral', ['p1.13.definite-unknown']],
+    [10, 5, 'Prove n³ − n is a multiple of 4 for odd n; counter-example otherwise', ['p1.7.proof', 'fx.proof.counterexample']],
+    [11, 6, 'Model for the area covered by trees, A = 80 − 45e^(ct)', ['p1.14.exponential-modelling', 'p1.14.solve-exponential']],
+    [12, 9, 'Trig equation as a quadratic in sin; find the error in a student’s working', ['p1.10.harder-equations', 'p1.10.equations']],
+    [13, 7, 'Heart rate model h = pm^q from a log–log graph', ['p1.14.log-graphs']],
+    [14, 10, 'Complete the square; maximum point; area between a curve and a line', ['p1.2.completing-square', 'p1.13.area-between']],
+    [15, 9, 'Circle from a tangent and its centre; where a line meets it', ['p1.6.tangents', 'p1.6.equation-of-circle', 'p1.6.intersections']],
+    [16, 11, 'Cubic with unknowns from a point and a gradient; its stationary points', ['p1.12.differentiate-xn', 'p1.12.stationary-points']],
+  ]),
+  ...Qs('2021-10-as21', [
+    [1, 2, 'Venn diagram: a missing probability; mutually exclusive events', ['sm1.5.venn']],
+    [2, 9, 'Complete a histogram and its table; estimates from grouped data', ['sm1.3.histograms', 'sm1.2.grouped']],
+    [3, 4, 'Large data set (Heathrow): systematic sampling and a qualitative variable', ['sm1.1.sampling', 'fx.statistics.large-data-set']],
+    [4, 10, 'Binomial model for red beads; two-tailed test and p-value', ['sm1.6.binomial-model', 'sm1.7.binomial-test', 'sm1.7.exam-style']],
+    [5, 5, 'Balls moved between two bags: find n from a probability', ['sm1.5.tree-diagrams']],
+  ]),
+  ...Qs('2021-10-as22', [
+    [1, 7, 'Stone thrown up and back down past its start: time and distance', ['sm1.9.suvat', 'sm1.9.language']],
+    [2, 10, 'Velocity v = 10t − t² − k: acceleration, times at rest, total distance', ['sm1.11.differentiation', 'sm1.11.integration']],
+    [3, 13, 'Two balls over a pulley at different heights; one hits the ground', ['sm1.10.pulleys']],
+  ]),
+  ...Qs('2022-06-as1', [
+    [1, 4, 'Integrate a sum of powers of x, including a fraction', ['p1.13.indefinite']],
+    [2, 7, 'Factor theorem; quadratic factor; show there is only one real root', ['p1.7.factor-theorem', 'p1.2.discriminant']],
+    [3, 6, 'Vectors in a triangle: a magnitude and a point dividing a side in a ratio', ['p1.11.geometry', 'p1.11.magnitude-direction']],
+    [4, 6, 'Triangle with sides in x: cosine rule gives a quadratic; then an angle', ['p1.9.cosine-rule', 'p1.9.sine-rule']],
+    [5, 10, 'Mass of algae A = pqᵗ from a log graph', ['p1.14.log-graphs', 'p1.14.exponential-modelling']],
+    [6, 6, 'Binomial expansion to four terms; a coefficient in a product', ['p1.8.binomial', 'p1.8.binomial-problems']],
+    [7, 7, 'Factorise and sketch a cubic; values of k for three intersections', ['p1.4.curve-sketching', 'p1.12.stationary-points']],
+    [8, 6, 'Tyre pressure after a puncture, P = k + 1.4e^(−0.5t)', ['p1.14.exponential-modelling', 'p1.14.gradient-ekx']],
+    [9, 6, 'Logs in terms of p = log₃ x; solve an equation', ['p1.14.log-laws']],
+    [10, 10, 'Tangent to a curve with roots, then the exact area of a region', ['p1.12.tangents-normals', 'p1.13.area-between']],
+    [11, 8, 'Circle centre and radius; shortest distance to a line', ['p1.6.equation-of-circle', 'p1.5.parallel-perpendicular']],
+    [12, 12, 'Cylinder drinks can: minimise the cost of metal with calculus', ['p1.12.modelling']],
+    [13, 8, 'Prove a trig identity, then use it to solve an equation', ['p1.10.identities', 'p1.10.equations']],
+    [14, 4, 'Disprove a statement about x²; prove n³ + 3n² + 2n divisible by 6', ['fx.proof.counterexample', 'p1.7.proof']],
+  ]),
+  ...Qs('2022-06-as21', [
+    [1, 5, 'Regression line: correlation, units of the gradient, extrapolation', ['sm1.4.regression', 'sm1.4.correlation']],
+    [2, 7, 'Binomial number of damp bags; test a supplier’s claim', ['sm1.6.binomial-cumulative', 'sm1.7.binomial-test']],
+    [3, 8, 'Histogram: median by interpolation; a curve to model the frequency density', ['sm1.3.histograms', 'sm1.2.grouped', 'p1.13.definite']],
+    [4, 2, 'Large data set: what is wrong with a box plot of Daily Mean Pressure', ['fx.statistics.large-data-set', 'sm1.3.box-plots']],
+    [5, 8, 'Two biased spinners: distribution of a combined score', ['sm1.6.discrete']],
+  ]),
+  ...Qs('2022-06-as22', [
+    [1, 7, 'Stone projected up from 1.8 m: speed, time and a better model', ['sm1.9.suvat']],
+    [2, 8, 'Train between stations: speed–time graph with a top speed', ['sm1.9.graphs']],
+    [3, 9, 'Displacement s = t³/3 − 5t²/2 + 6t: acceleration at rest, total distance', ['sm1.11.differentiation']],
+    [4, 6, 'Lift cage carrying a block, raised by a rope: tension and reaction', ['sm1.10.connected', 'sm1.10.vertical']],
+  ]),
+  ...Qs('2023-06-as1', [
+    [1, 6, 'Differentiate; where the curve is decreasing', ['p1.12.stationary-points', 'p1.12.differentiate-xn']],
+    [2, 4, 'Equation that is a quadratic in √x', ['p1.2.hidden-quadratic']],
+    [3, 4, 'Phone masts on bearings: a distance by the cosine rule', ['p1.9.cosine-rule']],
+    [4, 5, 'Sketch y = k/x²; solve an inequality with x in the denominator', ['p1.4.reciprocal', 'p1.3.inequalities']],
+    [5, 5, 'Exact area between a curve, the y-axis and a horizontal line', ['p1.13.area-between', 'p1.13.definite']],
+    [6, 5, 'Circle with a constant k: centre; k so it misses the x-axis', ['p1.6.equation-of-circle', 'p1.6.intersections']],
+    [7, 8, 'Linear model for the fuel left in a car’s tank', ['p1.5.modelling']],
+    [8, 5, 'Quadratic curve and a line: inequalities for a shaded region', ['p1.3.inequalities']],
+    [9, 5, 'Solve a log equation using the laws of logs', ['p1.14.log-laws']],
+    [10, 8, 'Perpendicular lines, where they meet, and the area of a triangle', ['p1.5.parallel-perpendicular', 'p1.5.length-area']],
+    [11, 6, 'Exponential model for a plant’s height: rate of growth and its limit', ['p1.14.exponential-modelling', 'p1.14.gradient-ekx']],
+    [12, 9, 'Equation with tan and cos as a quadratic in sin; solve', ['p1.10.harder-equations']],
+    [13, 7, 'Position vectors: a magnitude, and a constant from a condition', ['p1.11.position-vectors', 'p1.11.magnitude-direction']],
+    [14, 5, 'Coefficient of x⁵ in a binomial expansion', ['p1.8.binomial']],
+    [15, 7, 'Two curves: verify one meeting point, find the other algebraically', ['p1.7.factor-theorem', 'p1.3.simultaneous']],
+    [16, 6, 'Find f(x) from f′(x) with unknowns, a stationary point and an intercept', ['p1.13.finding-functions']],
+    [17, 5, 'Counter-example; prove a result about consecutive even integers', ['fx.proof.counterexample', 'p1.7.proof']],
+  ]),
+  ...Qs('2023-06-as21', [
+    [1, 5, 'Histogram and frequency polygon: mean and standard deviation; a constant error', ['sm1.2.grouped', 'sm1.2.coding']],
+    [2, 4, 'Large data set (Beijing): scatter diagram of pressure and temperature', ['fx.statistics.large-data-set', 'sm1.4.correlation']],
+    [3, 6, 'After-school club: Venn diagram, range of values and independence', ['sm1.5.venn']],
+    [4, 7, 'Two-tailed binomial test for an allergy: critical region', ['sm1.7.critical-region', 'sm1.7.exam-style']],
+    [5, 8, 'Letters chosen without replacement: a distribution; then a binomial', ['sm1.6.discrete', 'sm1.6.binomial-model']],
+  ]),
+  ...Qs('2023-06-as22', [
+    [1, 8, 'Two children race: velocity–time graphs, find a top speed', ['sm1.9.graphs']],
+    [2, 7, 'Stone projected upwards: height of the start, time below a speed', ['sm1.9.suvat']],
+    [3, 8, 'Velocity v = 15 − t² − 2t: when at rest, and distance', ['sm1.11.integration', 'sm1.11.differentiation']],
+    [4, 7, 'Car towing a trailer with resistances: tension and acceleration', ['sm1.10.connected']],
+  ]),
+  ...Qs('2024-06-as1', [
+    [1, 4, 'Split a fraction into powers of x, then integrate', ['p1.13.indefinite-algebra']],
+    [2, 8, 'Factor theorem with two unknowns; factorise and solve', ['p1.7.factor-theorem']],
+    [3, 8, 'Position vectors: a right angle and a fourth point', ['p1.11.position-vectors', 'p1.11.geometry']],
+    [4, 5, 'Two triangles: sine rule, then cosine rule', ['p1.9.sine-rule', 'p1.9.cosine-rule']],
+    [5, 9, 'Sketch y = 6/(x + 3) with its asymptotes; where it meets a quadratic', ['p1.4.reciprocal', 'p1.3.simultaneous']],
+    [6, 6, 'Binomial (1 + ax)¹²: find a and k; estimate a power', ['p1.8.binomial-problems', 'p1.8.binomial-estimation']],
+    [7, 5, 'Smoke concentration P = abˣ from a log graph', ['p1.14.log-graphs']],
+    [8, 10, 'Tangent to a cubic, where it meets again, and the area between', ['p1.12.tangents-normals', 'p1.13.area-between']],
+    [9, 5, 'Laws of logs: write logs in terms of p and q', ['p1.14.log-laws']],
+    [10, 8, 'Circle with a tangent of known gradient: find k and the equation', ['p1.6.tangents', 'p1.6.equation-of-circle']],
+    [11, 6, 'Two exponential price models: when their rates of change match', ['p1.14.exponential-modelling', 'p1.14.gradient-ekx']],
+    [12, 13, 'Swimming pool design: optimise with calculus', ['p1.12.modelling']],
+    [13, 9, 'Trig equation as a quadratic in tan; solve', ['p1.10.harder-equations', 'p1.10.equations']],
+    [14, 4, 'Prove that n² + 5n is even', ['p1.7.proof', 'fx.proof.deduction']],
+  ]),
+  ...Qs('2024-06-as21', [
+    [1, 4, 'Draw a box plot from summary statistics', ['sm1.3.box-plots']],
+    [2, 3, 'Large data set (Camborne wind direction): which letter is which', ['fx.statistics.large-data-set']],
+    [3, 7, 'Complete a histogram and table for queuing times; estimates', ['sm1.3.histograms']],
+    [4, 8, 'Binomial probabilities; test whether defects have gone down', ['sm1.6.binomial-cumulative', 'sm1.7.binomial-test']],
+    [5, 8, 'Biased spinner, spun until a 7: the distribution of the number of spins', ['sm1.6.discrete']],
+  ]),
+  ...Qs('2024-06-as22', [
+    [1, 6, 'Car in a queue: speed–time graph, distance, sketch the distance–time graph', ['sm1.9.graphs']],
+    [2, 7, 'Velocity as a quadratic in t: acceleration and displacement', ['sm1.11.differentiation', 'sm1.11.integration']],
+    [3, 5, 'Two forces in vector form: unknown from the size of the acceleration', ['sm1.10.dynamics-in-a-plane', 'sm1.10.forces-vectors']],
+    [4, 12, 'Car towing a trailer by a towbar: tension, then braking', ['sm1.10.connected']],
+  ]),
+  ...Qs('2025-06-as1', [
+    [1, 6, 'Sketch transformations of a curve with a turning point and an asymptote', ['p1.4.transformations']],
+    [2, 5, 'Line through two points; inequalities for the region between it and a curve', ['p1.5.equations-of-lines', 'p1.3.inequalities']],
+    [3, 6, 'Vectors: an exact magnitude and an angle in a triangle', ['p1.11.magnitude-direction', 'p1.9.cosine-rule']],
+    [4, 6, 'Circle centre and radius; range of k for y = k to cut it twice', ['p1.6.equation-of-circle', 'p1.6.intersections']],
+    [5, 6, 'Write as powers of x, then integrate', ['p1.13.indefinite-algebra']],
+    [6, 7, 'Cubic from a factor and a given gradient: find two constants', ['p1.7.factor-theorem', 'p1.12.differentiate-xn']],
+    [7, 10, 'Quadratic profit model for a chair: sensible prices and the maximum', ['p1.2.modelling', 'p1.2.completing-square']],
+    [8, 5, 'Solve sin² 3x = 4 cos² 3x', ['p1.10.equations']],
+    [9, 3, 'Equal roots: use the discriminant', ['p1.2.discriminant']],
+    [10, 5, 'Solve a log equation', ['p1.14.log-laws']],
+    [11, 13, 'Feeding trough: area of metal, minimise with calculus', ['p1.12.modelling', 'p1.12.second-derivative']],
+    [12, 5, 'Sketch the gradient function of a curve', ['p1.12.stationary-points']],
+    [13, 12, 'Tree height model h = 31 − Ae^(−kt): constants, limit and growth', ['p1.14.exponential-modelling', 'p1.14.solve-exponential']],
+    [14, 7, 'Binomial (1 + kx)⁸: a coefficient in k, then k from a condition', ['p1.8.binomial-problems', 'p1.8.binomial']],
+    [15, 4, 'Always, sometimes or never prime: n³ + 4n and n³ + 5n', ['fx.proof.counterexample', 'p1.7.proof']],
+  ]),
+  ...Qs('2025-06-as21', [
+    [1, 3, 'Binomial probabilities from B(20, 0.37)', ['sm1.6.binomial-probabilities', 'sm1.6.binomial-cumulative']],
+    [2, 6, 'Large data set (Perth): a census; pressure and wind speed', ['fx.statistics.large-data-set', 'sm1.1.data']],
+    [3, 9, 'Counters in a bag: binomial model; one-tailed test and acceptance region', ['sm1.6.binomial-model', 'sm1.7.binomial-test', 'sm1.7.critical-region']],
+    [4, 5, 'Standard deviation from a sum of squares; interpret a regression line', ['sm1.2.variance', 'sm1.4.regression']],
+    [5, 7, 'Venn diagram for three events with independence', ['sm1.5.venn']],
+  ]),
+  ...Qs('2025-06-as22', [
+    [1, 4, 'Runner from A to B: speed–time graph, total time', ['sm1.9.graphs']],
+    [2, 5, 'Forces in vector form: resultant, acceleration, a third force', ['sm1.10.dynamics-in-a-plane', 'sm1.10.forces-vectors']],
+    [3, 11, 'Package on a table pulled by a hanging package over a pulley', ['sm1.10.pulleys']],
+    [4, 10, 'Displacement s = 2t³ − 12t² + 18t: when at rest, and distance', ['sm1.11.differentiation']],
+  ]),
 ];
 
 export const PAST_PAPER_BY_ID = new Map(PAST_PAPERS.map((p) => [p.id, p]));
+
+/** Is this an AS paper? (AS marks get AS grades, and don't count towards the A level prediction.) */
+export const isASPaper = (id: string) => {
+  const p = PAST_PAPER_BY_ID.get(id);
+  return !!p && isAS(p.paper);
+};
 
 /** Past paper questions that match each practice family. */
 export function pastQuestionsFor(family: string): PastQuestion[] {
