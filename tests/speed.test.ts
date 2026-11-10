@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GENS, SPEED_AREAS, SPEED_COUNT, speedCorrect, speedRound } from '../src/lib/speed';
+import { A2_KINDS, GENS, SPEED_AREAS, SPEED_COUNT, speedCorrect, speedRound } from '../src/lib/speed';
 import { isBest } from '../src/lib/speed-records';
 import { withRetries } from '../src/engine/core/rng';
 import { answerTex, canonicalResponse } from '../src/engine/marking/mark';
@@ -37,5 +37,12 @@ describe('speed rounds', () => {
     expect(isBest(7, 150, rec)).toBe(true);
     expect(isBest(7, 200, rec)).toBe(false);
     expect(isBest(6, 60, rec)).toBe(false);
+  });
+});
+
+describe('AS speed rounds', () => {
+  it('leave out Year 2 kinds of question, and every A2 kind is a real kind', () => {
+    for (const k of A2_KINDS) expect(GENS.some((g) => g.kind === k), k).toBe(true);
+    for (const a of SPEED_AREAS) for (const seed of [1, 2, 3]) for (const q of speedRound(a.id, seed, true)) expect(A2_KINDS.has(q.kind), q.kind).toBe(false);
   });
 });

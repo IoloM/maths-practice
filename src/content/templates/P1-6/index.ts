@@ -2,6 +2,7 @@
 import type { Template } from '../../../engine/templates/types';
 import t0 from './circles';
 import t1 from './exam-style';
+import t2 from './intersections';
 
-const templates: Template[] = [...t0, ...t1];
+const templates: Template[] = [...t0, ...t1, ...t2];
 export default templates;

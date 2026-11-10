@@ -3,7 +3,9 @@ import { BANK, type BankEntry } from '../content/bank-meta';
 import { CHAPTERS, CHAPTER_BY_REF } from '../content/chapters';
 import { getStore } from '../storage';
 import type { SetRecord } from '../storage/types';
-import { PAPERS, MINUTES_PER_MARK, buildDaily, buildPaper, buildTimed, newSetId, setMarks, todayKey } from '../lib/sets';
+import { PAPERS, MINUTES_PER_MARK, buildDaily, buildPaper, buildTimed, newSetId, paperMinutes, setMarks, todayKey, type PaperSpec } from '../lib/sets';
+import { useSettings } from '../lib/settings';
+import { chapterInCourse } from '../lib/course';
 import { useProgress } from '../lib/useProgress';
 import { scoreOf } from '../progress/mastery';
 import { href, navigate } from '../router';
@@ -27,7 +29,37 @@ export async function startSet(rec: Omit<SetRecord, 'id' | 'createdAt' | 'status
   navigate(`/set/${set.id}`);
 }
 
+/** One mock paper: its marks and time, and a Start button. */
+function PaperRow({ p }: { p: PaperSpec }) {
+  const m = p.sections.reduce((s, x) => s + x.marks, 0);
+  return (
+    <li>
+      <div className="list-link">
+        <span style={{ flex: 1 }}>
+          {p.title}
+          <span className="muted small">
+            {' '}
+            · {m} marks · {paperMinutes(p, m)} min
+          </span>
+        </span>
+        <button
+          className="btn btn-small btn-primary"
+          aria-label={`Start ${p.title}`}
+          onClick={async () => {
+            const { items, sections, marks: got } = buildPaper(p, Date.now() % 2 ** 31);
+            await startSet({ kind: 'mock', title: p.title, items, sections, durationMin: paperMinutes(p, got), paper: p.id });
+          }}
+        >
+          Start
+        </button>
+      </div>
+    </li>
+  );
+}
+
 export function Exams() {
+  const { settings } = useSettings();
+  const as = settings.course === 'as';
   const { attempts, cards, loading } = useProgress();
   const [sets, setSets] = useState<SetRecord[] | null>(null);
   const [area, setArea] = useState('pure1');
@@ -44,14 +76,17 @@ export function Exams() {
 
   const openDaily = async () => {
     if (daily) return navigate(`/set/${dailyId}`);
-    const items = buildDaily(day, attempts, cards);
+    const items = buildDaily(day, attempts, cards, 5, as);
     await startSet({ id: dailyId, kind: 'daily', title: `Daily set — ${new Date().toLocaleDateString()}`, items, durationMin: 0 });
   };
-  const chapterOptions = CHAPTERS.filter((c) => BANK.templates.some((t) => t.chapter === c.ref));
+  const chapterOptions = CHAPTERS.filter((c) => chapterInCourse(settings.course, c.ref) && BANK.templates.some((t) => t.chapter === c.ref));
+  const areas = as ? AREAS.filter((a) => a.id !== 'pure2').map((a) => (a.id === 'pure' ? { ...a, label: 'All Pure (Year 1)' } : a)) : AREAS;
+  const mine = PAPERS.filter((p) => p.course === settings.course);
+  const others = PAPERS.filter((p) => p.course !== settings.course);
 
   const startTimed = async () => {
-    const areaDef = AREAS.find((a) => a.id === area);
-    const pool = BANK.templates.filter((e) => (areaDef ? areaDef.test(e) : e.chapter === area));
+    const areaDef = areas.find((a) => a.id === area);
+    const pool = BANK.templates.filter((e) => (areaDef ? areaDef.test(e) : e.chapter === area) && (!as || e.level === 'AS'));
     const items = buildTimed(pool, marks, Date.now() % 2 ** 31);
     const got = setMarks(items);
     const label = areaDef?.label ?? CHAPTER_BY_REF.get(area as never)?.title ?? area;
@@ -105,37 +140,25 @@ export function Exams() {
         <h2>
           <Icon name="clock" /> Mock papers
         </h2>
-        <p className="muted small">A full paper is 100 marks in 2 hours. Questions are drawn at random from the whole bank for that paper, easier first.</p>
+        <p className="muted small">
+          {as ? 'AS Paper 1 is 100 marks in 2 hours; AS Paper 2 is 60 marks in 1 hour 15 minutes.' : 'A full paper is 100 marks in 2 hours.'} Questions are drawn at random from the bank for that paper, about 40% of the marks on long questions as in the real papers, easier first.
+        </p>
         <p className="small">
           Want the real thing? <a href={href('/past-papers')}>Past papers 2018–2025</a> links every official Edexcel A level and AS paper and mark scheme, question by question.
         </p>
         <ul className="list">
-          {PAPERS.map((p) => {
-            const m = p.sections.reduce((s, x) => s + x.marks, 0);
-            return (
-              <li key={p.id}>
-                <div className="list-link">
-                  <span style={{ flex: 1 }}>
-                    {p.title}
-                    <span className="muted small">
-                      {' '}
-                      · {m} marks · {Math.round(m * MINUTES_PER_MARK)} min
-                    </span>
-                  </span>
-                  <button
-                    className="btn btn-small btn-primary"
-                    onClick={async () => {
-                      const { items, sections, marks: got } = buildPaper(p, Date.now() % 2 ** 31);
-                      await startSet({ kind: 'mock', title: p.title, items, sections, durationMin: Math.round(got * MINUTES_PER_MARK) });
-                    }}
-                  >
-                    Start
-                  </button>
-                </div>
-              </li>
-            );
-          })}
+          {mine.map((p) => (
+            <PaperRow key={p.id} p={p} />
+          ))}
         </ul>
+        <details>
+          <summary className="small">{as ? 'A level mock papers (Year 1 and Year 2)' : 'AS mock papers (Year 1 only)'}</summary>
+          <ul className="list">
+            {others.map((p) => (
+              <PaperRow key={p.id} p={p} />
+            ))}
+          </ul>
+        </details>
       </section>
 
       <section className="card stack">
@@ -147,7 +170,7 @@ export function Exams() {
             Topics{' '}
             <select value={area} onChange={(e) => setArea(e.target.value)}>
               <optgroup label="Areas">
-                {AREAS.map((a) => (
+                {areas.map((a) => (
                   <option key={a.id} value={a.id}>
                     {a.label}
                   </option>

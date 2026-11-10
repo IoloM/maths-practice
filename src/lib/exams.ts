@@ -1,4 +1,6 @@
 /** The student's own exam dates, for the countdown on the home page. */
+import type { Course } from './course';
+
 export const EXAM_PAPERS = [
   { id: '1', label: 'Paper 1: Pure Mathematics 1' },
   { id: '2', label: 'Paper 2: Pure Mathematics 2' },
@@ -6,6 +8,15 @@ export const EXAM_PAPERS = [
 ] as const;
 export type ExamPaperId = (typeof EXAM_PAPERS)[number]['id'];
 export type ExamDates = Partial<Record<ExamPaperId, string>>;
+
+/** The papers for the course: AS has two (the dates are kept under the same ids). */
+export const examPapers = (course: Course): readonly { id: ExamPaperId; label: string }[] =>
+  course === 'as'
+    ? [
+        { id: '1', label: 'AS Paper 1: Pure Mathematics' },
+        { id: '2', label: 'AS Paper 2: Statistics and Mechanics' },
+      ]
+    : EXAM_PAPERS;
 
 /** Whole days from today to a YYYY-MM-DD date (0 = today), counted on the calendar, not in hours. */
 export function daysUntil(iso: string, now = new Date()): number | null {
@@ -15,8 +26,8 @@ export function daysUntil(iso: string, now = new Date()): number | null {
 }
 
 /** Exams still to come (including today), soonest first. */
-export function upcomingExams(dates: ExamDates, now = new Date()) {
-  return EXAM_PAPERS.flatMap((p) => {
+export function upcomingExams(dates: ExamDates, now = new Date(), course: Course = 'alevel') {
+  return examPapers(course).flatMap((p) => {
     const iso = dates[p.id];
     const days = iso ? daysUntil(iso, now) : null;
     return iso && days !== null && days >= 0 ? [{ ...p, date: iso, days }] : [];

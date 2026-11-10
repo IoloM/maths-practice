@@ -94,6 +94,8 @@ export interface SetRecord {
   challenge?: { by: string; got: number; of: number };
   /** a check-in on a topic you said you'd learnt (topics.ts): which topic, and which check-in (0, 1, 2) */
   checkin?: { chapter: string; n: number };
+  /** a mock paper: which paper it is (PAPERS id in sets.ts, e.g. 'p1', 'as2') */
+  paper?: string;
 }
 
 export interface Setting {

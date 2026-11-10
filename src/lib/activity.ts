@@ -21,7 +21,7 @@ export interface ActivityDetail {
   /** every chapter practised: questions, % of marks, last practised */
   chapters: { chapter: string; title: string; questions: number; pct: number; last: number }[];
   papers: { id: string; got: number; of: number; max: number; complete: boolean; done?: string; at: number }[];
-  sets: { title: string; kind: string; got: number; of: number; at: number }[];
+  sets: { title: string; kind: string; got: number; of: number; at: number; paper?: string }[];
   /** topics they've asked for help with (chapter refs) */
   help?: string[];
 }
@@ -75,6 +75,7 @@ export function buildActivity(s: Snapshot, papers: PaperResults, now = new Date(
         got: s.attempts.filter((a) => a.setId === x.id).reduce((t, a) => t + scoreOf(a), 0),
         of: setMarks(x.items),
         at: x.finishedAt ?? x.createdAt,
+        ...(x.paper ? { paper: x.paper } : {}),
       }))
       .sort((a, b) => b.at - a.at)
       .slice(0, 15),

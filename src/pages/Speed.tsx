@@ -1,7 +1,7 @@
 /**
  * `#/speed`: a speed round — 10 quick questions against a 5-minute clock, marked as you go, with
  * your best score for each kind of round. `?area=…&seed=…` starts from a particular round (the same
- * questions every time), which is how a round can be repeated or shared.
+ * questions every time), which is how a round can be repeated or shared; `&as=1` is an AS round.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SPEED_AREAS, SPEED_COUNT, SPEED_SECONDS, speedCorrect, speedRound, type SpeedQ } from '../lib/speed';
@@ -12,6 +12,7 @@ import { AnswerInput, hasResponse } from '../components/answers/AnswerInput';
 import { MathText, Tex } from '../components/MathText';
 import { Loading } from '../components/bits';
 import { Icon } from '../components/Icon';
+import { useSettings } from '../lib/settings';
 
 const mmss = (s: number) => `${Math.floor(s / 60)}:${String(Math.max(0, s) % 60).padStart(2, '0')}`;
 const AREA_LABEL = Object.fromEntries(SPEED_AREAS.map((a) => [a.id, a.label])) as Record<SpeedArea, string>;
@@ -189,17 +190,21 @@ export function Speed({ query }: { query: URLSearchParams }) {
   const fixed = useMemo(() => {
     const area = query.get('area') as SpeedArea | null;
     const seed = Number(query.get('seed'));
-    return area && SPEED_AREAS.some((a) => a.id === area) && Number.isInteger(seed) && seed > 0 ? { area, seed } : null;
+    return area && SPEED_AREAS.some((a) => a.id === area) && Number.isInteger(seed) && seed > 0 ? { area, seed, as: query.get('as') === '1' } : null;
   }, [query]);
   const [round, setRound] = useState<Round | null>(null);
   const [done, setDone] = useState<Done | null>(null);
   const used = useRef(false);
 
+  const { settings } = useSettings();
   const start = (area: SpeedArea) => {
-    const seed = fixed && fixed.area === area && !used.current ? fixed.seed : Math.floor(Math.random() * 1e9) + 1;
+    const linked = fixed && fixed.area === area && !used.current;
+    const seed = linked ? fixed.seed : Math.floor(Math.random() * 1e9) + 1;
+    // AS: Year 1 questions only (a shared round keeps the questions it was made with)
+    const onlyAS = linked ? fixed.as : settings.course === 'as';
     used.current = true;
     setDone(null);
-    setRound({ area, seed, qs: speedRound(area, seed), started: Date.now() });
+    setRound({ area, seed, qs: speedRound(area, seed, onlyAS), started: Date.now() });
     window.scrollTo({ top: 0 });
   };
   const onDone = useCallback(

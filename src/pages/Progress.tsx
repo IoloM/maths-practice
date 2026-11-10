@@ -17,7 +17,9 @@ import { GradeChart, type PaperPoint } from '../components/GradeChart';
 import { BADGES, earned } from '../lib/badges';
 import { Icon } from '../components/Icon';
 import { finishedPapers, lossesByFamily, lossesByReason, paperScore, usePaperResults, type PaperResults } from '../lib/paper-results';
-import { PAPER_TITLES, PAST_PAPER_BY_ID, isAS } from '../content/past-papers';
+import { PAPER_TITLES, PAST_PAPER_BY_ID, isAS, isASPaper } from '../content/past-papers';
+import { useSettings } from '../lib/settings';
+import { isASMock } from '../lib/course';
 import { BANK } from '../content/bank-meta';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
@@ -181,6 +183,9 @@ export function Progress() {
   const { attempts, cards, loading } = useProgress();
   const results = usePaperResults();
   const [sets, setSets] = useState<SetRecord[]>([]);
+  const { settings } = useSettings();
+  // the prediction and chart are for your course: A level, or AS (AS mocks and AS papers only)
+  const as = settings.course === 'as';
   useEffect(() => {
     void getStore().then(async (s) => setSets(await s.allSets()));
   }, [attempts.length]);
@@ -191,20 +196,19 @@ export function Progress() {
   const mocks = useMemo(
     () =>
       sets
-        .filter((s) => s.kind === 'mock' && s.status === 'finished')
+        .filter((s) => s.kind === 'mock' && s.status === 'finished' && isASMock(s.paper) === as)
         .map((s) => ({ got: attempts.filter((a) => a.setId === s.id).reduce((t, a) => t + scoreOf(a), 0), of: setMarks(s.items), finishedAt: s.finishedAt ?? s.createdAt, label: s.title })),
-    [sets, attempts],
+    [sets, attempts, as],
   );
   const overTime = useMemo((): PaperPoint[] => {
     const real = Object.entries(results ?? {}).flatMap(([id, r]): PaperPoint[] => {
       const sc = paperScore(id, r);
       const p = PAST_PAPER_BY_ID.get(id);
-      // the chart is against A level boundaries, so AS papers stay out of it
-      if (!sc.complete || !p || isAS(p.paper)) return [];
+      if (!sc.complete || !p || isAS(p.paper) !== as) return [];
       return [{ label: `${p.series} ${PAPER_TITLES[p.paper].split(':')[0]}`, got: sc.got, of: sc.max, finishedAt: r.done ? new Date(`${r.done}T12:00:00`).getTime() : r.updatedAt, kind: 'paper' }];
     });
     return [...real, ...mocks.map((m) => ({ ...m, kind: 'mock' as const }))];
-  }, [results, mocks]);
+  }, [results, mocks, as]);
   if (loading) return <Loading />;
   const byCh = groupBy(attempts, (a) => a.chapter);
   const marks = attempts.reduce((s, a) => s + a.marks, 0);
@@ -238,11 +242,11 @@ export function Progress() {
         </a>
       </div>
 
-      <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results, true) : []} />
+      <PredictedGrade mocks={mocks} papers={results ? finishedPapers(results).filter((x) => isASPaper(x.id) === as) : []} course={settings.course} />
       {overTime.length > 0 && (
         <section className="card" aria-labelledby="grades-over-time">
           <h2 id="grades-over-time">Grades over time</h2>
-          <GradeChart points={overTime} />
+          <GradeChart points={overTime} course={settings.course} />
         </section>
       )}
       {results && <RealPapers results={results} />}

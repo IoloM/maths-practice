@@ -20,29 +20,51 @@ export interface PaperSection {
 export interface PaperSpec {
   id: string;
   title: string;
+  /** A level (9MA0) or AS (8MA0) */
+  course: 'alevel' | 'as';
   sections: PaperSection[];
+  /** time allowed per mark when it isn't 1.2 (AS Paper 2: 75 minutes for 60 marks) */
+  minutesPerMark?: number;
 }
 
 const stream = (e: BankEntry) => CHAPTER_BY_REF.get(e.chapter)?.stream;
 const isPure = (e: BankEntry) => stream(e) === 'Pure';
 const isStats = (e: BankEntry) => stream(e) === 'Statistics';
 const isMech = (e: BankEntry) => stream(e) === 'Mechanics';
+const isAS = (e: BankEntry) => e.level === 'AS';
 
 export const PAPERS: PaperSpec[] = [
-  { id: 'p1', title: 'Paper 1: Pure Mathematics 1', sections: [{ name: 'Pure Mathematics', marks: 100, filter: (e) => isPure(e) && e.paper.includes(1) }] },
-  { id: 'p2', title: 'Paper 2: Pure Mathematics 2', sections: [{ name: 'Pure Mathematics', marks: 100, filter: (e) => isPure(e) && e.paper.includes(2) }] },
+  { id: 'p1', course: 'alevel', title: 'Paper 1: Pure Mathematics 1', sections: [{ name: 'Pure Mathematics', marks: 100, filter: (e) => isPure(e) && e.paper.includes(1) }] },
+  { id: 'p2', course: 'alevel', title: 'Paper 2: Pure Mathematics 2', sections: [{ name: 'Pure Mathematics', marks: 100, filter: (e) => isPure(e) && e.paper.includes(2) }] },
   {
     id: 'p3',
+    course: 'alevel',
     title: 'Paper 3: Statistics and Mechanics',
     sections: [
       { name: 'Section A: Statistics', marks: 50, filter: isStats },
       { name: 'Section B: Mechanics', marks: 50, filter: isMech },
     ],
   },
-  { id: 'p1-half', title: 'Half paper: Pure (50 marks)', sections: [{ name: 'Pure Mathematics', marks: 50, filter: isPure }] },
-  { id: 'p3-stats', title: 'Section practice: Statistics (50 marks)', sections: [{ name: 'Statistics', marks: 50, filter: isStats }] },
-  { id: 'p3-mech', title: 'Section practice: Mechanics (50 marks)', sections: [{ name: 'Mechanics', marks: 50, filter: isMech }] },
+  { id: 'p1-half', course: 'alevel', title: 'Half paper: Pure (50 marks)', sections: [{ name: 'Pure Mathematics', marks: 50, filter: isPure }] },
+  { id: 'p3-stats', course: 'alevel', title: 'Section practice: Statistics (50 marks)', sections: [{ name: 'Statistics', marks: 50, filter: isStats }] },
+  { id: 'p3-mech', course: 'alevel', title: 'Section practice: Mechanics (50 marks)', sections: [{ name: 'Mechanics', marks: 50, filter: isMech }] },
+  // AS (8MA0): Year 1 content only
+  { id: 'as1', course: 'as', title: 'AS Paper 1: Pure Mathematics', sections: [{ name: 'Pure Mathematics', marks: 100, filter: (e) => isPure(e) && isAS(e) }] },
+  {
+    id: 'as2',
+    course: 'as',
+    title: 'AS Paper 2: Statistics and Mechanics',
+    minutesPerMark: 1.25,
+    sections: [
+      { name: 'Section A: Statistics', marks: 30, filter: (e) => isStats(e) && isAS(e) },
+      { name: 'Section B: Mechanics', marks: 30, filter: (e) => isMech(e) && isAS(e) },
+    ],
+  },
+  { id: 'as1-half', course: 'as', title: 'AS half paper: Pure (50 marks)', sections: [{ name: 'Pure Mathematics', marks: 50, filter: (e) => isPure(e) && isAS(e) }] },
 ];
+
+/** Minutes allowed for a paper of `marks` marks. */
+export const paperMinutes = (p: PaperSpec, marks: number) => Math.round(marks * (p.minutesPerMark ?? MINUTES_PER_MARK));
 
 /** Small seeded generator (mulberry32) so sets are reproducible. */
 export function rng(seed: number): () => number {
@@ -65,18 +87,24 @@ function shuffle<T>(xs: T[], rnd: () => number): T[] {
   return a;
 }
 
+/** Real papers: about 40% of the marks are on questions worth 8 marks or more. */
+export const LONG_MARKS = 8;
+export const LONG_SHARE = 0.4;
+
 /**
- * Choose templates totalling exactly `target` marks where possible: one per family, spread across
- * chapters, then fill any gap; ordered easier → harder like an exam paper.
+ * Choose templates totalling exactly `target` marks where possible: long questions first (up to
+ * `longShare` of the marks, as on real papers), then one per family, spread across chapters, then
+ * fill any gap; ordered easier → harder like an exam paper.
  */
-export function fillToMarks(pool: BankEntry[], target: number, rnd: () => number, maxFixedShare = 0.15): BankEntry[] {
+export function fillToMarks(pool: BankEntry[], target: number, rnd: () => number, maxFixedShare = 0.15, longShare = LONG_SHARE): BankEntry[] {
   const shuffled = shuffle(pool, rnd);
   const chosen: BankEntry[] = [];
   const families = new Set<string>();
   const perChapter = new Map<string, number>();
   const maxPerChapter = Math.max(1, Math.round(target / 22));
   let total = 0,
-    fixedMarks = 0;
+    fixedMarks = 0,
+    longMarks = 0;
   const canAdd = (e: BankEntry, strict: boolean) => {
     if (chosen.includes(e) || total + e.marks > target) return false;
     if (e.fixed && fixedMarks + e.marks > target * maxFixedShare) return false;
@@ -89,10 +117,18 @@ export function fillToMarks(pool: BankEntry[], target: number, rnd: () => number
     perChapter.set(e.chapter, (perChapter.get(e.chapter) ?? 0) + 1);
     total += e.marks;
     if (e.fixed) fixedMarks += e.marks;
+    if (e.marks >= LONG_MARKS) longMarks += e.marks;
   };
+  // long exam-style questions, up to their share of the paper (leaving room for the rest)
+  const longTarget = target * longShare;
+  for (const e of shuffled) {
+    if (total >= longTarget) break;
+    if (e.marks >= LONG_MARKS && total + e.marks <= longTarget + LONG_MARKS / 2 && canAdd(e, true)) add(e);
+  }
   for (const e of shuffled) {
     if (total >= target - 2) break;
-    if (canAdd(e, true)) add(e);
+    // no more long questions once they have their share
+    if (canAdd(e, true) && (e.marks < LONG_MARKS || longMarks < longTarget)) add(e);
   }
   // fill the gap: exact fit first, then the largest that fits
   for (let guard = 0; total < target && guard < 20; guard++) {
@@ -157,11 +193,11 @@ const hashString = (s: string) => {
 
 /**
  * Today's set (5 questions, about 20–25 marks): due reviews first, then the weakest chapters you
- * have practised, then new chapters. Deterministic for the day and the progress so far.
+ * have practised, then new chapters (Year 1 only for AS). Deterministic for the day and the progress so far.
  */
-export function buildDaily(day: string, attempts: Attempt[], cards: CardRecord[], size = 5): SetItem[] {
+export function buildDaily(day: string, attempts: Attempt[], cards: CardRecord[], size = 5, onlyAS = false): SetItem[] {
   const rnd = rng(hashString(`daily:${day}`));
-  const gen = BANK.templates.filter((e) => !e.fixed);
+  const gen = BANK.templates.filter((e) => !e.fixed && (!onlyAS || e.level === 'AS'));
   const byFamily = group(gen, (e) => e.family);
   const picks: BankEntry[] = [];
   const used = new Set<string>();

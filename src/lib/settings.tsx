@@ -5,6 +5,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Paper } from '../storage/types';
 import type { ExamDates } from './exams';
+import type { Course } from './course';
 import { settingsKey } from './logins';
 
 export interface Settings {
@@ -24,12 +25,14 @@ export interface Settings {
   textSize: 'normal' | 'large' | 'larger';
   /** 'readable': Atkinson Hyperlegible for text (maths keeps its own font) */
   font: 'standard' | 'readable';
+  /** A level, or AS only (Year 1 topics, AS mocks and an AS grade) */
+  course: Course;
   /** when a preference that follows the person (SYNCED_PREFS) last changed (ms) */
   prefsAt: number;
 }
 
 /** Preferences that follow a person between devices; the rest belong to the device. */
-export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'textSize', 'font'] as const;
+export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'textSize', 'font', 'course'] as const;
 export type SyncedPrefs = Pick<Settings, (typeof SYNCED_PREFS)[number]>;
 
 const DEFAULTS: Settings = {
@@ -45,6 +48,7 @@ const DEFAULTS: Settings = {
   dailyGoal: 5,
   textSize: 'normal',
   font: 'standard',
+  course: 'alevel',
   prefsAt: 0,
 };
 /** each login on the device has its own settings */

@@ -543,12 +543,15 @@ export const GENS: Gen[] = [
   },
 ];
 
-const BY_AREA = (area: SpeedArea) => GENS.filter((g) => area === 'mixed' || g.area === area);
+/** Kinds of question that are Year 2 only (left out of AS rounds). */
+export const A2_KINDS = new Set(['Arithmetic sequence', 'Sum to infinity', 'Radians', 'Conditional probability', 'Standardising', 'Normal probability', 'Friction', 'Moments', 'Resolving']);
 
-/** The 10 questions of a round: different kinds of question where there are enough. */
-export function speedRound(area: SpeedArea, seed: number): SpeedQ[] {
-  const r = new Rng(`speed:${area}:${seed}`);
-  const gens = BY_AREA(area);
+const BY_AREA = (area: SpeedArea, onlyAS: boolean) => GENS.filter((g) => (area === 'mixed' || g.area === area) && !(onlyAS && A2_KINDS.has(g.kind)));
+
+/** The 10 questions of a round: different kinds of question where there are enough (Year 1 only for AS). */
+export function speedRound(area: SpeedArea, seed: number, onlyAS = false): SpeedQ[] {
+  const r = new Rng(`speed:${area}:${seed}${onlyAS ? ':as' : ''}`);
+  const gens = BY_AREA(area, onlyAS);
   const order: Gen[] = [];
   while (order.length < SPEED_COUNT) order.push(...r.shuffle(gens));
   return order.slice(0, SPEED_COUNT).map((g, i) => ({ kind: g.kind, ...withRetries(`speed:${seed}:${i}:${g.kind}`, g.make) }));

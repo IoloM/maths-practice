@@ -5,7 +5,7 @@ import { notifyProgress } from '../progress/record';
 import { BANK } from '../content/bank';
 import { Icon } from '../components/Icon';
 import { InstallHelp } from '../components/Install';
-import { EXAM_PAPERS, daysUntil } from '../lib/exams';
+import { daysUntil, examPapers } from '../lib/exams';
 import { cloudMode, currentLogin } from '../lib/logins';
 import { href } from '../router';
 
@@ -136,12 +136,29 @@ export function Settings() {
       </section>
       <section className="card stack" id="exams">
         <h2>Your exams and goal</h2>
+        <fieldset className="stack" style={{ gap: 6, border: 'none', padding: 0, margin: 0 }}>
+          <legend className="small" style={{ padding: 0 }}>
+            Your course
+          </legend>
+          <label className="row">
+            <input type="radio" name="course" checked={settings.course !== 'as'} onChange={() => update({ course: 'alevel' })} />
+            <span>
+              A level Mathematics (9MA0) <span className="muted small">· every topic, Years 1 and 2</span>
+            </span>
+          </label>
+          <label className="row">
+            <input type="radio" name="course" checked={settings.course === 'as'} onChange={() => update({ course: 'as' })} />
+            <span>
+              AS Mathematics (8MA0) only <span className="muted small">· Year 1 topics, AS mock papers and an AS grade</span>
+            </span>
+          </label>
+        </fieldset>
         <label className="row">
           <span style={{ flex: 1 }}>Daily goal (questions a day)</span>
           <input type="number" inputMode="numeric" min={1} max={50} value={settings.dailyGoal} onChange={(e) => update({ dailyGoal: Math.max(1, Math.min(50, Math.round(Number(e.target.value) || 1))) })} style={{ width: '5em' }} />
         </label>
         <p className="muted small">Add your exam dates (from your school's exam timetable) for a countdown on the home page.</p>
-        {EXAM_PAPERS.map((p) => {
+        {examPapers(settings.course).map((p) => {
           const v = settings.examDates[p.id] ?? '';
           const days = v ? daysUntil(v) : null;
           return (

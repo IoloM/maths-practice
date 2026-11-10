@@ -10,24 +10,29 @@ import { SPEC_BY_REF } from '../content/spec';
 import { href } from '../router';
 import { PastPaperRefs } from '../components/PastPaperRefs';
 import { PAST_QUESTIONS } from '../content/past-papers';
+import { useSettings } from '../lib/settings';
 
 const PPQ_FAMILIES = [...new Set(PAST_QUESTIONS.flatMap((q) => q.families))];
 import type { Mode } from '../storage/types';
 
 export function Practice({ query }: { query: URLSearchParams }) {
-  const cfg: SessionConfig = useMemo(
-    () => ({
-      chapters: query.get('c')?.split(',').filter(Boolean),
-      templates: query.get('t')?.split(',').filter(Boolean),
+  const { settings } = useSettings();
+  const cfg: SessionConfig = useMemo(() => {
+    const chapters = query.get('c')?.split(',').filter(Boolean);
+    const templates = query.get('t')?.split(',').filter(Boolean);
+    return {
+      chapters,
+      templates,
       specs: query.get('s')?.split(',').filter(Boolean),
       streams: query.get('st')?.split(',').filter(Boolean),
       minMarks: Number(query.get('mm') ?? 0),
       families: query.get('pp') ? PPQ_FAMILIES : undefined,
+      // AS: mixed practice stays in Year 1 (a chapter or question chosen by name is still honoured)
+      level: settings.course === 'as' && !chapters?.length && !templates?.length ? 'AS' : undefined,
       dmin: Number(query.get('dmin') ?? 1),
       dmax: Number(query.get('dmax') ?? 5),
-    }),
-    [query],
-  );
+    };
+  }, [query, settings.course]);
   const mode: Mode = (cfg.chapters?.length ?? 0) > 1 || query.get('mixed') ? 'mixed' : 'practice';
   const { attempts, loading } = useProgress();
   const [inst, setInst] = useState<Instance | null>(null);

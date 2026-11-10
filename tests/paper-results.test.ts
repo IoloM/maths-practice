@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { boundariesFor, finishedPapers, lossesByFamily, paperScore, questionsFor, type PaperResults } from '../src/lib/paper-results';
-import { AS_LATEST, LATEST, predict } from '../src/lib/grades';
+import { predict } from '../src/lib/grades';
 
 const ID = '2024-06-1';
 const qs = questionsFor(ID);
@@ -15,7 +15,8 @@ describe('marks on real past papers', () => {
 
   it('grades a finished paper on its own year’s boundaries', () => {
     expect(boundariesFor(ID).series).toBe('June 2024');
-    expect(boundariesFor('2019-06-1')).toBe(LATEST); // no boundaries kept for that year
+    expect(boundariesFor('2019-06-1')).toMatchObject({ series: 'June 2019', marks: { 'A*': 217 } });
+    expect(boundariesFor('2021-10-1').series).toBe('October 2021');
     const top = paperScore(ID, { marks: full((m) => m), updatedAt: 1 });
     expect(top).toMatchObject({ got: 100, complete: true, grade: 'A*' });
     const none = paperScore(ID, { marks: full(() => 0), updatedAt: 1 });
@@ -37,7 +38,8 @@ describe('marks on real past papers', () => {
   it('grades AS papers on AS boundaries, and keeps them out of the A level prediction', () => {
     const as = '2024-06-as1';
     expect(boundariesFor(as)).toMatchObject({ series: 'June 2024', max: 160 });
-    expect(boundariesFor('2019-06-as21')).toBe(AS_LATEST);
+    expect(boundariesFor('2019-06-as21')).toMatchObject({ series: 'June 2019', max: 160 });
+    expect(boundariesFor('2023-06-as1').marks).toEqual({ A: 103, B: 90, C: 77, D: 64, E: 52 });
     const marks = Object.fromEntries(questionsFor(as).map((q) => [q.q, q.marks]));
     expect(paperScore(as, { marks, updatedAt: 1 })).toMatchObject({ got: 100, max: 100, complete: true, grade: 'A' });
     const results: PaperResults = { [as]: { marks, updatedAt: 300 }, [ID]: { marks: full((m) => m), updatedAt: 200 } };

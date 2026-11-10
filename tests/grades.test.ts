@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { AS_BOUNDARIES, AS_LATEST, BOUNDARIES, LATEST, gradeFor, predict } from '../src/lib/grades';
+import { AS_BOUNDARIES, AS_LATEST, AS_OLDER_BOUNDARIES, BOUNDARIES, LATEST, OLDER_BOUNDARIES, gradeFor, predict } from '../src/lib/grades';
 
 describe('grade boundaries', () => {
   it('are ordered A* > A > … > E in every series', () => {
-    for (const b of BOUNDARIES) {
+    for (const b of [...BOUNDARIES, ...OLDER_BOUNDARIES]) {
       const m = Object.values(b.marks);
       expect(m).toEqual([...m].sort((x, y) => y - x));
       expect(b.max).toBe(300);
@@ -17,7 +17,7 @@ describe('grade boundaries', () => {
     expect(gradeFor(0.1)).toBe('U');
   });
   it('AS boundaries are out of 160, ordered A > … > E, with no A*', () => {
-    for (const b of AS_BOUNDARIES) {
+    for (const b of [...AS_BOUNDARIES, ...AS_OLDER_BOUNDARIES]) {
       const m = Object.values(b.marks);
       expect(m).toEqual([...m].sort((x, y) => y - x));
       expect(b.max).toBe(160);
@@ -48,3 +48,18 @@ describe('predict', () => {
     expect(p.range).toEqual(['A', 'A*']); // A* only on the 2023 boundaries (244)
   });
 });
+
+describe('AS prediction', () => {
+  it('uses both AS papers (160 marks) and AS boundaries, with A as the top grade', () => {
+    const p = predict([{ got: 90, of: 100, finishedAt: 3 }, { got: 54, of: 60, finishedAt: 2 }, { got: 10, of: 100, finishedAt: 1 }], undefined, 'as')!;
+    expect(p.marks).toBe(160);
+    expect(p.papers).toBe(2);
+    expect(p.grade).toBe('A');
+    expect(p.next).toBeUndefined();
+    const c = predict([{ got: 86, of: 160, finishedAt: 1 }], undefined, 'as')!;
+    expect(c.grade).toBe('C');
+    expect(c.next?.grade).toBe('B');
+    expect(c.next!.gap).toBeCloseTo(99 / 160 - 86 / 160);
+  });
+});
+

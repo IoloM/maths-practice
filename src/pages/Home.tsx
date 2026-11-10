@@ -146,7 +146,7 @@ function GroupTile({ todo, admin }: { todo: number | null; admin: boolean }) {
 export function Home() {
   const { attempts, cards } = useProgress();
   const { settings } = useSettings();
-  const exams = upcomingExams(settings.examDates);
+  const exams = upcomingExams(settings.examDates, new Date(), settings.course);
   const anyDates = Object.values(settings.examDates).some(Boolean);
   const [daily, setDaily] = useState<SetRecord | null>(null);
   const dailyId = `daily-${todayKey()}`;

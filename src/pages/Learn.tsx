@@ -17,6 +17,9 @@ import { FlagChip, TopicFlagButtons } from '../components/TopicFlag';
 import { VideoCard } from '../components/VideoCard';
 import { usePastPapers } from '../components/PastPaperRefs';
 import { ConfidencePicker } from '../components/ConfidencePicker';
+import { CourseNote } from '../components/CourseNote';
+import { bookInCourse } from '../lib/course';
+import { useSettings } from '../lib/settings';
 
 const when = (t?: number) => (t ? new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
 
@@ -561,7 +564,8 @@ export function Learn() {
     .filter((x) => x.m < 0.6)
     .sort((a, b) => a.m - b.m)
     .slice(0, 3);
-  const books = ['P1', 'P2', 'SM1', 'SM2'] as const;
+  const { settings } = useSettings();
+  const books = (['P1', 'P2', 'SM1', 'SM2'] as const).filter((b) => bookInCourse(settings.course, b));
   return (
     <div className="stack">
       <div>
@@ -604,6 +608,7 @@ export function Learn() {
         </section>
       )}
       <h2>Every topic</h2>
+      {settings.course === 'as' && <CourseNote />}
       {books.map((b) => (
         <section key={b} className={`card ${b === 'P2' || b === 'SM2' ? 'year-2' : ''}`} aria-label={BOOK_NAMES[b]}>
           <h3>{BOOK_NAMES[b]}</h3>

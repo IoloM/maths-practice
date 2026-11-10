@@ -8,6 +8,9 @@ import { groupBy, mastery } from '../progress/mastery';
 import { RagBadge } from '../components/bits';
 import { FlagChip } from '../components/TopicFlag';
 import { useTopicMarks } from '../lib/topics';
+import { useSettings } from '../lib/settings';
+import { bookInCourse } from '../lib/course';
+import { CourseNote } from '../components/CourseNote';
 
 export function Topics() {
   const [view, setView] = useState<'chapters' | 'spec'>('chapters');
@@ -16,7 +19,8 @@ export function Topics() {
   const byCh = groupBy(attempts, (a) => a.chapter);
   const bySpec = groupBy(attempts, (a) => a.spec);
   const count = (ch: string) => BANK.templates.filter((t) => t.chapter === ch).length;
-  const books = ['P1', 'P2', 'SM1', 'SM2'] as const;
+  const { settings } = useSettings();
+  const books = (['P1', 'P2', 'SM1', 'SM2'] as const).filter((b) => bookInCourse(settings.course, b));
   return (
     <div className="stack">
       <div className="page-head">
@@ -34,6 +38,7 @@ export function Topics() {
           </button>
         </div>
       </div>
+      {view === 'chapters' && settings.course === 'as' && <CourseNote />}
       {view === 'chapters' ? (
         books.map((b) => (
           <section key={b} className={b === 'P2' || b === 'SM2' ? 'year-2' : ''}>

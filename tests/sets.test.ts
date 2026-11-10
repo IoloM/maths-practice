@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { BANK, ENTRY_BY_ID, seedsFor } from '../src/content/bank';
 import { CHAPTER_BY_REF } from '../src/content/chapters';
-import { PAPERS, buildDaily, buildPaper, buildTimed, decodeSet, encodeSet, setMarks } from '../src/lib/sets';
+import { LONG_MARKS, PAPERS, buildDaily, buildPaper, buildTimed, decodeSet, encodeSet, paperMinutes, setMarks } from '../src/lib/sets';
 import { markInstance } from '../src/lib/set-marking';
 import { ALL_TEMPLATES } from '../src/content/templates/all.gen';
 import { generateInstance } from '../src/engine/templates/validate';
@@ -34,6 +34,30 @@ describe('mock papers', () => {
   it('is reproducible from its seed', () => {
     expect(buildPaper(PAPERS[0], 5)).toEqual(buildPaper(PAPERS[0], 5));
   });
+  it('has a real paper’s share of long questions (about 40% of the marks on 8+ mark questions)', () => {
+    for (const p of PAPERS.filter((x) => x.id === 'p1' || x.id === 'p2' || x.id === 'as1')) {
+      for (const seed of [1, 2, 3, 4, 5]) {
+        const { items, marks } = buildPaper(p, seed);
+        const long = items.map((i) => ENTRY_BY_ID.get(i.templateId)!).filter((e) => e.marks >= LONG_MARKS);
+        const share = long.reduce((t, e) => t + e.marks, 0) / marks;
+        expect(share, `${p.id} seed ${seed}`).toBeGreaterThanOrEqual(0.3);
+        expect(share, `${p.id} seed ${seed}`).toBeLessThanOrEqual(0.55);
+        expect(items.length, 'fewer, longer questions than before').toBeLessThanOrEqual(22);
+      }
+    }
+  });
+  it('AS mock papers use Year 1 (AS) questions only, with AS timings', () => {
+    for (const id of ['as1', 'as2', 'as1-half']) {
+      const p = PAPERS.find((x) => x.id === id)!;
+      expect(p.course).toBe('as');
+      const { items } = buildPaper(p, 11);
+      for (const it of items) expect(ENTRY_BY_ID.get(it.templateId)!.level, it.templateId).toBe('AS');
+    }
+    const as2 = PAPERS.find((x) => x.id === 'as2')!;
+    expect(as2.sections.map((s) => s.marks)).toEqual([30, 30]);
+    expect(paperMinutes(as2, 60)).toBe(75);
+    expect(paperMinutes(PAPERS.find((x) => x.id === 'as1')!, 100)).toBe(120);
+  });
 });
 
 describe('timed and daily sets', () => {
@@ -49,6 +73,9 @@ describe('timed and daily sets', () => {
     expect(new Set(a.map((i) => ENTRY_BY_ID.get(i.templateId)!.family)).size).toBe(5);
     expect(buildDaily('2026-10-20', [], [])).toEqual(a);
     expect(buildDaily('2026-10-21', [], [])).not.toEqual(a);
+  });
+  it('daily set for AS uses Year 1 questions only', () => {
+    for (const day of ['2026-11-01', '2026-11-02', '2026-11-03']) for (const it of buildDaily(day, [], [], 5, true)) expect(ENTRY_BY_ID.get(it.templateId)!.level).toBe('AS');
   });
 });
 

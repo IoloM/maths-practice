@@ -595,6 +595,38 @@
    "n": 200
   },
   {
+   "id": "p1.3.region-between-line-and-curve",
+   "family": "p1.3.inequalities",
+   "title": "Where a line meets a quadratic, and inequalities for the region between them",
+   "spec": [
+    "P2.5",
+    "P2.4"
+   ],
+   "chapter": "P1.3",
+   "sections": [
+    "3.6",
+    "3.7"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find",
+    "Use"
+   ],
+   "tags": [
+    "inequalities",
+    "regions",
+    "simultaneous equations"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.4.cubic-intercepts",
    "family": "p1.4.curve-sketching",
    "title": "Where a factorised cubic meets the axes",
@@ -1147,6 +1179,68 @@
    "n": 200
   },
   {
+   "id": "p1.6.line-cuts-circle-points-and-chord",
+   "family": "p1.6.intersections",
+   "title": "Where a line cuts a circle, and the length of the chord",
+   "spec": [
+    "P3.2",
+    "P2.4"
+   ],
+   "chapter": "P1.6",
+   "sections": [
+    "6.3",
+    "6.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "circles",
+    "simultaneous equations",
+    "chords"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.6.circle-range-of-constant",
+   "family": "p1.6.intersections",
+   "title": "Range of the constant term so a circle misses an axis or sits in one quadrant",
+   "spec": [
+    "P3.2",
+    "P2.5"
+   ],
+   "chapter": "P1.6",
+   "sections": [
+    "6.2",
+    "6.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "circles",
+    "inequalities",
+    "radius"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.7.factor-theorem-find-k",
    "family": "p1.7.factor-theorem",
    "title": "Factor theorem: find a constant, then factorise fully",
@@ -1323,6 +1417,105 @@
    "n": 180
   },
   {
+   "id": "p1.7.factor-theorem-show-and-solve",
+   "family": "p1.7.factor-theorem",
+   "title": "Show that (x − a) is a factor, then solve the cubic",
+   "spec": [
+    "P2.6",
+    "P2.3"
+   ],
+   "chapter": "P1.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 6,
+   "time": 7,
+   "commands": [
+    "Show that",
+    "Hence",
+    "Solve"
+   ],
+   "tags": [
+    "factor theorem",
+    "polynomials",
+    "solving cubics"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.7.factor-theorem-one-real-root",
+   "family": "p1.7.factor-theorem",
+   "title": "Factor theorem, then show a cubic has only one real root",
+   "spec": [
+    "P2.6",
+    "P2.3"
+   ],
+   "chapter": "P1.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Show that",
+    "Find",
+    "Hence",
+    "Write down"
+   ],
+   "tags": [
+    "factor theorem",
+    "discriminant",
+    "polynomials"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.7.long-factor-theorem-and-inequality",
+   "family": "p1.7.factor-theorem",
+   "title": "Exam-style: find two constants from a factor and a point, factorise, then a cubic inequality",
+   "spec": [
+    "P2.6",
+    "P2.5",
+    "P2.7"
+   ],
+   "chapter": "P1.7",
+   "sections": [
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 13,
+   "commands": [
+    "Find",
+    "Hence",
+    "Factorise"
+   ],
+   "tags": [
+    "exam-style",
+    "factor theorem",
+    "simultaneous equations",
+    "inequalities"
+   ],
+   "n": 200
+  },
+  {
    "id": "p1.8.coefficient-of-term",
    "family": "p1.8.binomial",
    "title": "Coefficient of a term in a binomial expansion",
@@ -1435,6 +1628,37 @@
     "unknown constant"
    ],
    "n": 78
+  },
+  {
+   "id": "p1.8.long-binomial-unknown-and-product",
+   "family": "p1.8.binomial-problems",
+   "title": "Exam-style: a binomial expansion with an unknown — find it, then a product and the x³ term",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P1.8",
+   "sections": [
+    "8.3",
+    "8.4"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 10,
+   "time": 12,
+   "commands": [
+    "Find",
+    "Hence"
+   ],
+   "tags": [
+    "exam-style",
+    "binomial expansion",
+    "coefficients"
+   ],
+   "n": 200
   },
   {
    "id": "p1.9.cosine-rule-side",
@@ -1610,6 +1834,40 @@
     "trig graphs",
     "translations",
     "intercepts"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.10.long-quadratic-trig-equation-then-transformed",
+   "family": "p1.10.harder-equations",
+   "title": "Exam-style: show a trig equation is a quadratic, solve it, then solve a transformed version",
+   "spec": [
+    "P5.5",
+    "P5.7"
+   ],
+   "chapter": "P1.10",
+   "sections": [
+    "10.5",
+    "10.6"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 9,
+   "time": 11,
+   "commands": [
+    "Show that",
+    "Hence",
+    "Solve"
+   ],
+   "tags": [
+    "exam-style",
+    "trigonometric equations",
+    "identities",
+    "quadratics"
    ],
    "n": 200
   },
@@ -2437,6 +2695,40 @@
     "stationary points",
     "second derivative",
     "tangent"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p1.12.gradient-function-from-graph",
+   "family": "p1.12.stationary-points",
+   "title": "The gradient function from a sketch: where it is zero, where it is negative, and its shape",
+   "spec": [
+    "P7.3",
+    "P7.1"
+   ],
+   "chapter": "P1.12",
+   "sections": [
+    "12.3",
+    "12.8",
+    "12.9"
+   ],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 3,
+   "marks": 5,
+   "time": 6,
+   "commands": [
+    "Write down",
+    "Find",
+    "Describe"
+   ],
+   "tags": [
+    "gradient function",
+    "stationary points",
+    "sketching"
    ],
    "n": 200
   },
@@ -3921,6 +4213,41 @@
     "modelling",
     "quadratic",
     "limitations"
+   ],
+   "n": 200
+  },
+  {
+   "id": "p2.2.long-modulus-graph-line-and-inequality",
+   "family": "p2.2.modulus",
+   "title": "Exam-style: y = a|x − b| + c — vertex, range, where a line meets it, and an inequality",
+   "spec": [
+    "P2.7",
+    "P2.8"
+   ],
+   "chapter": "P2.2",
+   "sections": [
+    "2.1",
+    "2.2",
+    "2.7"
+   ],
+   "level": "A2",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 4,
+   "marks": 10,
+   "time": 12,
+   "commands": [
+    "State",
+    "Solve",
+    "Hence"
+   ],
+   "tags": [
+    "exam-style",
+    "modulus",
+    "graphs",
+    "inequalities"
    ],
    "n": 200
   },
@@ -8342,6 +8669,67 @@
    "n": 108
   },
   {
+   "id": "sm1.6.discrete-two-unknowns",
+   "family": "sm1.6.discrete",
+   "title": "Discrete distribution with two unknowns, then two independent observations",
+   "spec": [
+    "S3.1"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.1",
+    "6.2"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 7,
+   "time": 8,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "discrete distributions",
+    "probability",
+    "independent events"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm1.6.long-discrete-function-then-binomial",
+   "family": "sm1.6.discrete",
+   "title": "Exam-style: P(X = x) given by a formula — find k, probabilities, two observations and a binomial",
+   "spec": [
+    "S3.1",
+    "S3.2"
+   ],
+   "chapter": "SM1.6",
+   "sections": [
+    "6.1",
+    "6.2",
+    "6.4"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 10,
+   "time": 12,
+   "commands": [
+    "Find",
+    "Show that"
+   ],
+   "tags": [
+    "exam-style",
+    "discrete distributions",
+    "binomial"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm1.6.long-binomial-model-and-repeated-samples",
    "family": "sm1.6.exam-style",
    "title": "Exam-style: a binomial model, cumulative probabilities and repeated samples",
@@ -8586,6 +8974,39 @@
     "hypothesis test",
     "language",
     "significance level"
+   ],
+   "n": 200
+  },
+  {
+   "id": "sm1.7.p-value-and-acceptance-region",
+   "family": "sm1.7.binomial-test",
+   "title": "Hypotheses, a p-value and conclusion, then the acceptance region",
+   "spec": [
+    "S5.1",
+    "S5.2"
+   ],
+   "chapter": "SM1.7",
+   "sections": [
+    "7.1",
+    "7.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 3,
+   "marks": 8,
+   "time": 10,
+   "commands": [
+    "Write down",
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "hypothesis test",
+    "p-value",
+    "acceptance region",
+    "binomial"
    ],
    "n": 200
   },
@@ -9026,6 +9447,38 @@
    "n": 200
   },
   {
+   "id": "sm1.10.long-car-trailer-tow-bar-breaks",
+   "family": "sm1.10.connected",
+   "title": "Exam-style: a car tows a trailer — acceleration, tension, then the tow bar breaks",
+   "spec": [
+    "M8.4",
+    "M8.2",
+    "M7.3"
+   ],
+   "chapter": "SM1.10",
+   "sections": [
+    "10.5"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 10,
+   "time": 12,
+   "commands": [
+    "Find",
+    "State"
+   ],
+   "tags": [
+    "exam-style",
+    "connected particles",
+    "tow bar",
+    "suvat"
+   ],
+   "n": 200
+  },
+  {
    "id": "sm1.10.constant-velocity",
    "family": "sm1.10.newtons-laws",
    "title": "Newton's first law: constant velocity on rough ground",
@@ -9408,6 +9861,39 @@
     "suvat"
    ],
    "n": 200
+  },
+  {
+   "id": "sm1.11.long-velocity-quadratic-in-t",
+   "family": "sm1.11.differentiation",
+   "title": "Exam-style: velocity as a quadratic in t — acceleration, greatest speed, distance and a change of direction",
+   "spec": [
+    "M7.4",
+    "P7.3",
+    "P8.3"
+   ],
+   "chapter": "SM1.11",
+   "sections": [
+    "11.1",
+    "11.2",
+    "11.3"
+   ],
+   "level": "AS",
+   "paper": [
+    3
+   ],
+   "difficulty": 4,
+   "marks": 11,
+   "time": 13,
+   "commands": [
+    "Find"
+   ],
+   "tags": [
+    "exam-style",
+    "kinematics",
+    "variable acceleration",
+    "calculus"
+   ],
+   "n": 198
   },
   {
    "id": "sm1.11.displacement-polynomial-in-t",
@@ -12620,6 +13106,176 @@
    "difficulty": 2,
    "marks": 1,
    "time": 1,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "trigonometric equations",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-log-of-sum",
+   "family": "fx.pure.explain",
+   "title": "Find the error: adding logarithms",
+   "spec": [
+    "P6.4"
+   ],
+   "chapter": "P1.14",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "logarithms",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-square-root-inequality",
+   "family": "fx.pure.explain",
+   "title": "Find the error: square-rooting an inequality",
+   "spec": [
+    "P2.5"
+   ],
+   "chapter": "P1.3",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "inequalities",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-differentiate-fraction",
+   "family": "fx.pure.explain",
+   "title": "Find the error: differentiating a fraction",
+   "spec": [
+    "P7.2"
+   ],
+   "chapter": "P1.12",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 1,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "differentiation",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-integrate-fraction",
+   "family": "fx.pure.explain",
+   "title": "Find the error: integrating a fraction",
+   "spec": [
+    "P8.2",
+    "P2.1"
+   ],
+   "chapter": "P1.13",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "integration",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-binomial-bracket",
+   "family": "fx.pure.explain",
+   "title": "Find the error: a binomial coefficient",
+   "spec": [
+    "P4.1"
+   ],
+   "chapter": "P1.8",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
+   "commands": [
+    "Explain"
+   ],
+   "tags": [
+    "binomial expansion",
+    "errors",
+    "fixed"
+   ],
+   "n": 1,
+   "fixed": true
+  },
+  {
+   "id": "fx.pure.error-tan-second-solution",
+   "family": "fx.pure.explain",
+   "title": "Find the error: the second solution of tan",
+   "spec": [
+    "P5.5",
+    "P5.7"
+   ],
+   "chapter": "P1.10",
+   "sections": [],
+   "level": "AS",
+   "paper": [
+    1,
+    2
+   ],
+   "difficulty": 2,
+   "marks": 2,
+   "time": 2,
    "commands": [
     "Explain"
    ],
@@ -15865,8 +16521,8 @@
   }
  ],
  "totals": {
-  "templates": 359,
-  "questions": 64671,
-  "fixed": 175
+  "templates": 374,
+  "questions": 67669,
+  "fixed": 181
  }
 }

@@ -6,16 +6,19 @@ import { setFlag, useTopicMarks } from '../lib/topics';
 import { VERDICTS, actualLevel, byChapter, verdict, type Verdict } from '../lib/confidence';
 import { ConfidencePicker } from '../components/ConfidencePicker';
 import { Loading } from '../components/bits';
+import { useSettings } from '../lib/settings';
+import { chapterInCourse } from '../lib/course';
 
 const PRACTISABLE = new Set(BANK.templates.map((t) => t.chapter));
 
 /** `#/confidence`: how sure you feel about each topic, next to how you're actually scoring. */
 export function Confidence() {
   const marks = useTopicMarks();
+  const { settings } = useSettings();
   const { attempts, loading } = useProgress();
   if (!marks || loading) return <Loading />;
   const byCh = byChapter(attempts);
-  const rows = CHAPTERS.filter((c) => PRACTISABLE.has(c.ref)).map((c) => {
+  const rows = CHAPTERS.filter((c) => PRACTISABLE.has(c.ref) && chapterInCourse(settings.course, c.ref)).map((c) => {
     const a = actualLevel(byCh.get(c.ref) ?? []);
     const conf = marks[c.ref]?.confidence;
     return { c, a, conf, v: verdict(conf, a.level) };

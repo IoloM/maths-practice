@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { GRADES, LATEST, gradeFor, needed, predict, type MockResult } from '../lib/grades';
+import { gradeFor, gradeTables, needed, predict, type MockResult } from '../lib/grades';
+import type { Course } from '../lib/course';
 import { TableWrap } from './bits';
 
 export interface PaperPoint extends MockResult {
@@ -14,24 +15,25 @@ const day = (t: number) => new Date(t).toLocaleDateString(undefined, { day: 'num
  * Every finished paper in order (real past papers as filled circles, app mocks as hollow squares),
  * the predicted grade after each one as a line, and the grade boundaries behind them.
  */
-export function GradeChart({ points }: { points: PaperPoint[] }) {
+export function GradeChart({ points, course = 'alevel' }: { points: PaperPoint[]; course?: Course }) {
+  const t = gradeTables(course);
   const [hover, setHover] = useState<number | null>(null);
   const pts = [...points].sort((a, b) => a.finishedAt - b.finishedAt);
   if (!pts.length) return null;
-  const pred = pts.map((_, i) => predict(pts.slice(0, i + 1))!);
+  const pred = pts.map((_, i) => predict(pts.slice(0, i + 1), undefined, course)!);
   const W = 640,
     H = 240,
     L = 40,
     R = 44,
     T = 12,
     B = 28;
-  const lo = Math.max(0, Math.floor(Math.min(...pts.map((p) => p.got / p.of), needed('C')) * 10) / 10 - 0.05);
+  const lo = Math.max(0, Math.floor(Math.min(...pts.map((p) => p.got / p.of), needed('C', t.latest)) * 10) / 10 - 0.05);
   const x = (i: number) => (pts.length === 1 ? (L + W - R) / 2 : L + ((W - L - R) * i) / (pts.length - 1));
   const y = (f: number) => T + (H - T - B) * (1 - (f - lo) / (1 - lo));
   const line = pred.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.frac).toFixed(1)}`).join(' ');
   const last = pred[pred.length - 1];
   const summary = `${pts.length} paper${pts.length === 1 ? '' : 's'}. Latest: ${pts[pts.length - 1].label}, ${pct(pts[pts.length - 1].got / pts[pts.length - 1].of)}. Predicted grade now ${last.grade} (${pct(last.frac)}).`;
-  const shown = GRADES.filter((g) => needed(g) >= lo);
+  const shown = t.grades.filter((g) => needed(g, t.latest) >= lo);
   const h = hover === null ? null : pts[hover];
   return (
     <figure className="grade-chart" style={{ margin: 0 }}>
@@ -59,8 +61,8 @@ export function GradeChart({ points }: { points: PaperPoint[] }) {
         <svg className="trend" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={summary} onMouseLeave={() => setHover(null)}>
           {shown.map((g) => (
             <g key={g}>
-              <line x1={L} x2={W - R} y1={y(needed(g))} y2={y(needed(g))} stroke="var(--border)" strokeDasharray="4 4" />
-              <text x={W - R + 16} y={y(needed(g)) + 4} fontSize="11" fill="var(--text-2)">
+              <line x1={L} x2={W - R} y1={y(needed(g, t.latest))} y2={y(needed(g, t.latest))} stroke="var(--border)" strokeDasharray="4 4" />
+              <text x={W - R + 16} y={y(needed(g, t.latest)) + 4} fontSize="11" fill="var(--text-2)">
                 {g}
               </text>
             </g>
@@ -96,13 +98,13 @@ export function GradeChart({ points }: { points: PaperPoint[] }) {
           <div className="chart-tip small" style={{ left: `${(100 * x(hover)) / W}%` }} role="status">
             <b>{h.label}</b>
             <br />
-            {day(h.finishedAt)} · {h.got}/{h.of} ({pct(h.got / h.of)}, about {gradeFor(h.got / h.of)})
+            {day(h.finishedAt)} · {h.got}/{h.of} ({pct(h.got / h.of)}, about {gradeFor(h.got / h.of, t.latest)})
             <br />
             Predicted grade after it: <b>{pred[hover].grade}</b>
           </div>
         )}
       </div>
-      <figcaption className="small muted">Dashed lines: {LATEST.series} grade boundaries. The prediction uses your last 300 marks of papers.</figcaption>
+      <figcaption className="small muted">Dashed lines: {t.latest.series} {course === 'as' ? 'AS ' : ''}grade boundaries. The prediction uses your last {t.full} marks of papers.</figcaption>
       <details>
         <summary className="small">Show as a table</summary>
         <TableWrap label="Papers over time">

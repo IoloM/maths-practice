@@ -4,6 +4,7 @@ import { BANK, type BankEntry } from '../content/bank-meta';
 import { seedsFor } from '../content/bank-seeds';
 import { href } from '../router';
 import { Icon } from '../components/Icon';
+import { useSettings } from '../lib/settings';
 import { startSet } from './Exams';
 import { LOSS_REASONS, boundariesFor, clearPaper, lossesByReason, paperScore, savePaperMark, setLossReasons, setPaperDone, setQuestionNote, usePaperResults, type PaperResult, type PaperResults } from '../lib/paper-results';
 
@@ -218,7 +219,9 @@ function YourPapers({ results, onOpen }: { results: PaperResults; onOpen: (id: s
 
 export function PastPapers({ open, mark = false }: { open?: string; mark?: boolean }) {
   const [filter, setFilter] = useState<Filter>('all');
-  const [level, setLevel] = useState<Level>('both');
+  const { settings } = useSettings();
+  // AS students see the AS papers first (unless a link opened an A level paper)
+  const [level, setLevel] = useState<Level>(() => (settings.course === 'as' && (!open || isASPaper(open)) ? 'as' : 'both'));
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(open ?? null);
   const [marking, setMarking] = useState<string | null>(mark && open ? open : null);
