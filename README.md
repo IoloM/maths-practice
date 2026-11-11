@@ -7,14 +7,18 @@ worked solutions and mark schemes.
 
 **Live:** https://iolomaths.co.uk/ (also still at https://iolom.github.io/maths-practice/, which offers to move each device's progress across and then forwards)
 
-- 349 question types (62,948 verified questions) covering every 9MA0 spec point, plus 158
-  explain-and-prove questions: proof, interpretation, modelling assumptions and the large data set.
-  Long exam-style questions (10–14 marks) in Pure, Statistics and Mechanics.
+- 374 question types (67,669 verified questions) covering every 9MA0 spec point, plus 181
+  explain-and-prove questions: proof, interpretation, modelling assumptions, the large data set and
+  "find the error" in a student's working. Long multi-part exam-style questions (9–14 marks) on the
+  most-examined topics in Pure, Statistics and Mechanics.
 - Past papers: all 31 A level (9MA0) and all 23 AS (8MA0) papers June 2018 – June 2025 indexed
   question by question (topic, marks, links to Pearson's own question paper and mark scheme), and
   every question type shows the real past-paper questions on the same topic ("PPQ").
-- Topic, mixed and spaced-repetition review practice; today's set; mock Papers 1–3 and timed sets
-  under exam conditions (1.2 minutes per mark, marked at the end); shareable links for questions and sets.
+- Topic, mixed and spaced-repetition review practice; today's set; mock Papers 1–3 (and AS Papers
+  1–2) and timed sets under exam conditions (1.2 minutes per mark, marked at the end), with about 40%
+  of a mock's marks on long questions as in the real papers; shareable links for questions and sets.
+- **AS mode** (Settings → Your course): Year 1 topics only, AS mocks, AS exam dates and a predicted
+  AS grade on 8MA0 boundaries.
 - Progress dashboard (red/amber/green by chapter and spec point, trend, time per mark, frequent
   mistakes) and a predicted grade from mock papers using recent grade boundaries.
 - Flashcards (formulae to learn and key facts, spaced repetition), formulae and statistical tables

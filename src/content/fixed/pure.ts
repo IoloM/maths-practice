@@ -103,21 +103,21 @@ const EXPLAIN = [
     hints: H('Could sin x be 0?', 'What happens to those solutions when you divide?', 'Try factorising instead.') }),
   // find the error in a student's working
   choiceQ({ ...P(['P6.4'], 'P1.14'), id: 'fx.pure.error-log-of-sum', title: 'Find the error: adding logarithms', tags: ['logarithms', 'errors'], difficulty: 2, commands: ['Explain'], marks: 2,
-    stem: md`A student solves $\log_{2}(x + 4) + \log_{2} x = 5$:
-
-- Line 1: $\log_{2}(x + 4 + x) = 5$
+    stem: md`A student solves $\log_{2}(x + 4) + \log_{2} x = 5$ like this.`,
+    prompt: md`- Line 1: $\log_{2}(x + 4 + x) = 5$
 - Line 2: $2x + 4 = 2^{5} = 32$
-- Line 3: $x = 14$`,
-    prompt: 'Which line contains the error, and why?',
+- Line 3: $x = 14$
+
+Which line contains the error, and why?`,
     options: [md`Line 1: $\log_{2} a + \log_{2} b = \log_{2}(ab)$, not $\log_{2}(a + b)$`, md`Line 2: it should be $2x + 4 = 5^{2}$`, 'Line 3: the arithmetic is wrong', 'There is no error'], correct: 0,
     why: md`The addition law gives $\log_{2} x(x + 4) = 5$, so $x^{2} + 4x - 32 = 0$, $x = 4$ ($x = -8$ is rejected because $\log_{2} x$ needs $x > 0$).`,
     hints: H('Check each line against the laws of logarithms.', md`What is $\log a + \log b$ equal to?`, md`It is $\log(ab)$.`) }),
   choiceQ({ ...P(['P2.5'], 'P1.3'), id: 'fx.pure.error-square-root-inequality', title: 'Find the error: square-rooting an inequality', tags: ['inequalities', 'errors'], difficulty: 2, commands: ['Explain'], marks: 2,
-    stem: md`A student solves $x^{2} < 9$:
+    stem: md`A student solves $x^{2} < 9$ like this.`,
+    prompt: md`- Line 1: $x < \pm 3$
+- Line 2: so $x < 3$
 
-- Line 1: $x < \pm 3$
-- Line 2: so $x < 3$`,
-    prompt: 'What is wrong, and what is the correct answer?',
+What is wrong, and what is the correct answer?`,
     options: [md`You cannot square-root an inequality like an equation; the critical values are $\pm 3$ and the answer is $-3 < x < 3$`, md`Line 2 should be $x < -3$`, md`The answer should be $x > 3$ or $x < -3$`, 'Nothing is wrong'], correct: 0,
     why: md`$x = -5$ satisfies $x < 3$ but $(-5)^{2} = 25 > 9$. Sketch $y = x^{2} - 9$: it is below the axis between its roots.`,
     hints: H('Test the student’s answer with a negative number such as x = −5.', md`Find the critical values of $x^{2} - 9 = 0$.`, 'Sketch the quadratic and choose the region below the x-axis.') }),

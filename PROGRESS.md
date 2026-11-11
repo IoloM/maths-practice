@@ -343,3 +343,30 @@ axe on 13 views in light and dark) — all green.
   level grade or the grades-over-time chart (they'd be measured against A level boundaries).
 - **Exam mode** gives AS papers their own time: 2 hours for Paper 1, 1 hour 15 for Paper 2 (so 38
   minutes for each section on its own).
+
+## Phase 17 — Longer questions, AS mode, older boundaries ✅ (11 Nov 2026)
+
+- **22 new question types** (374 in all, 67,669 verified questions):
+  - long multi-part exam-style questions (9–11 marks) on the most-examined topics: factor theorem
+    with a cubic inequality, binomial with an unknown, trig equation then a transformed version,
+    modulus graph with a line and an inequality, discrete distribution then a binomial, velocity
+    as a quadratic in t, car and trailer with the tow bar breaking;
+  - more variety where real papers ask a lot but the app had one type: factor theorem (+3),
+    discrete distributions (+2), lines and circles (+2), modulus (+1);
+  - types real papers ask that were missing: inequalities for a region between a line and a curve,
+    the gradient function from a sketch, p-values and the acceptance region;
+  - 6 "find the error" questions (logs, inequalities, differentiation, integration, binomial, tan).
+- **Mocks look like real papers**: about 40% of the marks on questions worth 8 or more
+  (`fillToMarks`, `LONG_SHARE`), so about 18–21 questions per 100 marks instead of 23+.
+- **AS mode** (Settings → Your course, synced with your other preferences): Topics, Learn and
+  Confidence show Year 1 only; mixed practice, today's set, timed sets and speed rounds stay in
+  Year 1; AS mock papers (AS Paper 1: 100 marks, 2 hours; AS Paper 2: Statistics 30 + Mechanics 30,
+  1 hour 15); AS exam dates; past papers open on AS; a predicted AS grade from AS mocks and AS past
+  papers on 8MA0 boundaries (June 2023–2026). Mock records now carry their paper id (`paper`).
+- **Every past paper is graded on its own year**: Pearson's GCE grade boundaries for June 2018,
+  June 2019, October 2020, November 2021 (the October 2021 papers), June 2022 and June 2023, for
+  A level and AS. Predictions still use June 2023 onwards.
+- **The move from the old address was tested live** (fresh browser, saved test progress): every
+  answer, setting and preference came across to iolomaths.co.uk and the old address then forwards.
+  Guests (not signed in) have nothing saved, so there is nothing to move for them.
+

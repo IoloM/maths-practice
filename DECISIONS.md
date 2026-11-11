@@ -72,3 +72,14 @@ the bottom of each section.
 | AS (8MA0) papers sit with the A level ones, with a Level filter (both shown by default) | Year 12s want AS; Year 13s can use AS papers for year-1 topics. One page, one way of marking. |
 | AS papers get AS grades (out of 160, no A*) and stay out of the A level prediction and chart | An AS score on A level boundaries would mislead, and AS papers only test year-1 content. |
 | AS Paper 2 at 1.25 minutes a mark (1 hour 15 for 60 marks); everything else 1.2 | The real time allowed. |
+
+## Longer questions and AS mode
+
+| Decision | Why |
+|---|---|
+| New long questions go in their topic's family (e.g. `p1.7.factor-theorem`), not a separate `.exam-style` family | Past-paper questions link to topic families, so "Practise this" and spaced review reach the long versions too. |
+| Mocks: long questions first, up to 40% of the marks, then no more long ones | Real papers put about 40% of the marks on 8+ mark questions; random picks from the bank gave about 10%. |
+| AS mode is one synced preference that filters by textbook (P1, SM1) or `level: 'AS'` | One switch, no separate app; a chapter or question chosen by name is still honoured. |
+| AS mocks and AS papers only count towards the AS prediction, and A level ones towards the A level prediction | Each is measured against its own boundaries. |
+| Older series' boundaries grade a past paper from that series but are left out of predictions | 2018–2022 grading was unusual (small first entries, pandemic years); recent years predict better. |
+
