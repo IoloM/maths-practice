@@ -28,6 +28,28 @@ export function RagBadge({ mastery }: { mastery: number | null }) {
   );
 }
 
+/** A ring that fills with mastery, coloured red/amber/green, with the percentage inside. */
+export function MasteryRing({ mastery, size = 40 }: { mastery: number | null; size?: number }) {
+  const r = ragOf(mastery);
+  const R = 15,
+    C = 2 * Math.PI * R;
+  const pct = mastery === null ? 0 : Math.round(mastery * 100);
+  return (
+    <span className={`ring ring-${r}`} role="img" aria-label={`${RAG_TEXT[r]}${mastery !== null ? ` ${pct}%` : ''}`} title={`${RAG_TEXT[r]}${mastery !== null ? ` ${pct}%` : ''}`}>
+      <svg width={size} height={size} viewBox="0 0 36 36" aria-hidden="true">
+        <circle cx="18" cy="18" r={R} className="ring-track" />
+        {mastery !== null && <circle cx="18" cy="18" r={R} className="ring-fill" strokeDasharray={`${(C * pct) / 100} ${C}`} transform="rotate(-90 18 18)" />}
+        <text x="18" y="18" dominantBaseline="central" textAnchor="middle" className="ring-text">
+          {mastery === null ? '–' : pct}
+        </text>
+      </svg>
+    </span>
+  );
+}
+
+/** "1 question type", "2 question types". */
+export const plural = (n: number, word: string, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
+
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return (
     <p className="muted" role="status">

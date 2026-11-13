@@ -21,6 +21,7 @@ import { isOpen, mistakesFrom, useMistakeNotes } from '../lib/mistakes';
 import { flagged, useTopicMarks } from '../lib/topics';
 import { savedList, useSaved } from '../lib/saved';
 import { useSpeed } from '../lib/speed-records';
+import { pctOf, weekSummary } from '../lib/week';
 
 const PRIORITY = [
   { label: 'Integration (Pure Y1 13.5–13.7)', chapter: 'P1.13' },
@@ -33,6 +34,57 @@ const PRIORITY = [
   { label: 'Variance', chapter: 'SM1.2' },
   { label: 'Inclined planes', chapter: 'SM2.5' },
 ];
+
+/** The last 7 days against the 7 before: questions, share of marks, time, best and weakest topics. */
+function WeekCard({ attempts }: { attempts: Attempt[] }) {
+  const w = weekSummary(attempts);
+  if (!w.now.questions && !w.before.questions) return null;
+  const title = (ch: string) => CHAPTERS.find((c) => c.ref === ch)?.title ?? ch;
+  return (
+    <section className="card week" aria-labelledby="week-h">
+      <h2 id="week-h" className="h3">
+        Your week
+      </h2>
+      <div className="week-kpis">
+        <div>
+          <b>{w.now.questions}</b>
+          <span className="muted small">question{w.now.questions === 1 ? '' : 's'}</span>
+        </div>
+        <div>
+          <b>{w.now.of ? `${pctOf(w.now)}%` : '–'}</b>
+          <span className="muted small">
+            of marks
+            {w.change !== null && (
+              <span className={`week-change ${w.change > 0 ? 'up' : w.change < 0 ? 'down' : ''}`}>
+                {' '}
+                {w.change > 0 ? '▲' : w.change < 0 ? '▼' : '='} {w.change === 0 ? 'same as' : `${Math.abs(w.change)} points ${w.change > 0 ? 'up on' : 'down on'}`} last week
+              </span>
+            )}
+          </span>
+        </div>
+        <div>
+          <b>{w.now.minutes}</b>
+          <span className="muted small">minute{w.now.minutes === 1 ? '' : 's'} practising</span>
+        </div>
+      </div>
+      {(w.best || w.weakest) && (
+        <p className="small" style={{ margin: 0 }}>
+          {w.best && (
+            <>
+              Best this week: <b>{title(w.best.chapter)}</b> ({w.best.pct}%).{' '}
+            </>
+          )}
+          {w.weakest && (
+            <>
+              Needs work: <a href={href('/practice', { c: w.weakest.chapter })}>{title(w.weakest.chapter)}</a> ({w.weakest.pct}%).
+            </>
+          )}
+        </p>
+      )}
+      {!w.now.questions && <p className="small muted" style={{ margin: 0 }}>Nothing yet this week — last week you did {w.before.questions}.</p>}
+    </section>
+  );
+}
 
 /** Today's questions against the daily goal, the streak, and the last fortnight at a glance. */
 function GoalCard({ attempts, goal }: { attempts: Attempt[]; goal: number }) {
@@ -135,9 +187,9 @@ function PlanCard({ attempts, cards, setWork, exams }: { attempts: Attempt[]; ca
 function GroupTile({ todo, admin }: { todo: number | null; admin: boolean }) {
   return (
     <a className="card tile" href={href('/group')}>
-      <h2>
+      <h3>
         <Icon name="users" /> {admin ? 'Study group' : 'Set work'}
-      </h2>
+      </h3>
       <span className="muted">{todo ? `${todo} piece${todo === 1 ? '' : 's'} of set work to do` : admin ? 'Leaderboard, set work and the topics people find hard' : 'Work set for you'}</span>
     </a>
   );
@@ -173,9 +225,9 @@ export function Home() {
   return (
     <div className="stack">
       <div>
-        <h1>Edexcel A Level Maths practice</h1>
+        <h1>{settings.course === 'as' ? 'Edexcel AS Maths practice' : 'Edexcel A Level Maths practice'}</h1>
         <p className="muted">
-          9MA0 Pure, Statistics and Mechanics · {BANK.totals.templates} question types · {BANK.totals.questions.toLocaleString()} verified questions · {BANK.totals.fixed} explain-and-prove questions · works offline
+          {settings.course === 'as' ? '8MA0 (Year 1)' : '9MA0'} Pure, Statistics and Mechanics · {BANK.totals.templates} question types · {BANK.totals.questions.toLocaleString()} verified questions · {BANK.totals.fixed} explain-and-prove questions · works offline
         </p>
       </div>
       {exams.length > 0 ? (
@@ -210,68 +262,58 @@ export function Home() {
       )}
       <GoalCard attempts={attempts} goal={settings.dailyGoal} />
       <PlanCard attempts={attempts} cards={cards} setWork={setWork ?? []} exams={exams} />
+      <WeekCard attempts={attempts} />
+      <h2 className="home-section">Practise</h2>
       <div className="grid">
         {cloudMe() && <GroupTile todo={setWork ? setWork.length : null} admin={!!cloudMe()?.admin} />}
         {last && (
           <a className="card tile" href={href('/practice', { c: last.chapter })}>
-            <h2>
+            <h3>
               <Icon name="play" /> Continue
-            </h2>
+            </h3>
             <span className="muted">{CHAPTERS.find((c) => c.ref === last.chapter)?.title ?? last.chapter}</span>
           </a>
         )}
         <a className="card tile" href={href('/exams')}>
-          <h2>
+          <h3>
             <Icon name="refresh" /> Today’s set
-          </h2>
+          </h3>
           <span className="muted">{daily ? `${dailyDone}/${daily.items.length} done` : '5 questions picked for you'}</span>
         </a>
         <a className="card tile" href={href('/review')}>
-          <h2>
+          <h3>
             <Icon name="review" /> Review
-          </h2>
+          </h3>
           <span className="muted">{due ? `${due} due now` : 'Nothing due'}</span>
         </a>
         <a className="card tile" href={href('/learn')}>
-          <h2>
+          <h3>
             <Icon name="bulb" /> Learn a topic
-          </h2>
+          </h3>
           <span className="muted">{helpTopics ? `${helpTopics} topic${helpTopics === 1 ? '' : 's'} you need help with` : 'Notes, worked examples and videos for every topic'}</span>
         </a>
-        <a className="card tile" href={href('/speed')}>
-          <h2>
-            <Icon name="bolt" /> Speed round
-          </h2>
-          <span className="muted">{speedBest ? `Best ${speedBest} — can you beat it?` : '10 quick questions in 5 minutes'}</span>
-        </a>
-        <a className="card tile" href={href('/stretch')}>
-          <h2>
-            <Icon name="mountain" /> A* stretch
-          </h2>
-          <span className="muted">Harder questions that mix several topics</span>
-        </a>
         <a className="card tile" href={href('/saved')}>
-          <h2>
+          <h3>
             <Icon name="star" /> Saved for later
-          </h2>
+          </h3>
           <span className="muted">{savedCount ? `${savedCount} question${savedCount === 1 ? '' : 's'} saved` : 'Star any question to come back to it'}</span>
         </a>
         <a className="card tile" href={href('/mistakes')}>
-          <h2>
+          <h3>
             <Icon name="x" /> Mistake notebook
-          </h2>
+          </h3>
           <span className="muted">{openMistakes ? `${openMistakes} to put right` : 'Questions you dropped marks on'}</span>
         </a>
         <a className="card tile" href={href('/topics')}>
-          <h2>
+          <h3>
             <Icon name="book" /> Topic practice
-          </h2>
+          </h3>
           <span className="muted">Choose a textbook chapter or spec point</span>
         </a>
         <div className="card tile">
-          <h2>
+          <h3>
             <Icon name="grid" /> Mixed practice
-          </h2>
+          </h3>
           <span className="row-wrap small">
             <a href={href('/practice', { mixed: 1 })}>Everything</a>
             <a href={href('/practice', { mixed: 1, st: 'Pure' })}>Pure</a>
@@ -280,46 +322,64 @@ export function Home() {
             <a href={href('/practice', { mixed: 1, mm: 10 })}>Long questions</a>
           </span>
         </div>
+      </div>
+      <h2 className="home-section">Exams and challenges</h2>
+      <div className="grid">
         <a className="card tile" href={href('/exams')}>
-          <h2>
+          <h3>
             <Icon name="clock" /> Mock papers
-          </h2>
-          <span className="muted">Papers 1, 2 and 3 under timed conditions</span>
-        </a>
-        <a className="card tile" href={href('/progress')}>
-          <h2>
-            <Icon name="chart" /> Progress
-          </h2>
-          <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
+          </h3>
+          <span className="muted">{settings.course === 'as' ? 'AS Papers 1 and 2 under timed conditions' : 'Papers 1, 2 and 3 under timed conditions'}</span>
         </a>
         <a className="card tile" href={href('/past-papers')}>
-          <h2>
+          <h3>
             <Icon name="scheme" /> Past papers
-          </h2>
+          </h3>
           <span className="muted">Every A level and AS paper 2018–2025 by question, with practice on each topic</span>
         </a>
+        <a className="card tile" href={href('/speed')}>
+          <h3>
+            <Icon name="bolt" /> Speed round
+          </h3>
+          <span className="muted">{speedBest ? `Best ${speedBest} — can you beat it?` : '10 quick questions in 5 minutes'}</span>
+        </a>
+        <a className="card tile" href={href('/stretch')}>
+          <h3>
+            <Icon name="mountain" /> A* stretch
+          </h3>
+          <span className="muted">Harder questions that mix several topics</span>
+        </a>
+      </div>
+      <h2 className="home-section">Progress and tools</h2>
+      <div className="grid">
+        <a className="card tile" href={href('/progress')}>
+          <h3>
+            <Icon name="chart" /> Progress
+          </h3>
+          <span className="muted">{attempts.length ? `${attempts.length} questions · ${marks ? Math.round((100 * got) / marks) : 0}% of marks` : 'No attempts yet'}</span>
+        </a>
         <a className="card tile" href={href('/flashcards')}>
-          <h2>
+          <h3>
             <Icon name="bulb" /> Flashcards
-          </h2>
+          </h3>
           <span className="muted">{flashDue ? `${flashDue} due now` : 'Formulae you must learn (not in the booklet)'}</span>
         </a>
         <a className="card tile" href={href('/graphs')}>
-          <h2>
+          <h3>
             <Icon name="graph" /> Graph plotter
-          </h2>
+          </h3>
           <span className="muted">Plot functions and slide through transformations</span>
         </a>
         <a className="card tile" href={href('/data')}>
-          <h2>
+          <h3>
             <Icon name="graph" /> Large data set
-          </h2>
+          </h3>
           <span className="muted">Explore the weather data for Paper 3: summaries, box plots, scatter, sampling</span>
         </a>
         <a className="card tile" href={href('/reference')}>
-          <h2>
+          <h3>
             <Icon name="scheme" /> Formula booklet
-          </h2>
+          </h3>
           <span className="muted">The exam booklet, what to learn, statistical tables and how marking works</span>
         </a>
       </div>

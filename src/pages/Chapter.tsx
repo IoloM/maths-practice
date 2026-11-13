@@ -5,7 +5,7 @@ import { CHAPTER_BY_REF, BOOK_NAMES } from '../content/chapters';
 import { href, navigate } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
-import { Difficulty, RagBadge, ErrorBox } from '../components/bits';
+import { Difficulty, RagBadge, ErrorBox, plural } from '../components/bits';
 import { Icon } from '../components/Icon';
 import { TopicFlagButtons } from '../components/TopicFlag';
 
@@ -60,7 +60,7 @@ export function ChapterPage({ chapter: chRef }: { chapter: string }) {
         </label>
         <span className="spacer" />
         <button className="btn btn-primary" disabled={!filtered.length} onClick={() => navigate('/practice', { c: chRef, dmin, dmax })}>
-          <Icon name="play" /> Practise {filtered.length} question types
+          <Icon name="play" /> Practise {plural(filtered.length, 'question type')}
         </button>
       </div>
       {sections.map((sec) => {

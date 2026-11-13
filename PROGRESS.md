@@ -370,3 +370,25 @@ axe on 13 views in light and dark) — all green.
   answer, setting and preference came across to iolomaths.co.uk and the old address then forwards.
   Guests (not signed in) have nothing saved, so there is nothing to move for them.
 
+## Phase 18 — Polish: ten improvements ✅ (13 Nov 2026)
+
+- **Home page in sections** (Practise · Exams and challenges · Progress and tools) instead of one
+  long grid of tiles; tiles lift slightly on hover; the title follows the course (AS or A level).
+- **Your week** on the home page: questions, share of marks (up or down on last week), minutes
+  practised, and this week's best and weakest topics (`src/lib/week.ts`).
+- **Progress rings** on the Topics page: each chapter's mastery as a red/amber/green ring with
+  the percentage, instead of a text badge.
+- **Plurals**: "1 question type", not "1 question types" (`plural` in `components/bits.tsx`).
+- **Full marks** gets a small celebration ("Full marks, no hints!"), still when reduced motion
+  is on, just without the animation.
+- **Light and dark mode** checked on the new pieces; ring, timer and badge colours use the theme
+  tokens.
+- **A timer on each practice question**: time so far against the exam aim (it turns amber when
+  you go over, pauses when you switch away, and shows how long it took once marked).
+- **Keyboard shortcuts** in practice: H for a hint, N for the next question once marked,
+  ? for the list (Enter already checks an answer; / searches). Hidden on touch screens.
+- **Session summary**: a running total while you practise ("This session: 5 questions · 18/24
+  marks · 21 min") and a summary at the end with the questions worth another go.
+- **Printable progress report**: Progress → "Print or save as PDF", with your name, the date and
+  the course at the top; cards don't split across pages.
+

@@ -5,7 +5,7 @@ import { SPEC } from '../content/spec';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
 import { groupBy, mastery } from '../progress/mastery';
-import { RagBadge } from '../components/bits';
+import { MasteryRing, RagBadge, plural } from '../components/bits';
 import { FlagChip } from '../components/TopicFlag';
 import { useTopicMarks } from '../lib/topics';
 import { useSettings } from '../lib/settings';
@@ -53,10 +53,10 @@ export function Topics() {
                     </span>
                     <h3>{c.title}</h3>
                     <span className="row small">
-                      <span className="muted">{n} question types</span>
+                      <span className="muted">{plural(n, 'question type')}</span>
                       <FlagChip flag={marks?.[c.ref]?.flag} />
                       <span className="spacer" />
-                      <RagBadge mastery={mastery(byCh.get(c.ref) ?? [])} />
+                      <MasteryRing mastery={mastery(byCh.get(c.ref) ?? [])} />
                     </span>
                   </a>
                 ) : (

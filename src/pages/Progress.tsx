@@ -20,6 +20,7 @@ import { finishedPapers, lossesByFamily, lossesByReason, paperScore, usePaperRes
 import { PAPER_TITLES, PAST_PAPER_BY_ID, isAS, isASPaper } from '../content/past-papers';
 import { useSettings } from '../lib/settings';
 import { isASMock } from '../lib/course';
+import { currentLogin } from '../lib/logins';
 import { BANK } from '../content/bank-meta';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
@@ -220,7 +221,16 @@ export function Progress() {
   const finishedSets = sets.filter((s) => s.status === 'finished' && s.kind !== 'daily').sort((a, b) => (b.finishedAt ?? 0) - (a.finishedAt ?? 0));
   return (
     <div className="stack">
-      <h1>Progress</h1>
+      <div className="page-head">
+        <h1>Progress</h1>
+        <span className="spacer" />
+        <button className="btn btn-small no-print" onClick={() => window.print()}>
+          <Icon name="download" /> Print or save as PDF
+        </button>
+      </div>
+      <p className="print-only small">
+        Maths Practice progress report{currentLogin()?.name ? ` for ${currentLogin()!.name}` : ''} · {new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })} · {settings.course === 'as' ? 'AS Mathematics (8MA0)' : 'A level Mathematics (9MA0)'} · iolomaths.co.uk
+      </p>
       <div className="kpis">
         <div className="card kpi">
           <b>{attempts.length}</b>

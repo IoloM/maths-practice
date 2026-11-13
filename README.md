@@ -20,7 +20,10 @@ worked solutions and mark schemes.
 - **AS mode** (Settings → Your course): Year 1 topics only, AS mocks, AS exam dates and a predicted
   AS grade on 8MA0 boundaries.
 - Progress dashboard (red/amber/green by chapter and spec point, trend, time per mark, frequent
-  mistakes) and a predicted grade from mock papers using recent grade boundaries.
+  mistakes), a predicted grade from mock papers using recent grade boundaries, a weekly summary
+  on the home page, and a printable progress report.
+- In practice: a timer against the exam aim, keyboard shortcuts (H hint, N next, ? help), a
+  running session total and an end-of-session summary.
 - Flashcards (formulae to learn and key facts, spaced repetition), formulae and statistical tables
   generated in the app, and calculator tips.
 - Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.

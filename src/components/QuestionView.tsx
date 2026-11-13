@@ -48,6 +48,16 @@ interface Props {
   nextLabel?: string;
 }
 
+/** m:ss for the question timer. */
+const mmss = (ms: number) => {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+};
+
+/** Typing in a field (or the maths keyboard): keyboard shortcuts stay out of the way. */
+const typing = (t: EventTarget | null) =>
+  t instanceof HTMLElement && !!t.closest('input:not([type="radio"]):not([type="checkbox"]):not([type="button"]):not([type="submit"]), textarea, select, [contenteditable="true"], math-field');
+
 /** Help counted like hints: one step of the worked solution is a lot of help, two or more the most. */
 const helpUsed = (p: PartState) => Math.max(p.hints, p.steps ? Math.min(3, p.steps + 1) : 0);
 
@@ -107,6 +117,14 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
 
   // autosave draft
   const done = attemptId !== null;
+  // the clock on the question (practice only; sets have their own): active time, paused when you switch away
+  const [, setTick] = useState(0);
+  const tookMs = useRef<number | null>(null);
+  useEffect(() => {
+    if (done || setId) return;
+    const t = setInterval(() => setTick((x) => x + 1), 1000);
+    return () => clearInterval(t);
+  }, [done, setId]);
   useEffect(() => {
     if (!loaded.current || done) return;
     const t = setTimeout(async () => {
@@ -204,6 +222,7 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
     if (!allDone || attemptId !== null || saving.current) return;
     saving.current = true;
     const a = buildAttempt(parts, gaveUp);
+    tookMs.current = a.durationMs;
     recordAttempt(a, meta.time).then(async (id) => {
       setAttemptId(id);
       const store = await getStore();
@@ -247,6 +266,31 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
   };
 
   const autoScore = parts.reduce((s, p) => s + (p.result?.score ?? 0), 0);
+  // keyboard: H for a hint on the first part not yet checked, N for the next question once it's done, ? for help
+  const [keysHelp, setKeysHelp] = useState(false);
+  const live = useRef({ parts, allDone, onNext });
+  live.current = { parts, allDone, onNext };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || typing(e.target)) return;
+      const { parts: ps, allDone: fin, onNext: next } = live.current;
+      if ((e.key === 'n' || e.key === 'N') && next && fin) {
+        e.preventDefault();
+        next();
+      } else if (e.key === 'h' || e.key === 'H') {
+        const i = ps.findIndex((p) => !p.result && p.hints < 3);
+        if (i >= 0) {
+          e.preventDefault();
+          setParts((xs) => xs.map((x, j) => (j === i ? { ...x, hints: x.hints + 1 } : x)));
+        }
+      } else if (e.key === '?') {
+        e.preventDefault();
+        setKeysHelp((v) => !v);
+      } else if (e.key === 'Escape') setKeysHelp(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const selfTotal = parts.reduce((s, p, i) => s + Math.max(p.result?.score ?? 0, selfScore(inst.parts[i].scheme, p.ticks, inst.parts[i].answer.type === 'self')), 0);
 
   const singleLabel = inst.parts.length === 1 && inst.parts[0].label === '';
@@ -266,7 +310,13 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
           <Difficulty d={meta.difficulty} /> <span className="sr-only">Difficulty {meta.difficulty} of 5</span>
         </span>
         <span className="chip">{total} marks</span>
-        <span className="chip">~{meta.time} min</span>
+        {setId ? (
+          <span className="chip">~{meta.time} min</span>
+        ) : (
+          <span className={`chip q-timer ${!done && activeTime() > meta.time * 60_000 ? 'over' : ''}`} title="Time on this question (it pauses when you switch away)">
+            <Icon name="clock" /> {done && tookMs.current !== null ? `took ${mmss(tookMs.current)}` : mmss(activeTime())} · aim ~{meta.time} min
+          </span>
+        )}
         <span className="spacer" />
         <button className="btn btn-small btn-ghost" onClick={() => setAnnotating((a) => !a)} aria-pressed={annotating} title="Write on the question">
           <Icon name="annotate" /> {annotating ? 'Stop annotating' : 'Annotate'}
@@ -481,18 +531,44 @@ function QuestionViewInner({ inst, meta, number = 1, mode, setId, onFinished, on
                 {selfTotal > autoScore ? ` · with self-marking ${selfTotal}/${total}` : ''}
               </span>
             )}
+            {allDone && !gaveUp && total > 0 && selfTotal === total && (
+              <span className="full-marks" role="status">
+                <Icon name="star" /> Full marks{parts.every((p) => helpUsed(p) === 0) ? ', no hints' : ''}!
+              </span>
+            )}
             {(gaveUp || (allDone && selfTotal < total)) && chapter && (
               <a className="btn btn-small btn-ghost" href={href(`/learn/${chapter.ref}`)} onClick={() => void setFlag(chapter.ref, 'help')}>
                 <Icon name="info" /> Need help with {chapter.title}?
               </a>
             )}
             <span className="spacer" />
+            <button className="btn btn-small btn-ghost keys-hint" onClick={() => setKeysHelp((v) => !v)} aria-expanded={keysHelp}>
+              Keyboard shortcuts
+            </button>
             {onNext && (
               <button className={`btn ${allDone ? 'btn-primary' : ''}`} onClick={onNext}>
                 {allDone ? nextLabel : 'Skip'} <Icon name="next" />
               </button>
             )}
           </div>
+          {keysHelp && (
+            <div className="card keys-help" role="region" aria-label="Keyboard shortcuts">
+              <ul className="small">
+                <li>
+                  <kbd>Enter</kbd> in an answer box: check it
+                </li>
+                <li>
+                  <kbd>H</kbd>: a hint on the first part you haven’t checked
+                </li>
+                <li>
+                  <kbd>N</kbd>: next question, once this one is marked
+                </li>
+                <li>
+                  <kbd>/</kbd>: search · <kbd>?</kbd>: show or hide this list
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
         {workingCol}
       </div>

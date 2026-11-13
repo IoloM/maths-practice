@@ -492,12 +492,83 @@ label.check input {
   border-left: 5px solid var(--accent);
   min-height: 96px;
 }
+.tile {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
 .tile:hover {
   border-color: var(--accent);
 }
-.tile h2 {
+a.tile:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.tile h2,
+.tile h3 {
   margin: 0;
   font-size: 1.05rem;
+}
+.ring {
+  display: inline-flex;
+  flex: none;
+}
+.ring-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+}
+.ring-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+.ring-r .ring-fill {
+  stroke: var(--bad);
+}
+.ring-a .ring-fill {
+  stroke: var(--warn);
+}
+.ring-g .ring-fill {
+  stroke: var(--good);
+}
+.ring-text {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--text-2);
+  font-family: var(--sans);
+}
+.home-section {
+  margin: 8px 0 -4px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.week-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 8px 0;
+}
+.week-kpis > div {
+  display: flex;
+  flex-direction: column;
+}
+.week-kpis b {
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+.week-change.up {
+  color: var(--good);
+  font-weight: 600;
+}
+.week-change.down {
+  color: var(--bad);
+  font-weight: 600;
 }
 .stack {
   display: flex;
@@ -1063,6 +1134,94 @@ dialog.sheet::backdrop {
   font-weight: 700;
   font-family: var(--serif);
 }
+.session-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+}
+.q-timer {
+  font-variant-numeric: tabular-nums;
+}
+.q-timer.over {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.full-marks {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--good-soft);
+  color: var(--good);
+  font-weight: 700;
+  animation: full-marks-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.full-marks::before,
+.full-marks::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid var(--good);
+  opacity: 0;
+  animation: full-marks-ring 0.9s ease-out 0.1s;
+}
+.full-marks::after {
+  animation-delay: 0.3s;
+}
+@keyframes full-marks-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes full-marks-ring {
+  from {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+.keys-help ul {
+  margin: 0;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 4px;
+}
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 5px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-family: var(--sans);
+  font-size: 0.85em;
+  text-align: center;
+}
+/* touch screens rarely have a keyboard */
+@media (hover: none) {
+  .keys-hint {
+    display: none;
+  }
+}
 .q-footer {
   display: flex;
   gap: 8px;
@@ -1267,6 +1426,30 @@ dialog.sheet::backdrop {
   * {
     animation: none !important;
     transition: none !important;
+  }
+}
+/* printed progress report: a heading line, cards kept whole, no buttons */
+.print-only {
+  display: none;
+}
+@media print {
+  .print-only {
+    display: block;
+  }
+  body {
+    background: #fff;
+  }
+  .card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  .kpis {
+    break-inside: avoid;
+  }
+  button,
+  details > summary::marker {
+    display: none !important;
   }
 }
 
