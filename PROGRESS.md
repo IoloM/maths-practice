@@ -412,3 +412,22 @@ axe on 13 views in light and dark) — all green.
 - pdf.js (`pdfjs-dist` 6.3.289, legacy build) draws the pages, loaded only on these pages; its
   worker is cached for offline use (`.mjs` added to the offline cache).
 
+## Phase 20 — Booklet questions marked and counted like the rest ✅ (14 Nov 2026)
+
+- Each booklet question now has its **parts and marks** (from the worked solutions, e.g. (a) [3],
+  (b) [3]; 200 with parts, 47 single-part, 3 adapted questions without published marks): an
+  answer box per part, then **"Mark my answers"** shows the worked solution and a row of mark
+  buttons for each part (0 to that part's marks) and "Full marks". Change any mark later to add
+  method marks you missed; the total, a full-marks badge and "Counted in your progress" show.
+- **Marks count like any other question**: once every part has a mark, it is recorded as an
+  attempt (`mode: 'booklet'`, id `astbury:<question>`) in the matching textbook chapter and app
+  topic (`family` per section in `content/astbury.ts`). So it counts towards questions attempted
+  and % of marks, chapter and spec-point mastery (Topics rings, at 80% weight, as for every
+  self-marked question), spaced review (the topic's review card), today's goal, streaks, your week,
+  badges and the group report. Changing a mark updates that attempt rather than adding another.
+- Recent questions and the mistake notebook link back to the booklet question
+  (`lib/question-link.ts`); "put mistakes right" practises the app's own questions.
+- The app can't check the booklet's answers itself: its final answers are printed maths, and
+  reading them out of the PDF scrambles fractions and powers. So, like the app's proof questions,
+  you mark them against the worked solution.
+

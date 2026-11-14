@@ -21,6 +21,7 @@ import { PAPER_TITLES, PAST_PAPER_BY_ID, isAS, isASPaper } from '../content/past
 import { useSettings } from '../lib/settings';
 import { isASMock } from '../lib/course';
 import { currentLogin } from '../lib/logins';
+import { questionHref, questionTitle } from '../lib/question-link';
 import { BANK } from '../content/bank-meta';
 
 const RAG_VAR: Record<string, string> = { r: 'var(--bad)', a: 'var(--warn)', g: 'var(--good)', none: 'var(--border-strong)' };
@@ -380,9 +381,9 @@ export function Progress() {
         <ul className="list">
           {recent.map((a) => (
             <li key={a.id}>
-              <a className="list-link" href={href(`/q/${a.templateId}/${a.seed}`)}>
+              <a className="list-link" href={questionHref(a.templateId, a.seed)}>
                 <span style={{ flex: 1 }}>
-                  {ENTRY_BY_ID.get(a.templateId)?.title ?? a.templateId}
+                  {questionTitle(a.templateId)}
                   <span className="muted small">
                     {' '}
                     · {CHAPTER_BY_REF.get(a.chapter as never)?.title} · {new Date(a.finishedAt).toLocaleDateString()}

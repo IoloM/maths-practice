@@ -13,7 +13,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { BOOKLET, BOOKLET_PAGES, BOOKLET_SECTION, SOLUTIONS_PAGES, type BookletQuestion, type BookletSection } from '../content/astbury';
 import { loadBookletFile, removeBookletFile, saveBookletFile, type BookletFile, type StoredFile } from '../lib/booklet-files';
-import { hasWorking, sectionProgress, updateBookletWork, useBookletWork, type BookletWork, type BookletWorks, type Check } from '../lib/booklet';
+import { fullyMarked, hasWorking, recordBookletMarks, sectionProgress, totalMarks, updateBookletWork, useBookletWork, type BookletWork, type BookletWorks, type Check } from '../lib/booklet';
+import { useActiveTime } from '../lib/attempt';
+import { CHAPTER_BY_REF } from '../content/chapters';
 import { openPdf, renderPage } from '../lib/pdf';
 import { useSettings } from '../lib/settings';
 import { currentLogin } from '../lib/logins';
@@ -293,7 +295,13 @@ function SectionPage({ s }: { s: BookletSection }) {
                   {q.source}
                   {q.marks ? <span className="muted small"> · {q.marks} marks</span> : null}
                 </span>
-                {w?.check && <span className={`chip check-${w.check}`}>{CHECK_TEXT[w.check]}</span>}
+                {q.marks && fullyMarked(q, w) ? (
+                  <span className={`chip check-${w?.check ?? 'part'}`}>
+                    {totalMarks(q, w)}/{q.marks}
+                  </span>
+                ) : w?.check ? (
+                  <span className={`chip check-${w.check}`}>{CHECK_TEXT[w.check]}</span>
+                ) : null}
                 <span className={`chip ${w?.done ? 'chip-accent' : ''}`}>{w?.done ? '✓ Done' : w && (w.answer.trim() || hasWorking(w)) ? 'Started' : 'To do'}</span>
               </a>
             </li>
@@ -313,12 +321,17 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
   const works = useBookletWork();
   const { settings } = useSettings();
   const [w, setW] = useState<BookletWork | null>(null);
-  const [showSol, setShowSol] = useState(false);
+  const [marking, setMarking] = useState(false);
   const save = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pending = useRef<BookletWork | null>(null);
+  const cur = useRef<BookletWork | null>(null);
+  const activeTime = useActiveTime();
   // take the saved record once, then this page owns it (saved as you type, half a second later)
   useEffect(() => {
-    if (works && !w) setW(works[q.id] ?? { answer: '', updatedAt: 0 });
+    if (works && !w) {
+      cur.current = works[q.id] ?? { answer: '', updatedAt: 0 };
+      setW(cur.current);
+    }
   }, [works, w, q.id]);
   // leaving the page saves anything not yet saved
   useEffect(
@@ -330,7 +343,8 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
   );
   if (!w || b.questions === undefined) return <Loading />;
   const change = (p: Partial<BookletWork>, now = false) => {
-    const next = { ...w, ...p };
+    const next = { ...cur.current!, ...p };
+    cur.current = next;
     setW(next);
     clearTimeout(save.current);
     pending.current = next;
@@ -342,6 +356,16 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
     else save.current = setTimeout(go, 500);
   };
   const working: Working = w.working ?? emptyWorking(settings.paper, settings.workingMode);
+  const labelled = q.parts.some((p) => p.label !== '');
+  const marked = fullyMarked(q, w);
+  // marks for every part: record it as an attempt (counted in progress, topics and review), and it's done
+  const giveMarks = (marks: Record<string, number>) => {
+    change({ marks }, true);
+    const now = cur.current!;
+    if (!fullyMarked(q, now)) return;
+    const total = totalMarks(q, now);
+    void recordBookletMarks(s, q, now, Math.round(activeTime())).then((at) => change({ attemptAt: at, done: now.done ?? Date.now(), check: total === q.marks ? 'right' : total === 0 ? 'wrong' : 'part' }, true));
+  };
   const prev = s.questions[q.n - 2],
     next = s.questions[q.n];
   return (
@@ -369,31 +393,48 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
       )}
       <section className="card stack" aria-labelledby="ans-h">
         <h2 id="ans-h" className="h3">
-          Your answer
+          {labelled ? 'Your answers' : 'Your answer'}
         </h2>
-        <textarea className="booklet-answer" rows={3} value={w.answer} placeholder="Final answers for each part, e.g. (a) x = 3, (b) 16 − 4√5" aria-labelledby="ans-h" onChange={(e) => change({ answer: e.target.value })} />
+        {labelled ? (
+          <div className="stack" style={{ gap: 8 }}>
+            {q.parts.map((p) => (
+              <label key={p.label} className="row booklet-part">
+                <span className="chip">({p.label})</span>
+                <input type="text" value={w.answers?.[p.label] ?? ''} placeholder="Final answer" aria-label={`Answer to part (${p.label})`} onChange={(e) => change({ answers: { ...w.answers, [p.label]: e.target.value } })} />
+                <span className="muted small">[{p.marks}]</span>
+              </label>
+            ))}
+          </div>
+        ) : (
+          <textarea className="booklet-answer" rows={2} value={w.answer} placeholder="Your final answer" aria-labelledby="ans-h" onChange={(e) => change({ answer: e.target.value })} />
+        )}
         <h3 className="h3" style={{ margin: 0 }}>
           Your working
         </h3>
         <WorkingArea working={working} onChange={(x) => change({ working: x })} exportName={`astbury-${q.id.replace(/[:.]/g, '-')}`} />
         <div className="btn-row">
-          <button className={`btn ${w.done ? '' : 'btn-primary'}`} aria-pressed={!!w.done} onClick={() => change({ done: w.done ? undefined : Date.now() }, true)}>
-            <Icon name="check" /> {w.done ? `Done ${day(w.done)} (undo)` : 'Mark as done'}
+          <button className={`btn ${marking ? '' : 'btn-primary'}`} aria-expanded={marking} onClick={() => setMarking((x) => !x)}>
+            <Icon name="check" /> {marking ? 'Hide the marking' : marked ? 'Change my marks' : 'Mark my answers'}
           </button>
-          <button className="btn" aria-expanded={showSol} onClick={() => setShowSol((x) => !x)}>
-            {showSol ? 'Hide the worked solution' : 'Check against the worked solution'}
+          <button className="btn" aria-pressed={!!w.done} onClick={() => change({ done: w.done ? undefined : Date.now() }, true)}>
+            {w.done ? `Done ${day(w.done)} (undo)` : 'Mark as done without marking'}
           </button>
+          {marked && q.marks ? (
+            <span className="score-pill" aria-live="polite">
+              {totalMarks(q, w)}/{q.marks}
+            </span>
+          ) : null}
         </div>
       </section>
-      {showSol && (
+      {marking && (
         <section className="card stack" aria-labelledby="sol-h">
           <h2 id="sol-h" className="h3">
-            Worked solution
+            Mark it against the worked solution
           </h2>
           {b.solutions ? (
             <>
               <p className="small muted" style={{ margin: 0 }}>
-                Question {q.n} starts on this page (look for “Question {q.n}”).
+                Question {q.n} starts on this page (look for “Question {q.n}”). Final answers are in the green boxes; the yellow boxes say what the mark scheme insists on.
               </p>
               <PdfPages doc={b.solutions} from={q.solPage} count={q.solPages} label={`Worked solution to question ${q.n}`} trim={false} />
             </>
@@ -402,23 +443,56 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
               Load the worked solutions PDF on the <a href={href('/booklet')}>booklet page</a> to see it here.
             </p>
           )}
-          <div className="stack" style={{ gap: 6 }}>
-            <span className="small">How did you do?</span>
-            <div className="btn-row" role="group" aria-label="How did you do?">
-              {(Object.keys(CHECK_TEXT) as Check[]).map((c) => (
-                <button key={c} className={`btn btn-small why ${w.check === c ? 'on' : ''}`} aria-pressed={w.check === c} onClick={() => change({ check: w.check === c ? undefined : c }, true)}>
-                  {CHECK_TEXT[c]}
-                </button>
+          {q.marks ? (
+            <div className="stack" style={{ gap: 10 }}>
+              <p className="small" style={{ margin: 0 }}>
+                Give yourself the marks for each part: the method marks for correct working even if the final answer went wrong, and the accuracy marks only for answers that match.
+              </p>
+              {q.parts.map((p) => (
+                <div key={p.label} className="booklet-mark">
+                  <span>
+                    {p.label ? <b>({p.label})</b> : <b>Marks</b>}
+                    {w.answers?.[p.label] ? <span className="muted small"> · you wrote {w.answers[p.label]}</span> : null}
+                  </span>
+                  <div className="btn-row" role="group" aria-label={p.label ? `Marks for part (${p.label})` : 'Marks for this question'}>
+                    {Array.from({ length: p.marks + 1 }, (_, m) => (
+                      <button key={m} className={`btn btn-small why ${w.marks?.[p.label] === m ? 'on' : ''}`} aria-pressed={w.marks?.[p.label] === m} onClick={() => giveMarks({ ...w.marks, [p.label]: m })}>
+                        {m}
+                      </button>
+                    ))}
+                    <span className="muted small">/ {p.marks}</span>
+                  </div>
+                </div>
               ))}
+              <div className="btn-row">
+                <button className="btn btn-small" onClick={() => giveMarks(Object.fromEntries(q.parts.map((p) => [p.label, p.marks])))}>
+                  Full marks
+                </button>
+                {marked && (
+                  <span className="score-pill" aria-live="polite">
+                    Total: {totalMarks(q, w)}/{q.marks}
+                  </span>
+                )}
+                {marked && totalMarks(q, w) === q.marks && (
+                  <span className="full-marks" role="status">
+                    <Icon name="star" /> Full marks!
+                  </span>
+                )}
+              </div>
+              {marked && <p className="small muted" style={{ margin: 0 }}>Counted in your progress for {CHAPTER_BY_REF.get(s.chapter as never)?.title ?? s.chapter}, like any other question.</p>}
             </div>
-            {q.marks ? (
-              <label className="row small">
-                Your mark
-                <input type="number" inputMode="numeric" min={0} max={q.marks} value={w.score ?? ''} style={{ width: '5em' }} onChange={(e) => change({ score: e.target.value === '' ? undefined : Math.max(0, Math.min(q.marks!, Math.round(Number(e.target.value)))) }, true)} />
-                out of {q.marks}
-              </label>
-            ) : null}
-          </div>
+          ) : (
+            <div className="stack" style={{ gap: 6 }}>
+              <span className="small">This question was adapted, so it has no marks. How did you do?</span>
+              <div className="btn-row" role="group" aria-label="How did you do?">
+                {(Object.keys(CHECK_TEXT) as Check[]).map((c) => (
+                  <button key={c} className={`btn btn-small why ${w.check === c ? 'on' : ''}`} aria-pressed={w.check === c} onClick={() => change({ check: w.check === c ? undefined : c, done: w.done ?? Date.now() }, true)}>
+                    {CHECK_TEXT[c]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       )}
       <div className="btn-row">
@@ -477,8 +551,7 @@ function RecordQuestion({ q, w, doc }: { q: BookletQuestion; w?: BookletWork; do
         Question {q.n} <span className="muted small">· {q.source}</span>
         <span className="record-status">
           {w?.done ? `✓ Done ${day(w.done)}` : 'Not done'}
-          {w?.check ? ` · ${CHECK_TEXT[w.check]}` : ''}
-          {w?.score !== undefined && q.marks ? ` · ${w.score}/${q.marks}` : ''}
+          {q.marks && fullyMarked(q, w) ? ` · ${totalMarks(q, w)}/${q.marks} marks` : w?.check ? ` · ${CHECK_TEXT[w.check]}` : ''}
         </span>
       </h3>
       {doc && <PdfPages doc={doc} from={q.page} count={q.pages} label={`Question ${q.n} from the booklet`} />}
@@ -486,6 +559,21 @@ function RecordQuestion({ q, w, doc }: { q: BookletQuestion; w?: BookletWork; do
         <p className="record-answer">
           <b>Answer:</b> {w.answer}
         </p>
+      ) : null}
+      {q.parts.some((p) => p.label && (w?.answers?.[p.label] || w?.marks?.[p.label] !== undefined)) ? (
+        <ul className="record-parts">
+          {q.parts.map((p) => (
+            <li key={p.label}>
+              <b>({p.label})</b> {w?.answers?.[p.label] || <span className="muted">no answer written</span>}
+              {w?.marks?.[p.label] !== undefined ? (
+                <span className="muted">
+                  {' '}
+                  · {w.marks[p.label]}/{p.marks}
+                </span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
       ) : null}
       {w?.working?.text.trim() ? (
         <div className="record-typed">
@@ -602,7 +690,7 @@ function Record({ query }: { query: URLSearchParams }) {
             {s.ref} {s.title}
           </h2>
           {s.questions
-            .filter((q) => works[q.id]?.done || works[q.id]?.answer.trim() || hasWorking(works[q.id]))
+            .filter((q) => works[q.id]?.done || works[q.id]?.answer.trim() || Object.values(works[q.id]?.answers ?? {}).some((a) => a.trim()) || hasWorking(works[q.id]))
             .map((q) => (
               <RecordQuestion key={q.id} q={q} w={works[q.id]} doc={withQuestions ? (b.questions ?? null) : null} />
             ))}

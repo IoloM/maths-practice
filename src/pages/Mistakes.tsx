@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { ENTRY_BY_ID } from '../content/bank-meta';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { href } from '../router';
 import { useProgress } from '../lib/useProgress';
@@ -7,11 +6,12 @@ import { LOSS_REASONS, type LossReason } from '../lib/paper-results';
 import { isOpen, mistakesFrom, updateNote, useMistakeNotes, type Mistake, type MistakeNote } from '../lib/mistakes';
 import { Loading } from '../components/bits';
 import { Icon } from '../components/Icon';
+import { practiceHref, questionHref, questionTitle } from '../lib/question-link';
+import { isBookletAttempt } from '../lib/booklet';
 
 const when = (t: number) => new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
 
 function Entry({ m, note }: { m: Mistake; note: MistakeNote | undefined }) {
-  const meta = ENTRY_BY_ID.get(m.templateId);
   const ch = CHAPTER_BY_REF.get(m.chapter as never);
   const [text, setText] = useState(note?.note ?? '');
   const reasons = note?.reasons ?? [];
@@ -20,8 +20,8 @@ function Entry({ m, note }: { m: Mistake; note: MistakeNote | undefined }) {
   return (
     <li className={`card mistake ${fixed || note?.sorted ? 'fixed' : ''}`}>
       <div className="mistake-head">
-        <a href={href(`/q/${m.templateId}/${m.seed}`)}>
-          <b>{meta?.title ?? m.templateId}</b>
+        <a href={questionHref(m.templateId, m.seed)}>
+          <b>{questionTitle(m.templateId)}</b>
         </a>
         <span className="chip">{ch ? ch.title : m.chapter}</span>
         <span className="spacer" />
@@ -35,7 +35,7 @@ function Entry({ m, note }: { m: Mistake; note: MistakeNote | undefined }) {
           <Icon name="check" /> Put right on {when(m.fixedAt!)} with full marks
         </p>
       )}
-      <div className="why-chips" role="group" aria-label={`What went wrong on ${meta?.title ?? 'this question'}`}>
+      <div className="why-chips" role="group" aria-label={`What went wrong on ${questionTitle(m.templateId)}`}>
         {LOSS_REASONS.map((r) => (
           <button key={r.id} type="button" className={`btn btn-small why ${reasons.includes(r.id) ? 'on' : ''}`} aria-pressed={reasons.includes(r.id)} onClick={() => toggle(r.id)}>
             {r.label}
@@ -43,7 +43,7 @@ function Entry({ m, note }: { m: Mistake; note: MistakeNote | undefined }) {
         ))}
       </div>
       <label className="sr-only" htmlFor={`note-${m.key}`}>
-        Note to self about {meta?.title ?? 'this question'}
+        Note to self about {questionTitle(m.templateId)}
       </label>
       <textarea
         id={`note-${m.key}`}
@@ -56,10 +56,10 @@ function Entry({ m, note }: { m: Mistake; note: MistakeNote | undefined }) {
         onBlur={() => text !== (note?.note ?? '') && void updateNote(m.key, (n) => ({ ...n, note: text }))}
       />
       <div className="btn-row">
-        <a className="btn btn-small btn-primary" href={href(`/q/${m.templateId}/${m.seed}`)}>
+        <a className="btn btn-small btn-primary" href={questionHref(m.templateId, m.seed)}>
           Try it again
         </a>
-        <a className="btn btn-small" href={href('/practice', { t: m.templateId })}>
+        <a className="btn btn-small" href={practiceHref(m.templateId, m.chapter)}>
           A similar one
         </a>
         {!fixed && (
@@ -84,7 +84,8 @@ export function Mistakes() {
   const done = all.filter((m) => !isOpen(m, notes));
   const list = (show === 'open' ? open : done).filter((m) => !chapter || m.chapter === chapter);
   const chapters = [...new Set(all.map((m) => m.chapter))].sort();
-  const redo = [...new Set(open.filter((m) => !chapter || m.chapter === chapter).map((m) => m.templateId))].slice(0, 40);
+  // the booklet's questions aren't in the question bank, so "put them right" practises the bank's
+  const redo = [...new Set(open.filter((m) => (!chapter || m.chapter === chapter) && !isBookletAttempt(m.templateId)).map((m) => m.templateId))].slice(0, 40);
   return (
     <div className="stack">
       <div>

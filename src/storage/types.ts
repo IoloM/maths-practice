@@ -28,7 +28,7 @@ export interface PartAttempt {
   hints: number;
 }
 
-export type Mode = 'practice' | 'mixed' | 'review' | 'mock' | 'timed' | 'daily' | 'shared';
+export type Mode = 'practice' | 'mixed' | 'review' | 'mock' | 'timed' | 'daily' | 'shared' | 'booklet';
 
 export interface Attempt {
   id?: number;

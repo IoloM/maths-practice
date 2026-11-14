@@ -3,10 +3,10 @@
  * their own, admins see everyone's): recent questions, how each chapter is going, real past papers
  * and mock/timed sets. Built from their snapshot when they save; small, and no answers or working.
  */
+import { questionTitle } from './question-link';
 import type { Snapshot } from './sync-merge';
 import type { PaperResults } from './paper-results';
 import { paperScore } from './paper-results';
-import { ENTRY_BY_ID } from '../content/bank-meta';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { scoreOf } from '../progress/mastery';
 import { setMarks } from './sets';
@@ -49,7 +49,7 @@ export function buildActivity(s: Snapshot, papers: PaperResults, now = new Date(
       week: { questions: week.questions, marks: week.marks, scored: week.scored },
     },
     recent: attempts.slice(0, 30).map((a) => ({
-      title: ENTRY_BY_ID.get(a.templateId)?.title ?? a.templateId,
+      title: questionTitle(a.templateId),
       chapter: a.chapter,
       scored: scoreOf(a),
       marks: a.marks,

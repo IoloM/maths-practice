@@ -91,4 +91,6 @@ the bottom of each section.
 | The app keeps only where each question and solution is (page, marks, source) | Enough to show the right pages and count marks, with nothing of the booklet's content. |
 | Answers and typed working sync; handwriting stays on the device it was written on | Same rule as all working in the app (sync size); a newer copy without handwriting never wipes it. |
 | The record for Mr Astbury is a printable page (print or save as PDF) | Works offline on any device, and he can be sent the PDF however suits him. |
+| Booklet answers are self-marked part by part, then recorded as ordinary attempts | Automatic checking needs a reliable answer key; text read from the PDF scrambles maths. Self-marks are what the app already uses for proofs, and recording an attempt makes every total, ring, goal and review count them. |
+| Each booklet section counts towards one app topic (its `family`) | Progress, mastery and spaced review are kept by topic; a booklet question then nudges that topic's review. |
 

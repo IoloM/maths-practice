@@ -53,3 +53,39 @@ describe('booklet work', () => {
     expect(m.c.answer).toBe('other device');
   });
 });
+
+describe('booklet marks count like any other question', () => {
+  it('every section counts towards a real topic in the app, and parts add up to the marks', async () => {
+    const { BANK } = await import('../src/content/bank-meta');
+    const families = new Set(BANK.templates.map((t) => t.family));
+    for (const s of BOOKLET) {
+      expect(families.has(s.family), `${s.id} → ${s.family}`).toBe(true);
+      for (const q of s.questions) if (q.marks) expect(q.parts.reduce((t, p) => t + p.marks, 0), q.id).toBe(q.marks);
+    }
+    expect(BOOKLET_QUESTION.get('1.1:1')!.parts).toEqual([
+      { label: 'a', marks: 3 },
+      { label: 'b', marks: 3 },
+    ]);
+  });
+  it('makes an attempt with your marks as self-marks, in the right chapter and topic', async () => {
+    const { bookletAttempt, fullyMarked, totalMarks } = await import('../src/lib/booklet');
+    const { scoreOf } = await import('../src/progress/mastery');
+    const s = BOOKLET[0],
+      q = s.questions[0];
+    const w = { answer: '', answers: { a: '16 − 4√5', b: '4 − √5' }, marks: { a: 3, b: 1 }, updatedAt: 1 };
+    expect(fullyMarked(q, w)).toBe(true);
+    expect(fullyMarked(q, { ...w, marks: { a: 3 } })).toBe(false);
+    expect(totalMarks(q, w)).toBe(4);
+    const a = bookletAttempt(s, q, w, { startedAt: 1, finishedAt: 2, durationMs: 60_000 });
+    expect(a).toMatchObject({ templateId: 'astbury:1.1:1', chapter: 'P1.1', family: 'p1.1.indices', mode: 'booklet', marks: 6 });
+    expect(a.spec.length).toBeGreaterThan(0);
+    expect(scoreOf(a)).toBe(4);
+    expect(a.parts.map((p) => p.response)).toEqual(['16 − 4√5', '4 − √5']);
+  });
+  it('titles and links booklet questions, and bank questions as before', async () => {
+    const { questionHref, questionTitle } = await import('../src/lib/question-link');
+    expect(questionTitle('astbury:1.12-modelling:2')).toBe('Mr Astbury 1.12 Differentiation: Modelling: question 2');
+    expect(questionHref('astbury:1.12-modelling:2', 0)).toContain('#/booklet/1.12-modelling/2');
+    expect(questionHref('p1.1.simplify-index-laws', 7)).toContain('#/q/p1.1.simplify-index-laws/7');
+  });
+});

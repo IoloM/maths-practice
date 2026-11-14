@@ -6,14 +6,22 @@
  */
 import { useEffect, useState } from 'react';
 import { getStore } from '../storage';
-import type { Working } from '../storage/types';
-import { notifyProgress, onProgressChange } from '../progress/record';
-import type { BookletSection } from '../content/astbury';
+import type { Attempt, Working } from '../storage/types';
+import { notifyProgress, onProgressChange, recordAttempt, updateAttempt } from '../progress/record';
+import type { BookletQuestion, BookletSection } from '../content/astbury';
+import { BANK } from '../content/bank-meta';
 
 export type Check = 'right' | 'part' | 'wrong';
 
 export interface BookletWork {
+  /** the answer box (one box per question, or the answer to a question without parts) */
   answer: string;
+  /** answers by part label, for questions with parts */
+  answers?: Record<string, string>;
+  /** your marks by part label, against the worked solution */
+  marks?: Record<string, number>;
+  /** when the marks were recorded as an attempt (its finish time), so a change updates it */
+  attemptAt?: number;
   working?: Working;
   /** when you marked the question done (ms) */
   done?: number;
@@ -80,7 +88,10 @@ export function sectionProgress(works: BookletWorks, s: BookletSection): Section
       done++;
       finishedAt = Math.max(finishedAt, w.done);
     }
-    if (w?.score !== undefined && q.marks) {
+    if (q.marks && fullyMarked(q, w)) {
+      got += totalMarks(q, w);
+      of += q.marks;
+    } else if (w?.score !== undefined && q.marks) {
       got += w.score;
       of += q.marks;
     }
@@ -105,4 +116,55 @@ export function mergeBooklet(local: BookletWorks, remote: BookletWorks): Booklet
     out[id] = r.working || l?.working ? { ...r, working: { ...(r.working ?? l!.working!), strokes } } : r;
   }
   return out;
+}
+
+// ------------------------------------------------------------------ marking, and counting it like any other question
+
+/** Attempts from the booklet have ids like 'astbury:1.12-modelling:2' (no question bank entry). */
+export const BOOKLET_PREFIX = 'astbury:';
+export const isBookletAttempt = (templateId: string) => templateId.startsWith(BOOKLET_PREFIX);
+export const bookletQuestionId = (templateId: string) => templateId.slice(BOOKLET_PREFIX.length);
+
+/** Every part has a mark. */
+export const fullyMarked = (q: BookletQuestion, w: BookletWork | undefined) => !!q.marks && q.parts.length > 0 && q.parts.every((p) => w?.marks?.[p.label] !== undefined);
+
+export const totalMarks = (q: BookletQuestion, w: BookletWork | undefined) => q.parts.reduce((t, p) => t + (w?.marks?.[p.label] ?? 0), 0);
+
+/** The attempt this marking makes: it counts in progress, topics, review, goals and streaks like any question. */
+export function bookletAttempt(s: BookletSection, q: BookletQuestion, w: BookletWork, at: { startedAt: number; finishedAt: number; durationMs: number }): Attempt {
+  const entry = BANK.templates.find((e) => e.family === s.family);
+  return {
+    templateId: `${BOOKLET_PREFIX}${q.id}`,
+    seed: 0,
+    family: s.family,
+    spec: entry?.spec ?? [],
+    chapter: s.chapter,
+    difficulty: 3,
+    mode: 'booklet',
+    startedAt: at.startedAt,
+    finishedAt: at.finishedAt,
+    durationMs: at.durationMs,
+    marks: q.marks ?? 0,
+    // marked by you, like the app's self-marked questions: nothing auto-marked, your marks as self-marks
+    parts: q.parts.map((p) => ({ label: p.label, response: w.answers?.[p.label] ?? (p.label === '' ? w.answer : null), auto: { score: 0, max: p.marks, verdict: 'self' }, self: { score: w.marks?.[p.label] ?? 0, ticks: [] }, hints: 0 })),
+    gaveUp: false,
+    working: w.working,
+  };
+}
+
+/**
+ * Record the marks as an attempt (or update the one recorded before, so changing a mark doesn't
+ * count the question twice). Returns when it was recorded, to keep on the work record.
+ */
+export async function recordBookletMarks(s: BookletSection, q: BookletQuestion, w: BookletWork, durationMs: number): Promise<number> {
+  const store = await getStore();
+  const templateId = `${BOOKLET_PREFIX}${q.id}`;
+  const before = w.attemptAt ? (await store.attemptsFor(templateId)).find((a) => a.finishedAt === w.attemptAt) : undefined;
+  if (before) {
+    await updateAttempt({ ...bookletAttempt(s, q, w, { startedAt: before.startedAt, finishedAt: before.finishedAt, durationMs: before.durationMs }), id: before.id });
+    return before.finishedAt;
+  }
+  const now = Date.now();
+  await recordAttempt(bookletAttempt(s, q, w, { startedAt: now - durationMs, finishedAt: now, durationMs }), Math.max(1, Math.round((q.marks ?? 1) * 1.2)));
+  return now;
 }

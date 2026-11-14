@@ -2937,3 +2937,29 @@ svg.qr {
   height: 8px;
   accent-color: var(--good);
 }
+.booklet-part input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+}
+.booklet-part {
+  align-items: center;
+}
+.booklet-mark {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.record-parts {
+  margin: 6px 0 0;
+  padding-left: 1.2em;
+}
