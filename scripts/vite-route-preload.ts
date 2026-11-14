@@ -18,6 +18,7 @@ const PAGES: Record<string, string> = {
   reference: 'src/pages/Reference.tsx',
   flashcards: 'src/pages/Flashcards.tsx',
   'past-papers': 'src/pages/PastPapers.tsx',
+  booklet: 'src/pages/Booklet.tsx',
   settings: 'src/pages/Settings.tsx',
   print: 'src/pages/PrintSet.tsx',
   account: 'src/pages/Logins.tsx',

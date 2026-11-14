@@ -83,3 +83,12 @@ the bottom of each section.
 | AS mocks and AS papers only count towards the AS prediction, and A level ones towards the A level prediction | Each is measured against its own boundaries. |
 | Older series' boundaries grade a past paper from that series but are left out of predictions | 2018–2022 grading was unusual (small first entries, pandemic years); recent years predict better. |
 
+## Mr Astbury's booklet
+
+| Decision | Why |
+|---|---|
+| The student loads their own copy of the PDFs on each device; the site never contains them | The booklet is Mr Astbury's (and the questions are exam boards'); the app and its repository are public. Same approach as the large data set. |
+| The app keeps only where each question and solution is (page, marks, source) | Enough to show the right pages and count marks, with nothing of the booklet's content. |
+| Answers and typed working sync; handwriting stays on the device it was written on | Same rule as all working in the app (sync size); a newer copy without handwriting never wipes it. |
+| The record for Mr Astbury is a printable page (print or save as PDF) | Works offline on any device, and he can be sent the PDF however suits him. |
+

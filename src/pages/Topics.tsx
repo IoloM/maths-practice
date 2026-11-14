@@ -28,6 +28,9 @@ export function Topics() {
         <a className="btn btn-small" href={href('/learn')}>
           Learn: notes and videos
         </a>
+        <a className="btn btn-small" href={href('/booklet')}>
+          Mr Astbury’s booklet
+        </a>
         <span className="spacer" />
         <div className="working-tabs" role="tablist" aria-label="Browse by" style={{ border: 'none' }}>
           <button role="tab" aria-selected={view === 'chapters'} onClick={() => setView('chapters')}>

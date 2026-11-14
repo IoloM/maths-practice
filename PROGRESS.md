@@ -392,3 +392,23 @@ axe on 13 views in light and dark) — all green.
 - **Printable progress report**: Progress → "Print or save as PDF", with your name, the date and
   the course at the top; cards don't split across pages.
 
+## Phase 19 — Mr Astbury's booklet ✅ (14 Nov 2026)
+
+- **`#/booklet`**: Mr Astbury's *A Level Exam Qs Series – Pure* (version 3, 430 pages, 48 sections,
+  250 questions) worked through in the app, chapter by chapter. Each question shows its page from
+  the booklet (the ruled writing space trimmed off), with a box for your answer and the usual
+  handwriting / typed working area, saved as you go; "Mark as done"; and the matching page of the
+  *Full Worked Solutions* (146 pages) to check against, with "Right / Partly right / Not right
+  yet" and your mark out of the question's total.
+- **Record for Mr Astbury** (`#/booklet/record`): pick chapters, then print or save as a PDF: a
+  table of chapters (questions done, when finished, marks checked), then each question you did
+  with the question, your answer, typed working and handwriting.
+- **The PDFs are the student's own copy**, loaded once per device and kept in that device's own
+  IndexedDB database (`mp-files`, `lib/booklet-files.ts`): never uploaded, synced or put on the
+  public site. The app only knows where each question and solution is
+  (`src/content/astbury.ts`: pages, marks, source paper), and checks the page counts match.
+- Your work (`astburyWork` in the settings store, `lib/booklet.ts`) is in backups and syncs to
+  your other devices like the rest of your progress, without the handwriting.
+- pdf.js (`pdfjs-dist` 6.3.289, legacy build) draws the pages, loaded only on these pages; its
+  worker is cached for offline use (`.mjs` added to the offline cache).
+

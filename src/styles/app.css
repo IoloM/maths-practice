@@ -1428,6 +1428,108 @@ kbd {
     transition: none !important;
   }
 }
+/* Mr Astbury's booklet */
+.booklet-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 900px;
+}
+.booklet-page {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  background: #fff;
+}
+.booklet-answer {
+  width: 100%;
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+  resize: vertical;
+}
+.booklet-bar {
+  width: 80px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  flex: none;
+}
+.booklet-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.check-right {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.check-part {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.check-wrong {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.record-head,
+.record-section,
+.record-q {
+  display: block;
+}
+.record-q {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.record-q h3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+.record-status {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+.record-answer {
+  margin: 8px 0 0;
+}
+.record-typed pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin: 4px 0 0;
+}
+.record-strokes {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  background: #fff;
+}
+.record-pick {
+  max-height: 340px;
+  overflow: auto;
+}
+@media print {
+  .booklet-record .record-q {
+    break-inside: avoid;
+  }
+  .booklet-record .record-section {
+    break-before: page;
+  }
+  .booklet-page {
+    border: none;
+  }
+}
+
 /* printed progress report: a heading line, cards kept whole, no buttons */
 .print-only {
   display: none;

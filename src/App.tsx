@@ -19,6 +19,7 @@ const Review = lazy(() => import('./pages/Review').then((m) => ({ default: m.Rev
 const Mistakes = lazy(() => import('./pages/Mistakes').then((m) => ({ default: m.Mistakes })));
 const SitPaper = lazy(() => import('./pages/SitPaper').then((m) => ({ default: m.SitPaper })));
 const DataSet = lazy(() => import('./pages/DataSet').then((m) => ({ default: m.DataSet })));
+const Booklet = lazy(() => import('./pages/Booklet').then((m) => ({ default: m.Booklet })));
 const Graphs = lazy(() => import('./pages/Graphs').then((m) => ({ default: m.Graphs })));
 const Learn = lazy(() => import('./pages/Learn').then((m) => ({ default: m.Learn })));
 const LearnTopic = lazy(() => import('./pages/Learn').then((m) => ({ default: m.LearnTopic })));
@@ -85,6 +86,8 @@ function Page({ path, parts, query }: ReturnType<typeof useRoute>) {
       return <PastPapers key={query.toString()} open={query.get('p') ?? undefined} mark={query.get('mark') === '1'} />;
     case 'data':
       return <DataSet />;
+    case 'booklet':
+      return <Booklet parts={parts.slice(1)} query={query} />;
     case 'graphs':
       return <Graphs />;
     case 'saved':
@@ -138,7 +141,7 @@ export default function App() {
   const mustChoose = cloudMode && !!me?.mustChange;
   const locked = (needsSignIn() && !['join', 'invite', 'move'].includes(route.parts[0])) || mustChoose;
   const lockScreen = mustChoose ? <ChoosePasswordScreen /> : cloudMode ? <CloudSignIn screen /> : <SignInScreen />;
-  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && route.parts[0] === 'chapter') || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group', 'report'].includes(route.parts[0])) || (p === '/reference' && (route.parts[0] === 'flashcards' || route.parts[0] === 'data' || route.parts[0] === 'graphs')) || (p === '/review' && (route.parts[0] === 'mistakes' || route.parts[0] === 'saved')) || (p === '/progress' && route.parts[0] === 'confidence') || (p === '/learn' && route.parts[0] === 'checkin') || (p === '/exams' && (route.parts[0] === 'past-papers' || route.parts[0] === 'sit' || route.parts[0] === 'speed' || route.parts[0] === 'stretch')));
+  const active = (p: string) => (p === '/' ? route.path === '/' || route.parts[0] === 'practice' || route.parts[0] === 'q' : route.path.startsWith(p) || (p === '/topics' && (route.parts[0] === 'chapter' || route.parts[0] === 'booklet')) || (p === '/exams' && (route.parts[0] === 'set' || route.parts[0] === 'print')) || (p === '/settings' && ['account', 'logins', 'join', 'group', 'report'].includes(route.parts[0])) || (p === '/reference' && (route.parts[0] === 'flashcards' || route.parts[0] === 'data' || route.parts[0] === 'graphs')) || (p === '/review' && (route.parts[0] === 'mistakes' || route.parts[0] === 'saved')) || (p === '/progress' && route.parts[0] === 'confidence') || (p === '/learn' && route.parts[0] === 'checkin') || (p === '/exams' && (route.parts[0] === 'past-papers' || route.parts[0] === 'sit' || route.parts[0] === 'speed' || route.parts[0] === 'stretch')));
   return (
     <>
       <a className="skip-link" href="#main" onClick={(e) => (e.preventDefault(), document.getElementById('main')?.focus())}>

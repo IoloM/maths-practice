@@ -310,6 +310,12 @@ export function Home() {
           </h3>
           <span className="muted">Choose a textbook chapter or spec point</span>
         </a>
+        <a className="card tile" href={href('/booklet')}>
+          <h3>
+            <Icon name="book" /> Mr Astbury’s booklet
+          </h3>
+          <span className="muted">Work through his exam questions chapter by chapter, saved for you to show him</span>
+        </a>
         <div className="card tile">
           <h3>
             <Icon name="grid" /> Mixed practice

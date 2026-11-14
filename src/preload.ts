@@ -15,6 +15,7 @@ const PAGES: Record<string, () => Promise<unknown>> = {
   reference: () => import('./pages/Reference'),
   flashcards: () => import('./pages/Flashcards'),
   'past-papers': () => import('./pages/PastPapers'),
+  booklet: () => import('./pages/Booklet'),
   settings: () => import('./pages/Settings'),
   print: () => import('./pages/PrintSet'),
   account: () => import('./pages/Logins'),

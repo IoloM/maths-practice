@@ -15,6 +15,7 @@ import type { PaperResults } from './paper-results';
 import { NOTES_KEY, type MistakeNotes } from './mistakes';
 import { TOPICS_KEY, type TopicMarks } from './topics';
 import { SAVED_KEY, type SavedQuestions } from './saved';
+import { BOOKLET_KEY, mergeBooklet, outgoingBooklet, type BookletWorks } from './booklet';
 import { SPEED_KEY, type SpeedRecords } from './speed-records';
 import { streak, thisWeek } from './streak';
 import { scoreOf } from '../progress/mastery';
@@ -73,6 +74,8 @@ interface Payload {
   saved?: SavedQuestions;
   /** speed-round personal bests */
   speed?: SpeedRecords;
+  /** Mr Astbury's booklet: answers and typed working (not handwriting) */
+  booklet?: BookletWorks;
 }
 
 /** What admins see of you (the study group leaderboard). */
@@ -184,12 +187,17 @@ async function run(): Promise<void> {
       const [topics, topicsChanged] = await mergeSetting(store, TOPICS_KEY, remote?.topics);
       const [saved, savedChanged] = await mergeSetting(store, SAVED_KEY, remote?.saved);
       const [speed, speedChanged] = await mergeSetting(store, SPEED_KEY, remote?.speed);
-      if (papersChanged || notesChanged || topicsChanged || savedChanged || speedChanged) changed = true;
+      const localBooklet = await store.getSetting<BookletWorks>(BOOKLET_KEY, {});
+      const bookletAll = mergeBooklet(localBooklet, remote?.booklet ?? {});
+      const bookletChanged = JSON.stringify(bookletAll) !== JSON.stringify(localBooklet);
+      if (bookletChanged) await store.putSetting(BOOKLET_KEY, bookletAll);
+      const booklet = outgoingBooklet(bookletAll);
+      if (papersChanged || notesChanged || topicsChanged || savedChanged || speedChanged || bookletChanged) changed = true;
       const prefs = { values: syncedPrefs(), at: readSettings().prefsAt };
       const snapshot = await localSnapshot(store);
       const out = outgoing(snapshot);
-      if (remote && JSON.stringify([out, prefs, papers, notes, topics, saved, speed]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}, remote.topics ?? {}, remote.saved ?? {}, remote.speed ?? {}])) break;
-      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes, topics, saved, speed };
+      if (remote && JSON.stringify([out, prefs, papers, notes, topics, saved, speed, booklet]) === JSON.stringify([outgoing(remote.stores), remote.prefs ?? null, remote.papers ?? {}, remote.notes ?? {}, remote.topics ?? {}, remote.saved ?? {}, remote.speed ?? {}, remote.booklet ?? {}])) break;
+      const payload: Payload = { app: 'maths-practice', kind: 'sync', version: 1, savedAt: Date.now(), stores: out, prefs, papers, notes, topics, saved, speed, booklet };
       const data = await pack(JSON.stringify(payload));
       if (data.length > MAX_SYNC_CHARS) throw new Error('Your progress is too big to save online — back it up to a file instead');
       if (await pushProgress(got.v, data, summarise(snapshot, new Date(), papers))) break;
