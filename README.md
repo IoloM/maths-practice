@@ -24,9 +24,10 @@ worked solutions and mark schemes.
   on the home page, and a printable progress report.
 - In practice: a timer against the exam aim, keyboard shortcuts (H hint, N next, ? help), a
   running session total and an end-of-session summary.
-- **Mr Astbury's booklet** (`#/booklet`): load your own copy of his Pure exam-questions PDF (and the
-  worked solutions) on your device, work through it chapter by chapter with your answers and working
-  saved, and print a record of finished chapters to show him. The PDFs never leave the device.
+- **Mr Astbury's booklet** (`#/booklet`): his Pure exam questions and the worked solutions (which he
+  gave for the site; signed-in people only), chapter by chapter, with your answers by part, marked
+  against the worked solutions and counted in your progress, and a record of finished chapters to
+  print or save as a PDF for him.
 - Flashcards (formulae to learn and key facts, spaced repetition), formulae and statistical tables
   generated in the app, and calculator tips.
 - Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.

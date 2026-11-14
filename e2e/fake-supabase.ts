@@ -36,10 +36,12 @@ export interface FakeState {
   results: Record<string, unknown>[];
   target: number | null;
   invites: InviteRow[];
+  /** booklets downloaded from storage */
+  downloads: string[];
 }
 
 export function fakeState(people: { username: string; name: string; password: string; admin?: boolean; mustChange?: boolean }[]): FakeState {
-  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [], target: null, invites: [] };
+  const s: FakeState = { users: [], profiles: [], progress: new Map(), stats: new Map(), activity: new Map(), assignments: [], results: [], target: null, invites: [], downloads: [] };
   for (const p of people) addPerson(s, p.username, p.name, p.password, !!p.admin, !!p.mustChange);
   return s;
 }
@@ -49,6 +51,22 @@ function addPerson(s: FakeState, username: string, name: string, password: strin
   s.users.push({ id, email: emailFor(username), password, banned: false });
   s.profiles.push({ id, username, name, admin, must_change: mustChange, disabled: false, created_at: new Date().toISOString(), last_seen: null });
   return id;
+}
+
+/** A PDF of blank A4 pages. */
+export function blankPdf(pages: number): Buffer {
+  const objs = ['<< /Type /Catalog /Pages 2 0 R >>', `<< /Type /Pages /Count ${pages} /Kids [${Array.from({ length: pages }, (_, i) => `${i + 3} 0 R`).join(' ')}] >>`];
+  for (let i = 0; i < pages; i++) objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] >>');
+  let out = '%PDF-1.4\n';
+  const offsets: number[] = [];
+  objs.forEach((o, i) => {
+    offsets.push(out.length);
+    out += `${i + 1} 0 obj\n${o}\nendobj\n`;
+  });
+  const xref = out.length;
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((n) => `${String(n).padStart(10, '0')} 00000 n \n`).join('')}`;
+  out += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(out, 'latin1');
 }
 
 const b64url = (o: unknown) => Buffer.from(JSON.stringify(o)).toString('base64url');
@@ -181,6 +199,14 @@ async function respond(s: FakeState, route: Route) {
     return reply(200, sessionFor(me).user);
   }
   if (path === '/auth/v1/logout') return reply(204);
+
+  // ---- storage: Mr Astbury's booklets, for signed-in people only (blank stand-ins with the right page counts)
+  const booklet = /^\/storage\/v1\/object\/(?:authenticated\/)?booklets\/(astbury-(questions|solutions)\.pdf)$/.exec(path);
+  if (booklet) {
+    if (!me) return reply(400, { statusCode: '403', error: 'Unauthorized', message: 'not signed in' });
+    s.downloads.push(booklet[1]);
+    return route.fulfill({ status: 200, headers: { ...CORS, 'content-type': 'application/pdf' }, body: blankPdf(booklet[2] === 'questions' ? 430 : 146) });
+  }
 
   // ---- the admin function (the real handler)
   if (path === '/functions/v1/admin') {

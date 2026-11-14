@@ -387,3 +387,23 @@ test('several logins at once, and a personal link that goes straight to choosing
   await expect(ben.getByText('BenS', { exact: true })).toBeVisible();
   await ben.context().close();
 });
+
+test("Mr Astbury's booklet comes with your login (once per device), and not without one", async ({ page }) => {
+  const s = fakeState([{ username: 'dev', name: 'Dev', password: 'dev-pass-1' }]);
+  await serveSupabase(page.context(), s);
+  await plainInput(page);
+  await page.goto('./#/booklet');
+  await expect(page.getByText(/Sign in \(Settings → Account\) and the booklet comes with your login/)).toBeVisible();
+  expect(s.downloads).toEqual([]);
+  await signIn(page, 'dev', 'dev-pass-1');
+  await reloads(page, page.getByRole('button', { name: 'Sign in' }).click());
+  await page.goto('./#/booklet');
+  await expect(page.getByText('The booklet and worked solutions came with your login, and are saved on this device')).toBeVisible();
+  expect(s.downloads.sort()).toEqual(['astbury-questions.pdf', 'astbury-solutions.pdf']);
+  await page.goto('./#/booklet/1.1/1');
+  await expect(page.getByRole('img', { name: 'Question 1, page 5 of the booklet' }).locator('canvas')).toBeVisible();
+  // kept on the device: no second download
+  await page.reload();
+  await expect(page.getByRole('img', { name: 'Question 1, page 5 of the booklet' }).locator('canvas')).toBeVisible();
+  expect(s.downloads).toHaveLength(2);
+});

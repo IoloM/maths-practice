@@ -1,10 +1,11 @@
 /**
- * `#/booklet`: Mr Astbury's A Level Exam Qs Series (Pure), from the student's own copy of the PDF.
+ * `#/booklet`: Mr Astbury's A Level Exam Qs Series (Pure). Signed in, the booklet and its worked
+ * solutions come from the site once per device (he gave them for it); otherwise load your own copy.
  * Work through it chapter by chapter in the app: each question shows its page from the booklet,
  * with space for your answer and working (saved as you go), a "done" tick, the worked solution to
  * check against, and a record of the chapters you've finished to print or save as a PDF for him.
  *
- *   #/booklet                 chapters, progress, and loading the booklets onto this device
+ *   #/booklet                 chapters, progress, and the booklets on this device
  *   #/booklet/<section>       the questions in a chapter
  *   #/booklet/<section>/<n>   one question
  *   #/booklet/record?s=…      the record to print for Mr Astbury
@@ -17,6 +18,7 @@ import { fullyMarked, hasWorking, recordBookletMarks, sectionProgress, totalMark
 import { useActiveTime } from '../lib/attempt';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { openPdf, renderPage } from '../lib/pdf';
+import { canDownloadBooklets, downloadBooklet } from '../lib/booklet-cloud';
 import { useSettings } from '../lib/settings';
 import { currentLogin } from '../lib/logins';
 import { href, navigate } from '../router';
@@ -34,13 +36,32 @@ const day = (t: number) => new Date(t).toLocaleDateString(undefined, { day: 'num
 const docs: Partial<Record<BookletFile, Promise<PDFDocumentProxy | null>>> = {};
 const infoCache: Partial<Record<BookletFile, StoredFile | null>> = {};
 
+/** The booklet on this device; if it isn't here yet and you're signed in, it comes from the site first. */
 function openStored(kind: BookletFile): Promise<PDFDocumentProxy | null> {
-  docs[kind] ??= loadBookletFile(kind).then((f) => {
+  docs[kind] ??= (async () => {
+    let f = await loadBookletFile(kind);
+    if (!f && canDownloadBooklets()) {
+      const data = await downloadBooklet(kind);
+      if (data) {
+        try {
+          const doc = await openPdf(data);
+          if (doc.numPages === EXPECTED[kind]) {
+            f = { kind, name: 'from the site', data, pages: doc.numPages, savedAt: Date.now() };
+            await saveBookletFile(f);
+          }
+        } catch {
+          /* not a PDF: leave it to a file the student loads */
+        }
+      }
+    }
     infoCache[kind] = f ?? null;
     return f ? openPdf(f.data) : null;
-  });
+  })();
   return docs[kind]!;
 }
+
+/** While the booklet comes down from the site the first time (it's 26 MB). */
+const gettingLabel = () => (canDownloadBooklets() ? 'Getting Mr Astbury’s booklet (just the first time on this device)…' : 'Loading…');
 
 /** The two booklets as loaded on this device (null = not loaded; undefined = still looking). */
 function useBooklets() {
@@ -191,8 +212,9 @@ function BookletHome() {
     const all = BOOKLET.map((s) => sectionProgress(works, s));
     return { done: all.reduce((t, p) => t + p.done, 0), total: all.reduce((t, p) => t + p.total, 0), chapters: all.filter((p) => p.complete).length };
   }, [works]);
-  if (b.questions === undefined || !works) return <Loading />;
+  if (b.questions === undefined || !works) return <Loading label={gettingLabel()} />;
   const ready = !!b.questions;
+  const fromSite = infoCache.questions?.name === 'from the site';
   return (
     <div className="stack">
       <div>
@@ -202,19 +224,31 @@ function BookletHome() {
           the chapters you’ve finished to show Mr Astbury.
         </p>
       </div>
-      <section className="card stack" aria-labelledby="files-h">
-        <h2 id="files-h" className="h3">
-          {ready ? 'The booklets on this device' : 'Load the booklet'}
-        </h2>
-        {!ready && (
-          <p className="small" style={{ margin: 0 }}>
-            Choose your copy of the PDF (for example from iCloud Drive → School → Maths). It stays on this device: it isn’t uploaded or shared, so do this once on each device you use.
-          </p>
-        )}
-        <FilePicker kind="questions" loaded={!!b.questions} onChange={b.reload} />
-        <FilePicker kind="solutions" loaded={!!b.solutions} onChange={b.reload} />
-        {b.error && <ErrorBox>{b.error}</ErrorBox>}
-      </section>
+      {ready && fromSite ? (
+        <details className="card small">
+          <summary>The booklet and worked solutions came with your login, and are saved on this device</summary>
+          <div className="stack" style={{ gap: 10, marginTop: 10 }}>
+            <FilePicker kind="questions" loaded={!!b.questions} onChange={b.reload} />
+            <FilePicker kind="solutions" loaded={!!b.solutions} onChange={b.reload} />
+          </div>
+        </details>
+      ) : (
+        <section className="card stack" aria-labelledby="files-h">
+          <h2 id="files-h" className="h3">
+            {ready ? 'The booklets on this device' : 'Load the booklet'}
+          </h2>
+          {!ready && (
+            <p className="small" style={{ margin: 0 }}>
+              {canDownloadBooklets()
+                ? 'The booklet couldn’t be fetched from the site just now (are you offline?). Try again later, or choose your copy of the PDF.'
+                : 'Sign in (Settings → Account) and the booklet comes with your login. Or choose your copy of the PDF (for example from iCloud Drive → School → Maths); it stays on this device.'}
+            </p>
+          )}
+          <FilePicker kind="questions" loaded={!!b.questions} onChange={b.reload} />
+          <FilePicker kind="solutions" loaded={!!b.solutions} onChange={b.reload} />
+          {b.error && <ErrorBox>{b.error}</ErrorBox>}
+        </section>
+      )}
       {totals && (
         <section className="card" aria-label="Booklet progress">
           <div className="week-kpis">
@@ -341,7 +375,7 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
     },
     [q.id],
   );
-  if (!w || b.questions === undefined) return <Loading />;
+  if (!w || b.questions === undefined) return <Loading label={gettingLabel()} />;
   const change = (p: Partial<BookletWork>, now = false) => {
     const next = { ...cur.current!, ...p };
     cur.current = next;
@@ -595,7 +629,7 @@ function Record({ query }: { query: URLSearchParams }) {
   useEffect(() => {
     if (works && !chosen) setChosen(new Set(fromQuery?.length ? fromQuery : BOOKLET.filter((s) => sectionProgress(works, s).done > 0).map((s) => s.id)));
   }, [works, chosen, fromQuery]);
-  if (!works || !chosen || b.questions === undefined) return <Loading />;
+  if (!works || !chosen || b.questions === undefined) return <Loading label={gettingLabel()} />;
   const sections = BOOKLET.filter((s) => chosen.has(s.id));
   const name = currentLogin()?.name;
   return (

@@ -87,7 +87,7 @@ the bottom of each section.
 
 | Decision | Why |
 |---|---|
-| The student loads their own copy of the PDFs on each device; the site never contains them | The booklet is Mr Astbury's (and the questions are exam boards'); the app and its repository are public. Same approach as the large data set. |
+| The booklet is in a private storage bucket that only signed-in people can read (not in the public site or repository) | Mr Astbury gave it for the site; the app and its repository are public, so keeping it behind the logins means it goes to the people using the site, not the whole internet. Loading your own copy still works without a login. |
 | The app keeps only where each question and solution is (page, marks, source) | Enough to show the right pages and count marks, with nothing of the booklet's content. |
 | Answers and typed working sync; handwriting stays on the device it was written on | Same rule as all working in the app (sync size); a newer copy without handwriting never wipes it. |
 | The record for Mr Astbury is a printable page (print or save as PDF) | Works offline on any device, and he can be sent the PDF however suits him. |

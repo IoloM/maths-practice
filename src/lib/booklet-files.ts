@@ -1,7 +1,7 @@
 /**
- * Mr Astbury's booklets, as the student loaded them: kept in this device's own IndexedDB database
- * ('mp-files'), never uploaded, synced, backed up or moved. The name doesn't start with
- * 'maths-practice', so the progress database code (backups, moving address) leaves it alone.
+ * Mr Astbury's booklets on this device (downloaded with your login, or a file you chose): kept in
+ * the device's own IndexedDB database ('mp-files'), not synced, backed up or moved. The name doesn't
+ * start with 'maths-practice', so the progress database code (backups, moving address) leaves it alone.
  */
 import { openDB } from 'idb';
 

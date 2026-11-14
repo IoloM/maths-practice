@@ -18,6 +18,12 @@ const SUPABASE_STANDINS = `
   grant usage on schema public to anon, authenticated, service_role;
   alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
   alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
+  create schema storage;
+  grant usage on schema storage to anon, authenticated, service_role;
+  create table storage.buckets (id text primary key, name text not null, public boolean default false, file_size_limit bigint, allowed_mime_types text[]);
+  create table storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text references storage.buckets (id), name text);
+  alter table storage.objects enable row level security;
+  grant select on storage.buckets, storage.objects to anon, authenticated, service_role;
 `;
 
 const dir = new URL('../supabase/migrations/', import.meta.url);
@@ -189,5 +195,11 @@ describe('security rules', () => {
     expect(await fails(db.query("insert into public.profiles (id, username, name) values ($1, 'iolom', 'X')", [other]))).toBe(true);
     expect(await fails(db.query("insert into public.profiles (id, username, name) values ($1, 'Iolo M', 'X')", [other]))).toBe(true);
     await db.query('delete from public.profiles where id = $1', [id]);
+  });
+  it("Mr Astbury's booklets: a private bucket that signed-in people can read and nobody else", async () => {
+    expect((await db.query<{ public: boolean }>("select public from storage.buckets where id = 'booklets'")).rows[0].public).toBe(false);
+    await db.query("insert into storage.objects (bucket_id, name) values ('booklets', 'astbury-questions.pdf')");
+    expect(await as(ANA, "select name from storage.objects where bucket_id = 'booklets'")).toHaveLength(1);
+    expect(await as(null, "select name from storage.objects where bucket_id = 'booklets'")).toHaveLength(0);
   });
 });

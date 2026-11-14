@@ -431,3 +431,14 @@ axe on 13 views in light and dark) — all green.
   reading them out of the PDF scrambles fractions and powers. So, like the app's proof questions,
   you mark them against the worked solution.
 
+## Phase 21 — The booklet comes with your login ✅ (14 Nov 2026)
+
+- Mr Astbury gave his booklet for the site, so the booklet and its worked solutions are now on
+  it: in a private Supabase storage bucket (`booklets`, migration
+  `20261114000000_booklets.sql`) that **only signed-in people can read** (not public: the site and
+  its code are open to anyone). Uploaded with the admin key from this Mac.
+- Signed in, the booklet page downloads both PDFs the first time on a device (26 MB + 1 MB) and
+  keeps them there; no file to choose. Not signed in, it says to sign in, or you can still choose
+  your own copy. `src/lib/booklet-cloud.ts`; tested against the pretend Supabase with stand-in
+  PDFs (`blankPdf` in `e2e/fake-supabase.ts`).
+

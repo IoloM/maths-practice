@@ -1,8 +1,9 @@
 /**
  * Mr Astbury's "A Level Exam Qs Series – Pure" (version 3, 430 pages) and the matching "Full Worked
  * Solutions" (146 pages): where each question and its solution are. Only page numbers, marks and
- * the source paper printed in the margin are kept here. The booklets themselves are loaded by the
- * student from their own copy and stay on their device (lib/booklet-files.ts).
+ * the source paper printed in the margin are kept here. The booklets themselves (which Mr Astbury
+ * gave for the site) are in a private storage bucket for signed-in people (lib/booklet-cloud.ts),
+ * and once downloaded stay on the device (lib/booklet-files.ts).
  */
 export interface BookletQuestion {
   /** e.g. '1.1:3' */
