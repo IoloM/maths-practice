@@ -1,9 +1,10 @@
 /**
  * `#/booklet`: Mr Astbury's A Level Exam Qs Series (Pure). Signed in, the booklet and its worked
  * solutions come from the site once per device (he gave them for it); otherwise load your own copy.
- * Work through it chapter by chapter in the app: each question shows its page from the booklet,
- * with space for your answer and working (saved as you go), a "done" tick, the worked solution to
- * check against, and a record of the chapters you've finished to print or save as a PDF for him.
+ * Work through it chapter by chapter in the app: each question shows its pages from the booklet to
+ * write your working on (the booklet's own lined paper), a box for each final answer (saved as you
+ * go), marks against the worked solution, and for each chapter a PDF of the booklet pages with your
+ * working, answers and marks on them to send him (or a printable record of several chapters).
  *
  *   #/booklet                 chapters, progress, and the booklets on this device
  *   #/booklet/<section>       the questions in a chapter
@@ -14,7 +15,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { BOOKLET, BOOKLET_PAGES, BOOKLET_SECTION, SOLUTIONS_PAGES, type BookletQuestion, type BookletSection } from '../content/astbury';
 import { loadBookletFile, removeBookletFile, saveBookletFile, type BookletFile, type StoredFile } from '../lib/booklet-files';
-import { fullyMarked, hasWorking, recordBookletMarks, sectionProgress, totalMarks, updateBookletWork, useBookletWork, type BookletWork, type BookletWorks, type Check } from '../lib/booklet';
+import { fullyMarked, hasWorking, loadBookletWork, recordBookletMarks, sectionProgress, totalMarks, updateBookletWork, useBookletWork, type BookletWork, type BookletWorks, type Check } from '../lib/booklet';
 import { useActiveTime } from '../lib/attempt';
 import { CHAPTER_BY_REF } from '../content/chapters';
 import { openPdf, renderPage } from '../lib/pdf';
@@ -23,6 +24,9 @@ import { useSettings } from '../lib/settings';
 import { currentLogin } from '../lib/logins';
 import { href, navigate } from '../router';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
+import { BookletInk, InkedPage } from '../working/BookletInk';
+import { loadInkPages } from '../lib/booklet-ink';
+import { makeBookletPdf } from '../lib/booklet-pdf';
 import { ErrorBox, Loading, plural } from '../components/bits';
 import { Icon } from '../components/Icon';
 import type { Stroke, Working } from '../storage/types';
@@ -183,6 +187,96 @@ function PdfPages({ doc, from, count, label, trim = true }: { doc: PDFDocumentPr
   );
 }
 
+// ------------------------------------------------------------------ the PDF for Mr Astbury
+
+type Made = { step: 'idle' } | { step: 'making' } | { step: 'ready'; url: string; file: File } | { step: 'error'; msg: string };
+
+const mb = (n: number) => (n < 1e6 ? `${Math.max(1, Math.round(n / 1e3))} KB` : `${(n / 1e6).toFixed(1)} MB`);
+
+/**
+ * Make the PDF of these chapters: the booklet pages with your writing on them, your answers and
+ * marks, and a front page. Then save it (on a computer it downloads straight away) or share it.
+ */
+function ExportPdf({ sections, label = 'PDF with my working', primary = true }: { sections: BookletSection[]; label?: string; primary?: boolean }) {
+  const [made, setMade] = useState<Made>({ step: 'idle' });
+  useEffect(
+    () => () => {
+      if (made.step === 'ready') URL.revokeObjectURL(made.url);
+    },
+    [made],
+  );
+  const make = async () => {
+    setMade({ step: 'making' });
+    try {
+      const doc = await openStored('questions');
+      const f = await loadBookletFile('questions');
+      if (!doc || !f) {
+        setMade({ step: 'error', msg: 'The booklet isn’t on this device yet, so its pages can’t go in the PDF. Open Mr Astbury’s booklet (signed in) or choose your copy first.' });
+        return;
+      }
+      const works = await loadBookletWork();
+      const { bytes, fileName } = await makeBookletPdf(f.data, sections, works, currentLogin()?.name);
+      const file = new File([bytes as BlobPart], fileName, { type: 'application/pdf' });
+      const url = URL.createObjectURL(file);
+      setMade({ step: 'ready', url, file });
+      // on a computer it just downloads; on a phone or iPad you choose Save or Share
+      if (window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+      }
+    } catch {
+      setMade({ step: 'error', msg: 'The PDF couldn’t be made. Try again.' });
+    }
+  };
+  const canShare = made.step === 'ready' && typeof navigator.canShare === 'function' && navigator.canShare({ files: [made.file] });
+  return (
+    <div className="stack export-pdf" style={{ gap: 6 }}>
+      {made.step === 'ready' ? (
+        <div className="btn-row">
+          <a className="btn btn-primary" href={made.url} download={made.file.name}>
+            <Icon name="download" /> Save the PDF
+          </a>
+          {canShare && (
+            <button
+              className="btn"
+              onClick={() => {
+                void navigator.share({ files: [made.file], title: made.file.name.replace(/\.pdf$/, '') }).catch(() => {});
+              }}
+            >
+              <Icon name="share" /> Share
+            </button>
+          )}
+          <button className="btn btn-ghost btn-small" onClick={() => void make()}>
+            Make it again
+          </button>
+        </div>
+      ) : (
+        <div className="btn-row">
+          <button className={`btn ${primary ? 'btn-primary' : ''}`} disabled={made.step === 'making'} onClick={() => void make()}>
+            <Icon name="download" /> {made.step === 'making' ? 'Making the PDF…' : label}
+          </button>
+        </div>
+      )}
+      <p className="small muted" role="status" style={{ margin: 0 }}>
+        {made.step === 'making'
+          ? 'Putting your writing onto the booklet pages…'
+          : made.step === 'ready'
+            ? `Ready: ${made.file.name} (${mb(made.file.size)}).`
+            : made.step === 'error'
+              ? ''
+              : null}
+      </p>
+      {made.step === 'error' && (
+        <p className="small warn-text" role="alert" style={{ margin: 0 }}>
+          {made.msg}
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ------------------------------------------------------------------ chapters
 
 function ChapterRow({ s, works }: { s: BookletSection; works: BookletWorks }) {
@@ -220,8 +314,8 @@ function BookletHome() {
       <div>
         <h1>Mr Astbury’s booklet</h1>
         <p className="muted">
-          The A Level Exam Qs Series (Pure), chapter by chapter: each question with space for your answer and working, saved as you go. Tick each one off, check it against the worked solution, and print a record of
-          the chapters you’ve finished to show Mr Astbury.
+          The A Level Exam Qs Series (Pure), chapter by chapter: write your working on the booklet’s own lined pages, put your final answers in the boxes, and mark them against the worked solution. Then make a PDF of the
+          chapter with your working on it to send Mr Astbury.
         </p>
       </div>
       {ready && fromSite ? (
@@ -311,13 +405,22 @@ function SectionPage({ s }: { s: BookletSection }) {
             <Icon name="play" /> {p.done ? (p.complete ? 'Look back through' : 'Carry on') : 'Start'}
           </a>
           <a className="btn" href={href('/booklet/record', { s: s.id })}>
-            <Icon name="download" /> Record of this chapter
+            Record of this chapter
           </a>
           <a className="btn" href={href('/practice', { c: s.chapter })}>
             Practise this topic in the app
           </a>
         </div>
       </div>
+      <section className="card stack" aria-labelledby="pdf-h" style={{ gap: 8 }}>
+        <h2 id="pdf-h" className="h3" style={{ margin: 0 }}>
+          For Mr Astbury
+        </h2>
+        <p className="small muted" style={{ margin: 0 }}>
+          A PDF of this chapter’s pages from the booklet with your working written on them, your final answers and marks along the bottom of each question, and a front page with the record. Send it to him, or print it.
+        </p>
+        <ExportPdf sections={[s]} label="PDF of this chapter with my working" />
+      </section>
       <ul className="list card">
         {s.questions.map((q) => {
           const w = works[q.id];
@@ -419,16 +522,31 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
         </p>
       </div>
       {b.questions ? (
-        <PdfPages doc={b.questions} from={q.page} count={q.pages} label={`Question ${q.n}, page ${q.page} of the booklet`} />
+        <BookletInk
+          doc={b.questions}
+          from={q.page}
+          count={q.pages}
+          name={`Question ${q.n}`}
+          onInk={(any) => {
+            if (!!cur.current?.inked !== any) change({ inked: any });
+          }}
+        />
       ) : (
         <p className="card small">
-          Load the booklet on this device to see the question: <a href={href('/booklet')}>Mr Astbury’s booklet</a>. You can still write your answer here.
+          Load the booklet on this device to see the question and write on its pages: <a href={href('/booklet')}>Mr Astbury’s booklet</a>. You can still write your answer here.
         </p>
       )}
       <section className="card stack" aria-labelledby="ans-h">
-        <h2 id="ans-h" className="h3">
-          {labelled ? 'Your answers' : 'Your answer'}
-        </h2>
+        <div>
+          <h2 id="ans-h" className="h3" style={{ margin: 0 }}>
+            {labelled ? 'Final answers' : 'Final answer'}
+          </h2>
+          {b.questions && (
+            <p className="small muted" style={{ margin: '4px 0 0' }}>
+              Work it out on the booklet’s lines above, then put {labelled ? 'each final answer' : 'your final answer'} here.
+            </p>
+          )}
+        </div>
         {labelled ? (
           <div className="stack" style={{ gap: 8 }}>
             {q.parts.map((p) => (
@@ -442,10 +560,10 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
         ) : (
           <textarea className="booklet-answer" rows={2} value={w.answer} placeholder="Your final answer" aria-labelledby="ans-h" onChange={(e) => change({ answer: e.target.value })} />
         )}
-        <h3 className="h3" style={{ margin: 0 }}>
-          Your working
-        </h3>
-        <WorkingArea working={working} onChange={(x) => change({ working: x })} exportName={`astbury-${q.id.replace(/[:.]/g, '-')}`} />
+        <details className="extra-working" open={!b.questions || !!working.strokes.length || !!working.text.trim()}>
+          <summary>{b.questions ? 'Need more room? Extra working space (blank paper, or type it)' : 'Your working'}</summary>
+          <WorkingArea working={working} onChange={(x) => change({ working: x })} exportName={`astbury-${q.id.replace(/[:.]/g, '-')}`} />
+        </details>
         <div className="btn-row">
           <button className={`btn ${marking ? '' : 'btn-primary'}`} aria-expanded={marking} onClick={() => setMarking((x) => !x)}>
             <Icon name="check" /> {marking ? 'Hide the marking' : marked ? 'Change my marks' : 'Mark my answers'}
@@ -578,7 +696,9 @@ function StrokesSvg({ strokes }: { strokes: Stroke[] }) {
   );
 }
 
-function RecordQuestion({ q, w, doc }: { q: BookletQuestion; w?: BookletWork; doc: PDFDocumentProxy | null }) {
+function RecordQuestion({ q, w, doc, ink }: { q: BookletQuestion; w?: BookletWork; doc: PDFDocumentProxy | null; ink: Map<number, Stroke[]> }) {
+  const pages = Array.from({ length: q.pages }, (_, i) => q.page + i);
+  const inked = pages.some((p) => ink.has(p));
   return (
     <article className="record-q">
       <h3>
@@ -588,7 +708,15 @@ function RecordQuestion({ q, w, doc }: { q: BookletQuestion; w?: BookletWork; do
           {q.marks && fullyMarked(q, w) ? ` · ${totalMarks(q, w)}/${q.marks} marks` : w?.check ? ` · ${CHECK_TEXT[w.check]}` : ''}
         </span>
       </h3>
-      {doc && <PdfPages doc={doc} from={q.page} count={q.pages} label={`Question ${q.n} from the booklet`} />}
+      {doc && inked ? (
+        <div className="booklet-pages">
+          {pages.map((p) => (
+            <InkedPage key={p} doc={doc} page={p} strokes={ink.get(p) ?? []} label={`Question ${q.n} from the booklet (page ${p}) with the working written on it`} />
+          ))}
+        </div>
+      ) : doc ? (
+        <PdfPages doc={doc} from={q.page} count={q.pages} label={`Question ${q.n} from the booklet`} />
+      ) : null}
       {w?.answer.trim() ? (
         <p className="record-answer">
           <b>Answer:</b> {w.answer}
@@ -625,11 +753,22 @@ function Record({ query }: { query: URLSearchParams }) {
   const works = useBookletWork();
   const [chosen, setChosen] = useState<Set<string> | null>(null);
   const [withQuestions, setWithQuestions] = useState(true);
+  const [ink, setInk] = useState<Map<number, Stroke[]> | null>(null);
   const fromQuery = query.get('s')?.split(',').filter((id) => BOOKLET_SECTION.has(id));
+  const chosenKey = chosen ? [...chosen].sort().join(',') : '';
+  useEffect(() => {
+    if (!chosenKey) return;
+    let alive = true;
+    const pages = BOOKLET.filter((s) => chosenKey.split(',').includes(s.id)).flatMap((s) => s.questions.flatMap((q) => Array.from({ length: q.pages }, (_, i) => q.page + i)));
+    void loadInkPages(pages).then((m) => alive && setInk(m));
+    return () => {
+      alive = false;
+    };
+  }, [chosenKey]);
   useEffect(() => {
     if (works && !chosen) setChosen(new Set(fromQuery?.length ? fromQuery : BOOKLET.filter((s) => sectionProgress(works, s).done > 0).map((s) => s.id)));
   }, [works, chosen, fromQuery]);
-  if (!works || !chosen || b.questions === undefined) return <Loading label={gettingLabel()} />;
+  if (!works || !chosen || b.questions === undefined || (chosenKey && !ink)) return <Loading label={gettingLabel()} />;
   const sections = BOOKLET.filter((s) => chosen.has(s.id));
   const name = currentLogin()?.name;
   return (
@@ -640,7 +779,7 @@ function Record({ query }: { query: URLSearchParams }) {
         </p>
         <h1>Record for Mr Astbury</h1>
         <p className="muted" style={{ margin: 0 }}>
-          Choose the chapters, then print it or save it as a PDF (in the print window choose “Save as PDF”) and send it to him. It shows each question you’ve done with your answer and working.
+          Choose the chapters, then make the PDF of their booklet pages with your working written on them, your answers and marks (the best thing to send him). Or print this page, a shorter record of each question you’ve done.
         </p>
         <details className="card">
           <summary>
@@ -677,9 +816,10 @@ function Record({ query }: { query: URLSearchParams }) {
         <label className="row small">
           <input type="checkbox" checked={withQuestions} onChange={(e) => setWithQuestions(e.target.checked)} /> Show each question from the booklet (needs the booklet on this device)
         </label>
+        {sections.length ? <ExportPdf key={chosenKey} sections={sections} label={sections.length === 1 ? 'PDF of this chapter with my working' : `PDF of these ${sections.length} chapters with my working`} /> : null}
         <div className="btn-row">
-          <button className="btn btn-primary" onClick={() => window.print()} disabled={!sections.length}>
-            <Icon name="download" /> Print or save as PDF
+          <button className="btn" onClick={() => window.print()} disabled={!sections.length}>
+            Print or save this page as a PDF
           </button>
         </div>
       </div>
@@ -726,7 +866,7 @@ function Record({ query }: { query: URLSearchParams }) {
           {s.questions
             .filter((q) => works[q.id]?.done || works[q.id]?.answer.trim() || Object.values(works[q.id]?.answers ?? {}).some((a) => a.trim()) || hasWorking(works[q.id]))
             .map((q) => (
-              <RecordQuestion key={q.id} q={q} w={works[q.id]} doc={withQuestions ? (b.questions ?? null) : null} />
+              <RecordQuestion key={q.id} q={q} w={works[q.id]} doc={withQuestions ? (b.questions ?? null) : null} ink={ink ?? new Map()} />
             ))}
         </section>
       ))}

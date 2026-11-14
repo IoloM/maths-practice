@@ -91,6 +91,8 @@ the bottom of each section.
 | The app keeps only where each question and solution is (page, marks, source) | Enough to show the right pages and count marks, with nothing of the booklet's content. |
 | Answers and typed working sync; handwriting stays on the device it was written on | Same rule as all working in the app (sync size); a newer copy without handwriting never wipes it. |
 | The record for Mr Astbury is a printable page (print or save as PDF) | Works offline on any device, and he can be sent the PDF however suits him. |
+| You write on the booklet's own pages; the ink is kept in page points, page by page | It's how the booklet is meant to be used (the ruled space under each question), and points keep the writing on the same lines at any screen size or zoom. One key per page keeps each save small. |
+| The PDF for him is the real booklet pages with your ink drawn on (pdf-lib), not pictures of the screen | The questions stay sharp and the file small (about 0.5 MB a chapter); the ink is drawn with the same stroke shapes as on screen. The answers line and front page are drawn as images, so any maths symbol in an answer (√, π, θ) shows. |
 | Booklet answers are self-marked part by part, then recorded as ordinary attempts | Automatic checking needs a reliable answer key; text read from the PDF scrambles maths. Self-marks are what the app already uses for proofs, and recording an attempt makes every total, ring, goal and review count them. |
 | Each booklet section counts towards one app topic (its `family`) | Progress, mastery and spaced review are kept by topic; a booklet question then nudges that topic's review. |
 

@@ -1428,6 +1428,95 @@ kbd {
     transition: none !important;
   }
 }
+/* Mr Astbury's booklet: writing on its pages */
+.ink {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 900px;
+}
+.ink-toolbar {
+  position: sticky;
+  top: calc(56px + env(safe-area-inset-top));
+  z-index: 12;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+}
+.ink-toolbar select {
+  min-height: 40px;
+}
+.ink-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 2px;
+}
+.ink-pencil {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+/* on a phone the tools stay on one line (scroll it sideways), so the page keeps the screen */
+@media (max-width: 600px) {
+  .ink-toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ink-toolbar > * {
+    flex: none;
+  }
+  .ink-toolbar .spacer {
+    display: none;
+  }
+}
+.ink-scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.ink-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ink-page {
+  position: relative;
+  aspect-ratio: 595.32 / 841.92;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--border);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+}
+.ink-page-bg,
+.ink-layer {
+  position: absolute;
+  inset: 0;
+}
+.ink-page-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* ink written in the default colour is black on the white page, in dark mode too */
+.ink-layer {
+  color: #111;
+}
+svg.ink-layer {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.extra-working > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.extra-working[open] > summary {
+  margin-bottom: 8px;
+}
 /* Mr Astbury's booklet */
 .booklet-pages {
   display: flex;
@@ -1527,6 +1616,10 @@ kbd {
   }
   .booklet-page {
     border: none;
+  }
+  .ink-page {
+    break-inside: avoid;
+    box-shadow: none;
   }
 }
 

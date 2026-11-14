@@ -1,8 +1,9 @@
 /**
- * Your work on Mr Astbury's booklet: for each question, your answer, your working (handwritten
+ * Your work on Mr Astbury's booklet: for each question, your answers, any extra working (handwritten
  * and/or typed), when you marked it done, and how it went against the worked solution. Kept in the
  * settings store, so backups include it; it syncs to your other devices except the handwriting,
- * which (as everywhere in the app) stays on the device it was written on.
+ * which (as everywhere in the app) stays on the device it was written on. The writing on the
+ * booklet's own pages is kept page by page in lib/booklet-ink.ts.
  */
 import { useEffect, useState } from 'react';
 import { getStore } from '../storage';
@@ -23,6 +24,8 @@ export interface BookletWork {
   /** when the marks were recorded as an attempt (its finish time), so a change updates it */
   attemptAt?: number;
   working?: Working;
+  /** there's handwriting on the question's pages in the booklet (the ink itself is in lib/booklet-ink.ts) */
+  inked?: boolean;
   /** when you marked the question done (ms) */
   done?: number;
   /** after checking against the worked solution */
@@ -64,7 +67,7 @@ export function useBookletWork(): BookletWorks | null {
   return w;
 }
 
-export const hasWorking = (w: BookletWork | undefined) => !!w && (!!w.working?.strokes.length || !!w.working?.text.trim());
+export const hasWorking = (w: BookletWork | undefined) => !!w && (!!w.inked || !!w.working?.strokes.length || !!w.working?.text.trim());
 
 export interface SectionProgress {
   done: number;

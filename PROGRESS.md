@@ -442,3 +442,28 @@ axe on 13 views in light and dark) — all green.
   your own copy. `src/lib/booklet-cloud.ts`; tested against the pretend Supabase with stand-in
   PDFs (`blankPdf` in `e2e/fake-supabase.ts`).
 
+## Phase 22 — Write on the booklet's own pages, and a PDF of the chapter ✅ (14 Nov 2026)
+
+- Each booklet question now shows its **whole pages** (the question and its ruled lines, not
+  trimmed), and you **write your working on them**: pen, highlighter, rubber, a hand to scroll with
+  a finger, four inks, three pen sizes, zoom (fit, 150%, 200%), undo/redo across the pages (⌘Z),
+  and "Pencil only" for an Apple Pencil. `src/working/BookletInk.tsx`; the drawing canvas
+  (`working/Canvas.tsx`) now takes `units`, so strokes are kept in the page's own points and stay
+  on the same lines at any size or zoom.
+- The ink is saved page by page in the settings store (`astburyInk:<page>`,
+  `lib/booklet-ink.ts`), so backups include it; like all handwriting it isn't synced. A question
+  with writing on it shows as started (`inked` on its record).
+- Below the pages: a **final answer box per part**, then marking against the worked solution as
+  before. The old working area is still there, folded away, as extra room (blank paper or typed).
+- **PDF of the chapter with your working** (chapter page, and the record page for several
+  chapters): the chapter's real booklet pages (copied with pdf-lib, so the questions stay sharp)
+  with your ink drawn on as vector shapes where you wrote it, a line along the bottom of each
+  question with your final answers, marks and when you did it, and a front page with the record
+  (who, when, each question's answers, marks and date). Made on the device, nothing uploaded
+  (`lib/booklet-pdf.ts`); on a computer it downloads, on a phone or iPad Save or Share. About
+  0.5 MB a chapter.
+- The record page shows a question's pages with the writing on them too.
+- Tests: `tests/booklet-pdf.test.ts` (pages, ink placement, answers line, file name) and an e2e
+  test that writes on the page with the mouse, undoes and redoes, uses the hand, reloads, then
+  makes the PDF and checks its pages and ink (desktop, phone and tablet).
+

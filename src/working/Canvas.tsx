@@ -1,9 +1,11 @@
 /**
  * Handwriting canvas (lazy chunk). Pointer Events with pressure + coalesced events,
  * perfect-freehand strokes, vector storage, grows as you write, pencil-only palm rejection.
+ * With `units`, it covers a page (Mr Astbury's booklet) and strokes are kept in the page's own
+ * units, so the ink stays on the paper whatever size the page is shown at.
  */
 import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
-import { getStroke } from 'perfect-freehand';
+import { strokePath2D } from './ink';
 import type { Paper, Stroke } from '../storage/types';
 
 export type Tool = 'pen' | 'highlighter' | 'eraser';
@@ -33,36 +35,14 @@ interface Props {
   label: string;
   handle?: Ref<CanvasHandle>;
   onHistory?: (canUndo: boolean, canRedo: boolean) => void;
+  /** a page this size (in its own units, e.g. PDF points): strokes are kept in those units and the height follows the width */
+  units?: { w: number; h: number };
+  /** after each change you can undo (a stroke drawn or rubbed out, or a clear) */
+  onCommit?: () => void;
 }
 
 const GROW_MARGIN = 140;
 const GROW_STEP = 420;
-
-function outline(s: Stroke, live = false): Path2D {
-  const pts: [number, number, number][] = [];
-  for (let i = 0; i < s.points.length; i += 3) pts.push([s.points[i], s.points[i + 1], s.points[i + 2]]);
-  const hl = s.tool === 'highlighter';
-  const poly = getStroke(pts, {
-    size: s.size,
-    thinning: hl ? 0 : 0.55,
-    smoothing: 0.5,
-    streamline: 0.45,
-    simulatePressure: pts.every((p) => p[2] === 0.5),
-    last: !live,
-    start: { cap: true },
-    end: { cap: true },
-  });
-  const path = new Path2D();
-  if (!poly.length) return path;
-  path.moveTo(poly[0][0], poly[0][1]);
-  for (let i = 1; i < poly.length; i++) {
-    const [x0, y0] = poly[i - 1];
-    const [x1, y1] = poly[i];
-    path.quadraticCurveTo(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
-  }
-  path.closePath();
-  return path;
-}
 
 function drawStroke(ctx: CanvasRenderingContext2D, s: Stroke, live = false) {
   ctx.save();
@@ -70,7 +50,7 @@ function drawStroke(ctx: CanvasRenderingContext2D, s: Stroke, live = false) {
     ctx.globalAlpha = 0.32;
   }
   ctx.fillStyle = s.color;
-  ctx.fill(outline(s, live));
+  ctx.fill(strokePath2D(s, live));
   ctx.restore();
 }
 
@@ -102,7 +82,7 @@ function hits(s: Stroke, x: number, y: number, r: number): boolean {
 }
 
 export default function DrawingCanvas(props: Props) {
-  const { strokes, onChange, tool, color, size, paper, pencilOnly, height, onHeight, fixedHeight, transparent, label, handle, onHistory } = props;
+  const { strokes, onChange, tool, color, size, paper, pencilOnly, onHeight, fixedHeight, transparent, label, handle, onHistory, units, onCommit } = props;
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [width, setWidth] = useState(600);
@@ -114,6 +94,9 @@ export default function DrawingCanvas(props: Props) {
   const strokesRef = useRef(strokes);
   strokesRef.current = strokes;
   const raf = useRef(0);
+  // on a page: CSS px per page unit, and the page's height at this width
+  const scale = units ? width / units.w : 1;
+  const height = units ? Math.round((width * units.h) / units.w) : props.height;
 
   const commit = useCallback(
     (next: Stroke[]) => {
@@ -122,8 +105,9 @@ export default function DrawingCanvas(props: Props) {
       redoStack.current = [];
       onChange(next);
       onHistory?.(true, false);
+      onCommit?.();
     },
-    [onChange, onHistory],
+    [onChange, onHistory, onCommit],
   );
 
   useImperativeHandle(
@@ -211,17 +195,18 @@ export default function DrawingCanvas(props: Props) {
   const render = useCallback(() => {
     const c = canvasRef.current;
     if (!c) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    // sharp, but within what phones and iPads allow for a canvas (about 16 million pixels)
+    const dpr = Math.min(window.devicePixelRatio || 1, 3, Math.sqrt(12e6 / Math.max(1, width * height)));
     if (c.width !== Math.round(width * dpr) || c.height !== Math.round(height * dpr)) {
       c.width = Math.round(width * dpr);
       c.height = Math.round(height * dpr);
     }
     const ctx = c.getContext('2d')!;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, width, height);
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+    ctx.clearRect(0, 0, width / scale, height / scale);
     for (const s of strokesRef.current) drawStroke(ctx, { ...s, color: resolveColor(s.color) });
     if (live.current) drawStroke(ctx, { ...live.current, color: resolveColor(live.current.color) }, true);
-  }, [width, height, resolveColor]);
+  }, [width, height, scale, resolveColor]);
 
   useEffect(() => {
     render();
@@ -235,11 +220,11 @@ export default function DrawingCanvas(props: Props) {
   const point = (e: PointerEvent | React.PointerEvent): [number, number, number] => {
     const r = canvasRef.current!.getBoundingClientRect();
     const pressure = e.pointerType === 'pen' ? Math.max(0.05, e.pressure || 0.5) : 0.5;
-    return [e.clientX - r.left, e.clientY - r.top, pressure];
+    return [(e.clientX - r.left) / scale, (e.clientY - r.top) / scale, pressure];
   };
 
   const maybeGrow = (y: number) => {
-    if (fixedHeight || !onHeight) return;
+    if (fixedHeight || units || !onHeight) return;
     if (y > height - GROW_MARGIN) onHeight(height + GROW_STEP);
   };
 
@@ -257,13 +242,13 @@ export default function DrawingCanvas(props: Props) {
       eraseAt(x, y);
       return;
     }
-    live.current = { tool, color, size: tool === 'highlighter' ? Math.max(14, size * 4) : size, points: [x, y, p] };
+    live.current = { tool, color, size: tool === 'highlighter' ? Math.max(units ? 10 : 14, size * 4) : size, points: [x, y, p] };
     schedule();
   };
 
   const eraseAt = (x: number, y: number) => {
     const cur = strokesRef.current;
-    const keep = cur.filter((s) => !hits(s, x, y, 10));
+    const keep = cur.filter((s) => !hits(s, x, y, 10 / scale));
     if (keep.length !== cur.length) {
       if (!erasing.current?.removed) {
         commit(keep);
@@ -303,7 +288,7 @@ export default function DrawingCanvas(props: Props) {
     }
     const s = live.current;
     live.current = null;
-    if (s && s.points.length >= 3) commit([...strokesRef.current, { ...s, points: s.points.map((v) => Math.round(v * 10) / 10) }]);
+    if (s && s.points.length >= 3) commit([...strokesRef.current, { ...s, points: s.points.map((v, i) => (i % 3 === 2 ? Math.round(v * 100) / 100 : Math.round(v * 10) / 10)) }]);
     else schedule();
   };
 
@@ -329,7 +314,7 @@ export default function DrawingCanvas(props: Props) {
         ref={canvasRef}
         role="img"
         aria-label={label}
-        style={{ width, height, cursor: tool === 'eraser' ? 'cell' : 'crosshair', touchAction: pencilOnly ? 'pan-y' : 'none' }}
+        style={{ width, height, cursor: tool === 'eraser' ? 'cell' : 'crosshair', touchAction: pencilOnly ? 'pan-x pan-y' : 'none' }}
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}

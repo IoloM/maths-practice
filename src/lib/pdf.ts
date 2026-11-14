@@ -26,7 +26,8 @@ export async function openPdf(data: ArrayBuffer): Promise<PDFDocumentProxy> {
 export async function renderPage(doc: PDFDocumentProxy, n: number, cssWidth: number, trim = false): Promise<HTMLCanvasElement> {
   const page = await doc.getPage(n);
   const base = page.getViewport({ scale: 1 });
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  // sharp, but within what phones and iPads allow for a canvas (about 16 million pixels)
+  const dpr = Math.min(2, window.devicePixelRatio || 1, Math.sqrt(12e6 / ((cssWidth * cssWidth * base.height) / base.width)));
   const viewport = page.getViewport({ scale: (cssWidth / base.width) * dpr });
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(viewport.width);

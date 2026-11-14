@@ -401,9 +401,11 @@ test("Mr Astbury's booklet comes with your login (once per device), and not with
   await expect(page.getByText('The booklet and worked solutions came with your login, and are saved on this device')).toBeVisible();
   expect(s.downloads.sort()).toEqual(['astbury-questions.pdf', 'astbury-solutions.pdf']);
   await page.goto('./#/booklet/1.1/1');
-  await expect(page.getByRole('img', { name: 'Question 1, page 5 of the booklet' }).locator('canvas')).toBeVisible();
+  await expect(page.locator('.ink-page-img')).toBeVisible();
+  await expect(page.getByRole('img', { name: /Question 1, its page in the booklet \(booklet page 5\)/ })).toBeVisible();
   // kept on the device: no second download
   await page.reload();
-  await expect(page.getByRole('img', { name: 'Question 1, page 5 of the booklet' }).locator('canvas')).toBeVisible();
+  await expect(page.locator('.ink-page-img')).toBeVisible();
+  await expect(page.getByRole('img', { name: /Question 1, its page in the booklet \(booklet page 5\)/ })).toBeVisible();
   expect(s.downloads).toHaveLength(2);
 });
