@@ -25,6 +25,8 @@ import { currentLogin } from '../lib/logins';
 import { href, navigate } from '../router';
 import { WorkingArea, emptyWorking } from '../working/WorkingArea';
 import { BookletInk, InkedPage } from '../working/BookletInk';
+import { InkPaths } from '../working/InkSvg';
+import { strokesBox } from '../working/shapes';
 import { loadInkPages } from '../lib/booklet-ink';
 import { makeBookletPdf } from '../lib/booklet-pdf';
 import { ErrorBox, Loading, plural } from '../components/bits';
@@ -672,26 +674,12 @@ function QuestionPage({ s, q }: { s: BookletSection; q: BookletQuestion }) {
 
 /** Handwritten working as an SVG, scaled to fit. */
 function StrokesSvg({ strokes }: { strokes: Stroke[] }) {
-  let x0 = Infinity,
-    y0 = Infinity,
-    x1 = -Infinity,
-    y1 = -Infinity;
-  for (const s of strokes)
-    for (let i = 0; i + 1 < s.points.length; i += 3) {
-      x0 = Math.min(x0, s.points[i]);
-      x1 = Math.max(x1, s.points[i]);
-      y0 = Math.min(y0, s.points[i + 1]);
-      y1 = Math.max(y1, s.points[i + 1]);
-    }
-  if (!Number.isFinite(x0)) return null;
+  const box = strokesBox(strokes);
+  if (!box) return null;
   const pad = 10;
   return (
-    <svg className="record-strokes" viewBox={`${x0 - pad} ${y0 - pad} ${x1 - x0 + 2 * pad} ${y1 - y0 + 2 * pad}`} role="img" aria-label="Handwritten working">
-      {strokes.map((s, k) => {
-        let d = '';
-        for (let i = 0; i + 1 < s.points.length; i += 3) d += `${i ? 'L' : 'M'}${s.points[i].toFixed(1)} ${s.points[i + 1].toFixed(1)}`;
-        return <path key={k} d={d} fill="none" stroke={s.color === 'currentColor' ? '#111' : s.color} strokeOpacity={s.tool === 'highlighter' ? 0.3 : 1} strokeWidth={s.tool === 'highlighter' ? s.size * 4 : s.size} strokeLinecap="round" strokeLinejoin="round" />;
-      })}
+    <svg className="record-strokes" viewBox={`${box.x0 - pad} ${box.y0 - pad} ${box.x1 - box.x0 + 2 * pad} ${box.y1 - box.y0 + 2 * pad}`} role="img" aria-label="Handwritten working">
+      <InkPaths strokes={strokes} />
     </svg>
   );
 }

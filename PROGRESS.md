@@ -467,3 +467,34 @@ axe on 13 views in light and dark) — all green.
   test that writes on the page with the mouse, undoes and redoes, uses the hand, reloads, then
   makes the PDF and checks its pages and ink (desktop, phone and tablet).
 
+## Phase 23 — A better pen (Apple Pencil especially) ✅ (24 Nov 2026)
+
+- **Even ink**: the pen is the same thickness however hard you press (a smooth line through
+  the points, round ends), on screen, on the record page and in the PDF. Pressure is optional
+  (Pen settings → "Pressure changes the thickness", a brush pen drawn with perfect-freehand).
+- **Straightening**: hold the pen still at the end of a line or shape (about half a second) and
+  it snaps: a straight line (its end then follows the pen until you lift, snapping level,
+  upright or 45°), a circle or ellipse, a triangle, a rectangle, another polygon, or a few
+  straight lines joined at corners. Long lines that are nearly straight come out straight by
+  themselves (on by default). Handwriting is left alone. `src/working/shapes.ts`.
+- **Neaten my handwriting** (optional): smooths the wobble out of each stroke as you write.
+  The lasso can also neaten, or **level** a slanted line of writing.
+- **Shapes**: line, arrow, rectangle, circle/ellipse, triangle, axes (press at the origin and
+  drag) and axes for one quadrant; dashed lines for asymptotes.
+- **Lasso**: loop round writing to move it, resize it from the corner dot, or neaten, level,
+  recolour, copy or delete it (Delete key and Esc work too).
+- **Colours**: the four you use most in the toolbar, a palette of ten, any colour, and separate
+  highlighter colours. **Thickness**: four sizes and a slider.
+- **Rubber**: whole strokes, or only the part it touches (cuts strokes).
+- **Apple Pencil**: the first time it touches the page, "Pencil only" turns on by itself (the
+  Pencil writes, fingers scroll); with it on, a two-finger tap undoes and a three-finger tap
+  redoes. A hover dot shows where an iPad Pro's Pencil will land. Writing stays quick on a full
+  page (finished strokes are drawn once into their own layer).
+- One toolbar for the working area and the booklet (`src/working/InkToolbar.tsx`), with panels
+  that open under it (so they work on a phone). Choices are kept on the device (`settings.ink`).
+- Tests: `tests/ink-shapes.test.ts` (recognising lines and shapes from wobbly drawings and
+  leaving handwriting alone, straightening, neatening, levelling, the lasso, the part rubber,
+  drawing), the PDF test for even lines and dashes, and an e2e test that snaps a line, draws a
+  purple rectangle, lassoes and deletes it, undoes, cuts a line with the part rubber and checks
+  the choices are kept.
+

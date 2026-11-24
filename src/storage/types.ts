@@ -3,9 +3,20 @@ import type { Response, Verdict } from '../engine/marking/types';
 export interface Stroke {
   tool: 'pen' | 'highlighter';
   color: string;
+  /** line width (the same all along, unless `brush`) */
   size: number;
-  /** flattened [x, y, pressure, x, y, pressure, …] in canvas CSS pixels */
+  /** flattened [x, y, pressure, x, y, pressure, …] in canvas CSS pixels (or the page's units) */
   points: number[];
+  /** a brush pen: pressing harder makes it thicker */
+  brush?: boolean;
+  /** straight lines between the points (a shape, or a line that was straightened), not a smooth curve */
+  poly?: boolean;
+  /** joined back to the start (a shape) */
+  closed?: boolean;
+  /** arrowheads: 1 at the end, 2 at both ends */
+  arrow?: 1 | 2;
+  /** a dashed line (asymptotes, construction lines) */
+  dash?: boolean;
 }
 
 export type Paper = 'plain' | 'lined' | 'squared';

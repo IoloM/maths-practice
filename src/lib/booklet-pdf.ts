@@ -8,7 +8,7 @@ import type { BookletQuestion, BookletSection } from '../content/astbury';
 import type { Stroke } from '../storage/types';
 import { fullyMarked, sectionProgress, totalMarks, type BookletWork, type BookletWorks, type Check } from './booklet';
 import { loadInkPages, PAGE_UNITS } from './booklet-ink';
-import { paperColour, strokeSvgPath } from '../working/ink';
+import { dashPattern, HIGHLIGHT_ALPHA, paperColour, strokeSvg } from '../working/ink';
 
 /** A4 in points, for the front pages. */
 const A4 = { w: 595.28, h: 841.89 };
@@ -39,7 +39,7 @@ const hex = (c: string) => {
 
 /** Put the PDF together from the booklet's bytes and the plan. */
 export async function buildBookletPdf(booklet: ArrayBuffer | Uint8Array, plan: PdfPlan): Promise<Uint8Array> {
-  const { PDFDocument, rgb, BlendMode } = await import('pdf-lib');
+  const { PDFDocument, rgb, BlendMode, LineCapStyle, LineJoinStyle, pushGraphicsState, popGraphicsState, setLineJoin } = await import('pdf-lib');
   const src = await PDFDocument.load(booklet, { updateMetadata: false, ignoreEncryption: true });
   const out = await PDFDocument.create();
   out.setTitle(plan.title);
@@ -60,11 +60,23 @@ export async function buildBookletPdf(booklet: ArrayBuffer | Uint8Array, plan: P
     const pg = out.addPage(copied[i]);
     const box = pg.getCropBox();
     const scale = box.width / PAGE_UNITS.w;
+    const at = { x: box.x, y: box.y + box.height, scale };
     for (const s of p.strokes) {
-      const d = strokeSvgPath(s);
-      if (!d) continue;
+      const g = strokeSvg(s);
+      const colour = rgb(...hex(paperColour(s.color)));
       const hl = s.tool === 'highlighter';
-      pg.drawSvgPath(d, { x: box.x, y: box.y + box.height, scale, color: rgb(...hex(paperColour(s.color))), opacity: hl ? 0.32 : 1, blendMode: hl ? BlendMode.Multiply : undefined });
+      const blendMode = hl ? BlendMode.Multiply : undefined;
+      if ('fill' in g) {
+        if (g.fill) pg.drawSvgPath(g.fill, { ...at, color: colour, opacity: hl ? HIGHLIGHT_ALPHA : 1, blendMode });
+        continue;
+      }
+      if (!g.line) continue;
+      // an even line with round ends and corners, as on screen
+      const line = { ...at, borderColor: colour, borderWidth: s.size, borderLineCap: LineCapStyle.Round, borderOpacity: hl ? HIGHLIGHT_ALPHA : 1, blendMode };
+      pg.pushOperators(pushGraphicsState(), setLineJoin(LineJoinStyle.Round));
+      pg.drawSvgPath(g.line, { ...line, borderDashArray: s.dash ? dashPattern(s) : undefined });
+      if (g.heads) pg.drawSvgPath(g.heads, line);
+      pg.pushOperators(popGraphicsState());
     }
     if (p.stamp) {
       const img = await out.embedPng(p.stamp);

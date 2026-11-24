@@ -181,3 +181,86 @@ test('write on the booklet’s pages, then a PDF of the chapter with the working
   await page.goto('./#/booklet/record?s=1.1');
   await expect(page.getByRole('img', { name: 'Question 1 from the booklet (page 5) with the working written on it' })).toBeVisible();
 });
+
+/** The strokes saved on a booklet page (once the half-second save has happened). */
+const savedInk = (page: import('@playwright/test').Page, n: number) =>
+  page.evaluate(async (key) => {
+    const db = await new Promise<IDBDatabase>((ok) => {
+      const r = indexedDB.open('maths-practice');
+      r.onsuccess = () => ok(r.result);
+    });
+    return new Promise<{ points: number[]; color: string; size: number; poly?: boolean; closed?: boolean; arrow?: number; dash?: boolean }[]>((ok) => {
+      const t = db.transaction('settings').objectStore('settings').get(key);
+      t.onsuccess = () => ok(t.result?.value ?? []);
+    });
+  }, `astburyInk:${n}`);
+
+test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and the rubber', async ({ page }) => {
+  await page.goto('./#/booklet');
+  await page.getByLabel('Mr Astbury – A Level Exam Qs Series – Pure (PDF)').setInputFiles({ name: 'booklet.pdf', mimeType: 'application/pdf', buffer: blankPdf(430) });
+  await expect(page.getByText('loaded (booklet.pdf)')).toBeVisible();
+  await page.goto('./#/booklet/1.1/4');
+  const layer = page.getByRole('img', { name: /Question 4, its page in the booklet \(booklet page 8\)/ });
+  await expect(layer).toBeVisible();
+  await layer.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    window.scrollBy({ top: r.top + r.height * 0.55 - innerHeight / 2, behavior: 'instant' });
+  });
+  const box = (await layer.boundingBox())!;
+  const at = (fx: number, fy: number): [number, number] => [box.x + box.width * fx, box.y + box.height * fy];
+  const path = async (pts: [number, number][], holdMs = 0) => {
+    await page.mouse.move(...pts[0]);
+    await page.mouse.down();
+    for (const p of pts.slice(1)) await page.mouse.move(...p, { steps: 2 });
+    if (holdMs) await page.waitForTimeout(holdMs);
+    await page.mouse.up();
+  };
+  const toolbar = page.getByRole('toolbar', { name: 'Pen and paper' });
+
+  // a wobbly line, held still at the end: it snaps straight (and level)
+  await path(Array.from({ length: 12 }, (_, i) => at(0.2 + i * 0.03, 0.5 + (i % 2 ? 0.004 : -0.004))), 700);
+  await expect.poll(async () => (await savedInk(page, 8)).length).toBe(1);
+  let ink = await savedInk(page, 8);
+  expect(ink[0]).toMatchObject({ poly: true });
+  expect(ink[0].points).toHaveLength(6);
+  expect(ink[0].points[1]).toBeCloseTo(ink[0].points[4], 1);
+
+  // a rectangle from the shapes, in purple, thick
+  await toolbar.getByRole('button', { name: 'More colours' }).click();
+  await page.getByRole('group', { name: 'Pen colours' }).getByRole('button', { name: 'Purple ink' }).click();
+  await toolbar.getByRole('button', { name: /^Thickness/ }).click();
+  await page.getByRole('group', { name: 'Thickness' }).getByRole('button', { name: 'Thick' }).click();
+  await toolbar.getByRole('button', { name: 'Shapes' }).click();
+  await page.getByRole('group', { name: 'Shapes' }).getByRole('button', { name: 'Rectangle' }).click();
+  await path([at(0.3, 0.6), at(0.45, 0.68), at(0.6, 0.7)]);
+  await expect.poll(async () => (await savedInk(page, 8)).length).toBe(2);
+  ink = await savedInk(page, 8);
+  expect(ink[1]).toMatchObject({ poly: true, closed: true, color: '#7b1fa2', size: 4.5 });
+  // purple is now one of the colours at hand
+  await expect(toolbar.getByRole('button', { name: 'Purple ink' })).toBeVisible();
+
+  // the lasso picks up the rectangle; delete it
+  await toolbar.getByRole('button', { name: 'Lasso' }).click();
+  await path([at(0.27, 0.57), at(0.65, 0.57), at(0.65, 0.73), at(0.27, 0.73), at(0.27, 0.575)]);
+  const menu = page.getByRole('toolbar', { name: 'The writing you selected' });
+  await expect(menu).toBeVisible();
+  await menu.getByRole('button', { name: 'Delete' }).click();
+  await expect.poll(async () => (await savedInk(page, 8)).length).toBe(1);
+  // and undo brings it back
+  await toolbar.getByRole('button', { name: 'Undo' }).click();
+  await expect.poll(async () => (await savedInk(page, 8)).length).toBe(2);
+
+  // the rubber that takes only what it touches cuts the line in two
+  await toolbar.getByRole('button', { name: 'Pen settings' }).click();
+  await page.getByRole('radio', { name: 'just what it touches' }).check();
+  await toolbar.getByRole('button', { name: 'Rubber' }).click();
+  await path([at(0.36, 0.47), at(0.36, 0.5), at(0.36, 0.53)]);
+  await expect.poll(async () => (await savedInk(page, 8)).length).toBe(3);
+
+  // the choices are kept on the device
+  await page.reload();
+  await page.getByRole('toolbar', { name: 'Pen and paper' }).getByRole('button', { name: 'Pen settings' }).click();
+  await expect(page.getByRole('radio', { name: 'just what it touches' })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /Straighten lines/ })).toBeChecked();
+  await axe(page);
+});

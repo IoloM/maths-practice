@@ -26,12 +26,13 @@ worked solutions and mark schemes.
   running session total and an end-of-session summary.
 - **Mr Astbury's booklet** (`#/booklet`): his Pure exam questions and the worked solutions (which he
   gave for the site; signed-in people only), chapter by chapter: write your working on the
-  booklet's own lined pages (pen, highlighter, rubber, zoom, Apple Pencil), put the final answers
+  booklet's own lined pages (even ink, hold-to-snap lines and shapes, shape tools, lasso, colours,
+  zoom, Apple Pencil), put the final answers
   in the boxes, mark them against the worked solutions (counted in your progress), then make a
   PDF of the chapter's pages with your working, answers and marks on them to send him.
 - Flashcards (formulae to learn and key facts, spaced repetition), formulae and statistical tables
   generated in the app, and calculator tips.
-- Handwritten working with Apple Pencil (pressure, palm rejection) or typed working.
+- Handwritten working with Apple Pencil (even ink or a brush pen, palm rejection, hold-to-snap lines and shapes, shape tools including axes, lasso to move, resize, neaten or level, colours, two-finger undo) or typed working.
 - Works on iPhone, iPad, Android, Windows, Mac and Chromebook — installable PWA.
 - Fully offline after the first visit (no CDNs, no third-party calls, no tracking, no login).
 - Real past papers: enter your marks question by question from Pearson's mark scheme for a score,

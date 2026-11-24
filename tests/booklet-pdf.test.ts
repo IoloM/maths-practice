@@ -7,7 +7,8 @@ import { PDFDocument, PDFRawStream, PDFArray, PDFStream, decodePDFRawStream } fr
 import { BOOKLET, BOOKLET_PAGES, BOOKLET_SECTION } from '../src/content/astbury';
 import { answerLines, buildBookletPdf, marksText, pdfFileName, sectionPages, stampText } from '../src/lib/booklet-pdf';
 import type { BookletWork } from '../src/lib/booklet';
-import { strokeSvgPath } from '../src/working/ink';
+import { strokeSvg } from '../src/working/ink';
+import { makeShape } from '../src/working/shapes';
 import type { Stroke } from '../src/storage/types';
 
 // a 1×1 white PNG
@@ -79,7 +80,13 @@ describe('the PDF for Mr Astbury', () => {
 
   it('copies the booklet’s pages and draws the handwriting where it was written', async () => {
     const src = await booklet();
-    const ink = [pen([100, 400, 0.5, 150, 380, 0.5, 200, 420, 0.5]), pen([60, 500, 0.5, 90, 520, 0.5], '#c62828'), { ...pen([50, 300, 0.5, 300, 300, 0.5]), tool: 'highlighter' as const, size: 10 }];
+    const ink = [
+      pen([100, 400, 0.5, 150, 380, 0.5, 200, 420, 0.5]),
+      pen([60, 500, 0.5, 90, 520, 0.5], '#c62828'),
+      { ...pen([50, 300, 0.5, 300, 300, 0.5]), tool: 'highlighter' as const, size: 10 },
+      { ...pen([100, 600, 0.3, 150, 610, 0.9, 200, 600, 0.6]), brush: true },
+      ...makeShape('arrow', [100, 700], [300, 700], { tool: 'pen', color: '#1a5fd0', size: 2, dash: true }),
+    ];
     const bytes = await buildBookletPdf(src, {
       title: 'Mr Astbury 1.1 Algebraic Expressions – Iolo',
       author: 'Iolo',
@@ -97,23 +104,29 @@ describe('the PDF for Mr Astbury', () => {
     const page5 = contents(out, 1);
     expect(page5).toContain(hexText('booklet page 5'));
     expect(contents(out, 8)).toContain(hexText('booklet page 12'));
-    // the ink: filled paths, black, red and the highlighter, flipped onto the page (origin top left)
-    expect(page5).toMatch(/0\.0[67]\d* 0\.0[67]\d* 0\.0[67]\d* rg/); // #111 ink
-    expect(page5).toMatch(/0\.77\d* 0\.15\d* 0\.15\d* rg/); // red
+    // the ink: even lines (stroked, round ends and corners), black, red, the highlighter and a dashed blue arrow, flipped onto the page (origin top left)
+    expect(page5).toMatch(/0\.0[67]\d* 0\.0[67]\d* 0\.0[67]\d* RG/); // #111 ink
+    expect(page5).toMatch(/0\.77\d* 0\.15\d* 0\.15\d* RG/); // red
     expect(page5).toContain('1 0 0 1 0 841.92 cm\n1 0 0 1 0 0 cm\n1 0 0 -1 0 0 cm');
-    expect(page5.match(/\bf\b/g)?.length).toBeGreaterThanOrEqual(3);
+    expect(page5).toContain('1 j'); // round corners
+    expect(page5).toContain('1 J'); // round ends
+    expect(page5).toMatch(/\[6 5\.2\] 0 d/); // the dashed arrow
+    expect(page5.match(/\bS\b/g)?.length).toBeGreaterThanOrEqual(5);
+    // the brush pen is a filled outline
+    expect(page5.match(/\bf\b/g)?.length).toBe(1);
     // the answers line is an image along the bottom
     expect(page5).toMatch(/1 0 0 1 21 5 cm\n1 0 0 1 0 0 cm\n553 0 0 21 0 0 cm\n1 0 0 1 0 0 cm\n\/Image-\d+ Do/);
     // pages without writing are left as they were
     expect(contents(out, 2)).not.toContain(' gs');
   });
 
-  it('draws a stroke as one closed outline in the page’s units', () => {
-    const d = strokeSvgPath(pen([100, 400, 0.5, 150, 380, 0.5, 200, 420, 0.5]));
-    expect(d).toMatch(/^M[\d.]+ [\d.]+(Q[\d.]+ [\d.]+ [\d.]+ [\d.]+)+Z$/);
-    const xs = [...d.matchAll(/([\d.]+) ([\d.]+)/g)].map((m) => Number(m[1]));
-    expect(Math.min(...xs)).toBeGreaterThan(95);
-    expect(Math.max(...xs)).toBeLessThan(205);
-    expect(strokeSvgPath(pen([]))).toBe('');
+  it('draws a stroke as a line through its points, in the page’s units', () => {
+    const g = strokeSvg(pen([100, 400, 0.5, 150, 380, 0.5, 200, 420, 0.5]));
+    if (!('line' in g)) throw new Error('expected a line');
+    expect(g.line).toMatch(/^M100 400Q150 380 175 400L200 420$/);
+    expect(g.heads).toBe('');
+    const brush = strokeSvg({ ...pen([100, 400, 0.5, 150, 380, 0.5, 200, 420, 0.5]), brush: true });
+    if (!('fill' in brush)) throw new Error('expected an outline');
+    expect(brush.fill).toMatch(/^M[\d.]+ [\d.]+(Q[\d.]+ [\d.]+ [\d.]+ [\d.]+)+Z$/);
   });
 });

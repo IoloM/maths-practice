@@ -1435,16 +1435,138 @@ kbd {
   gap: 8px;
   max-width: 900px;
 }
-.ink-toolbar {
+/* the pen's toolbar (working area and booklet): a row of tools, and a panel that opens under it */
+.ink-bar {
+  background: var(--surface);
+}
+.ink-bar-sticky {
   position: sticky;
   top: calc(56px + env(safe-area-inset-top));
   z-index: 12;
-  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-s);
 }
+.ink-bar-sticky .ink-toolbar {
+  border-bottom: none;
+}
 .ink-toolbar select {
   min-height: 40px;
+}
+.working {
+  --ink-swatch: var(--text);
+}
+.ink-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+  max-height: 60vh;
+  overflow: auto;
+}
+.ink-panel .row {
+  align-items: flex-start;
+  gap: 8px;
+}
+.ink-panel input[type='checkbox'],
+.ink-panel input[type='radio'] {
+  margin-top: 3px;
+  flex: none;
+}
+.ink-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+}
+.ink-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ink-choice[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.ink-line-sample {
+  display: inline-block;
+  width: 36px;
+  border-radius: 4px;
+  flex: none;
+}
+.ink-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.ink-custom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  cursor: pointer;
+}
+.ink-custom input[type='color'] {
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: none;
+}
+.ink-size-dot {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+.ink-fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 6px 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+}
+.ink-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+  background: var(--accent-soft);
+}
+/* the menu over writing picked up with the lasso */
+.ink-sel-menu {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 330px;
+  padding: 4px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+.swatch-small {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
 }
 .ink-sep {
   width: 1px;

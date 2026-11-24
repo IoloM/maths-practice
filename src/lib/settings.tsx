@@ -29,7 +29,44 @@ export interface Settings {
   course: Course;
   /** when a preference that follows the person (SYNCED_PREFS) last changed (ms) */
   prefsAt: number;
+  /** the pen on this device: colours, thickness, and how it tidies your writing */
+  ink: InkPrefs;
 }
+
+export interface InkPrefs {
+  colour: string;
+  hlColour: string;
+  /** pen and highlighter thickness (CSS px, or points on a booklet page) */
+  size: number;
+  hlSize: number;
+  /** a long nearly-straight line becomes straight */
+  straighten: boolean;
+  /** smooth the wobble out of handwriting as you write */
+  neaten: boolean;
+  /** pressing harder makes the pen thicker */
+  pressure: boolean;
+  eraser: 'stroke' | 'part';
+  /** shapes dashed */
+  dash: boolean;
+  /** the pen colours at hand in the toolbar, most recent first */
+  recent: string[];
+  /** an Apple Pencil has been used on this device (Pencil only was turned on then) */
+  pencilSeen: boolean;
+}
+
+export const DEFAULT_INK: InkPrefs = {
+  colour: 'currentColor',
+  hlColour: '#ffd60a',
+  size: 2.25,
+  hlSize: 12,
+  straighten: true,
+  neaten: false,
+  pressure: false,
+  eraser: 'stroke',
+  dash: false,
+  recent: ['currentColor', '#1a5fd0', '#c62828', '#2e7d32'],
+  pencilSeen: false,
+};
 
 /** Preferences that follow a person between devices; the rest belong to the device. */
 export const SYNCED_PREFS = ['theme', 'input', 'paper', 'pencilOnly', 'workingMode', 'showWorking', 'examDates', 'dailyGoal', 'textSize', 'font', 'course'] as const;
@@ -50,6 +87,7 @@ const DEFAULTS: Settings = {
   font: 'standard',
   course: 'alevel',
   prefsAt: 0,
+  ink: DEFAULT_INK,
 };
 /** each login on the device has its own settings */
 const KEY = settingsKey();

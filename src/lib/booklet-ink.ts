@@ -10,13 +10,6 @@ import type { Stroke } from '../storage/types';
 /** Every page of the booklet is A4, in PDF points. */
 export const PAGE_UNITS = { w: 595.32, h: 841.92 };
 
-/** Pen sizes on the page, in points (a medium biro is about 0.7 mm, 2 points). */
-export const PAGE_PEN_SIZES = [
-  { size: 1.4, name: 'Fine' },
-  { size: 2, name: 'Medium' },
-  { size: 3, name: 'Thick' },
-];
-
 const key = (page: number) => `astburyInk:${page}`;
 
 export async function loadInk(page: number): Promise<Stroke[]> {
