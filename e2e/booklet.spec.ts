@@ -202,13 +202,15 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   await page.goto('./#/booklet/1.1/4');
   const layer = page.getByRole('img', { name: /Question 4, its page in the booklet \(booklet page 8\)/ });
   await expect(layer).toBeVisible();
-  await layer.evaluate((el) => {
-    const r = el.getBoundingClientRect();
-    window.scrollBy({ top: r.top + r.height * 0.55 - innerHeight / 2, behavior: 'instant' });
-  });
-  const box = (await layer.boundingBox())!;
-  const at = (fx: number, fy: number): [number, number] => [box.x + box.width * fx, box.y + box.height * fy];
-  const path = async (pts: [number, number][], holdMs = 0) => {
+  // points as fractions of the page; measured afresh each time (tapping the toolbar on a phone can scroll the page)
+  type F = [number, number];
+  const path = async (fr: F[], holdMs = 0) => {
+    await layer.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      window.scrollBy({ top: r.top + r.height * 0.6 - innerHeight / 2, behavior: 'instant' });
+    });
+    const box = (await layer.boundingBox())!;
+    const pts = fr.map(([fx, fy]): [number, number] => [box.x + box.width * fx, box.y + box.height * fy]);
     await page.mouse.move(...pts[0]);
     await page.mouse.down();
     for (const p of pts.slice(1)) await page.mouse.move(...p, { steps: 2 });
@@ -218,7 +220,7 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   const toolbar = page.getByRole('toolbar', { name: 'Pen and paper' });
 
   // a wobbly line, held still at the end: it snaps straight (and level)
-  await path(Array.from({ length: 12 }, (_, i) => at(0.2 + i * 0.03, 0.5 + (i % 2 ? 0.004 : -0.004))), 700);
+  await path(Array.from({ length: 12 }, (_, i): F => [0.2 + i * 0.03, 0.5 + (i % 2 ? 0.004 : -0.004)]), 700);
   await expect.poll(async () => (await savedInk(page, 8)).length).toBe(1);
   let ink = await savedInk(page, 8);
   expect(ink[0]).toMatchObject({ poly: true });
@@ -232,7 +234,7 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   await page.getByRole('group', { name: 'Thickness' }).getByRole('button', { name: 'Thick' }).click();
   await toolbar.getByRole('button', { name: 'Shapes' }).click();
   await page.getByRole('group', { name: 'Shapes' }).getByRole('button', { name: 'Rectangle' }).click();
-  await path([at(0.3, 0.6), at(0.45, 0.68), at(0.6, 0.7)]);
+  await path([[0.3, 0.6], [0.45, 0.68], [0.6, 0.7]]);
   await expect.poll(async () => (await savedInk(page, 8)).length).toBe(2);
   ink = await savedInk(page, 8);
   expect(ink[1]).toMatchObject({ poly: true, closed: true, color: '#7b1fa2', size: 4.5 });
@@ -241,7 +243,7 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
 
   // the lasso picks up the rectangle; delete it
   await toolbar.getByRole('button', { name: 'Lasso' }).click();
-  await path([at(0.27, 0.57), at(0.65, 0.57), at(0.65, 0.73), at(0.27, 0.73), at(0.27, 0.575)]);
+  await path([[0.27, 0.57], [0.65, 0.57], [0.65, 0.73], [0.27, 0.73], [0.27, 0.575]]);
   const menu = page.getByRole('toolbar', { name: 'The writing you selected' });
   await expect(menu).toBeVisible();
   await menu.getByRole('button', { name: 'Delete' }).click();
@@ -254,7 +256,7 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   await toolbar.getByRole('button', { name: 'Pen settings' }).click();
   await page.getByRole('radio', { name: 'just what it touches' }).check();
   await toolbar.getByRole('button', { name: 'Rubber' }).click();
-  await path([at(0.36, 0.47), at(0.36, 0.5), at(0.36, 0.53)]);
+  await path([[0.36, 0.47], [0.36, 0.5], [0.36, 0.53]]);
   await expect.poll(async () => (await savedInk(page, 8)).length).toBe(3);
 
   // the choices are kept on the device
