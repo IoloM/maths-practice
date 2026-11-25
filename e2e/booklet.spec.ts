@@ -204,12 +204,24 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   await expect(layer).toBeVisible();
   // points as fractions of the page; measured afresh each time (tapping the toolbar on a phone can scroll the page)
   type F = [number, number];
+  // bring the page to the same place, and wait until it has stopped moving (it can still be settling just after loading)
+  const settle = async () => {
+    let prev = '';
+    for (let i = 0; i < 25; i++) {
+      await layer.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        const by = r.top + r.height * 0.6 - innerHeight / 2;
+        if (Math.abs(by) > 2) window.scrollBy(0, by);
+      });
+      await page.waitForTimeout(120);
+      const b = JSON.stringify(await layer.boundingBox());
+      if (b === prev) return JSON.parse(b) as { x: number; y: number; width: number; height: number };
+      prev = b;
+    }
+    throw new Error('the page kept moving');
+  };
   const path = async (fr: F[], holdMs = 0) => {
-    await layer.evaluate((el) => {
-      const r = el.getBoundingClientRect();
-      window.scrollBy({ top: r.top + r.height * 0.6 - innerHeight / 2, behavior: 'instant' });
-    });
-    const box = (await layer.boundingBox())!;
+    const box = await settle();
     const pts = fr.map(([fx, fy]): [number, number] => [box.x + box.width * fx, box.y + box.height * fy]);
     await page.mouse.move(...pts[0]);
     await page.mouse.down();
@@ -226,6 +238,8 @@ test('the pen tidies your writing: hold to snap, shapes, colours, the lasso and 
   expect(ink[0]).toMatchObject({ poly: true });
   expect(ink[0].points).toHaveLength(6);
   expect(ink[0].points[1]).toBeCloseTo(ink[0].points[4], 1);
+  // and it's where it was drawn: half way down the page (842 points tall)
+  expect(Math.abs(ink[0].points[1] - 0.496 * 841.92)).toBeLessThan(12);
 
   // a rectangle from the shapes, in purple, thick
   await toolbar.getByRole('button', { name: 'More colours' }).click();
